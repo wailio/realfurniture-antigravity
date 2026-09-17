@@ -95,9 +95,10 @@ export default function HomePage() {
             className="mb-5 animate-fade-in-up" 
             style={{ animationDelay: '0ms', animationFillMode: 'both' }}
           >
-            <span className="inline-flex items-center gap-2 border border-white/20 bg-black/40 backdrop-blur-md px-4 py-1.5 rounded-none text-[11px] font-sora text-[#E4E4E7] tracking-[4px] uppercase shadow-sm">
-              <span className="w-1.5 h-1.5 bg-[#b68d40]" />
-              CHÂTEAU D&apos;ART · MAISON DE DESIGN
+            <span className="inline-flex items-center gap-2 border border-white/20 bg-black/40 backdrop-blur-md px-3 py-1 md:px-4 md:py-1.5 rounded-none text-[9px] md:text-[11px] font-sora text-[#E4E4E7] tracking-[3px] md:tracking-[4px] uppercase shadow-sm">
+              <span className="w-1 h-1 md:w-1.5 md:h-1.5 bg-[#b68d40]" />
+              <span className="md:hidden">CHÂTEAU D&apos;ART</span>
+              <span className="hidden md:inline">CHÂTEAU D&apos;ART · MAISON DE DESIGN</span>
             </span>
           </div>
           
@@ -116,7 +117,7 @@ export default function HomePage() {
             className="relative mb-6 animate-fade-in-up" 
             style={{ animationDelay: '200ms', animationFillMode: 'both' }}
           >
-            <h1 className="font-fraunces font-light text-[clamp(2.8rem,9vw,5.8rem)] text-white leading-[1.08] tracking-tight">
+            <h1 className="font-fraunces font-light text-[clamp(2rem,8vw,5.8rem)] md:text-[clamp(2.8rem,9vw,5.8rem)] text-white leading-[1.08] tracking-tight">
               espaces d&apos;exception
             </h1>
             <svg 
@@ -146,21 +147,22 @@ export default function HomePage() {
 
           {/* Call to action */}
           <div 
-            className="flex flex-col sm:flex-row items-center gap-4 animate-fade-in-up" 
+            className="flex flex-row items-center gap-2 md:gap-4 animate-fade-in-up" 
             style={{ animationDelay: '400ms', animationFillMode: 'both' }}
           >
             <Link 
               href="/all-products" 
-              className="inline-flex items-center gap-2.5 bg-[#b68d40] hover:bg-[#a37c35] text-white px-8 py-4 uppercase tracking-[2.5px] text-xs font-bold transition-all duration-300 shadow-xl hover:scale-105"
+              className="inline-flex items-center justify-center gap-1.5 md:gap-2.5 bg-[#b68d40] hover:bg-[#a37c35] text-white px-4 py-2.5 md:px-8 md:py-4 uppercase tracking-[1.5px] md:tracking-[2.5px] text-[9px] md:text-xs font-bold transition-all duration-300 shadow-xl hover:scale-105"
             >
-              <span>Explorer la collection</span>
-              <ArrowRight size={14} />
+              <span>Explorer</span>
+              <ArrowRight size={11} className="md:hidden" />
+              <ArrowRight size={14} className="hidden md:block" />
             </Link>
             <Link 
               href="/contact" 
-              className="inline-flex items-center gap-2 border border-white/20 hover:border-white/50 bg-black/30 backdrop-blur-xs text-white/90 hover:text-white px-8 py-4 uppercase tracking-[2.5px] text-xs font-medium transition-all duration-300"
+              className="inline-flex items-center justify-center gap-1.5 border border-white/20 hover:border-white/50 bg-black/30 backdrop-blur-xs text-white/90 hover:text-white px-4 py-2.5 md:px-8 md:py-4 uppercase tracking-[1.5px] md:tracking-[2.5px] text-[9px] md:text-xs font-medium transition-all duration-300"
             >
-              <span>Prendre rendez-vous</span>
+              <span>Rendez-vous</span>
             </Link>
           </div>
         </div>

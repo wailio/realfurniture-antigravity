@@ -42,6 +42,10 @@ export function CurvedProductShowcase() {
   const [hoveredSlot, setHoveredSlot] = useState<number | null>(null);
   const [isStageHovered, setIsStageHovered] = useState<boolean>(false);
 
+  // Touch swipe support for mobile
+  const touchStartX = useRef<number>(0);
+  const touchStartY = useRef<number>(0);
+
   // Spin to next category automatically (pauses on hover)
   const advanceSpin = useCallback(() => {
     setCenterSlot((prevSlot) => {
@@ -180,6 +184,21 @@ export function CurvedProductShowcase() {
       <div 
         onMouseEnter={() => setIsStageHovered(true)}
         onMouseLeave={() => { setIsStageHovered(false); setHoveredSlot(null); }}
+        onTouchStart={(e) => {
+          touchStartX.current = e.targetTouches[0].clientX;
+          touchStartY.current = e.targetTouches[0].clientY;
+        }}
+        onTouchEnd={(e) => {
+          const dx = touchStartX.current - e.changedTouches[0].clientX;
+          const dy = Math.abs(touchStartY.current - e.changedTouches[0].clientY);
+          if (Math.abs(dx) > 40 && Math.abs(dx) > dy) {
+            if (dx > 0) {
+              advanceSpin();
+            } else {
+              setCenterSlot((prev) => (prev - 1 + 5) % 5);
+            }
+          }
+        }}
         className="relative w-full max-w-[1280px] h-[480px] md:h-[540px] flex items-center justify-center [perspective:1200px] scale-[0.78] sm:scale-[0.88] md:scale-100 transition-transform duration-300"
       >
         {CATEGORY_SLOTS.map((cat, slotIdx) => {

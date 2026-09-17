@@ -117,8 +117,8 @@ export function Header({ theme = 'dark' }: HeaderProps) {
       >
         <div className="max-w-[1440px] mx-auto flex items-center justify-between">
           
-          {/* LEFT: Phone / Need Help block */}
-          <div className="flex-1 flex items-center justify-start">
+          {/* LEFT: Phone / Need Help block — desktop only */}
+          <div className="hidden md:flex flex-1 items-center justify-start">
             <Link
               href="/contact"
               className="group inline-flex items-center gap-3.5 transition-transform duration-250 ease-out hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b68d40]"
@@ -156,8 +156,8 @@ export function Header({ theme = 'dark' }: HeaderProps) {
             </Link>
           </div>
 
-          {/* CENTER: Logo "Château d'art" (Maximized & Edge-to-Edge with Thin Bar) */}
-          <div className="flex-shrink-0 flex items-center justify-center">
+          {/* CENTER: Logo — left on mobile, centered on desktop */}
+          <div className="flex-1 md:flex-shrink-0 flex items-center justify-start md:justify-center">
             <Link href="/" className="group flex items-center py-0 -my-1.5 md:-my-2.5 lg:-my-3">
               <img
                 src="/logo.png"
@@ -169,10 +169,10 @@ export function Header({ theme = 'dark' }: HeaderProps) {
 
           {/* RIGHT: CTA Button + Language Switcher (NO search, wishlist, account, or cart icons) */}
           <div className="flex-1 flex items-center justify-end gap-2.5 md:gap-3.5">
-            {/* CTA Button */}
+            {/* CTA Button — desktop only */}
             <Link
               href="/all-products"
-              className="inline-flex items-center justify-center w-24 md:w-28 h-8 md:h-9 rounded-none bg-[#b68d40] hover:bg-[#a37c35] text-white font-bold text-[11px] md:text-xs uppercase tracking-wider shadow-sm transition-all duration-200"
+              className="hidden md:inline-flex items-center justify-center w-24 md:w-28 h-8 md:h-9 rounded-none bg-[#b68d40] hover:bg-[#a37c35] text-white font-bold text-[11px] md:text-xs uppercase tracking-wider shadow-sm transition-all duration-200"
             >
               Découvrir
             </Link>
