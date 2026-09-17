@@ -1,0 +1,292 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: #0E0F10;
+  --color-surface: #18191B;
+  --color-surface-elevated: #1F2022;
+  --color-primary: #F2F1EF;
+  --color-secondary: #B7BBC0;
+  --color-accent: #C7CBD1;
+  --color-accent-muted: rgba(199, 203, 209, 0.18);
+  --color-accent-hover: #DFE1E4;
+  --color-destructive: #ef4444;
+
+  --font-heading: "Fraunces", serif;
+  --font-body: "Sora", sans-serif;
+}
+
+/* ── Base ────────────────────────────────────────── */
+::selection {
+  background-color: #b68d40;
+  color: #ffffff;
+}
+
+::-moz-selection {
+  background-color: #b68d40;
+  color: #ffffff;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-background);
+  color: var(--color-secondary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom Luxury Scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-track {
+  background: #0e0f10;
+}
+::-webkit-scrollbar-thumb {
+  background: #27282c;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #b68d40;
+}
+
+/* Accessible focus outline */
+:focus-visible {
+  outline: 2px solid #b68d40;
+  outline-offset: 2px;
+}
+
+/* ── Luxury scroll-reveal system ────────────────── */
+.luxury-reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 1s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms),
+    transform 1s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms);
+}
+.luxury-reveal[data-variant="scale"] {
+  transform: scale(0.92);
+}
+.luxury-reveal[data-variant="left"] {
+  transform: translateX(-24px);
+}
+.luxury-reveal[data-variant="right"] {
+  transform: translateX(24px);
+}
+.luxury-reveal-visible {
+  opacity: 1;
+  transform: translateY(0) translateX(0) scale(1);
+}
+
+/* ── Heading underline reveal (straight hairline) ─ */
+.heading-underline path {
+  stroke-dasharray: 340;
+  stroke-dashoffset: 340;
+  animation: drawHeadingLine 700ms ease-out 900ms forwards;
+}
+@keyframes drawHeadingLine {
+  to { stroke-dashoffset: 0; }
+}
+
+/* ── 404 page animations ────────────────────────── */
+@keyframes labelIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes chairIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes headingIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes drawLine {
+  to { stroke-dashoffset: 0; }
+}
+.error-label { opacity: 0; animation: labelIn 400ms cubic-bezier(0.16, 1, 0.3, 1) 0ms forwards; }
+.chair-reveal { opacity: 0; animation: chairIn 800ms cubic-bezier(0.16, 1, 0.3, 1) 100ms forwards; }
+.heading-reveal { opacity: 0; animation: headingIn 600ms cubic-bezier(0.16, 1, 0.3, 1) 900ms forwards; }
+.underline-reveal path { stroke-dasharray: 420; stroke-dashoffset: 420; animation: drawLine 500ms ease-out 1500ms forwards; }
+.subheading-reveal { opacity: 0; animation: fadeIn 400ms ease-out 1600ms forwards; }
+.button-reveal { opacity: 0; animation: headingIn 400ms cubic-bezier(0.16, 1, 0.3, 1) 1900ms forwards; }
+
+/* ── Delivery benefit shimmer ───────────────────── */
+@keyframes benefitShimmer {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+.delivery-benefit-icon {
+  animation: benefitShimmer 2.5s ease-in-out infinite;
+}
+
+/* ── Mission logo float ─────────────────────────── */
+@keyframes logoFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.mission-logo-float {
+  animation: logoFloat 4s ease-in-out infinite;
+}
+
+/* ── Image styling ──── */
+.product-image {
+  filter: none;
+}
+
+/* ── Scrollbar hide ─────────────────────────────── */
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ── Product Contact Spotlight Effect ─────────────── */
+.product-message-wrap {
+  position: relative;
+}
+
+.product-message-spotlight .contact-field {
+  animation: 3.6s cubic-bezier(0.16, 1, 0.3, 1) forwards productMessageGlow;
+}
+
+.product-message-streak {
+  position: absolute;
+  top: 8%;
+  bottom: 8%;
+  width: 2px;
+  background: linear-gradient(to bottom, transparent, #b68d40 30%, #b68d40 70%, transparent);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.product-message-streak-left {
+  left: -6px;
+}
+
+.product-message-streak-right {
+  right: -6px;
+}
+
+.product-message-spotlight .product-message-streak {
+  animation: 3.6s cubic-bezier(0.16, 1, 0.3, 1) forwards productMessageStreak;
+}
+
+@keyframes productMessageGlow {
+  0% {
+    box-shadow: none;
+  }
+  17% {
+    box-shadow: 0 0 0 1px rgba(182, 141, 64, 0.5), 0 0 24px 6px rgba(182, 141, 64, 0.35), 0 0 45px 12px rgba(182, 141, 64, 0.15);
+  }
+  58% {
+    box-shadow: 0 0 0 1px rgba(182, 141, 64, 0.5), 0 0 28px 7px rgba(182, 141, 64, 0.4), 0 0 50px 14px rgba(182, 141, 64, 0.2);
+  }
+  78% {
+    box-shadow: 0 0 0 1px rgba(182, 141, 64, 0.4), 0 0 18px 4px rgba(182, 141, 64, 0.25), 0 0 32px 8px rgba(182, 141, 64, 0.12);
+  }
+  to {
+    box-shadow: 0 0 14px 2px rgba(182, 141, 64, 0.2);
+  }
+}
+
+@keyframes productMessageStreak {
+  0%, 17% {
+    opacity: 0;
+  }
+  28%, 68% {
+    opacity: 0.95;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@media (max-width: 767px) {
+  .product-message-wrap {
+    margin-inline: 4px;
+  }
+  .product-message-streak-left {
+    left: -5px;
+  }
+  .product-message-streak-right {
+    right: -5px;
+  }
+  .product-message-spotlight .contact-field {
+    animation-duration: 3.6s;
+    box-shadow: 0 0 0 1px rgba(182, 141, 64, 0.45), 0 0 20px 4px rgba(182, 141, 64, 0.3);
+  }
+}
+
+/* ── Reduced motion ─────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .luxury-reveal { opacity: 1; transform: none; transition: none; }
+  .heading-underline path { stroke-dashoffset: 0; animation: none; }
+  .error-label, .chair-reveal, .heading-reveal,
+  .subheading-reveal, .button-reveal { opacity: 1; animation: none; }
+  .underline-reveal path { stroke-dashoffset: 0; animation: none; }
+  .delivery-benefit-icon { animation: none; opacity: 1; }
+  .mission-logo-float { animation: none; }
+  .product-message-spotlight .contact-field {
+    animation: none;
+    box-shadow: 0 0 14px 2px rgba(182, 141, 64, 0.2);
+  }
+  .product-message-spotlight .product-message-streak {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+/* ── WhatsApp Ambient Halo Pulse ─────────────────── */
+@keyframes whatsappHalo {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.22);
+    opacity: 0.85;
+  }
+}
+
+.animate-whatsapp-halo {
+  animation: whatsappHalo 3.5s ease-in-out infinite;
+}
+
+/* ── Delivery Marquee (Moving benefits banner) ── */
+@keyframes deliveryMarqueeRight {
+  from {
+    transform: translateX(-25%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes deliveryMarqueeLeft {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-25%);
+  }
+}
+
+.delivery-marquee-right {
+  animation: deliveryMarqueeRight 26s linear infinite;
+  will-change: transform;
+}
+
+.delivery-marquee-left {
+  animation: deliveryMarqueeLeft 30s linear infinite;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .delivery-marquee-right,
+  .delivery-marquee-left {
+    animation: none;
+  }
+}
