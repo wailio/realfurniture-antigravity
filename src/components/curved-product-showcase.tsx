@@ -159,18 +159,18 @@ export function CurvedProductShowcase() {
 
   return (
     <section className="relative w-full py-16 md:py-24 overflow-hidden bg-gradient-to-b from-[#0E0F10] via-[#121316] to-[#0E0F10] flex items-center justify-center">
-      {/* Brand Emblem Watermark — luxury ghost, top-left corner */}
+      {/* Brand Emblem Watermark — massive bg ghost */}
       <div
         aria-hidden="true"
-        className="pointer-events-none select-none absolute -top-10 -left-16 sm:-top-8 sm:-left-12 md:-top-6 md:-left-10 z-0"
+        className="pointer-events-none select-none absolute -top-20 -left-32 z-0"
       >
         <img
           src="/chateau-emblem.png"
           alt=""
           draggable={false}
-          className="w-72 h-72 sm:w-80 sm:h-80 md:w-[420px] md:h-[420px] lg:w-[520px] lg:h-[520px] object-contain"
+          className="w-[600px] h-[600px] md:w-[800px] md:h-[800px] lg:w-[960px] lg:h-[960px] object-contain"
           style={{
-            opacity: 0.07,
+            opacity: 0.03,
             mixBlendMode: 'luminosity',
             filter: 'sepia(0.4) saturate(1.8) hue-rotate(5deg)',
           }}
