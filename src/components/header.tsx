@@ -178,7 +178,7 @@ export function Header({ theme = 'dark' }: HeaderProps) {
             </Link>
 
             {/* Language Switcher with User's Uploaded Flag Images */}
-            <div className="relative" ref={langDropdownRef}>
+            <div className="hidden md:block relative" ref={langDropdownRef}>
               <button
                 type="button"
                 onClick={() => setIsLangOpen(!isLangOpen)}
