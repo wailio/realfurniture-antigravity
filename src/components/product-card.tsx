@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React from 'react';
 import Link from 'next/link';
@@ -22,10 +22,10 @@ export function ProductCard({ product, className = 'w-40 md:w-[350px]' }: Produc
           </div>
         )}
 
-        {/* Favorite Button */}
-        <button className="absolute top-2 right-2 z-10 bg-[#18191B]/80 rounded-full p-1.5 text-[#B7BBC0] hover:text-[#F2F1EF] hover:bg-[#18191B] transition-colors border border-[rgba(199,203,209,0.18)]" aria-label="Add to favorites">
+        {/* Favorite Icon — div not button (can't nest button inside <a>) */}
+        <div className="absolute top-2 right-2 z-10 bg-[#18191B]/80 rounded-full p-1.5 text-[#B7BBC0] border border-[rgba(199,203,209,0.18)]" aria-hidden="true">
           <Heart size={13} />
-        </button>
+        </div>
 
         {/* Image Area — tall on mobile */}
         <div className="w-full aspect-[3/4] md:aspect-[4/3] overflow-hidden bg-[#0E0F10]">
