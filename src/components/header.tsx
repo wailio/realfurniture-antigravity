@@ -53,54 +53,31 @@ export function Header({ theme = 'dark' }: HeaderProps) {
   return (
     <header className="sticky top-0 w-full z-50 shadow-md font-sora transition-colors duration-300">
       {/* ── ROW 1: Top Promo Bar (Dark, Full Width, with Socials on Left) ── */}
-      <div className="bg-[#0A0B0C] text-[#F2F1EF] text-xs py-2 px-4 sm:px-6 md:px-10 lg:px-12 border-b border-white/5">
+      <div className="bg-[#0A0B0C] text-[#F2F1EF] text-xs py-1.5 px-4 sm:px-6 md:px-10 lg:px-12 border-b border-white/5">
         <div className="max-w-[1440px] mx-auto flex items-center justify-between">
-          {/* LEFT: Social Icons */}
-          <div className="flex items-center gap-3">
-            <a
-              href="https://www.instagram.com/chateau_dart_meubles/"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Instagram Château d'art"
-              className="text-[#B7BBC0] hover:text-[#b68d40] transition-colors p-0.5"
-            >
+          {/* LEFT: Social Icons — desktop only */}
+          <div className="hidden md:flex items-center gap-3">
+            <a href="https://www.instagram.com/chateau_dart_meubles/" target="_blank" rel="noopener noreferrer" aria-label="Instagram Château d'art" className="text-[#B7BBC0] hover:text-[#b68d40] transition-colors p-0.5">
               <Instagram className="w-3.5 h-3.5" />
             </a>
-            <a
-              href="https://www.facebook.com/chateau.dart.alger/"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Facebook Château d'art"
-              className="text-[#B7BBC0] hover:text-[#b68d40] transition-colors p-0.5"
-            >
+            <a href="https://www.facebook.com/chateau.dart.alger/" target="_blank" rel="noopener noreferrer" aria-label="Facebook Château d'art" className="text-[#B7BBC0] hover:text-[#b68d40] transition-colors p-0.5">
               <Facebook className="w-3.5 h-3.5" />
             </a>
-            <a
-              href="https://www.tiktok.com/@chateaudart_meubles"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="TikTok Château d'art"
-              className="text-[#B7BBC0] hover:text-[#b68d40] transition-colors p-0.5"
-            >
+            <a href="https://www.tiktok.com/@chateaudart_meubles" target="_blank" rel="noopener noreferrer" aria-label="TikTok Château d'art" className="text-[#B7BBC0] hover:text-[#b68d40] transition-colors p-0.5">
               <TikTokIcon className="w-3.5 h-3.5" />
             </a>
-            <a
-              href="https://www.youtube.com/@chateaudart/featured"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="YouTube Château d'art"
-              className="text-[#B7BBC0] hover:text-[#b68d40] transition-colors p-0.5"
-            >
+            <a href="https://www.youtube.com/@chateaudart/featured" target="_blank" rel="noopener noreferrer" aria-label="YouTube Château d'art" className="text-[#B7BBC0] hover:text-[#b68d40] transition-colors p-0.5">
               <Youtube className="w-3.5 h-3.5" />
             </a>
           </div>
 
-          {/* CENTER: Promo Announcement */}
-          <div className="flex-1 text-center font-medium tracking-wider text-[11px] sm:text-xs">
-            <span>Exclusive Furniture Sale Up To 50% Off</span>
+          {/* CENTER/LEFT on mobile: Promo — right-aligned on mobile, centered on desktop */}
+          <div className="flex-1 md:text-center text-right font-medium tracking-wider">
+            <span className="md:hidden text-[9px] text-[#B7BBC0]">Sale Up To 50% Off</span>
+            <span className="hidden md:inline text-[11px]">Exclusive Furniture Sale Up To 50% Off</span>
           </div>
 
-          {/* RIGHT: Visual Balancer */}
+          {/* RIGHT: desktop only */}
           <div className="hidden md:flex items-center justify-end w-[116px] text-[10px] text-[#A1A1AA] uppercase tracking-widest font-medium">
             <span>Haute Création</span>
           </div>

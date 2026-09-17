@@ -27,8 +27,8 @@ export function ProductCard({ product, className = 'w-40 md:w-[350px]' }: Produc
           <Heart size={13} />
         </div>
 
-        {/* Image Area — tall on mobile */}
-        <div className="w-full aspect-[3/4] md:aspect-[4/3] overflow-hidden bg-[#0E0F10]">
+        {/* Image Area — wide landscape on mobile */}
+        <div className="w-full aspect-[4/3] overflow-hidden bg-[#0E0F10]">
           <img
             src={product.image}
             alt={product.name}
