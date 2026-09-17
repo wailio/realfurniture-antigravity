@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { products } from "@/lib/products";
 
+export const runtime = 'edge';
+
 // GET: Fetch all products or filter by category
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);

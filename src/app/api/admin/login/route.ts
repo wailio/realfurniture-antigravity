@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
+
+export const runtime = 'edge';
 
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123";
 const SESSION_TOKEN = "admin_session";
@@ -10,16 +11,15 @@ export async function POST(request: NextRequest) {
     const { password } = body;
 
     if (password === ADMIN_PASSWORD) {
-      const cookieStore = await cookies();
-      cookieStore.set(SESSION_TOKEN, "authenticated", {
+      const response = NextResponse.json({ success: true });
+      response.cookies.set(SESSION_TOKEN, "authenticated", {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "strict",
-        maxAge: 60 * 60 * 24, // 24 hours
+        maxAge: 60 * 60 * 24,
         path: "/",
       });
-
-      return NextResponse.json({ success: true });
+      return response;
     }
 
     return NextResponse.json(
