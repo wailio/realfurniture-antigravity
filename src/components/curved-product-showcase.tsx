@@ -162,16 +162,15 @@ export function CurvedProductShowcase() {
       {/* Brand Emblem Watermark — luxury ghost, top-left corner */}
       <div
         aria-hidden="true"
-        className="pointer-events-none select-none absolute -top-6 -left-10 sm:-top-4 sm:-left-8 md:-top-2 md:-left-6 z-0"
-        style={{ transform: 'rotate(-8deg)' }}
+        className="pointer-events-none select-none absolute -top-10 -left-16 sm:-top-8 sm:-left-12 md:-top-6 md:-left-10 z-0"
       >
         <img
           src="/chateau-emblem.png"
           alt=""
           draggable={false}
-          className="w-52 h-52 sm:w-64 sm:h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 object-contain"
+          className="w-72 h-72 sm:w-80 sm:h-80 md:w-[420px] md:h-[420px] lg:w-[520px] lg:h-[520px] object-contain"
           style={{
-            opacity: 0.13,
+            opacity: 0.07,
             mixBlendMode: 'luminosity',
             filter: 'sepia(0.4) saturate(1.8) hue-rotate(5deg)',
           }}
