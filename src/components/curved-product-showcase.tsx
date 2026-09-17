@@ -159,6 +159,24 @@ export function CurvedProductShowcase() {
 
   return (
     <section className="relative w-full py-16 md:py-24 overflow-hidden bg-gradient-to-b from-[#0E0F10] via-[#121316] to-[#0E0F10] flex items-center justify-center">
+      {/* Brand Emblem Watermark — luxury ghost, top-left corner */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none select-none absolute -top-6 -left-10 sm:-top-4 sm:-left-8 md:-top-2 md:-left-6 z-0"
+        style={{ transform: 'rotate(-8deg)' }}
+      >
+        <img
+          src="/chateau-emblem.png"
+          alt=""
+          draggable={false}
+          className="w-52 h-52 sm:w-64 sm:h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 object-contain"
+          style={{
+            opacity: 0.13,
+            mixBlendMode: 'luminosity',
+            filter: 'sepia(0.4) saturate(1.8) hue-rotate(5deg)',
+          }}
+        />
+      </div>
       {/* 3D Arc Stage with pause on hover */}
       <div 
         onMouseEnter={() => setIsStageHovered(true)}
