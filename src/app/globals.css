@@ -312,3 +312,17 @@ button, a, [role="button"] {
     animation: none;
   }
 }
+
+/* ── Prevent mobile browser auto-zoom on input focus ── */
+@media screen and (max-width: 767px) {
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="number"],
+  input[type="password"],
+  input[type="search"],
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+}

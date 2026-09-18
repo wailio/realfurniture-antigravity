@@ -279,29 +279,29 @@ function ContactContent() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                       <div>
                         <label className="block font-sora text-[10px] md:text-xs uppercase tracking-wider text-[#A1A1AA] mb-1.5 font-medium">Nom complet *</label>
-                        <input type="text" name="name" required value={formData.name} onChange={handleChange} placeholder="Votre nom et prénom" className="w-full bg-[#0E0F10] border border-white/15 px-3.5 py-2.5 md:py-3 text-xs md:text-sm text-white placeholder:text-[#52525B] focus:outline-none focus:border-[#b68d40] transition-colors rounded-none" />
+                        <input type="text" name="name" required value={formData.name} onChange={handleChange} placeholder="Votre nom et prénom" className="w-full bg-[#0E0F10] border border-white/15 px-3.5 py-2.5 md:py-3 text-base md:text-sm text-white placeholder:text-[#52525B] focus:outline-none focus:border-[#b68d40] transition-colors rounded-none" />
                       </div>
                       <div>
                         <label className="block font-sora text-[10px] md:text-xs uppercase tracking-wider text-[#A1A1AA] mb-1.5 font-medium">Téléphone *</label>
-                        <input type="tel" name="phone" required value={formData.phone} onChange={handleChange} placeholder="Ex: 0550 XX XX XX" className="w-full bg-[#0E0F10] border border-white/15 px-3.5 py-2.5 md:py-3 text-xs md:text-sm text-white placeholder:text-[#52525B] focus:outline-none focus:border-[#b68d40] transition-colors rounded-none" />
+                        <input type="tel" name="phone" required value={formData.phone} onChange={handleChange} placeholder="Ex: 0550 XX XX XX" className="w-full bg-[#0E0F10] border border-white/15 px-3.5 py-2.5 md:py-3 text-base md:text-sm text-white placeholder:text-[#52525B] focus:outline-none focus:border-[#b68d40] transition-colors rounded-none" />
                       </div>
                     </div>
 
                     <div>
                       <label className="block font-sora text-[10px] md:text-xs uppercase tracking-wider text-[#A1A1AA] mb-1.5 font-medium">Adresse email *</label>
-                      <input type="email" name="email" required value={formData.email} onChange={handleChange} placeholder="nom@exemple.com" className="w-full bg-[#0E0F10] border border-white/15 px-3.5 py-2.5 md:py-3 text-xs md:text-sm text-white placeholder:text-[#52525B] focus:outline-none focus:border-[#b68d40] transition-colors rounded-none" />
+                      <input type="email" name="email" required value={formData.email} onChange={handleChange} placeholder="nom@exemple.com" className="w-full bg-[#0E0F10] border border-white/15 px-3.5 py-2.5 md:py-3 text-base md:text-sm text-white placeholder:text-[#52525B] focus:outline-none focus:border-[#b68d40] transition-colors rounded-none" />
                     </div>
 
                     <div>
                       <label className="block font-sora text-[10px] md:text-xs uppercase tracking-wider text-[#A1A1AA] mb-1.5 font-medium">Sujet</label>
-                      <input type="text" name="subject" value={formData.subject} onChange={handleChange} placeholder="Objet de votre demande" className="w-full bg-[#0E0F10] border border-white/15 px-3.5 py-2.5 md:py-3 text-xs md:text-sm text-white placeholder:text-[#52525B] focus:outline-none focus:border-[#b68d40] transition-colors rounded-none" />
+                      <input type="text" name="subject" value={formData.subject} onChange={handleChange} placeholder="Objet de votre demande" className="w-full bg-[#0E0F10] border border-white/15 px-3.5 py-2.5 md:py-3 text-base md:text-sm text-white placeholder:text-[#52525B] focus:outline-none focus:border-[#b68d40] transition-colors rounded-none" />
                     </div>
 
                     <div>
                       <label className="block font-sora text-[10px] md:text-xs uppercase tracking-wider text-[#A1A1AA] mb-1.5 font-medium">Votre Message *</label>
                       <div className={`product-message-wrap ${hasSpotlight ? 'product-message-spotlight' : ''}`}>
                         <span className="product-message-streak product-message-streak-left" aria-hidden="true" />
-                        <textarea ref={messageRef} name="message" rows={4} required value={formData.message} onFocus={() => setHasSpotlight(false)} onChange={(e) => { setHasSpotlight(false); handleChange(e); }} placeholder="Précisez votre projet, les modèles qui vous intéressent ou vos dimensions souhaitées..." className="contact-field w-full bg-[#0E0F10] border border-white/15 p-3.5 md:p-4 text-xs md:text-sm text-white placeholder:text-[#52525B] focus:outline-none focus:border-[#b68d40] transition-colors resize-none rounded-none" />
+                        <textarea ref={messageRef} name="message" rows={4} required value={formData.message} onFocus={() => setHasSpotlight(false)} onChange={(e) => { setHasSpotlight(false); handleChange(e); }} placeholder="Précisez votre projet, les modèles qui vous intéressent ou vos dimensions souhaitées..." className="contact-field w-full bg-[#0E0F10] border border-white/15 p-3.5 md:p-4 text-base md:text-sm text-white placeholder:text-[#52525B] focus:outline-none focus:border-[#b68d40] transition-colors resize-none rounded-none" />
                         <span className="product-message-streak product-message-streak-right" aria-hidden="true" />
                       </div>
                     </div>
