@@ -61,7 +61,7 @@ export default function RoomsPage() {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
                 {roomProducts.map((product, j) => (
                   <LuxuryReveal key={product.id} delay={j * 80}>
-                    <ProductCard product={product} />
+                    <ProductCard product={product} className="w-full" />
                   </LuxuryReveal>
                 ))}
               </div>

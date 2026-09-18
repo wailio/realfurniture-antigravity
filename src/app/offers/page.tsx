@@ -80,7 +80,7 @@ export default function OffersPage() {
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6">
             {discountedProducts.map((product, i) => (
               <LuxuryReveal key={product.id} delay={i * 80}>
-                <ProductCard product={product} />
+                <ProductCard product={product} className="w-full" />
               </LuxuryReveal>
             ))}
           </div>

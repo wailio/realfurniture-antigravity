@@ -98,13 +98,12 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                           alt={relProduct.name}
                           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                         />
-                        <button 
-                          type="button"
-                          aria-label="Ajouter aux favoris"
+                        <div 
+                          aria-hidden="true"
                           className="absolute top-1.5 right-1.5 bg-black/60 backdrop-blur-md rounded-full p-1.5 hover:bg-[#b68d40] text-white hover:text-black transition-colors"
                         >
                           <Heart size={13} />
-                        </button>
+                        </div>
                       </div>
 
                       {/* Content */}
@@ -144,10 +143,8 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                 { label: 'Armoire', href: '/all-products?category=armoire' },
                 { label: 'Accessoires', href: '/all-products?category=accessories' },
               ].map((cat) => (
-                <Link key={cat.label} href={cat.href}>
-                  <button className="px-3 md:px-5 py-1.5 md:py-2 rounded-lg font-sora font-medium transition-all duration-300 text-xs md:text-sm bg-[#0E0F10] text-[#f4d79a] hover:bg-[#b68d40] hover:text-black border border-white/15 hover:border-[#b68d40] whitespace-nowrap shadow-sm">
-                    {cat.label}
-                  </button>
+                <Link key={cat.label} href={cat.href} className="px-3 md:px-5 py-1.5 md:py-2 rounded-lg font-sora font-medium transition-all duration-300 text-xs md:text-sm bg-[#0E0F10] text-[#f4d79a] hover:bg-[#b68d40] hover:text-black border border-white/15 hover:border-[#b68d40] whitespace-nowrap shadow-sm inline-block">
+                  {cat.label}
                 </Link>
               ))}
             </div>

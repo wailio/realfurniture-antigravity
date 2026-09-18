@@ -13,11 +13,11 @@ export default function AboutPage() {
       {/* ── Section 1 - Page Hero ── */}
       <section className="relative w-full pt-28 pb-20 md:pt-40 md:pb-28 bg-gradient-to-b from-[#141518] to-[#0E0F10] overflow-hidden flex flex-col items-center justify-center text-center px-4">
         <LuxuryReveal>
-          <div className="inline-flex items-center gap-2 border border-white/15 px-4 py-1.5 rounded-none text-xs uppercase tracking-[3px] text-[#b68d40] mb-6">
-            <Sparkles className="w-3.5 h-3.5" />
+          <div className="inline-flex items-center gap-1.5 md:gap-2 border border-white/15 px-3 py-1 md:px-4 md:py-1.5 rounded-none text-[10px] md:text-xs uppercase tracking-[2px] md:tracking-[3px] text-[#b68d40] mb-4 md:mb-6">
+            <Sparkles className="w-3 h-3 md:w-3.5 md:h-3.5" />
             <span>Maison de Haute Création</span>
           </div>
-          <h1 className="font-fraunces font-light text-4xl md:text-6xl lg:text-7xl text-white tracking-tight mb-6">
+          <h1 className="font-fraunces font-light text-3xl md:text-6xl lg:text-7xl text-white tracking-tight mb-4 md:mb-6">
             À Propos de Château d&apos;art
           </h1>
           <div className="flex justify-center w-full mb-8">
