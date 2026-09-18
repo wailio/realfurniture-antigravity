@@ -55,23 +55,23 @@ export function Header({ theme = 'dark' }: HeaderProps) {
       {/* ── ROW 1: Top Promo Bar (Dark, Full Width, with Socials on Left) ── */}
       <div className="bg-[#0A0B0C] text-[#F2F1EF] text-xs py-1.5 px-4 sm:px-6 md:px-10 lg:px-12 border-b border-white/5">
         <div className="max-w-[1440px] mx-auto flex items-center justify-between">
-          {/* LEFT: Social Icons — desktop only */}
-          <div className="hidden md:flex items-center gap-3">
-            <a href="https://www.instagram.com/chateau_dart_meubles/" target="_blank" rel="noopener noreferrer" aria-label="Instagram Château d'art" className="text-[#B7BBC0] hover:text-[#b68d40] transition-colors p-0.5">
-              <Instagram className="w-3.5 h-3.5" />
+          {/* LEFT: Social Icons — all screens, tiny on mobile */}
+          <div className="flex items-center gap-1.5 md:gap-3">
+            <a href="https://www.instagram.com/chateau_dart_meubles/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-[#B7BBC0] hover:text-[#b68d40] transition-colors p-0.5">
+              <Instagram className="w-2.5 h-2.5 md:w-3.5 md:h-3.5" />
             </a>
-            <a href="https://www.facebook.com/chateau.dart.alger/" target="_blank" rel="noopener noreferrer" aria-label="Facebook Château d'art" className="text-[#B7BBC0] hover:text-[#b68d40] transition-colors p-0.5">
-              <Facebook className="w-3.5 h-3.5" />
+            <a href="https://www.facebook.com/chateau.dart.alger/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="text-[#B7BBC0] hover:text-[#b68d40] transition-colors p-0.5">
+              <Facebook className="w-2.5 h-2.5 md:w-3.5 md:h-3.5" />
             </a>
-            <a href="https://www.tiktok.com/@chateaudart_meubles" target="_blank" rel="noopener noreferrer" aria-label="TikTok Château d'art" className="text-[#B7BBC0] hover:text-[#b68d40] transition-colors p-0.5">
-              <TikTokIcon className="w-3.5 h-3.5" />
+            <a href="https://www.tiktok.com/@chateaudart_meubles" target="_blank" rel="noopener noreferrer" aria-label="TikTok" className="text-[#B7BBC0] hover:text-[#b68d40] transition-colors p-0.5">
+              <TikTokIcon className="w-2.5 h-2.5 md:w-3.5 md:h-3.5" />
             </a>
-            <a href="https://www.youtube.com/@chateaudart/featured" target="_blank" rel="noopener noreferrer" aria-label="YouTube Château d'art" className="text-[#B7BBC0] hover:text-[#b68d40] transition-colors p-0.5">
-              <Youtube className="w-3.5 h-3.5" />
+            <a href="https://www.youtube.com/@chateaudart/featured" target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="text-[#B7BBC0] hover:text-[#b68d40] transition-colors p-0.5 hidden sm:block">
+              <Youtube className="w-2.5 h-2.5 md:w-3.5 md:h-3.5" />
             </a>
           </div>
 
-          {/* CENTER/LEFT on mobile: Promo — right-aligned on mobile, centered on desktop */}
+          {/* RIGHT: Promo text — right on mobile, center on desktop */}
           <div className="flex-1 md:text-center text-right font-medium tracking-wider">
             <span className="md:hidden text-[9px] text-[#B7BBC0]">Sale Up To 50% Off</span>
             <span className="hidden md:inline text-[11px]">Exclusive Furniture Sale Up To 50% Off</span>
@@ -371,156 +371,53 @@ export function Header({ theme = 'dark' }: HeaderProps) {
         </div>
       </nav>
 
-      {/* ── MOBILE MENU OVERLAY (when open) ── */}
+      {/* ── MOBILE MENU OVERLAY ── */}
       {isMobileMenuOpen && (
-        <div className="md:hidden bg-[#0E0F10] text-[#F2F1EF] border-b border-[#27272A] px-6 py-6 animate-fade-in">
-          {/* Mobile phone block */}
-          <Link
-            href="/contact"
+        <div className="md:hidden backdrop-blur-xl bg-[#0A0B0C]/88 border-b border-white/10 px-5 py-4 animate-fade-in shadow-2xl">
+          {/* Phone shortcut */}
+          <a
+            href="tel:0561719100"
             onClick={() => setIsMobileMenuOpen(false)}
-            className="flex items-center gap-3 p-3.5 mb-5 rounded-lg bg-[#18191B] border border-[rgba(199,203,209,0.15)]"
+            className="flex items-center gap-2.5 p-2.5 mb-3 bg-white/5 border border-white/10 rounded-sm"
           >
-            <div className="w-10 h-10 rounded-full flex items-center justify-center bg-[#b68d40] text-white">
-              <Phone className="w-4 h-4" />
+            <div className="w-7 h-7 rounded-full flex items-center justify-center bg-[#b68d40] text-white flex-shrink-0">
+              <Phone className="w-3.5 h-3.5" />
             </div>
             <div>
-              <span className="text-[11px] text-[#B7BBC0] block">
-                Need Help ?
-              </span>
-              <span className="text-sm font-bold text-[#F2F1EF]">
-                0561 71 91 00
-              </span>
+              <span className="text-[10px] text-[#B7BBC0] block leading-none mb-0.5">Need Help?</span>
+              <span className="text-xs font-bold text-white">0561 71 91 00</span>
             </div>
-          </Link>
+          </a>
 
           {/* Nav Links */}
-          <nav className="flex flex-col gap-3 font-medium text-base">
-            <Link
-              href="/"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="py-2 border-b border-[#1F2022] hover:text-[#b68d40] transition-colors"
-            >
-              Accueil
-            </Link>
+          <nav className="flex flex-col text-sm font-medium text-[#E4E4E7]">
+            <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="py-2 border-b border-white/8 hover:text-[#b68d40] transition-colors">Accueil</Link>
 
-            {/* Collapsible Produits */}
             <div>
               <button
                 type="button"
                 onClick={() => setIsMobileProductsOpen(!isMobileProductsOpen)}
-                className="w-full flex items-center justify-between py-2 border-b border-[#1F2022] text-[#b68d40]"
+                className="w-full flex items-center justify-between py-2 border-b border-white/8 text-[#b68d40]"
               >
                 <span>Produits</span>
-                <ChevronDown
-                  className={`w-4 h-4 transition-transform ${
-                    isMobileProductsOpen ? 'rotate-180' : ''
-                  }`}
-                />
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isMobileProductsOpen ? 'rotate-180' : ''}`} />
               </button>
-
               {isMobileProductsOpen && (
-                <div className="pl-4 py-2 flex flex-col gap-2 bg-[#18191B] rounded-md my-1 text-sm text-[#B7BBC0]">
-                  <Link
-                    href="/all-products"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="py-1 text-white hover:text-[#b68d40]"
-                  >
-                    Tous les produits
-                  </Link>
+                <div className="pl-3 py-1.5 flex flex-col gap-1 bg-white/5 rounded-sm my-1 text-xs text-[#B7BBC0]">
+                  <Link href="/all-products" onClick={() => setIsMobileMenuOpen(false)} className="py-1 text-white hover:text-[#b68d40]">Tous les produits</Link>
                   {categories.map((cat) => (
-                    <Link
-                      key={cat.name}
-                      href={cat.href}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className="py-1 hover:text-[#b68d40]"
-                    >
-                      {cat.name}
-                    </Link>
+                    <Link key={cat.name} href={cat.href} onClick={() => setIsMobileMenuOpen(false)} className="py-1 hover:text-[#b68d40]">{cat.name}</Link>
                   ))}
                 </div>
               )}
             </div>
 
-            <Link
-              href="/rooms"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="py-2 border-b border-[#1F2022] hover:text-[#b68d40] transition-colors"
-            >
-              Pièces
-            </Link>
-
-            <Link
-              href="/inspirations"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="py-2 border-b border-[#1F2022] hover:text-[#b68d40] transition-colors"
-            >
-              Inspirations
-            </Link>
-
-            <Link
-              href="/offers"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="py-2 border-b border-[#1F2022] hover:text-[#b68d40] transition-colors"
-            >
-              Offres
-            </Link>
-
-            <Link
-              href="/about"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="py-2 border-b border-[#1F2022] hover:text-[#b68d40] transition-colors"
-            >
-              À Propos
-            </Link>
-
-            <Link
-              href="/contact"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="py-2 hover:text-[#b68d40] transition-colors"
-            >
-              Contact
-            </Link>
+            <Link href="/rooms" onClick={() => setIsMobileMenuOpen(false)} className="py-2 border-b border-white/8 hover:text-[#b68d40] transition-colors">Pièces</Link>
+            <Link href="/inspirations" onClick={() => setIsMobileMenuOpen(false)} className="py-2 border-b border-white/8 hover:text-[#b68d40] transition-colors">Inspirations</Link>
+            <Link href="/offers" onClick={() => setIsMobileMenuOpen(false)} className="py-2 border-b border-white/8 hover:text-[#b68d40] transition-colors">Offres</Link>
+            <Link href="/about" onClick={() => setIsMobileMenuOpen(false)} className="py-2 border-b border-white/8 hover:text-[#b68d40] transition-colors">À Propos</Link>
+            <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} className="py-2 hover:text-[#b68d40] transition-colors">Contact</Link>
           </nav>
-
-          {/* Mobile Social Links */}
-          <div className="mt-6 pt-5 border-t border-white/10 flex items-center justify-center gap-5">
-            <a
-              href="https://www.instagram.com/chateau_dart_meubles/"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Instagram"
-              className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-[#B7BBC0] hover:text-[#b68d40]"
-            >
-              <Instagram className="w-4 h-4" />
-            </a>
-            <a
-              href="https://www.facebook.com/chateau.dart.alger/"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Facebook"
-              className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-[#B7BBC0] hover:text-[#b68d40]"
-            >
-              <Facebook className="w-4 h-4" />
-            </a>
-            <a
-              href="https://www.tiktok.com/@chateaudart_meubles"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="TikTok"
-              className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-[#B7BBC0] hover:text-[#b68d40]"
-            >
-              <TikTokIcon className="w-4 h-4" />
-            </a>
-            <a
-              href="https://www.youtube.com/@chateaudart/featured"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="YouTube"
-              className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-[#B7BBC0] hover:text-[#b68d40]"
-            >
-              <Youtube className="w-4 h-4" />
-            </a>
-          </div>
         </div>
       )}
     </header>

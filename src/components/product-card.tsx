@@ -10,7 +10,7 @@ interface ProductCardProps {
   className?: string;
 }
 
-export function ProductCard({ product, className = 'w-40 md:w-[350px]' }: ProductCardProps) {
+export function ProductCard({ product, className = 'w-[72vw] md:w-[350px]' }: ProductCardProps) {
   return (
     <Link href={`/product/${product.id}`} className={`group flex-shrink-0 ${className} block`}>
       <div className="bg-[#18191B] border border-[rgba(199,203,209,0.18)] transition-all duration-300 group-hover:border-[rgba(199,203,209,0.4)] group-hover:-translate-y-0.5 group-hover:shadow-[0_8px_30px_rgba(0,0,0,0.5)] h-full flex flex-col relative overflow-hidden">
