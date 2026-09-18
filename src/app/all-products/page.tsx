@@ -97,7 +97,7 @@ function AllProductsContent() {
                 <button
                   key={cat.slug}
                   onClick={() => setActiveCategory(cat.slug)}
-                  className={`px-5 py-2.5 rounded-sm font-sora text-xs uppercase tracking-wider transition-all duration-200 whitespace-nowrap ${
+                  className={`interactive-tap px-5 py-2.5 rounded-sm font-sora text-xs uppercase tracking-wider transition-all duration-200 whitespace-nowrap cursor-pointer ${
                     isActive
                       ? 'bg-[#b68d40] text-white font-bold shadow-md'
                       : 'bg-[#121316] text-[#A1A1AA] hover:text-white border border-white/10 hover:border-white/20'

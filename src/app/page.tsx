@@ -244,7 +244,7 @@ export default function HomePage() {
           <div className="flex overflow-x-auto md:overflow-visible md:flex-wrap justify-start md:justify-center gap-4 sm:gap-6 md:gap-8 lg:gap-10 pb-1 scrollbar-hide">
             {categories.map((cat, index) => (
               <LuxuryReveal key={cat.name} delay={index * 60} className="shrink-0">
-                <Link href={`/all-products?category=${cat.slug}`} className="group flex flex-col items-center">
+                <Link href={`/all-products?category=${cat.slug}`} className="interactive-tap group flex flex-col items-center">
                   <div className="w-22 h-22 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-30 lg:h-30 rounded-full overflow-hidden border-2 border-white/15 group-hover:border-[#b68d40] transition-all duration-500 mb-2.5 shadow-md group-hover:shadow-[0_8px_20px_rgba(182,141,64,0.25)]">
                     <img
                       src={cat.image}
@@ -427,13 +427,13 @@ export default function HomePage() {
                       <div className="flex items-center gap-2">
                         <Link
                           href={`/product/${product.id}`}
-                          className="px-3 sm:px-4 py-2 bg-white/5 hover:bg-white/10 text-white text-xs font-medium tracking-wider uppercase border border-white/15 transition-all"
+                          className="interactive-tap px-3 sm:px-4 py-2 bg-white/5 hover:bg-white/10 text-white text-xs font-medium tracking-wider uppercase border border-white/15 transition-all"
                         >
                           Détails
                         </Link>
                         <Link
                           href={`/contact?product=${encodeURIComponent(product.name)}&subject=${encodeURIComponent(`Commande rapide: ${product.name}`)}#contact-form`}
-                          className="px-4 sm:px-5 py-2 bg-[#b68d40] hover:bg-[#c99b4d] text-black text-xs font-bold tracking-wider uppercase transition-all shadow-md hover:scale-105"
+                          className="interactive-tap px-4 sm:px-5 py-2 bg-[#b68d40] hover:bg-[#c99b4d] text-black text-xs font-bold tracking-wider uppercase transition-all shadow-md hover:scale-105"
                         >
                           Commander
                         </Link>
@@ -449,7 +449,7 @@ export default function HomePage() {
           <div className="mt-12 md:mt-16 text-center">
             <Link 
               href="/all-products" 
-              className="inline-flex items-center gap-2 border border-white/20 bg-[#0E0F10] text-white px-10 py-4 uppercase tracking-[2.5px] text-xs font-bold transition-all duration-300 hover:bg-[#b68d40] hover:border-[#b68d40] hover:text-black shadow-xl hover:scale-105"
+              className="interactive-tap inline-flex items-center gap-2 border border-white/20 bg-[#0E0F10] text-white px-10 py-4 uppercase tracking-[2.5px] text-xs font-bold transition-all duration-300 hover:bg-[#b68d40] hover:border-[#b68d40] hover:text-black shadow-xl hover:scale-105"
             >
               <span>Voir tout le catalogue complet</span>
               <ArrowRight size={14} />

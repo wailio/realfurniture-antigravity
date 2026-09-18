@@ -7,6 +7,42 @@ import { Footer } from '@/components/footer';
 import { LuxuryReveal } from '@/components/luxury-reveal';
 import { Phone, Mail, MapPin, Clock, MessageSquare, Check, ArrowRight, ArrowUpRight } from 'lucide-react';
 
+function ShowroomMap() {
+  return (
+    <div className="w-full relative rounded-sm overflow-hidden border border-white/10 hover:border-[#b68d40]/50 transition-all duration-500 shadow-xl bg-[#121316]">
+      <div className="flex items-center justify-between px-3.5 py-2.5 bg-[#18191B] border-b border-white/10 text-xs font-sora">
+        <div className="flex items-center gap-2">
+          <MapPin className="w-3.5 h-3.5 text-[#b68d40]" />
+          <span className="font-semibold text-white text-[11px] md:text-xs">Château D&apos;Art &mdash; Showroom</span>
+        </div>
+        <span className="text-[10px] text-[#A1A1AA]">Alger, Algérie</span>
+      </div>
+      <div className="relative w-full h-[190px] sm:h-[220px] md:h-[260px] overflow-hidden">
+        <iframe 
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3198.5906046037494!2d3.060058575713971!3d36.70837457287061!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x128fad5fae229a89%3A0xa8afd38ca1b6e44f!2sCh%C3%A2teau%20D'Art%20-%20meubles!5e0!3m2!1sfr!2sdz!4v1789588881010!5m2!1sfr!2sdz" 
+          width="100%" 
+          height="100%" 
+          style={{ border: 0 }} 
+          allowFullScreen 
+          loading="lazy" 
+          referrerPolicy="strict-origin-when-cross-origin" 
+          title="Château D'Art Showroom" 
+          className="w-full h-full grayscale contrast-[1.15] brightness-[0.8] hover:grayscale-0 transition-all duration-700" 
+        />
+        <a 
+          href="https://maps.google.com/?q=Ch%C3%A2teau+D'Art+-+meubles" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="interactive-tap absolute bottom-3 right-3 z-10 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-sm bg-[#b68d40] text-white text-[11px] font-semibold hover:bg-[#a37c35] transition-all shadow-lg"
+        >
+          <span>Itinéraire</span>
+          <ArrowUpRight className="w-3 h-3" />
+        </a>
+      </div>
+    </div>
+  );
+}
+
 function ContactContent() {
   const searchParams = useSearchParams();
   const formRef = useRef<HTMLFormElement>(null);
@@ -122,128 +158,179 @@ function ContactContent() {
         </div>
       </section>
 
-      <section className="w-full py-8 md:py-24 px-4 md:px-12 lg:px-24 border-t border-white/5">
-        <div className="max-w-2xl md:max-w-7xl mx-auto flex flex-col lg:grid lg:grid-cols-2 lg:gap-16 lg:items-start gap-6">
+      <section className="w-full py-6 md:py-20 px-4 sm:px-6 md:px-12 lg:px-24 border-t border-white/5 overflow-hidden">
+        <div className="max-w-xl md:max-w-7xl mx-auto flex flex-col lg:grid lg:grid-cols-2 lg:gap-16 lg:items-start gap-8">
           
-          {/* Contact Form � FIRST on mobile */}
-          <div className="order-1 lg:order-2">
-            <LuxuryReveal variant="right" delay={200}>
-              <form ref={formRef} onSubmit={handleSubmit} className="bg-[#121316] border border-white/10 p-6 md:p-10 rounded-sm shadow-xl space-y-5">
-                <div>
+          {/* ── Left Column: Contact Cards + WhatsApp + Map (Above form on mobile) ── */}
+          <div className="w-full flex flex-col gap-4 items-center">
+            
+            {/* 2x2 Info Cards — Centered & uniform */}
+            <LuxuryReveal className="w-full">
+              <div className="grid grid-cols-2 gap-2.5 sm:gap-3.5 w-full">
+                <a 
+                  href="tel:0561719100" 
+                  className="interactive-tap group bg-[#121316] border border-white/10 hover:border-[#b68d40]/50 p-3 sm:p-4 md:p-6 flex flex-col items-center text-center rounded-sm transition-all duration-300 shadow-md"
+                >
+                  <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-[#b68d40] mb-2 md:mb-3 group-hover:bg-[#b68d40] group-hover:text-white transition-colors">
+                    <Phone size={14} />
+                  </div>
+                  <h3 className="font-fraunces text-xs md:text-base text-white mb-0.5 leading-tight font-medium">Téléphone</h3>
+                  <p className="font-sora text-[10px] md:text-xs text-[#b68d40] font-bold">0561 71 91 00</p>
+                  <span className="text-[9px] text-[#71717A] mt-1 hidden sm:block">Appel / WhatsApp</span>
+                </a>
+
+                <a 
+                  href="mailto:chateau.art01@gmail.com" 
+                  className="interactive-tap group bg-[#121316] border border-white/10 hover:border-[#b68d40]/50 p-3 sm:p-4 md:p-6 flex flex-col items-center text-center rounded-sm transition-all duration-300 shadow-md"
+                >
+                  <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-[#b68d40] mb-2 md:mb-3 group-hover:bg-[#b68d40] group-hover:text-white transition-colors">
+                    <Mail size={14} />
+                  </div>
+                  <h3 className="font-fraunces text-xs md:text-base text-white mb-0.5 leading-tight font-medium">Email</h3>
+                  <p className="font-sora text-[9px] md:text-xs text-white font-medium truncate max-w-[120px] sm:max-w-none">chateau.art01@gmail.com</p>
+                  <span className="text-[9px] text-[#71717A] mt-1 hidden sm:block">Réponse 24h</span>
+                </a>
+
+                <div className="bg-[#121316] border border-white/10 p-3 sm:p-4 md:p-6 flex flex-col items-center text-center rounded-sm shadow-md">
+                  <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-[#b68d40] mb-2 md:mb-3">
+                    <MapPin size={14} />
+                  </div>
+                  <h3 className="font-fraunces text-xs md:text-base text-white mb-0.5 leading-tight font-medium">Livraison</h3>
+                  <p className="font-sora text-[10px] md:text-xs text-[#A1A1AA] leading-snug">
+                    <strong className="text-white">58 wilayas</strong> d&apos;Algérie
+                  </p>
+                  <span className="text-[9px] text-[#71717A] mt-1 hidden sm:block">Partout en Algérie</span>
+                </div>
+
+                <div className="bg-[#121316] border border-white/10 p-3 sm:p-4 md:p-6 flex flex-col items-center text-center rounded-sm shadow-md">
+                  <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-[#b68d40] mb-2 md:mb-3">
+                    <Clock size={14} />
+                  </div>
+                  <h3 className="font-fraunces text-xs md:text-base text-white mb-0.5 leading-tight font-medium">Horaires</h3>
+                  <p className="font-sora text-[10px] md:text-xs text-[#A1A1AA] leading-snug">
+                    6/7j &middot; <span className="text-white font-semibold">09h30 - 20h</span>
+                  </p>
+                  <span className="text-[9px] text-[#71717A] mt-1 hidden sm:block">Showroom ouvert</span>
+                </div>
+              </div>
+            </LuxuryReveal>
+
+            {/* Direct WhatsApp banner */}
+            <LuxuryReveal className="w-full">
+              <div className="w-full p-3.5 sm:p-4 md:p-5 rounded-sm bg-[#121316] border border-[#b68d40]/30 flex items-center justify-between gap-3 shadow-md">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 md:w-9 md:h-9 rounded-full bg-[#25D366]/20 border border-[#25D366]/40 flex items-center justify-center text-[#25D366] flex-shrink-0">
+                    <MessageSquare size={15} />
+                  </div>
+                  <div className="text-left">
+                    <h4 className="font-sora text-xs md:text-sm font-bold text-white leading-tight">Besoin d&apos;aide rapide ?</h4>
+                    <p className="text-[10px] md:text-xs text-[#A1A1AA]">Discutez avec un conseiller en direct.</p>
+                  </div>
+                </div>
+                <a 
+                  href="https://wa.me/213561719100" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="interactive-tap px-3.5 py-2 bg-[#25D366] hover:bg-[#20bd5a] text-white text-[10px] md:text-xs font-bold rounded-sm uppercase tracking-wider flex items-center gap-1.5 flex-shrink-0 transition-colors shadow-sm"
+                >
+                  <span>WhatsApp</span>
+                  <ArrowRight size={12} />
+                </a>
+              </div>
+            </LuxuryReveal>
+
+            {/* Showroom Map (Desktop only in left column; appears under form on mobile) */}
+            <div className="hidden lg:block w-full">
+              <LuxuryReveal className="w-full">
+                <ShowroomMap />
+              </LuxuryReveal>
+            </div>
+          </div>
+
+          {/* ── Right Column: Contact Form (Under info cards on mobile) ── */}
+          <div className="w-full">
+            <LuxuryReveal className="w-full">
+              <form 
+                ref={formRef} 
+                onSubmit={handleSubmit} 
+                className="w-full bg-[#121316] border border-white/10 p-5 sm:p-7 md:p-10 rounded-sm shadow-xl space-y-4 md:space-y-5 text-left"
+              >
+                <div className="text-center sm:text-left">
                   <h3 className="font-fraunces text-xl md:text-2xl text-white font-light mb-1">Envoyez-nous un Message</h3>
                   <p className="font-sora text-xs text-[#A1A1AA]">Remplissez ce formulaire et notre équipe vous recontactera dans les plus brefs délais.</p>
                 </div>
+
                 {prefilledProduct && (
                   <div className="p-3 bg-[#b68d40]/15 border border-[#b68d40]/30 rounded-sm text-xs text-white flex items-center justify-between">
                     <span>Demande liée à : <strong>{prefilledProduct}</strong></span>
-                    <button type="button" onClick={() => setPrefilledProduct(null)} className="text-[#b68d40] hover:text-white font-bold ml-2">�S"</button>
+                    <button type="button" onClick={() => setPrefilledProduct(null)} className="interactive-tap text-[#b68d40] hover:text-white font-bold ml-2">✕</button>
                   </div>
                 )}
+
                 {submitted ? (
-                  <div className="py-12 text-center space-y-4">
-                    <div className="w-12 h-12 rounded-full bg-[#b68d40]/20 border border-[#b68d40] mx-auto flex items-center justify-center text-[#b68d40]"><Check size={24} /></div>
-                    <h4 className="font-fraunces text-xl text-white">Message Reçu avec Succès</h4>
+                  <div className="py-10 text-center space-y-3">
+                    <div className="w-11 h-11 rounded-full bg-[#b68d40]/20 border border-[#b68d40] mx-auto flex items-center justify-center text-[#b68d40]"><Check size={22} /></div>
+                    <h4 className="font-fraunces text-lg md:text-xl text-white">Message Reçu avec Succès</h4>
                     <p className="font-sora text-xs text-[#A1A1AA] max-w-md mx-auto">Merci. Un conseiller Château d&apos;art vous contactera très bientôt.</p>
-                    <button type="button" onClick={() => setSubmitted(false)} className="text-xs uppercase tracking-wider text-[#b68d40] hover:underline pt-2 inline-block font-semibold">Envoyer un autre message</button>
+                    <button type="button" onClick={() => setSubmitted(false)} className="interactive-tap text-xs uppercase tracking-wider text-[#b68d40] hover:underline pt-2 inline-block font-semibold">Envoyer un autre message</button>
                   </div>
                 ) : (
                   <>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                       <div>
-                        <label className="block font-sora text-xs uppercase tracking-wider text-[#A1A1AA] mb-2 font-medium">Nom complet *</label>
-                        <input type="text" name="name" required value={formData.name} onChange={handleChange} placeholder="Votre nom et prénom" className="w-full bg-[#0E0F10] border border-white/15 px-4 py-3 text-sm text-white placeholder:text-[#52525B] focus:outline-none focus:border-[#b68d40] transition-colors" />
+                        <label className="block font-sora text-[10px] md:text-xs uppercase tracking-wider text-[#A1A1AA] mb-1.5 font-medium">Nom complet *</label>
+                        <input type="text" name="name" required value={formData.name} onChange={handleChange} placeholder="Votre nom et prénom" className="w-full bg-[#0E0F10] border border-white/15 px-3.5 py-2.5 md:py-3 text-xs md:text-sm text-white placeholder:text-[#52525B] focus:outline-none focus:border-[#b68d40] transition-colors rounded-none" />
                       </div>
                       <div>
-                        <label className="block font-sora text-xs uppercase tracking-wider text-[#A1A1AA] mb-2 font-medium">Téléphone *</label>
-                        <input type="tel" name="phone" required value={formData.phone} onChange={handleChange} placeholder="Ex: 0550 XX XX XX" className="w-full bg-[#0E0F10] border border-white/15 px-4 py-3 text-sm text-white placeholder:text-[#52525B] focus:outline-none focus:border-[#b68d40] transition-colors" />
+                        <label className="block font-sora text-[10px] md:text-xs uppercase tracking-wider text-[#A1A1AA] mb-1.5 font-medium">Téléphone *</label>
+                        <input type="tel" name="phone" required value={formData.phone} onChange={handleChange} placeholder="Ex: 0550 XX XX XX" className="w-full bg-[#0E0F10] border border-white/15 px-3.5 py-2.5 md:py-3 text-xs md:text-sm text-white placeholder:text-[#52525B] focus:outline-none focus:border-[#b68d40] transition-colors rounded-none" />
                       </div>
                     </div>
+
                     <div>
-                      <label className="block font-sora text-xs uppercase tracking-wider text-[#A1A1AA] mb-2 font-medium">Adresse email *</label>
-                      <input type="email" name="email" required value={formData.email} onChange={handleChange} placeholder="nom@exemple.com" className="w-full bg-[#0E0F10] border border-white/15 px-4 py-3 text-sm text-white placeholder:text-[#52525B] focus:outline-none focus:border-[#b68d40] transition-colors" />
+                      <label className="block font-sora text-[10px] md:text-xs uppercase tracking-wider text-[#A1A1AA] mb-1.5 font-medium">Adresse email *</label>
+                      <input type="email" name="email" required value={formData.email} onChange={handleChange} placeholder="nom@exemple.com" className="w-full bg-[#0E0F10] border border-white/15 px-3.5 py-2.5 md:py-3 text-xs md:text-sm text-white placeholder:text-[#52525B] focus:outline-none focus:border-[#b68d40] transition-colors rounded-none" />
                     </div>
+
                     <div>
-                      <label className="block font-sora text-xs uppercase tracking-wider text-[#A1A1AA] mb-2 font-medium">Sujet</label>
-                      <input type="text" name="subject" value={formData.subject} onChange={handleChange} placeholder="Objet de votre demande" className="w-full bg-[#0E0F10] border border-white/15 px-4 py-3 text-sm text-white placeholder:text-[#52525B] focus:outline-none focus:border-[#b68d40] transition-colors" />
+                      <label className="block font-sora text-[10px] md:text-xs uppercase tracking-wider text-[#A1A1AA] mb-1.5 font-medium">Sujet</label>
+                      <input type="text" name="subject" value={formData.subject} onChange={handleChange} placeholder="Objet de votre demande" className="w-full bg-[#0E0F10] border border-white/15 px-3.5 py-2.5 md:py-3 text-xs md:text-sm text-white placeholder:text-[#52525B] focus:outline-none focus:border-[#b68d40] transition-colors rounded-none" />
                     </div>
+
                     <div>
-                      <label className="block font-sora text-xs uppercase tracking-wider text-[#A1A1AA] mb-2 font-medium">Votre Message *</label>
+                      <label className="block font-sora text-[10px] md:text-xs uppercase tracking-wider text-[#A1A1AA] mb-1.5 font-medium">Votre Message *</label>
                       <div className={`product-message-wrap ${hasSpotlight ? 'product-message-spotlight' : ''}`}>
                         <span className="product-message-streak product-message-streak-left" aria-hidden="true" />
-                        <textarea ref={messageRef} name="message" rows={5} required value={formData.message} onFocus={() => setHasSpotlight(false)} onChange={(e) => { setHasSpotlight(false); handleChange(e); }} placeholder="Précisez votre projet, les modèles qui vous intéressent ou vos dimensions souhaitées..." className="contact-field w-full bg-[#0E0F10] border border-white/15 p-4 text-sm text-white placeholder:text-[#52525B] focus:outline-none focus:border-[#b68d40] transition-colors resize-none" />
+                        <textarea ref={messageRef} name="message" rows={4} required value={formData.message} onFocus={() => setHasSpotlight(false)} onChange={(e) => { setHasSpotlight(false); handleChange(e); }} placeholder="Précisez votre projet, les modèles qui vous intéressent ou vos dimensions souhaitées..." className="contact-field w-full bg-[#0E0F10] border border-white/15 p-3.5 md:p-4 text-xs md:text-sm text-white placeholder:text-[#52525B] focus:outline-none focus:border-[#b68d40] transition-colors resize-none rounded-none" />
                         <span className="product-message-streak product-message-streak-right" aria-hidden="true" />
                       </div>
                     </div>
-                    <button type="submit" disabled={loading} className="w-full bg-[#b68d40] hover:bg-[#a37c35] text-white py-4 uppercase tracking-[2px] text-xs font-bold transition-all duration-300 shadow-xl disabled:opacity-50 flex items-center justify-center gap-2">
-                      {loading ? <span>Envoi en cours...</span> : <><span>Transmettre ma demande</span><ArrowRight size={14} /></>}
+
+                    <button 
+                      type="submit" 
+                      disabled={loading} 
+                      className="interactive-tap w-full bg-[#b68d40] hover:bg-[#a37c35] text-white py-3.5 md:py-4 uppercase tracking-[2px] text-xs font-bold transition-all duration-300 shadow-xl disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer rounded-none"
+                    >
+                      {loading ? (
+                        <span>Envoi en cours...</span>
+                      ) : (
+                        <>
+                          <span>Transmettre ma demande</span>
+                          <ArrowRight size={13} />
+                        </>
+                      )}
                     </button>
                   </>
                 )}
               </form>
             </LuxuryReveal>
-          </div>
 
-          {/* Info cards + Map � SECOND on mobile */}
-          <div className="order-2 lg:order-1 space-y-4">
-            <LuxuryReveal variant="left">
-              {/* 2x2 compact info cards */}
-              <div className="grid grid-cols-2 gap-3">
-                <a href="tel:0561719100" className="group bg-[#121316] border border-white/10 hover:border-[#b68d40]/50 p-3 md:p-6 flex flex-col items-start rounded-sm transition-all duration-300">
-                  <div className="w-7 h-7 md:w-10 md:h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-[#b68d40] mb-2 md:mb-4 group-hover:bg-[#b68d40] group-hover:text-white transition-colors"><Phone size={13} /></div>
-                  <h3 className="font-fraunces text-xs md:text-lg text-white mb-0.5 leading-tight">Téléphone</h3>
-                  <p className="font-sora text-[10px] md:text-sm text-[#b68d40] font-bold">0561 71 91 00</p>
-                  <span className="text-[9px] md:text-[11px] text-[#71717A] mt-1">Appel / WhatsApp</span>
-                </a>
-                <a href="mailto:chateau.art01@gmail.com" className="group bg-[#121316] border border-white/10 hover:border-[#b68d40]/50 p-3 md:p-6 flex flex-col items-start rounded-sm transition-all duration-300">
-                  <div className="w-7 h-7 md:w-10 md:h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-[#b68d40] mb-2 md:mb-4 group-hover:bg-[#b68d40] group-hover:text-white transition-colors"><Mail size={13} /></div>
-                  <h3 className="font-fraunces text-xs md:text-lg text-white mb-0.5 leading-tight">Email</h3>
-                  <p className="font-sora text-[9px] md:text-sm text-white font-medium break-all">chateau.art01@gmail.com</p>
-                  <span className="text-[9px] md:text-[11px] text-[#71717A] mt-1">Réponse 24h</span>
-                </a>
-                <div className="bg-[#121316] border border-white/10 p-3 md:p-6 flex flex-col items-start rounded-sm">
-                  <div className="w-7 h-7 md:w-10 md:h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-[#b68d40] mb-2 md:mb-4"><MapPin size={13} /></div>
-                  <h3 className="font-fraunces text-xs md:text-lg text-white mb-0.5 leading-tight">Livraison</h3>
-                  <p className="font-sora text-[9px] md:text-xs text-[#A1A1AA]"><strong className="text-white">58 wilayas</strong> d&apos;Algérie</p>
-                </div>
-                <div className="bg-[#121316] border border-white/10 p-3 md:p-6 flex flex-col items-start rounded-sm">
-                  <div className="w-7 h-7 md:w-10 md:h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-[#b68d40] mb-2 md:mb-4"><Clock size={13} /></div>
-                  <h3 className="font-fraunces text-xs md:text-lg text-white mb-0.5 leading-tight">Horaires</h3>
-                  <p className="font-sora text-[9px] md:text-xs text-[#A1A1AA]">6/7j &middot; <span className="text-white font-semibold">09h30 - 20h00</span></p>
-                </div>
-              </div>
-            </LuxuryReveal>
-
-            {/* WhatsApp */}
-            <LuxuryReveal variant="left" delay={150}>
-              <div className="p-4 md:p-6 rounded-sm bg-[#121316] border border-[#b68d40]/30 flex items-center justify-between gap-3">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-[#25D366]/20 border border-[#25D366]/40 flex items-center justify-center text-[#25D366] flex-shrink-0"><MessageSquare size={14} /></div>
-                  <div>
-                    <h4 className="font-sora text-xs font-bold text-white">Réponse rapide ?</h4>
-                    <p className="text-[10px] text-[#A1A1AA]">Discutez avec un conseiller.</p>
-                  </div>
-                </div>
-                <a href="https://wa.me/213561719100" target="_blank" rel="noopener noreferrer" className="px-3 py-1.5 bg-[#25D366] hover:bg-[#20bd5a] text-white text-[10px] font-bold rounded-sm uppercase tracking-wider flex items-center gap-1 flex-shrink-0 transition-colors">
-                  <span>WhatsApp</span><ArrowRight size={11} />
-                </a>
-              </div>
-            </LuxuryReveal>
-
-            {/* Map */}
-            <LuxuryReveal variant="left" delay={200}>
-              <div className="relative rounded-sm overflow-hidden border border-white/10 hover:border-[#b68d40]/50 transition-all duration-500 shadow-2xl bg-[#121316]">
-                <div className="flex items-center justify-between px-3 md:px-4 py-2.5 md:py-3 bg-[#18191B] border-b border-white/10 text-xs font-sora">
-                  <div className="flex items-center gap-2"><MapPin className="w-3.5 h-3.5 text-[#b68d40]" /><span className="font-semibold text-white text-[11px]">Château D&apos;Art - Showroom</span></div>
-                  <span className="text-[10px] text-[#A1A1AA]">Alger</span>
-                </div>
-                <div className="relative w-full h-[180px] md:h-[250px] overflow-hidden">
-                  <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3198.5906046037494!2d3.060058575713971!3d36.70837457287061!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x128fad5fae229a89%3A0xa8afd38ca1b6e44f!2sCh%C3%A2teau%20D'Art%20-%20meubles!5e0!3m2!1sfr!2sdz!4v1789588881010!5m2!1sfr!2sdz" width="100%" height="100%" style={{ border: 0 }} allowFullScreen loading="lazy" referrerPolicy="strict-origin-when-cross-origin" title="Château D'Art" className="w-full h-full grayscale contrast-[1.15] brightness-[0.8] hover:grayscale-0 transition-all duration-700" />
-                  <a href="https://maps.google.com/?q=Ch%C3%A2teau+D'Art+-+meubles" target="_blank" rel="noopener noreferrer" className="absolute bottom-3 right-3 z-10 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-sm bg-[#b68d40] text-white text-xs font-semibold hover:bg-[#a37c35] transition-all shadow-lg">
-                    <span>Itinéraire</span><ArrowUpRight className="w-3 h-3" />
-                  </a>
-                </div>
-              </div>
-            </LuxuryReveal>
+            {/* Mobile Only: Showroom Map directly under the Form */}
+            <div className="block lg:hidden w-full mt-6">
+              <LuxuryReveal className="w-full">
+                <ShowroomMap />
+              </LuxuryReveal>
+            </div>
           </div>
 
         </div>
