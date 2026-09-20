@@ -1,5 +1,7 @@
 'use client'
 
+export const runtime = 'edge'
+
 import { Shield, Database, Bell, Palette } from 'lucide-react'
 
 export default function AdminSettingsPage() {

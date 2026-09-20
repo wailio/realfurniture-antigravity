@@ -1,6 +1,8 @@
 import type { ReactNode } from 'react'
 import AdminSidebar from '@/components/admin/sidebar'
 
+export const runtime = 'edge'
+
 export const metadata = {
   title: "Admin — Château d'art",
 }
