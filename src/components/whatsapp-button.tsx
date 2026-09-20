@@ -1,8 +1,12 @@
 'use client';
 
 import React from 'react';
+import { usePathname } from 'next/navigation';
 
 export function WhatsAppButton() {
+  const pathname = usePathname();
+  if (pathname?.startsWith('/admin')) return null;
+
   const phoneNumber = '213561719100';
   const defaultMessage = "Bonjour Château d'art, je souhaite me renseigner sur vos collections.";
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(defaultMessage)}`;
