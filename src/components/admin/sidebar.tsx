@@ -49,14 +49,11 @@ export default function AdminSidebar() {
       className="flex flex-col shrink-0 transition-all duration-300"
       style={{
         width: collapsed ? 72 : 248,
-        background: 'rgba(14, 11, 8, 0.85)',
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)',
-        borderRight: '1px solid rgba(255, 255, 255, 0.08)',
+        background: '#0A0B0C',
+        borderRight: '1px solid rgba(255,255,255,0.05)',
         height: '100vh',
         position: 'sticky',
         top: 0,
-        zIndex: 50,
       }}
     >
       {/* Logo */}
@@ -65,7 +62,7 @@ export default function AdminSidebar() {
         style={{
           height: 72,
           padding: collapsed ? '0 16px' : '0 20px',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+          borderBottom: '1px solid rgba(255,255,255,0.05)',
         }}
       >
         {collapsed ? (
@@ -74,7 +71,7 @@ export default function AdminSidebar() {
             className="flex items-center justify-center w-8 h-8 rounded-lg hover:bg-white/5 transition-colors"
             aria-label="Expand sidebar"
           >
-            <ChevronRight className="w-4 h-4 text-[#d1aa5c]" />
+            <ChevronRight className="w-4 h-4 text-[#B7BBC0]" />
           </button>
         ) : (
           <div className="flex items-center justify-between w-full">
@@ -91,7 +88,7 @@ export default function AdminSidebar() {
               className="flex items-center justify-center w-7 h-7 rounded-lg hover:bg-white/5 transition-colors ml-2"
               aria-label="Collapse sidebar"
             >
-              <ChevronRight className="w-3.5 h-3.5 text-[#71717A] rotate-180" />
+              <ChevronRight className="w-3.5 h-3.5 text-[#4A4D55] rotate-180" />
             </button>
           </div>
         )}
@@ -107,7 +104,7 @@ export default function AdminSidebar() {
                   fontSize: 10,
                   fontWeight: 600,
                   letterSpacing: '0.12em',
-                  color: '#71717A',
+                  color: '#4A4D55',
                   textTransform: 'uppercase',
                   padding: '16px 20px 6px',
                 }}
@@ -116,7 +113,7 @@ export default function AdminSidebar() {
               </p>
             )}
             {section.group && collapsed && (
-              <div style={{ height: 1, background: 'rgba(255,255,255,0.08)', margin: '12px 10px' }} />
+              <div style={{ height: 1, background: 'rgba(255,255,255,0.05)', margin: '12px 10px' }} />
             )}
             {section.items.map((item) => {
               const active = isActive(item.href)
@@ -130,23 +127,22 @@ export default function AdminSidebar() {
                     padding: collapsed ? '9px 0' : '9px 20px',
                     justifyContent: collapsed ? 'center' : 'flex-start',
                     margin: '2px 8px',
-                    borderRadius: 12,
-                    background: active ? 'rgba(209, 170, 92, 0.12)' : 'transparent',
-                    border: active ? '1px solid rgba(209, 170, 92, 0.25)' : '1px solid transparent',
-                    color: active ? '#FFFFFF' : '#A1A1AA',
+                    borderRadius: 10,
+                    background: active ? 'rgba(255,255,255,0.07)' : 'transparent',
+                    color: active ? '#F2F1EF' : '#7C8089',
                   }}
                 >
                   <item.icon
                     className="shrink-0 transition-colors"
-                    style={{ width: 17, height: 17, color: active ? '#d1aa5c' : '#A1A1AA' }}
+                    style={{ width: 17, height: 17, color: active ? '#F2F1EF' : '#7C8089' }}
                   />
                   {!collapsed && (
                     <span
                       style={{
                         fontSize: 13.5,
-                        fontWeight: active ? 600 : 400,
+                        fontWeight: active ? 500 : 400,
                         letterSpacing: '0.01em',
-                        color: active ? '#FFFFFF' : '#A1A1AA',
+                        color: active ? '#F2F1EF' : '#7C8089',
                         transition: 'color 0.15s',
                       }}
                     >
@@ -156,7 +152,7 @@ export default function AdminSidebar() {
                   {active && !collapsed && (
                     <div
                       className="ml-auto"
-                      style={{ width: 5, height: 5, borderRadius: 99, background: '#d1aa5c', boxShadow: '0 0 6px #d1aa5c' }}
+                      style={{ width: 4, height: 4, borderRadius: 99, background: '#C7CBD1' }}
                     />
                   )}
                 </Link>
@@ -168,7 +164,7 @@ export default function AdminSidebar() {
 
       {/* Bottom Block */}
       <div
-        style={{ borderTop: '1px solid rgba(255,255,255,0.08)', padding: '12px 8px' }}
+        style={{ borderTop: '1px solid rgba(255,255,255,0.05)', padding: '12px 8px' }}
       >
         {/* Settings */}
         <Link
@@ -179,9 +175,7 @@ export default function AdminSidebar() {
             padding: collapsed ? '9px 0' : '9px 12px',
             justifyContent: collapsed ? 'center' : 'flex-start',
             borderRadius: 10,
-            background: isActive('/admin/settings') ? 'rgba(209, 170, 92, 0.12)' : 'transparent',
-            border: isActive('/admin/settings') ? '1px solid rgba(209, 170, 92, 0.25)' : '1px solid transparent',
-            color: isActive('/admin/settings') ? '#d1aa5c' : '#A1A1AA',
+            color: '#7C8089',
           }}
         >
           <Settings style={{ width: 17, height: 17 }} />
@@ -196,10 +190,9 @@ export default function AdminSidebar() {
             className="flex items-center gap-3"
             style={{
               padding: '10px 12px',
-              marginTop: 6,
+              marginTop: 4,
               borderRadius: 12,
-              background: 'rgba(255,255,255,0.04)',
-              border: '1px solid rgba(255,255,255,0.06)',
+              background: 'rgba(255,255,255,0.03)',
             }}
           >
             <div
@@ -208,29 +201,29 @@ export default function AdminSidebar() {
                 height: 34,
                 borderRadius: 99,
                 background: 'linear-gradient(135deg, #2A2B2E 0%, #1A1B1E 100%)',
-                border: '1px solid rgba(209, 170, 92, 0.3)',
+                border: '1px solid rgba(255,255,255,0.1)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 flexShrink: 0,
                 fontSize: 13,
-                color: '#d1aa5c',
+                color: '#C7CBD1',
                 fontWeight: 600,
               }}
             >
               A
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
-              <p style={{ fontSize: 12.5, color: '#FFFFFF', fontWeight: 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              <p style={{ fontSize: 12.5, color: '#D4D6DA', fontWeight: 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 Admin
               </p>
-              <p style={{ fontSize: 11, color: '#A1A1AA', marginTop: 1 }}>Manager</p>
+              <p style={{ fontSize: 11, color: '#4A4D55', marginTop: 1 }}>Manager</p>
             </div>
             <button
               onClick={() => { window.location.href = '/admin' }}
               title="Se déconnecter"
               className="hover:text-white transition-colors"
-              style={{ color: '#71717A', padding: 4 }}
+              style={{ color: '#4A4D55', padding: 4 }}
             >
               <LogOut style={{ width: 14, height: 14 }} />
             </button>
@@ -241,7 +234,7 @@ export default function AdminSidebar() {
           <button
             title="Se déconnecter"
             className="flex items-center justify-center w-full hover:bg-white/5 transition-colors"
-            style={{ padding: '9px 0', borderRadius: 10, color: '#71717A' }}
+            style={{ padding: '9px 0', borderRadius: 10, color: '#4A4D55' }}
           >
             <LogOut style={{ width: 17, height: 17 }} />
           </button>

@@ -6,7 +6,7 @@ import { Shield, Database, Bell, Palette } from 'lucide-react'
 
 export default function AdminSettingsPage() {
   return (
-    <div className="min-h-screen" style={{ background: 'linear-gradient(135deg, #1E1912 0%, #2c2418 50%, #8b7344 100%)' }}>
+    <div className="min-h-screen" style={{ background: '#F6F5F3' }}>
       <div
         style={{
           background: 'rgba(18, 15, 12, 0.70)',

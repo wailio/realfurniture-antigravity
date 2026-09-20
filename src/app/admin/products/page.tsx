@@ -248,7 +248,7 @@ export default function AdminProductsPage() {
   }
 
   return (
-    <div className="min-h-screen" style={{ background: 'linear-gradient(135deg, #1E1912 0%, #2c2418 50%, #8b7344 100%)' }}>
+    <div className="min-h-screen" style={{ background: '#F6F5F3' }}>
       {/* Header */}
       <div
         style={{
