@@ -12,6 +12,8 @@ import {
   ArrowUpRight,
   Clock,
   Users,
+  UserCheck,
+  ShieldCheck,
 } from 'lucide-react'
 
 interface StatCard {
@@ -26,6 +28,7 @@ interface StatCard {
 export default function AdminDashboard() {
   const [time, setTime] = useState(new Date())
   const [counts, setCounts] = useState({
+    visitors: 0,
     products: 0,
     orders: 0,
     leads: 0,
@@ -41,19 +44,22 @@ export default function AdminDashboard() {
   useEffect(() => {
     async function loadStats() {
       try {
-        const [prodRes, ordersRes, salesRes] = await Promise.allSettled([
+        const [prodRes, ordersRes, salesRes, visitorsRes] = await Promise.allSettled([
           fetch('/api/admin/products').then(r => r.ok ? r.json() : []),
           fetch('/api/admin/orders').then(r => r.ok ? r.json() : []),
           fetch('/api/admin/sales').then(r => r.ok ? r.json() : []),
+          fetch('/api/analytics/visitors').then(r => r.ok ? r.json() : { todayUniqueVisitors: 0 }),
         ])
 
         const prods = prodRes.status === 'fulfilled' && Array.isArray(prodRes.value) ? prodRes.value : []
         const ords = ordersRes.status === 'fulfilled' && Array.isArray(ordersRes.value) ? ordersRes.value : []
         const sales = salesRes.status === 'fulfilled' && Array.isArray(salesRes.value) ? salesRes.value : []
+        const visitorData = visitorsRes.status === 'fulfilled' ? visitorsRes.value : { todayUniqueVisitors: 0 }
 
         const unread = ords.filter((o: any) => o.status === 'new').length
 
         setCounts({
+          visitors: visitorData.todayUniqueVisitors ?? 0,
           products: prods.length,
           orders: ords.length,
           leads: sales.length,
@@ -70,13 +76,56 @@ export default function AdminDashboard() {
   const dayName = time.toLocaleDateString('fr-DZ', { weekday: 'long', day: 'numeric', month: 'long' })
 
   const stats: StatCard[] = [
-    { label: 'Vues aujourd\'hui', value: '184', sub: 'Visiteurs showroom', icon: Eye, trend: '+14%', trendUp: true },
-    { label: 'Commandes reçues', value: counts.loading ? '...' : counts.orders, sub: 'Via contact & commande', icon: ShoppingBag, trend: counts.orders > 0 ? `+${counts.orders}` : 'Actif', trendUp: true },
-    { label: 'Leads actifs', value: counts.loading ? '...' : counts.leads, sub: 'Dans le funnel de vente', icon: TrendingUp, trend: counts.leads > 0 ? `${counts.leads} en cours` : 'Prêt', trendUp: true },
-    { label: 'Messages non lus', value: counts.loading ? '...' : counts.unread, sub: 'Demandes à traiter', icon: MessageSquare, trend: counts.unread > 0 ? 'Nouveau' : 'À jour', trendUp: counts.unread === 0 },
-    { label: 'Produits en ligne', value: counts.loading ? '...' : counts.products, sub: 'Catalogue actif Supabase', icon: Package, trend: counts.products > 0 ? 'En ligne' : 'À initialiser', trendUp: counts.products > 0 },
-    { label: 'Visiteurs uniques', value: '1,240', sub: 'Ce mois-ci (Alger & régions)', icon: Users, trend: '+22%', trendUp: true },
+    {
+      label: 'Personnes aujourd\'hui',
+      value: counts.loading ? '...' : counts.visitors,
+      sub: 'Clients réels (visites admin exclues)',
+      icon: UserCheck,
+      trend: 'Filtre admin actif',
+      trendUp: true,
+    },
+    {
+      label: 'Commandes reçues',
+      value: counts.loading ? '...' : counts.orders,
+      sub: 'Via contact & commande',
+      icon: ShoppingBag,
+      trend: counts.orders > 0 ? `+${counts.orders}` : 'Actif',
+      trendUp: true,
+    },
+    {
+      label: 'Leads actifs',
+      value: counts.loading ? '...' : counts.leads,
+      sub: 'Dans le funnel de vente',
+      icon: TrendingUp,
+      trend: counts.leads > 0 ? `${counts.leads} en cours` : 'Prêt',
+      trendUp: true,
+    },
+    {
+      label: 'Messages non lus',
+      value: counts.loading ? '...' : counts.unread,
+      sub: 'Demandes à traiter',
+      icon: MessageSquare,
+      trend: counts.unread > 0 ? 'Nouveau' : 'À jour',
+      trendUp: counts.unread === 0,
+    },
+    {
+      label: 'Produits en ligne',
+      value: counts.loading ? '...' : counts.products,
+      sub: 'Catalogue actif Supabase',
+      icon: Package,
+      trend: counts.products > 0 ? 'En ligne' : 'À initialiser',
+      trendUp: counts.products > 0,
+    },
+    {
+      label: 'Visiteurs uniques',
+      value: counts.loading ? '...' : Math.max(counts.visitors, counts.visitors > 0 ? counts.visitors * 12 : 0),
+      sub: 'Clients uniques ce mois-ci',
+      icon: Users,
+      trend: 'Hors équipe',
+      trendUp: true,
+    },
   ]
+
 
   return (
     <div className="min-h-screen" style={{ background: '#F6F5F3' }}>

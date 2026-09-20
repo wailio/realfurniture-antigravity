@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Fraunces, Sora } from "next/font/google";
 import "./globals.css";
 import { WhatsAppButton } from "@/components/whatsapp-button";
+import { VisitorTracker } from "@/components/visitor-tracker";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -49,6 +50,7 @@ export default function RootLayout({
   return (
     <html lang="fr" className={`${fraunces.variable} ${sora.variable}`}>
       <body className="font-[family-name:var(--font-body)] antialiased bg-background">
+        <VisitorTracker />
         {children}
         <WhatsAppButton />
       </body>
