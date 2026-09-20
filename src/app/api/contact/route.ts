@@ -6,7 +6,7 @@ export const runtime = 'edge';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, email, phone, subject, message } = body;
+    const { name, email, phone, subject, message, product } = body;
 
     // Validate required fields
     if (!name || !email || !message) {
@@ -28,18 +28,22 @@ export async function POST(request: NextRequest) {
     // ── Save to Supabase messages table ──────────────────────
     try {
       const { url, key } = getSupabaseConfig();
-      await fetch(`${url}/rest/v1/messages`, {
+      const insertRes = await fetch(`${url}/rest/v1/messages`, {
         method: "POST",
         headers: supabaseHeaders(key),
         body: JSON.stringify({
           name,
           email,
           phone: phone || "",
-          subject: subject || "",
+          subject: subject || (product ? `Commande: ${product}` : ""),
           message,
+          product: product || "",
           status: "new",
         }),
       });
+      if (!insertRes.ok) {
+        console.error("Supabase insert error:", insertRes.status, await insertRes.text());
+      }
     } catch (dbErr) {
       console.error("Supabase message save error:", dbErr);
     }

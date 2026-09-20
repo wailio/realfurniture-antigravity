@@ -7,9 +7,10 @@ import Link from 'next/link';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { LuxuryReveal } from '@/components/luxury-reveal';
-import { products, formatPrice } from '@/lib/products';
+import { products, formatPrice, Product } from '@/lib/products';
 import { ProductDetailShowcase } from '@/components/product-detail-showcase';
 import { ChevronRight, Heart } from 'lucide-react';
+import { getSupabaseConfig, supabaseHeaders } from '@/lib/supabase-config';
 
 interface ProductPageProps {
   params: Promise<{ id: string }>;
@@ -17,7 +18,36 @@ interface ProductPageProps {
 
 export default async function ProductDetailPage({ params }: ProductPageProps) {
   const resolvedParams = await params;
-  const product = products.find((p) => p.id === Number(resolvedParams.id));
+  let product: Product | undefined = products.find(
+    (p) => String(p.id) === resolvedParams.id || (p as any).slug === resolvedParams.id
+  );
+
+  if (!product) {
+    try {
+      const { url, key } = getSupabaseConfig();
+      const res = await fetch(
+        `${url}/rest/v1/products?or=(id.eq.${resolvedParams.id},slug.eq.${resolvedParams.id})&limit=1`,
+        { headers: supabaseHeaders(key) }
+      );
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.length > 0) {
+          const item = data[0];
+          product = {
+            id: item.id,
+            name: item.name,
+            description: item.description || '',
+            price: item.price,
+            originalPrice: item.sale_price || undefined,
+            image: item.images?.[0] || '/products/salon/aa.jpg',
+            images: item.images && item.images.length > 0 ? item.images : ['/products/salon/aa.jpg'],
+            category: item.category,
+            brand: "Château d'art",
+          };
+        }
+      }
+    } catch {}
+  }
   
   if (!product) {
     notFound();

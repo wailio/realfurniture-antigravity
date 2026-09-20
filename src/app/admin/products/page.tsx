@@ -248,7 +248,7 @@ export default function AdminProductsPage() {
   }
 
   return (
-    <div className="min-h-screen" style={{ background: '#F6F5F3' }}>
+    <div className="min-h-screen" style={{ background: 'linear-gradient(135deg, #1E1912 0%, #2c2418 50%, #8b7344 100%)' }}>
       {/* Header */}
       <div
         style={{
@@ -335,20 +335,20 @@ export default function AdminProductsPage() {
         <div style={{ marginBottom: 36 }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <Layers className="w-4 h-4" style={{ color: '#6B7280' }} />
+              <Layers className="w-4 h-4" style={{ color: '#d1aa5c' }} />
               <span
                 style={{
                   fontSize: 12,
                   fontWeight: 600,
                   textTransform: 'uppercase',
                   letterSpacing: '0.08em',
-                  color: '#6B7280',
+                  color: '#f8f3e8',
                 }}
               >
                 Collections &amp; Échantillons
               </span>
             </div>
-            <span style={{ fontSize: 11.5, color: '#9CA3AF' }}>
+            <span style={{ fontSize: 11.5, color: '#d1aa5c' }}>
               Cliquez sur un dossier pour filtrer
             </span>
           </div>
