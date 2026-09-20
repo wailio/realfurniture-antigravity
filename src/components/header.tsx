@@ -135,11 +135,11 @@ export function Header({ theme = 'dark' }: HeaderProps) {
 
           {/* CENTER: Logo — left on mobile, centered on desktop */}
           <div className="flex-1 md:flex-shrink-0 flex items-center justify-start md:justify-center">
-            <Link href="/" className="group flex items-center py-0 -my-1.5 md:-my-2.5 lg:-my-3">
+            <Link href="/" className="group flex items-center py-0">
               <img
-                src="/logo.png"
+                src="/bigtower.png"
                 alt="Château d'art"
-                className="h-16 sm:h-18 md:h-22 lg:h-26 w-auto object-contain transition-transform duration-300 group-hover:scale-105 drop-shadow-md"
+                className="h-10 md:h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105 drop-shadow-md"
               />
             </Link>
           </div>
