@@ -32,10 +32,10 @@ interface Lead {
 }
 
 const STAGES = [
-  { key: 'cold', label: 'Cold lead', color: '#94A3B8', bg: '#F1F5F9', dot: '#94A3B8' },
-  { key: 'interested', label: 'Intéressé', color: '#F59E0B', bg: '#FFFBEB', dot: '#F59E0B' },
-  { key: 'delivering', label: 'En livraison', color: '#3B82F6', bg: '#EFF6FF', dot: '#3B82F6' },
-  { key: 'completed', label: 'Vente conclue', color: '#10B981', bg: '#ECFDF5', dot: '#10B981' },
+  { key: 'cold', label: 'Cold lead', color: '#94A3B8', bg: 'rgba(148, 163, 184, 0.15)', dot: '#94A3B8' },
+  { key: 'interested', label: 'Intéressé', color: '#F59E0B', bg: 'rgba(245, 158, 11, 0.15)', dot: '#F59E0B' },
+  { key: 'delivering', label: 'En livraison', color: '#60A5FA', bg: 'rgba(59, 130, 246, 0.15)', dot: '#3B82F6' },
+  { key: 'completed', label: 'Vente conclue', color: '#34D399', bg: 'rgba(16, 185, 129, 0.15)', dot: '#10B981' },
 ]
 
 function formatDate(iso: string) {
@@ -80,7 +80,7 @@ export default function AdminSalesPage() {
       await fetch('/api/admin/sales', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: lead.id, funnel_stage: STAGES[newIdx].key }),
+        body: JSON.stringify({ id, funnel_stage: STAGES[newIdx].key }),
       })
       setLeads(prev => prev.map(l => l.id === lead.id ? { ...l, funnel_stage: STAGES[newIdx].key } : l))
     } catch {
@@ -126,8 +126,10 @@ export default function AdminSalesPage() {
       {/* Header */}
       <div
         style={{
-          background: '#FFFFFF',
-          borderBottom: '1px solid rgba(0,0,0,0.06)',
+          background: 'rgba(18, 15, 12, 0.70)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
           padding: '28px 36px',
           display: 'flex',
           alignItems: 'center',
@@ -140,16 +142,16 @@ export default function AdminSalesPage() {
               fontFamily: 'var(--font-heading)',
               fontSize: 26,
               fontWeight: 300,
-              color: '#0E0F10',
+              color: '#FFFFFF',
               letterSpacing: '-0.02em',
             }}
           >
             Funnel de vente
           </h1>
-          <p style={{ fontSize: 13, color: '#9CA3AF', marginTop: 4 }}>
+          <p style={{ fontSize: 13, color: '#A1A1AA', marginTop: 4 }}>
             {leads.length} lead{leads.length !== 1 ? 's' : ''} actif{leads.length !== 1 ? 's' : ''}
             {completedValue > 0 && (
-              <span style={{ color: '#10B981', marginLeft: 10, fontWeight: 600 }}>
+              <span style={{ color: '#34D399', marginLeft: 10, fontWeight: 600 }}>
                 · {completedValue.toLocaleString('fr-DZ')} DA conclus
               </span>
             )}
@@ -162,15 +164,15 @@ export default function AdminSalesPage() {
         {error && (
           <div
             style={{
-              background: '#fef2f2',
-              border: '1px solid #fecaca',
-              borderRadius: 12,
+              background: 'rgba(239, 68, 68, 0.12)',
+              border: '1px solid rgba(239, 68, 68, 0.25)',
+              borderRadius: 14,
               padding: '14px 18px',
               display: 'flex',
               alignItems: 'center',
               gap: 10,
               marginBottom: 20,
-              color: '#dc2626',
+              color: '#f87171',
               fontSize: 13.5,
             }}
           >
@@ -181,7 +183,7 @@ export default function AdminSalesPage() {
 
         {loading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: '60px 0' }}>
-            <Loader2 className="w-7 h-7 animate-spin" style={{ color: '#9CA3AF' }} />
+            <Loader2 className="w-7 h-7 animate-spin text-[#d1aa5c]" />
           </div>
         ) : (
           <>
@@ -230,13 +232,13 @@ export default function AdminSalesPage() {
                           width: 40,
                           height: 40,
                           borderRadius: 99,
-                          background: '#FFFFFF',
-                          border: `3px solid ${stage.dot}`,
+                          background: 'rgba(20, 16, 12, 0.9)',
+                          border: `2.5px solid ${stage.dot}`,
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
                           marginBottom: 10,
-                          boxShadow: `0 0 0 4px ${stage.bg}`,
+                          boxShadow: `0 0 14px ${stage.dot}40`,
                         }}
                       >
                         <span
@@ -261,37 +263,40 @@ export default function AdminSalesPage() {
                       >
                         {stage.label}
                       </p>
-                      <p style={{ fontSize: 11, color: '#9CA3AF', marginTop: 2 }}>
+                      <p style={{ fontSize: 11, color: '#A1A1AA', marginTop: 2 }}>
                         {stageLeads.length} lead{stageLeads.length !== 1 ? 's' : ''}
                       </p>
                     </div>
 
                     {/* Stage cards */}
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                       {stageLeads.length === 0 && (
                         <div
                           style={{
-                            border: '1.5px dashed #E5E7EB',
+                            border: '1.5px dashed rgba(255, 255, 255, 0.12)',
                             borderRadius: 14,
                             padding: '28px 16px',
                             textAlign: 'center',
+                            background: 'rgba(255, 255, 255, 0.02)',
                           }}
                         >
-                          <p style={{ fontSize: 12, color: '#D1D5DB' }}>Aucun lead</p>
+                          <p style={{ fontSize: 12, color: '#71717A' }}>Aucun lead</p>
                         </div>
                       )}
                       {stageLeads.map(lead => (
                         <div
                           key={lead.id}
                           style={{
-                            background: '#FFFFFF',
-                            borderRadius: 14,
+                            background: 'rgba(22, 18, 14, 0.65)',
+                            backdropFilter: 'blur(16px)',
+                            WebkitBackdropFilter: 'blur(16px)',
+                            borderRadius: 16,
                             padding: '16px',
-                            border: '1px solid rgba(0,0,0,0.05)',
-                            boxShadow: '0 1px 4px rgba(0,0,0,0.04)',
-                            transition: 'box-shadow 0.2s',
+                            border: '1px solid rgba(255, 255, 255, 0.08)',
+                            boxShadow: '0 12px 32px 0 rgba(0, 0, 0, 0.35), inset 0 1px 0 0 rgba(255, 255, 255, 0.08)',
+                            transition: 'all 0.2s ease',
                           }}
-                          className="hover:shadow-md"
+                          className="hover:shadow-2xl hover:border-[#d1aa5c]/40 hover:-translate-y-0.5"
                         >
                           {/* Lead top */}
                           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 }}>
@@ -301,6 +306,7 @@ export default function AdminSalesPage() {
                                 height: 34,
                                 borderRadius: 99,
                                 background: stage.bg,
+                                border: `1px solid ${stage.color}30`,
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
@@ -320,9 +326,10 @@ export default function AdminSalesPage() {
                                 border: 'none',
                                 background: 'transparent',
                                 cursor: 'pointer',
-                                color: '#D1D5DB',
+                                color: '#71717A',
                                 display: 'flex',
                               }}
+                              className="hover:text-red-400"
                             >
                               {deletingId === lead.id
                                 ? <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -331,23 +338,25 @@ export default function AdminSalesPage() {
                             </button>
                           </div>
 
-                          <p style={{ fontSize: 13, fontWeight: 600, color: '#0E0F10', marginBottom: 4 }}>
+                          <p style={{ fontSize: 13.5, fontWeight: 600, color: '#FFFFFF', marginBottom: 4 }}>
                             {lead.customer_name}
                           </p>
                           {lead.phone && (
                             <a
                               href={`tel:${lead.phone}`}
-                              style={{ fontSize: 12, color: '#6B7280', display: 'flex', alignItems: 'center', gap: 4, textDecoration: 'none', marginBottom: 6 }}
+                              style={{ fontSize: 12, color: '#D4D4D8', display: 'flex', alignItems: 'center', gap: 4, textDecoration: 'none', marginBottom: 6 }}
+                              className="hover:text-[#d1aa5c]"
                             >
-                              <Phone className="w-3 h-3" />{lead.phone}
+                              <Phone className="w-3 h-3 text-[#d1aa5c]" />{lead.phone}
                             </a>
                           )}
                           {lead.messages?.product && (
                             <p
                               style={{
                                 fontSize: 11,
-                                color: '#9CA3AF',
-                                background: '#F6F5F3',
+                                color: '#d1aa5c',
+                                background: 'rgba(209, 170, 92, 0.12)',
+                                border: '1px solid rgba(209, 170, 92, 0.25)',
                                 padding: '3px 8px',
                                 borderRadius: 99,
                                 display: 'inline-block',
@@ -376,7 +385,9 @@ export default function AdminSalesPage() {
                                   width: '100%',
                                   padding: '8px 10px',
                                   borderRadius: 8,
-                                  border: '1.5px solid #0E0F10',
+                                  border: '1px solid rgba(209, 170, 92, 0.4)',
+                                  background: 'rgba(0, 0, 0, 0.35)',
+                                  color: '#FFFFFF',
                                   fontSize: 12,
                                   resize: 'vertical',
                                   outline: 'none',
@@ -390,8 +401,9 @@ export default function AdminSalesPage() {
                                     padding: '5px 12px',
                                     borderRadius: 7,
                                     border: 'none',
-                                    background: '#0E0F10',
-                                    color: '#fff',
+                                    background: '#d1aa5c',
+                                    color: '#14120f',
+                                    fontWeight: 600,
                                     fontSize: 12,
                                     cursor: 'pointer',
                                     display: 'flex',
@@ -406,9 +418,9 @@ export default function AdminSalesPage() {
                                   style={{
                                     padding: '5px 10px',
                                     borderRadius: 7,
-                                    border: 'none',
-                                    background: '#F6F5F3',
-                                    color: '#6B7280',
+                                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                                    background: 'rgba(255, 255, 255, 0.05)',
+                                    color: '#A1A1AA',
                                     fontSize: 12,
                                     cursor: 'pointer',
                                   }}
@@ -426,19 +438,20 @@ export default function AdminSalesPage() {
                               style={{
                                 padding: '8px 10px',
                                 borderRadius: 8,
-                                background: '#F6F5F3',
+                                background: 'rgba(0, 0, 0, 0.35)',
+                                border: '1px solid rgba(255, 255, 255, 0.06)',
                                 cursor: 'pointer',
                                 marginBottom: 10,
                                 minHeight: 36,
                               }}
                             >
                               {lead.notes ? (
-                                <p style={{ fontSize: 12, color: '#6B7280', lineHeight: 1.5 }}>
+                                <p style={{ fontSize: 12, color: '#D4D4D8', lineHeight: 1.5 }}>
                                   {lead.notes}
                                 </p>
                               ) : (
-                                <p style={{ fontSize: 12, color: '#D1D5DB', display: 'flex', alignItems: 'center', gap: 4 }}>
-                                  <StickyNote className="w-3.5 h-3.5" />
+                                <p style={{ fontSize: 12, color: '#71717A', display: 'flex', alignItems: 'center', gap: 4 }}>
+                                  <StickyNote className="w-3.5 h-3.5 text-[#d1aa5c]" />
                                   Ajouter une note...
                                 </p>
                               )}
@@ -455,17 +468,18 @@ export default function AdminSalesPage() {
                                   flex: 1,
                                   padding: '7px 0',
                                   borderRadius: 8,
-                                  border: '1px solid #E5E7EB',
-                                  background: 'transparent',
+                                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                                  background: 'rgba(255, 255, 255, 0.04)',
                                   cursor: 'pointer',
                                   fontSize: 11.5,
-                                  color: '#6B7280',
+                                  color: '#D4D4D8',
                                   display: 'flex',
                                   alignItems: 'center',
                                   justifyContent: 'center',
                                   gap: 4,
                                   transform: 'scaleX(-1)',
                                 }}
+                                className="hover:bg-white/10"
                               >
                                 <MoveRight className="w-3.5 h-3.5" />
                               </button>
@@ -478,7 +492,7 @@ export default function AdminSalesPage() {
                                   flex: 1,
                                   padding: '7px 0',
                                   borderRadius: 8,
-                                  border: 'none',
+                                  border: `1px solid ${stage.color}40`,
                                   background: stage.bg,
                                   cursor: 'pointer',
                                   fontSize: 11.5,
@@ -503,7 +517,7 @@ export default function AdminSalesPage() {
                                   padding: '7px 0',
                                   textAlign: 'center',
                                   fontSize: 11.5,
-                                  color: '#10B981',
+                                  color: '#34D399',
                                   fontWeight: 600,
                                   display: 'flex',
                                   alignItems: 'center',
@@ -529,15 +543,18 @@ export default function AdminSalesPage() {
                 style={{
                   textAlign: 'center',
                   padding: '60px 20px',
-                  background: '#FFFFFF',
-                  borderRadius: 16,
-                  border: '1px solid rgba(0,0,0,0.05)',
+                  background: 'rgba(22, 18, 14, 0.65)',
+                  backdropFilter: 'blur(16px)',
+                  WebkitBackdropFilter: 'blur(16px)',
+                  borderRadius: 20,
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  boxShadow: '0 12px 32px 0 rgba(0, 0, 0, 0.35)',
                   marginTop: 24,
                 }}
               >
-                <TrendingUp className="w-10 h-10 mx-auto mb-4" style={{ color: '#D1D5DB' }} />
-                <p style={{ color: '#6B7280', fontSize: 14, fontWeight: 500 }}>Aucun lead dans le funnel</p>
-                <p style={{ color: '#9CA3AF', fontSize: 12.5, marginTop: 6, maxWidth: 320, margin: '8px auto 0' }}>
+                <TrendingUp className="w-10 h-10 mx-auto mb-4 text-[#d1aa5c]" />
+                <p style={{ color: '#FFFFFF', fontSize: 16, fontWeight: 600 }}>Aucun lead dans le funnel</p>
+                <p style={{ color: '#A1A1AA', fontSize: 13, marginTop: 6, maxWidth: 320, margin: '8px auto 0' }}>
                   Utilisez le bouton «Ajouter au funnel» depuis la page Commandes pour déplacer un lead ici
                 </p>
               </div>

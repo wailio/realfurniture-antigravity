@@ -142,8 +142,10 @@ export default function AdminWebsiteInfoPage() {
       {/* Header */}
       <div
         style={{
-          background: '#FFFFFF',
-          borderBottom: '1px solid rgba(0,0,0,0.06)',
+          background: 'rgba(18, 15, 12, 0.70)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
           padding: '28px 36px',
           display: 'flex',
           alignItems: 'center',
@@ -156,13 +158,13 @@ export default function AdminWebsiteInfoPage() {
               fontFamily: 'var(--font-heading)',
               fontSize: 26,
               fontWeight: 300,
-              color: '#0E0F10',
+              color: '#FFFFFF',
               letterSpacing: '-0.02em',
             }}
           >
             Infos du site
           </h1>
-          <p style={{ fontSize: 13, color: '#9CA3AF', marginTop: 4 }}>
+          <p style={{ fontSize: 13, color: '#A1A1AA', marginTop: 4 }}>
             Modifiez le contenu du site sans toucher au code
           </p>
         </div>
@@ -171,21 +173,21 @@ export default function AdminWebsiteInfoPage() {
             display: 'flex',
             alignItems: 'center',
             gap: 8,
-            padding: '10px 16px',
-            background: '#fffbeb',
-            border: '1px solid #fde68a',
-            borderRadius: 12,
+            padding: '10px 18px',
+            background: 'rgba(245, 158, 11, 0.12)',
+            border: '1px solid rgba(245, 158, 11, 0.25)',
+            borderRadius: 99,
             fontSize: 12.5,
-            color: '#92400e',
+            color: '#fbbf24',
           }}
         >
-          <Clock className="w-4 h-4" />
+          <Clock className="w-4 h-4 text-[#d1aa5c]" />
           Connexion Supabase requise pour sauvegarder en live
         </div>
       </div>
 
       <div style={{ padding: '36px', maxWidth: 720, margin: '0 auto' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
           {SITE_SECTIONS.map(section => {
             const isOpen = openSections.includes(section.key)
             const isSaving = saving[section.key]
@@ -196,13 +198,16 @@ export default function AdminWebsiteInfoPage() {
               <div
                 key={section.key}
                 style={{
-                  background: '#FFFFFF',
-                  borderRadius: 16,
-                  border: '1px solid rgba(0,0,0,0.06)',
+                  background: 'rgba(22, 18, 14, 0.65)',
+                  backdropFilter: 'blur(16px)',
+                  WebkitBackdropFilter: 'blur(16px)',
+                  borderRadius: 18,
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  boxShadow: '0 12px 32px 0 rgba(0, 0, 0, 0.35), inset 0 1px 0 0 rgba(255, 255, 255, 0.08)',
                   overflow: 'hidden',
-                  transition: 'box-shadow 0.2s',
+                  transition: 'all 0.2s ease',
                 }}
-                className="hover:shadow-sm"
+                className="hover:shadow-2xl hover:border-[#d1aa5c]/30"
               >
                 {/* Section header */}
                 <button
@@ -222,18 +227,19 @@ export default function AdminWebsiteInfoPage() {
                   <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                     <div
                       style={{
-                        width: 36,
-                        height: 36,
-                        borderRadius: 10,
-                        background: '#F6F5F3',
+                        width: 38,
+                        height: 38,
+                        borderRadius: 12,
+                        background: 'rgba(209, 170, 92, 0.12)',
+                        border: '1px solid rgba(209, 170, 92, 0.25)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
                       }}
                     >
-                      <section.icon className="w-4 h-4" style={{ color: '#374151' }} />
+                      <section.icon className="w-4 h-4" style={{ color: '#d1aa5c' }} />
                     </div>
-                    <span style={{ fontSize: 14.5, fontWeight: 600, color: '#0E0F10' }}>
+                    <span style={{ fontSize: 14.5, fontWeight: 600, color: '#FFFFFF' }}>
                       {section.title}
                     </span>
                   </div>
@@ -242,8 +248,9 @@ export default function AdminWebsiteInfoPage() {
                       <span
                         style={{
                           fontSize: 12,
-                          color: '#059669',
-                          background: '#ecfdf5',
+                          color: '#34d399',
+                          background: 'rgba(16, 185, 129, 0.15)',
+                          border: '1px solid rgba(16, 185, 129, 0.3)',
                           padding: '3px 10px',
                           borderRadius: 99,
                           display: 'flex',
@@ -255,8 +262,8 @@ export default function AdminWebsiteInfoPage() {
                       </span>
                     )}
                     {isOpen
-                      ? <ChevronUp className="w-4 h-4" style={{ color: '#9CA3AF' }} />
-                      : <ChevronDown className="w-4 h-4" style={{ color: '#9CA3AF' }} />
+                      ? <ChevronUp className="w-4 h-4" style={{ color: '#d1aa5c' }} />
+                      : <ChevronDown className="w-4 h-4" style={{ color: '#A1A1AA' }} />
                     }
                   </div>
                 </button>
@@ -266,7 +273,7 @@ export default function AdminWebsiteInfoPage() {
                   <div
                     style={{
                       padding: '0 22px 22px',
-                      borderTop: '1px solid rgba(0,0,0,0.04)',
+                      borderTop: '1px solid rgba(255, 255, 255, 0.06)',
                       paddingTop: 20,
                     }}
                   >
@@ -278,7 +285,7 @@ export default function AdminWebsiteInfoPage() {
                               display: 'block',
                               fontSize: 11.5,
                               fontWeight: 600,
-                              color: '#374151',
+                              color: '#d1aa5c',
                               letterSpacing: '0.06em',
                               textTransform: 'uppercase',
                               marginBottom: 6,
@@ -296,10 +303,10 @@ export default function AdminWebsiteInfoPage() {
                                 width: '100%',
                                 padding: '11px 14px',
                                 borderRadius: 10,
-                                border: '1.5px solid #E5E7EB',
-                                background: '#FAFAFA',
+                                border: '1px solid rgba(255, 255, 255, 0.12)',
+                                background: 'rgba(0, 0, 0, 0.35)',
                                 fontSize: 13.5,
-                                color: '#0E0F10',
+                                color: '#FFFFFF',
                                 outline: 'none',
                                 resize: 'vertical',
                                 boxSizing: 'border-box',
@@ -307,8 +314,8 @@ export default function AdminWebsiteInfoPage() {
                                 transition: 'border-color 0.15s',
                                 fontFamily: 'var(--font-body)',
                               }}
-                              onFocus={e => (e.target.style.borderColor = '#0E0F10')}
-                              onBlur={e => (e.target.style.borderColor = '#E5E7EB')}
+                              onFocus={e => (e.target.style.borderColor = '#d1aa5c')}
+                              onBlur={e => (e.target.style.borderColor = 'rgba(255, 255, 255, 0.12)')}
                             />
                           ) : (
                             <input
@@ -320,17 +327,17 @@ export default function AdminWebsiteInfoPage() {
                                 width: '100%',
                                 padding: '11px 14px',
                                 borderRadius: 10,
-                                border: '1.5px solid #E5E7EB',
-                                background: '#FAFAFA',
+                                border: '1px solid rgba(255, 255, 255, 0.12)',
+                                background: 'rgba(0, 0, 0, 0.35)',
                                 fontSize: 13.5,
-                                color: '#0E0F10',
+                                color: '#FFFFFF',
                                 outline: 'none',
                                 boxSizing: 'border-box',
                                 transition: 'border-color 0.15s',
                                 fontFamily: 'var(--font-body)',
                               }}
-                              onFocus={e => (e.target.style.borderColor = '#0E0F10')}
-                              onBlur={e => (e.target.style.borderColor = '#E5E7EB')}
+                              onFocus={e => (e.target.style.borderColor = '#d1aa5c')}
+                              onBlur={e => (e.target.style.borderColor = 'rgba(255, 255, 255, 0.12)')}
                             />
                           )}
                         </div>
@@ -345,15 +352,16 @@ export default function AdminWebsiteInfoPage() {
                         padding: '11px 24px',
                         borderRadius: 10,
                         border: 'none',
-                        background: isSaved ? '#ecfdf5' : '#0E0F10',
-                        color: isSaved ? '#059669' : '#F2F1EF',
+                        background: isSaved ? 'rgba(16, 185, 129, 0.2)' : '#d1aa5c',
+                        color: isSaved ? '#34d399' : '#14120f',
                         fontSize: 13.5,
-                        fontWeight: 500,
+                        fontWeight: 600,
                         cursor: isSaving ? 'wait' : 'pointer',
                         display: 'flex',
                         alignItems: 'center',
                         gap: 8,
                         opacity: isSaving ? 0.7 : 1,
+                        boxShadow: isSaved ? 'none' : '0 4px 14px rgba(209, 170, 92, 0.25)',
                         transition: 'all 0.2s',
                       }}
                     >
@@ -376,14 +384,17 @@ export default function AdminWebsiteInfoPage() {
           style={{
             marginTop: 24,
             padding: '16px 20px',
-            background: '#F6F5F3',
-            borderRadius: 12,
+            background: 'rgba(22, 18, 14, 0.65)',
+            backdropFilter: 'blur(16px)',
+            WebkitBackdropFilter: 'blur(16px)',
+            borderRadius: 14,
+            border: '1px solid rgba(255, 255, 255, 0.08)',
             fontSize: 12.5,
-            color: '#6B7280',
+            color: '#A1A1AA',
             lineHeight: 1.6,
           }}
         >
-          <strong style={{ color: '#374151' }}>Note :</strong> Pour que les modifications soient reflétées en direct sur le site,
+          <strong style={{ color: '#d1aa5c' }}>Note :</strong> Pour que les modifications soient reflétées en direct sur le site,
           Supabase doit être configuré (remplir .env.local). Tant que Supabase n&apos;est pas connecté,
           les données sont préremplies mais non sauvegardées.
         </div>

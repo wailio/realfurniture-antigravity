@@ -9,8 +9,10 @@ export default function AdminSettingsPage() {
     <div className="min-h-screen" style={{ background: 'linear-gradient(135deg, #1E1912 0%, #2c2418 50%, #8b7344 100%)' }}>
       <div
         style={{
-          background: '#FFFFFF',
-          borderBottom: '1px solid rgba(0,0,0,0.06)',
+          background: 'rgba(18, 15, 12, 0.70)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
           padding: '28px 36px',
         }}
       >
@@ -19,82 +21,90 @@ export default function AdminSettingsPage() {
             fontFamily: 'var(--font-heading)',
             fontSize: 26,
             fontWeight: 300,
-            color: '#0E0F10',
+            color: '#FFFFFF',
             letterSpacing: '-0.02em',
           }}
         >
           Paramètres
         </h1>
-        <p style={{ fontSize: 13, color: '#9CA3AF', marginTop: 4 }}>Configuration du panneau d&apos;administration</p>
+        <p style={{ fontSize: 13, color: '#A1A1AA', marginTop: 4 }}>Configuration du panneau d&apos;administration</p>
       </div>
 
-      <div style={{ padding: '36px', maxWidth: 640 }}>
+      <div style={{ padding: '36px', maxWidth: 680 }}>
         {[
           {
             icon: Database,
             title: 'Base de données',
             desc: 'Connexion Supabase et état de la synchronisation',
-            status: 'À configurer',
-            statusColor: '#d97706',
-            statusBg: '#fffbeb',
+            status: 'Connecté (Live)',
+            statusColor: '#34d399',
+            statusBg: 'rgba(16, 185, 129, 0.15)',
+            statusBorder: 'rgba(16, 185, 129, 0.3)',
           },
           {
             icon: Shield,
             title: 'Sécurité & Accès',
             desc: 'Verrouillage de /admin via Cloudflare Access (Zero Trust)',
             status: 'Optionnel',
-            statusColor: '#6B7280',
-            statusBg: '#F6F5F3',
+            statusColor: '#D4D4D8',
+            statusBg: 'rgba(255, 255, 255, 0.06)',
+            statusBorder: 'rgba(255, 255, 255, 0.1)',
           },
           {
             icon: Bell,
             title: 'Notifications',
             desc: 'Alertes email / WhatsApp pour les nouvelles commandes',
             status: 'Bientôt',
-            statusColor: '#6B7280',
-            statusBg: '#F6F5F3',
+            statusColor: '#D4D4D8',
+            statusBg: 'rgba(255, 255, 255, 0.06)',
+            statusBorder: 'rgba(255, 255, 255, 0.1)',
           },
           {
             icon: Palette,
             title: 'Apparence',
-            desc: 'Personnalisation de l\'interface admin',
-            status: 'Bientôt',
-            statusColor: '#6B7280',
-            statusBg: '#F6F5F3',
+            desc: 'Design luxury dark glassy exclusif',
+            status: 'Actif',
+            statusColor: '#d1aa5c',
+            statusBg: 'rgba(209, 170, 92, 0.15)',
+            statusBorder: 'rgba(209, 170, 92, 0.3)',
           },
         ].map((item, i) => (
           <div
             key={i}
             style={{
-              background: '#FFFFFF',
-              borderRadius: 14,
+              background: 'rgba(22, 18, 14, 0.65)',
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
+              borderRadius: 18,
               padding: '20px 22px',
-              border: '1px solid rgba(0,0,0,0.06)',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
+              boxShadow: '0 12px 32px 0 rgba(0, 0, 0, 0.35), inset 0 1px 0 0 rgba(255, 255, 255, 0.08)',
               display: 'flex',
               alignItems: 'center',
               gap: 16,
-              marginBottom: 10,
-              transition: 'box-shadow 0.2s',
+              marginBottom: 12,
+              transition: 'all 0.2s ease',
             }}
-            className="hover:shadow-sm"
+            className="hover:shadow-2xl hover:border-[#d1aa5c]/30 hover:translate-x-1"
           >
             <div
               style={{
-                width: 42,
-                height: 42,
+                width: 44,
+                height: 44,
                 borderRadius: 12,
-                background: '#F6F5F3',
+                background: 'rgba(209, 170, 92, 0.12)',
+                border: '1px solid rgba(209, 170, 92, 0.25)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 flexShrink: 0,
               }}
             >
-              <item.icon className="w-5 h-5" style={{ color: '#374151' }} />
+              <item.icon className="w-5 h-5" style={{ color: '#d1aa5c' }} />
             </div>
             <div style={{ flex: 1 }}>
-              <p style={{ fontSize: 14, fontWeight: 600, color: '#0E0F10' }}>{item.title}</p>
-              <p style={{ fontSize: 12.5, color: '#9CA3AF', marginTop: 2 }}>{item.desc}</p>
+              <p style={{ fontSize: 14.5, fontWeight: 600, color: '#FFFFFF' }}>{item.title}</p>
+              <p style={{ fontSize: 12.5, color: '#A1A1AA', marginTop: 2 }}>{item.desc}</p>
             </div>
             <span
               style={{
@@ -102,6 +112,7 @@ export default function AdminSettingsPage() {
                 fontWeight: 600,
                 color: item.statusColor,
                 background: item.statusBg,
+                border: `1px solid ${item.statusBorder}`,
                 padding: '4px 12px',
                 borderRadius: 99,
                 flexShrink: 0,
@@ -116,8 +127,12 @@ export default function AdminSettingsPage() {
         <div
           style={{
             marginTop: 24,
-            background: '#0E0F10',
-            borderRadius: 14,
+            background: 'rgba(14, 11, 8, 0.85)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            boxShadow: '0 12px 32px rgba(0,0,0,0.4)',
+            borderRadius: 18,
             padding: '22px 24px',
           }}
         >
@@ -125,20 +140,20 @@ export default function AdminSettingsPage() {
             style={{
               fontSize: 13,
               fontWeight: 600,
-              color: '#F2F1EF',
+              color: '#FFFFFF',
               marginBottom: 4,
               letterSpacing: '0.02em',
             }}
           >
-            Script SQL — À exécuter dans Supabase
+            Script SQL — Configuration Supabase
           </p>
-          <p style={{ fontSize: 12, color: '#7C8089', marginBottom: 16 }}>
+          <p style={{ fontSize: 12, color: '#A1A1AA', marginBottom: 16 }}>
             Copiez ce script dans Supabase → SQL Editor → Run
           </p>
           <pre
             style={{
               fontSize: 11,
-              color: '#9CA3AF',
+              color: '#D4D4D8',
               lineHeight: 1.7,
               overflowX: 'auto',
               fontFamily: 'monospace',
