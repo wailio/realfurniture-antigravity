@@ -3,7 +3,6 @@
 export const runtime = 'edge'
 
 import { useState, useEffect, useCallback } from 'react'
-import Image from 'next/image'
 import {
   Plus,
   Search,
@@ -17,6 +16,9 @@ import {
   AlertCircle,
   Star,
   Package,
+  Sparkles,
+  Layers,
+  RefreshCw,
 } from 'lucide-react'
 
 interface Product {
@@ -41,6 +43,52 @@ const CATEGORIES = [
   { value: 'accessories', label: 'Accessoires' },
 ]
 
+// Authentic Château d'art collection files for the horizontal stacked deck
+const COLLECTION_FILES = [
+  {
+    name: 'Salons Modulables',
+    category: 'sofas',
+    tag: 'Salons',
+    image: '/products/salon/aa.jpg',
+    angle: -5,
+  },
+  {
+    name: 'Salles à Manger',
+    category: 'dining',
+    tag: 'Salles à manger',
+    image: '/products/salle/11.jpg',
+    angle: -2,
+  },
+  {
+    name: 'Suites & Chambres',
+    category: 'bedroom',
+    tag: 'Chambres',
+    image: '/products/chambre/-1.jpg',
+    angle: 0,
+  },
+  {
+    name: 'Dressings & Armoires',
+    category: 'armoires',
+    tag: 'Armoires',
+    image: '/products/armoire/ar1.jpg',
+    angle: 3,
+  },
+  {
+    name: 'Accessoires & Art',
+    category: 'accessories',
+    tag: 'Accessoires',
+    image: '/products/accessoire/acc1.jpg',
+    angle: 6,
+  },
+  {
+    name: 'Luxe & Velours',
+    category: 'sofas',
+    tag: 'Signature',
+    image: '/products/salon/bb.jpg',
+    angle: 9,
+  },
+]
+
 const STEPS = ['Infos', 'Catégorie', 'Images', 'Détails']
 
 const EMPTY_FORM = {
@@ -51,10 +99,6 @@ const EMPTY_FORM = {
   category: 'sofas',
   images: [''],
   in_stock: true,
-}
-
-function cn(...classes: (string | boolean | undefined)[]) {
-  return classes.filter(Boolean).join(' ')
 }
 
 export default function AdminProductsPage() {
@@ -68,8 +112,10 @@ export default function AdminProductsPage() {
   const [step, setStep] = useState(0)
   const [form, setForm] = useState(EMPTY_FORM)
   const [saving, setSaving] = useState(false)
+  const [seeding, setSeeding] = useState(false)
   const [saveMsg, setSaveMsg] = useState('')
   const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [hoveredFileIndex, setHoveredFileIndex] = useState<number | null>(null)
 
   const fetchProducts = useCallback(async () => {
     setLoading(true)
@@ -83,7 +129,7 @@ export default function AdminProductsPage() {
       const data = await res.json()
       setProducts(Array.isArray(data) ? data : [])
     } catch {
-      setError('Impossible de charger les produits. Vérifiez la configuration Supabase.')
+      setError('Impossible de charger les produits. Vérifiez la connexion Supabase.')
       setProducts([])
     } finally {
       setLoading(false)
@@ -91,6 +137,23 @@ export default function AdminProductsPage() {
   }, [filter])
 
   useEffect(() => { fetchProducts() }, [fetchProducts])
+
+  // 1-Click Catalog Seeder for initial launch
+  const handleSeed = async () => {
+    if (!confirm('Voulez-vous importer les 30 modèles du catalogue dans Supabase ?')) return
+    setSeeding(true)
+    setError('')
+    try {
+      const res = await fetch('/api/admin/products?action=seed', { method: 'POST' })
+      if (!res.ok) throw new Error('Erreur lors de l\'import')
+      await fetchProducts()
+      alert('Catalogue initial importé avec succès dans Supabase !')
+    } catch (e: any) {
+      alert(e.message || 'Erreur lors de l\'importation')
+    } finally {
+      setSeeding(false)
+    }
+  }
 
   const openAdd = () => {
     setEditing(null)
@@ -177,17 +240,6 @@ export default function AdminProductsPage() {
     search === '' || p.name.toLowerCase().includes(search.toLowerCase())
   )
 
-  // Static fallback images from the site's existing catalog
-  const STATIC_PREVIEWS = [
-    '/products/salon/aa.jpg',
-    '/products/salle/11.jpg',
-    '/products/chambre/-1.jpg',
-    '/products/armoire/ar1.jpg',
-    '/products/accessoire/acc1.jpg',
-  ]
-  const supabaseImages = products.slice(0, 5).map(p => p.images?.[0]).filter(Boolean) as string[]
-  const previewImages: string[] = supabaseImages.length >= 3 ? supabaseImages : STATIC_PREVIEWS
-
   const canNextStep = () => {
     if (step === 0) return form.name.trim().length > 0 && form.price.trim().length > 0
     if (step === 1) return form.category.trim().length > 0
@@ -207,6 +259,7 @@ export default function AdminProductsPage() {
           alignItems: 'center',
           justifyContent: 'space-between',
           gap: 16,
+          flexWrap: 'wrap',
         }}
       >
         <div>
@@ -222,101 +275,228 @@ export default function AdminProductsPage() {
             Produits
           </h1>
           <p style={{ fontSize: 13, color: '#9CA3AF', marginTop: 4 }}>
-            {products.length} produit{products.length !== 1 ? 's' : ''} dans le catalogue
+            {products.length} produit{products.length !== 1 ? 's' : ''} dans le catalogue Supabase
           </p>
         </div>
-        <button
-          onClick={openAdd}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 8,
-            background: '#0E0F10',
-            color: '#F2F1EF',
-            padding: '11px 22px',
-            borderRadius: 12,
-            fontSize: 13,
-            fontWeight: 500,
-            letterSpacing: '0.02em',
-            border: 'none',
-            cursor: 'pointer',
-            transition: 'opacity 0.15s',
-          }}
-          onMouseEnter={e => (e.currentTarget.style.opacity = '0.88')}
-          onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
-        >
-          <Plus className="w-4 h-4" />
-          Ajouter un produit
-        </button>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          {products.length === 0 && (
+            <button
+              onClick={handleSeed}
+              disabled={seeding}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 8,
+                background: '#FFFFFF',
+                color: '#0E0F10',
+                padding: '11px 18px',
+                borderRadius: 12,
+                fontSize: 13,
+                fontWeight: 500,
+                border: '1.5px solid #0E0F10',
+                cursor: seeding ? 'wait' : 'pointer',
+                transition: 'all 0.15s',
+              }}
+            >
+              {seeding ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+              {seeding ? 'Importation en cours...' : 'Importer le catalogue (30 modèles)'}
+            </button>
+          )}
+
+          <button
+            onClick={openAdd}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8,
+              background: '#0E0F10',
+              color: '#F2F1EF',
+              padding: '11px 22px',
+              borderRadius: 12,
+              fontSize: 13,
+              fontWeight: 500,
+              letterSpacing: '0.02em',
+              border: 'none',
+              cursor: 'pointer',
+              transition: 'opacity 0.15s',
+            }}
+            onMouseEnter={e => (e.currentTarget.style.opacity = '0.88')}
+            onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
+          >
+            <Plus className="w-4 h-4" />
+            Ajouter un produit
+          </button>
+        </div>
       </div>
 
       <div style={{ padding: '36px' }}>
-        {/* Fan Preview */}
-        {previewImages.length > 0 && (
-          <div
-            style={{
-              marginBottom: 32,
-              display: 'flex',
-              alignItems: 'flex-end',
-              height: 120,
-              position: 'relative',
-              width: 'fit-content',
-            }}
-          >
-            {previewImages.map((src, i) => (
-              <div
-                key={i}
+        {/* ── HORIZONTAL STACKED FILES DECK (As requested) ── */}
+        <div style={{ marginBottom: 36 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <Layers className="w-4 h-4" style={{ color: '#6B7280' }} />
+              <span
                 style={{
-                  position: 'absolute',
-                  left: i * 48,
-                  bottom: 0,
-                  width: 80,
-                  height: 100,
-                  borderRadius: 12,
-                  overflow: 'hidden',
-                  border: '2px solid #fff',
-                  boxShadow: '0 4px 16px rgba(0,0,0,0.12)',
-                  transform: `rotate(${(i - 2) * 6}deg)`,
-                  zIndex: i,
-                  transition: 'transform 0.2s',
-                  cursor: 'pointer',
-                }}
-                onMouseEnter={e => {
-                  e.currentTarget.style.transform = `rotate(${(i - 2) * 6}deg) translateY(-8px) scale(1.04)`
-                  e.currentTarget.style.zIndex = '10'
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.transform = `rotate(${(i - 2) * 6}deg)`
-                  e.currentTarget.style.zIndex = String(i)
+                  fontSize: 12,
+                  fontWeight: 600,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.08em',
+                  color: '#6B7280',
                 }}
               >
-                <Image src={src} alt="" fill className="object-cover" />
-              </div>
-            ))}
+                Collections &amp; Échantillons
+              </span>
+            </div>
+            <span style={{ fontSize: 11.5, color: '#9CA3AF' }}>
+              Cliquez sur un dossier pour filtrer
+            </span>
           </div>
-        )}
 
-        {/* Filters */}
+          {/* Horizontal Overlapping File Cards Container */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              padding: '24px 20px',
+              background: '#FFFFFF',
+              borderRadius: 20,
+              border: '1px solid rgba(0,0,0,0.06)',
+              overflowX: 'auto',
+              minHeight: 220,
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                margin: '0 auto',
+                padding: '10px 30px',
+              }}
+            >
+              {COLLECTION_FILES.map((file, i) => {
+                const isHovered = hoveredFileIndex === i
+                const isActive = filter === file.category
+
+                return (
+                  <div
+                    key={i}
+                    onClick={() => setFilter(file.category)}
+                    onMouseEnter={() => setHoveredFileIndex(i)}
+                    onMouseLeave={() => setHoveredFileIndex(null)}
+                    style={{
+                      position: 'relative',
+                      width: 140,
+                      height: 180,
+                      marginLeft: i === 0 ? 0 : -38,
+                      borderRadius: 16,
+                      background: '#18191B',
+                      border: isActive ? '3px solid #0E0F10' : '2.5px solid #FFFFFF',
+                      boxShadow: isHovered
+                        ? '0 20px 35px -5px rgba(0,0,0,0.3), 0 10px 10px -5px rgba(0,0,0,0.1)'
+                        : '0 10px 25px -5px rgba(0,0,0,0.15)',
+                      transform: isHovered
+                        ? 'translateY(-16px) scale(1.08) rotate(0deg)'
+                        : `rotate(${file.angle}deg)`,
+                      zIndex: isHovered ? 40 : isActive ? 20 : i + 1,
+                      transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+                      cursor: 'pointer',
+                      overflow: 'hidden',
+                      flexShrink: 0,
+                    }}
+                  >
+                    {/* Background Image */}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={file.image}
+                      alt={file.name}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        display: 'block',
+                      }}
+                    />
+
+                    {/* Gradient Overlay */}
+                    <div
+                      style={{
+                        position: 'absolute',
+                        inset: 0,
+                        background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 50%, transparent 100%)',
+                      }}
+                    />
+
+                    {/* Top Folder Tab Label */}
+                    <div
+                      style={{
+                        position: 'absolute',
+                        top: 8,
+                        left: 8,
+                        background: 'rgba(255,255,255,0.92)',
+                        backdropFilter: 'blur(4px)',
+                        padding: '3px 8px',
+                        borderRadius: 6,
+                        fontSize: 9.5,
+                        fontWeight: 700,
+                        color: '#0E0F10',
+                        letterSpacing: '0.04em',
+                        textTransform: 'uppercase',
+                      }}
+                    >
+                      {file.tag}
+                    </div>
+
+                    {/* Bottom Title */}
+                    <div
+                      style={{
+                        position: 'absolute',
+                        bottom: 10,
+                        left: 10,
+                        right: 10,
+                      }}
+                    >
+                      <p
+                        style={{
+                          fontSize: 12,
+                          fontWeight: 600,
+                          color: '#FFFFFF',
+                          lineHeight: 1.2,
+                          textShadow: '0 1px 3px rgba(0,0,0,0.6)',
+                        }}
+                      >
+                        {file.name}
+                      </p>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        </div>
+
+        {/* ── FILTERS & CATEGORIES (Directly below stacked files deck) ── */}
         <div
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: 8,
-            marginBottom: 20,
+            gap: 12,
+            marginBottom: 24,
             flexWrap: 'wrap',
           }}
         >
+          {/* Search Input */}
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
               gap: 8,
               background: '#FFFFFF',
-              borderRadius: 10,
-              padding: '8px 14px',
+              borderRadius: 12,
+              padding: '9px 16px',
               border: '1px solid rgba(0,0,0,0.07)',
               flex: 1,
-              maxWidth: 300,
+              maxWidth: 320,
             }}
           >
             <Search className="w-4 h-4" style={{ color: '#9CA3AF', flexShrink: 0 }} />
@@ -335,13 +515,15 @@ export default function AdminProductsPage() {
               }}
             />
           </div>
+
+          {/* Category Clickable Pills */}
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
             {CATEGORIES.map(cat => (
               <button
                 key={cat.value}
                 onClick={() => setFilter(cat.value)}
                 style={{
-                  padding: '7px 14px',
+                  padding: '8px 16px',
                   borderRadius: 99,
                   fontSize: 12.5,
                   fontWeight: 500,
@@ -359,28 +541,48 @@ export default function AdminProductsPage() {
           </div>
         </div>
 
-        {/* Error */}
+        {/* Error Notification */}
         {error && (
           <div
             style={{
-              background: '#fef2f2',
-              border: '1px solid #fecaca',
+              background: '#fffbeb',
+              border: '1px solid #fde68a',
               borderRadius: 12,
               padding: '14px 18px',
               display: 'flex',
               alignItems: 'center',
+              justifyContent: 'space-between',
               gap: 10,
               marginBottom: 20,
-              color: '#dc2626',
-              fontSize: 13.5,
+              color: '#92400e',
+              fontSize: 13,
             }}
           >
-            <AlertCircle className="w-4 h-4 shrink-0" />
-            {error}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <AlertCircle className="w-4 h-4 shrink-0 text-[#d97706]" />
+              <span>{error}</span>
+            </div>
+            <button
+              onClick={fetchProducts}
+              style={{
+                padding: '5px 12px',
+                borderRadius: 8,
+                background: '#0E0F10',
+                color: '#fff',
+                fontSize: 12,
+                border: 'none',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 5,
+              }}
+            >
+              <RefreshCw className="w-3 h-3" /> Réessayer
+            </button>
           </div>
         )}
 
-        {/* Product Grid */}
+        {/* ── PRODUCT GRID / EMPTY STATE ── */}
         {loading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: '60px 0' }}>
             <Loader2 className="w-7 h-7 animate-spin" style={{ color: '#9CA3AF' }} />
@@ -389,38 +591,85 @@ export default function AdminProductsPage() {
           <div
             style={{
               textAlign: 'center',
-              padding: '80px 20px',
+              padding: '70px 24px',
               background: '#FFFFFF',
-              borderRadius: 16,
+              borderRadius: 20,
               border: '1px solid rgba(0,0,0,0.05)',
             }}
           >
-            <Package className="w-10 h-10 mx-auto mb-4" style={{ color: '#D1D5DB' }} />
-            <p style={{ color: '#6B7280', fontSize: 14 }}>
-              {search ? 'Aucun produit trouvé' : 'Aucun produit dans cette catégorie'}
-            </p>
-            <button
-              onClick={openAdd}
+            <div
               style={{
-                marginTop: 16,
-                padding: '9px 20px',
-                background: '#0E0F10',
-                color: '#fff',
-                borderRadius: 10,
-                fontSize: 13,
-                border: 'none',
-                cursor: 'pointer',
+                width: 60,
+                height: 60,
+                borderRadius: 99,
+                background: '#F6F5F3',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                margin: '0 auto 16px',
               }}
             >
-              Ajouter le premier produit
-            </button>
+              <Package className="w-7 h-7" style={{ color: '#9CA3AF' }} />
+            </div>
+
+            <p style={{ color: '#0E0F10', fontSize: 16, fontWeight: 600 }}>
+              {search ? 'Aucun produit trouvé' : 'Le catalogue Supabase est prêt'}
+            </p>
+            <p style={{ color: '#6B7280', fontSize: 13, marginTop: 6, maxWidth: 440, margin: '6px auto 20px' }}>
+              {search
+                ? 'Essayez une autre recherche ou réinitialisez les filtres.'
+                : 'Votre base de données Supabase est connectée. Vous pouvez importer les 30 modèles de démonstration ou ajouter vos pièces sur-mesure.'}
+            </p>
+
+            <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
+              <button
+                onClick={handleSeed}
+                disabled={seeding}
+                style={{
+                  padding: '11px 22px',
+                  background: '#0E0F10',
+                  color: '#fff',
+                  borderRadius: 12,
+                  fontSize: 13,
+                  fontWeight: 500,
+                  border: 'none',
+                  cursor: seeding ? 'wait' : 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 8,
+                }}
+              >
+                {seeding ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+                {seeding ? 'Importation...' : '✨ Importer les 30 modèles du catalogue'}
+              </button>
+
+              <button
+                onClick={openAdd}
+                style={{
+                  padding: '11px 22px',
+                  background: '#F6F5F3',
+                  color: '#0E0F10',
+                  borderRadius: 12,
+                  fontSize: 13,
+                  fontWeight: 500,
+                  border: '1px solid rgba(0,0,0,0.1)',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 8,
+                }}
+              >
+                <Plus className="w-4 h-4" />
+                Ajouter manuellement
+              </button>
+            </div>
           </div>
         ) : (
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
-              gap: 16,
+              gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+              gap: 20,
             }}
           >
             {filteredProducts.map(product => (
@@ -428,52 +677,61 @@ export default function AdminProductsPage() {
                 key={product.id}
                 style={{
                   background: '#FFFFFF',
-                  borderRadius: 16,
+                  borderRadius: 18,
                   overflow: 'hidden',
-                  border: '1px solid rgba(0,0,0,0.05)',
+                  border: '1px solid rgba(0,0,0,0.06)',
                   transition: 'box-shadow 0.2s, transform 0.2s',
                 }}
-                className="hover:shadow-md hover:-translate-y-0.5"
+                className="hover:shadow-lg hover:-translate-y-1"
               >
                 {/* Product Image */}
-                <div style={{ position: 'relative', height: 180, background: '#F6F5F3' }}>
+                <div style={{ position: 'relative', height: 200, background: '#F6F5F3', overflow: 'hidden' }}>
                   {product.images?.[0] ? (
-                    <Image
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
                       src={product.images[0]}
                       alt={product.name}
-                      fill
-                      className="object-cover"
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        display: 'block',
+                      }}
+                      loading="lazy"
                     />
                   ) : (
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
                       <ImageIcon className="w-10 h-10" style={{ color: '#D1D5DB' }} />
                     </div>
                   )}
+
                   {/* Stock badge */}
                   <div
                     style={{
                       position: 'absolute',
-                      top: 10,
-                      left: 10,
-                      background: product.in_stock ? '#ecfdf5' : '#fef2f2',
-                      color: product.in_stock ? '#059669' : '#dc2626',
-                      fontSize: 10.5,
-                      fontWeight: 600,
-                      padding: '3px 8px',
+                      top: 12,
+                      left: 12,
+                      background: product.in_stock ? 'rgba(16,185,129,0.92)' : 'rgba(239,68,68,0.92)',
+                      backdropFilter: 'blur(4px)',
+                      color: '#FFFFFF',
+                      fontSize: 10,
+                      fontWeight: 700,
+                      padding: '3px 9px',
                       borderRadius: 99,
                       letterSpacing: '0.06em',
                     }}
                   >
                     {product.in_stock ? 'EN STOCK' : 'RUPTURE'}
                   </div>
-                  {/* Image count */}
+
+                  {/* Multiple Images badge */}
                   {product.images?.length > 1 && (
                     <div
                       style={{
                         position: 'absolute',
                         bottom: 10,
                         right: 10,
-                        background: 'rgba(0,0,0,0.55)',
+                        background: 'rgba(0,0,0,0.65)',
                         color: '#fff',
                         fontSize: 10.5,
                         padding: '3px 8px',
@@ -487,12 +745,12 @@ export default function AdminProductsPage() {
                 </div>
 
                 {/* Product Info */}
-                <div style={{ padding: '16px 18px' }}>
+                <div style={{ padding: '18px 20px' }}>
                   <div className="flex items-start justify-between gap-2 mb-2">
                     <div>
                       <p
                         style={{
-                          fontSize: 13,
+                          fontSize: 14,
                           fontWeight: 600,
                           color: '#0E0F10',
                           lineHeight: 1.3,
@@ -505,15 +763,16 @@ export default function AdminProductsPage() {
                           fontSize: 11,
                           color: '#9CA3AF',
                           background: '#F6F5F3',
-                          padding: '2px 7px',
+                          padding: '2px 8px',
                           borderRadius: 99,
                           display: 'inline-block',
-                          marginTop: 4,
+                          marginTop: 6,
                         }}
                       >
                         {CATEGORIES.find(c => c.value === product.category)?.label || product.category}
                       </span>
                     </div>
+
                     <div style={{ textAlign: 'right', flexShrink: 0 }}>
                       {product.sale_price ? (
                         <>
@@ -531,29 +790,32 @@ export default function AdminProductsPage() {
                       )}
                     </div>
                   </div>
+
                   {product.description && (
                     <p
                       style={{
                         fontSize: 12,
-                        color: '#9CA3AF',
+                        color: '#6B7280',
                         lineHeight: 1.5,
                         display: '-webkit-box',
                         WebkitLineClamp: 2,
                         WebkitBoxOrient: 'vertical',
                         overflow: 'hidden',
-                        marginBottom: 12,
+                        marginBottom: 14,
+                        marginTop: 6,
                       }}
                     >
                       {product.description}
                     </p>
                   )}
-                  <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
+
+                  <div style={{ display: 'flex', gap: 8, marginTop: 14 }}>
                     <button
                       onClick={() => openEdit(product)}
                       style={{
                         flex: 1,
-                        padding: '8px 0',
-                        borderRadius: 9,
+                        padding: '9px 0',
+                        borderRadius: 10,
                         fontSize: 12.5,
                         fontWeight: 500,
                         background: '#F6F5F3',
@@ -570,12 +832,13 @@ export default function AdminProductsPage() {
                       <Pencil className="w-3.5 h-3.5" />
                       Modifier
                     </button>
+
                     <button
                       onClick={() => handleDelete(product.id)}
                       disabled={deletingId === product.id}
                       style={{
-                        padding: '8px 14px',
-                        borderRadius: 9,
+                        padding: '9px 14px',
+                        borderRadius: 10,
                         fontSize: 12.5,
                         background: '#fef2f2',
                         border: 'none',
@@ -600,7 +863,7 @@ export default function AdminProductsPage() {
         )}
       </div>
 
-      {/* Add / Edit Modal */}
+      {/* ── ADD / EDIT MODAL ── */}
       {showModal && (
         <div
           style={{
@@ -608,7 +871,7 @@ export default function AdminProductsPage() {
             inset: 0,
             background: 'rgba(0,0,0,0.45)',
             backdropFilter: 'blur(4px)',
-            zIndex: 50,
+            zIndex: 60,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -813,7 +1076,7 @@ export default function AdminProductsPage() {
               {step === 2 && (
                 <div>
                   <p style={{ fontSize: 13, color: '#6B7280', marginBottom: 16, lineHeight: 1.5 }}>
-                    Entrez les URLs des images. La <strong style={{ color: '#0E0F10' }}>première image</strong> est la photo de couverture affichée en priorité.
+                    Entrez les URLs des photos. La <strong style={{ color: '#0E0F10' }}>première image</strong> est la couverture.
                   </p>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                     {form.images.map((img, i) => (
@@ -833,7 +1096,8 @@ export default function AdminProductsPage() {
                           }}
                         >
                           {img ? (
-                            <Image src={img} alt="" fill className="object-cover" />
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img src={img} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                           ) : (
                             <ImageIcon className="w-5 h-5" style={{ color: '#D1D5DB' }} />
                           )}
@@ -853,14 +1117,14 @@ export default function AdminProductsPage() {
                           )}
                         </div>
                         <input
-                          type="url"
+                          type="text"
                           value={img}
                           onChange={e => {
                             const newImgs = [...form.images]
                             newImgs[i] = e.target.value
                             setForm(f => ({ ...f, images: newImgs }))
                           }}
-                          placeholder={i === 0 ? 'URL image principale (couverture)' : `URL image ${i + 1}`}
+                          placeholder={i === 0 ? 'Ex: /products/salon/aa.jpg ou URL web' : `URL image ${i + 1}`}
                           style={{ ...inputStyle, flex: 1 }}
                         />
                         {form.images.length > 1 && (
@@ -901,11 +1165,10 @@ export default function AdminProductsPage() {
                           alignItems: 'center',
                           justifyContent: 'center',
                           gap: 6,
-                          transition: 'border-color 0.15s',
                         }}
                       >
                         <Plus className="w-4 h-4" />
-                        Ajouter une image
+                        Ajouter une photo
                       </button>
                     )}
                   </div>
@@ -915,7 +1178,7 @@ export default function AdminProductsPage() {
               {/* Step 3: Review */}
               {step === 3 && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-                  <p style={{ fontSize: 13, color: '#6B7280', marginBottom: 4 }}>Vérifiez avant de sauvegarder :</p>
+                  <p style={{ fontSize: 13, color: '#6B7280', marginBottom: 4 }}>Vérifiez avant d&apos;enregistrer :</p>
                   <div style={{ background: '#F6F5F3', borderRadius: 12, padding: '16px 18px', display: 'flex', flexDirection: 'column', gap: 10 }}>
                     {[
                       { label: 'Nom', value: form.name },

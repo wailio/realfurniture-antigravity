@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getSupabaseConfig, supabaseHeaders } from "@/lib/supabase-config";
 
 export const runtime = 'edge';
 
@@ -24,34 +25,45 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // ── Send to webhook / email service ──────────────────────
-    // TODO: Wire up to the same webhook/email service used by the original site.
-    // For now, log the submission and return success.
-    console.log("Contact form submission:", {
-      name,
-      email,
-      phone,
-      subject,
-      message,
-      timestamp: new Date().toISOString(),
-    });
-
-    // If a webhook URL is configured, forward the submission
-    const webhookUrl = process.env.CONTACT_WEBHOOK_URL;
-    if (webhookUrl) {
-      await fetch(webhookUrl, {
+    // ── Save to Supabase messages table ──────────────────────
+    try {
+      const { url, key } = getSupabaseConfig();
+      await fetch(`${url}/rest/v1/messages`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: supabaseHeaders(key),
         body: JSON.stringify({
           name,
           email,
-          phone,
-          subject,
+          phone: phone || "",
+          subject: subject || "",
           message,
-          source: "Château d'art Website",
-          timestamp: new Date().toISOString(),
+          status: "new",
         }),
       });
+    } catch (dbErr) {
+      console.error("Supabase message save error:", dbErr);
+    }
+
+    // ── If a webhook URL is configured, forward the submission ──
+    const webhookUrl = process.env.CONTACT_WEBHOOK_URL;
+    if (webhookUrl) {
+      try {
+        await fetch(webhookUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name,
+            email,
+            phone,
+            subject,
+            message,
+            source: "Château d'art Website",
+            timestamp: new Date().toISOString(),
+          }),
+        });
+      } catch (whErr) {
+        console.error("Webhook error:", whErr);
+      }
     }
 
     return NextResponse.json(
