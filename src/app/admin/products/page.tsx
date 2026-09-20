@@ -177,7 +177,16 @@ export default function AdminProductsPage() {
     search === '' || p.name.toLowerCase().includes(search.toLowerCase())
   )
 
-  const previewImages = products.slice(0, 5).map(p => p.images?.[0]).filter(Boolean)
+  // Static fallback images from the site's existing catalog
+  const STATIC_PREVIEWS = [
+    '/products/salon/aa.jpg',
+    '/products/salle/11.jpg',
+    '/products/chambre/-1.jpg',
+    '/products/armoire/ar1.jpg',
+    '/products/accessoire/acc1.jpg',
+  ]
+  const supabaseImages = products.slice(0, 5).map(p => p.images?.[0]).filter(Boolean) as string[]
+  const previewImages: string[] = supabaseImages.length >= 3 ? supabaseImages : STATIC_PREVIEWS
 
   const canNextStep = () => {
     if (step === 0) return form.name.trim().length > 0 && form.price.trim().length > 0
