@@ -84,15 +84,15 @@ export function Header({ theme = 'dark' }: HeaderProps) {
         </div>
       </div>
 
-      {/* ── ROW 2: Main Header Bar (Thin & Sleek Task Bar with Prominent Logo) ── */}
+      {/* ── ROW 2: Main Header Bar (Task Bar with Prominent Logo) ── */}
       <div
-        className={`py-1.5 md:py-2 px-4 sm:px-6 md:px-10 lg:px-12 transition-colors duration-300 ${
+        className={`py-1 md:py-1.5 px-4 sm:px-6 md:px-10 lg:px-12 min-h-[64px] md:min-h-[92px] lg:min-h-[96px] flex items-center transition-colors duration-300 ${
           isDark
             ? 'bg-[#101114] border-b border-white/10'
             : 'bg-white border-b border-[#E4E4E7]'
         }`}
       >
-        <div className="max-w-[1440px] mx-auto flex items-center justify-between">
+        <div className="max-w-[1440px] w-full mx-auto flex items-center justify-between">
           
           {/* LEFT: Phone / Need Help block — desktop only */}
           <div className="hidden md:flex flex-1 items-center justify-start">
@@ -139,7 +139,7 @@ export function Header({ theme = 'dark' }: HeaderProps) {
               <img
                 src="/bigtower.png"
                 alt="Château d'art"
-                className="h-10 md:h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105 drop-shadow-md"
+                className="h-[52px] sm:h-[56px] md:h-[76px] lg:h-[84px] w-auto object-contain transition-transform duration-300 group-hover:scale-105 drop-shadow-md"
               />
             </Link>
           </div>
