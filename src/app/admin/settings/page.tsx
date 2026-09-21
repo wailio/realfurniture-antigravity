@@ -7,28 +7,34 @@ import { Shield, Database, Bell, Palette } from 'lucide-react'
 export default function AdminSettingsPage() {
   return (
     <div className="min-h-screen" style={{ background: '#F6F5F3' }}>
-      <div
+      <header
         style={{
-          background: 'rgba(6, 10, 22, 0.95)',
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-          padding: '28px 36px',
+          background: '#0A0B0C',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
+          padding: '0 36px',
+          minHeight: 72,
+          display: 'flex',
+          alignItems: 'center',
         }}
       >
-        <h1
-          style={{
-            fontFamily: 'var(--font-heading)',
-            fontSize: 26,
-            fontWeight: 300,
-            color: '#FFFFFF',
-            letterSpacing: '-0.02em',
-          }}
-        >
-          Paramètres
-        </h1>
-        <p style={{ fontSize: 13, color: '#A1A1AA', marginTop: 4 }}>Configuration du panneau d&apos;administration</p>
-      </div>
+        <div>
+          <p style={{ fontSize: 11, color: '#52525B', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 3 }}>
+            Château d&apos;art / Admin
+          </p>
+          <h1
+            style={{
+              fontFamily: 'var(--font-heading)',
+              fontSize: 22,
+              fontWeight: 300,
+              color: '#FFFFFF',
+              letterSpacing: '-0.02em',
+            }}
+          >
+            Paramètres
+          </h1>
+          <p style={{ fontSize: 12, color: '#52525B', marginTop: 2 }}>Configuration du panneau d&apos;administration</p>
+        </div>
+      </header>
 
       <div style={{ padding: '36px', maxWidth: 680 }}>
         {[
@@ -72,18 +78,19 @@ export default function AdminSettingsPage() {
           <div
             key={i}
             style={{
-              background: 'rgba(7, 11, 24, 0.95)',
-              backdropFilter: 'blur(20px)',
-              WebkitBackdropFilter: 'blur(20px)',
+              background: 'linear-gradient(145deg, rgba(14,22,45,0.94) 0%, rgba(7,12,28,0.97) 50%, rgba(3,6,16,0.99) 100%)',
+              backdropFilter: 'blur(28px)',
+              WebkitBackdropFilter: 'blur(28px)',
               borderRadius: 18,
               padding: '20px 22px',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
-              boxShadow: '0 14px 36px 0 rgba(0, 0, 0, 0.35), inset 0 1px 0 0 rgba(255, 255, 255, 0.10)',
+              border: '1px solid rgba(255, 255, 255, 0.10)',
+              boxShadow: 'inset 0 1px 0 0 rgba(255,255,255,0.18), inset 0 0 0 1px rgba(255,255,255,0.04), 0 20px 45px -12px rgba(0,0,0,0.55), 0 8px 18px -4px rgba(2,6,23,0.35)',
               display: 'flex',
               alignItems: 'center',
               gap: 16,
               marginBottom: 12,
-              transition: 'all 0.2s ease',
+              transition: 'all 0.28s cubic-bezier(0.4,0,0.2,1)',
+              position: 'relative',
             }}
             className="hover:shadow-2xl hover:border-[#60a5fa]/30 hover:translate-x-1"
           >
@@ -127,13 +134,15 @@ export default function AdminSettingsPage() {
         <div
           style={{
             marginTop: 24,
-            background: 'rgba(7, 11, 24, 0.95)',
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
-            boxShadow: '0 14px 36px 0 rgba(0, 0, 0, 0.35), inset 0 1px 0 0 rgba(255, 255, 255, 0.10)',
+            background: 'linear-gradient(145deg, rgba(14,22,45,0.94) 0%, rgba(7,12,28,0.97) 50%, rgba(3,6,16,0.99) 100%)',
+            backdropFilter: 'blur(28px)',
+            WebkitBackdropFilter: 'blur(28px)',
+            border: '1px solid rgba(255, 255, 255, 0.10)',
+            boxShadow: 'inset 0 1px 0 0 rgba(255,255,255,0.18), inset 0 0 0 1px rgba(255,255,255,0.04), 0 20px 45px -12px rgba(0,0,0,0.55), 0 8px 18px -4px rgba(2,6,23,0.35)',
             borderRadius: 18,
             padding: '22px 24px',
+            position: 'relative',
+            overflow: 'hidden',
           }}
         >
           <p

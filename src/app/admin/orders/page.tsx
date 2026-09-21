@@ -120,24 +120,26 @@ export default function AdminOrdersPage() {
   return (
     <div className="min-h-screen" style={{ background: '#F6F5F3' }}>
       {/* Header */}
-      <div
+      <header
         style={{
-          background: 'rgba(6, 11, 25, 0.92)',
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-          padding: '28px 36px',
+          background: '#0A0B0C',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
+          padding: '0 36px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
+          minHeight: 72,
         }}
       >
         <div>
+          <p style={{ fontSize: 11, color: '#52525B', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 3 }}>
+            Château d&apos;art / Admin
+          </p>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <h1
               style={{
                 fontFamily: 'var(--font-heading)',
-                fontSize: 26,
+                fontSize: 22,
                 fontWeight: 300,
                 color: '#FFFFFF',
                 letterSpacing: '-0.02em',
@@ -161,11 +163,11 @@ export default function AdminOrdersPage() {
               </span>
             )}
           </div>
-          <p style={{ fontSize: 13, color: '#A1A1AA', marginTop: 4 }}>
+          <p style={{ fontSize: 12, color: '#52525B', marginTop: 2 }}>
             Messages et demandes reçus via le formulaire de contact
           </p>
         </div>
-      </div>
+      </header>
 
       <div style={{ padding: '36px' }}>
         {/* Status filter tabs */}
@@ -184,9 +186,9 @@ export default function AdminOrdersPage() {
                 fontWeight: 600,
                 border: filterStatus === tab.value ? 'none' : '1px solid rgba(255, 255, 255, 0.09)',
                 cursor: 'pointer',
-                background: filterStatus === tab.value ? '#d1aa5c' : 'rgba(6, 11, 25, 0.88)',
-                backdropFilter: 'blur(20px)',
-                WebkitBackdropFilter: 'blur(20px)',
+                background: filterStatus === tab.value ? 'linear-gradient(135deg, #d1aa5c 0%, #b89347 100%)' : 'linear-gradient(145deg, rgba(14,22,45,0.94) 0%, rgba(7,12,28,0.97) 50%, rgba(3,6,16,0.99) 100%)',
+                backdropFilter: filterStatus === tab.value ? 'none' : 'blur(28px)',
+                WebkitBackdropFilter: filterStatus === tab.value ? 'none' : 'blur(28px)',
                 color: filterStatus === tab.value ? '#14120f' : '#D4D4D8',
                 boxShadow: filterStatus === tab.value
                   ? '0 4px 14px rgba(209, 170, 92, 0.3)'
@@ -230,12 +232,14 @@ export default function AdminOrdersPage() {
             style={{
               textAlign: 'center',
               padding: '80px 20px',
-              background: 'rgba(6, 11, 25, 0.92)',
-              backdropFilter: 'blur(20px)',
-              WebkitBackdropFilter: 'blur(20px)',
+              background: 'linear-gradient(145deg, rgba(14,22,45,0.94) 0%, rgba(7,12,28,0.97) 50%, rgba(3,6,16,0.99) 100%)',
+              backdropFilter: 'blur(28px)',
+              WebkitBackdropFilter: 'blur(28px)',
               borderRadius: 20,
-              border: '1px solid rgba(255, 255, 255, 0.09)',
-              boxShadow: '0 14px 36px 0 rgba(0, 0, 0, 0.28), inset 0 1px 0 0 rgba(255, 255, 255, 0.10)',
+              border: '1px solid rgba(255, 255, 255, 0.10)',
+              boxShadow: 'inset 0 1px 0 0 rgba(255,255,255,0.18), inset 0 0 0 1px rgba(255,255,255,0.04), 0 20px 45px -12px rgba(0,0,0,0.55), 0 8px 18px -4px rgba(2,6,23,0.35)',
+              position: 'relative',
+              overflow: 'hidden',
             }}
           >
             <MessageSquare className="w-10 h-10 mx-auto mb-4 text-[#d1aa5c]" />
@@ -252,17 +256,17 @@ export default function AdminOrdersPage() {
                 <div
                   key={order.id}
                   style={{
-                    background: 'rgba(6, 11, 25, 0.92)',
-                    backdropFilter: 'blur(20px)',
-                    WebkitBackdropFilter: 'blur(20px)',
+                    background: 'linear-gradient(145deg, rgba(14,22,45,0.94) 0%, rgba(7,12,28,0.97) 50%, rgba(3,6,16,0.99) 100%)',
+                    backdropFilter: 'blur(28px)',
+                    WebkitBackdropFilter: 'blur(28px)',
                     borderRadius: 18,
-                    border: order.status === 'new' ? '1px solid rgba(209, 170, 92, 0.45)' : '1px solid rgba(255, 255, 255, 0.09)',
-                    boxShadow: '0 14px 36px 0 rgba(0, 0, 0, 0.28), inset 0 1px 0 0 rgba(255, 255, 255, 0.10)',
+                    border: order.status === 'new' ? '1px solid rgba(209, 170, 92, 0.45)' : '1px solid rgba(255, 255, 255, 0.10)',
+                    boxShadow: 'inset 0 1px 0 0 rgba(255,255,255,0.18), inset 0 0 0 1px rgba(255,255,255,0.04), 0 20px 45px -12px rgba(0,0,0,0.55), 0 8px 18px -4px rgba(2,6,23,0.35)',
                     padding: '20px 24px',
                     display: 'flex',
                     alignItems: 'flex-start',
                     gap: 16,
-                    transition: 'all 0.2s ease',
+                    transition: 'all 0.28s cubic-bezier(0.4,0,0.2,1)',
                     position: 'relative',
                   }}
                   className="hover:shadow-2xl hover:border-[#60a5fa]/40"

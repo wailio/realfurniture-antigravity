@@ -129,65 +129,79 @@ export default function AdminDashboard() {
 
   return (
     <div className="min-h-screen" style={{ background: '#F6F5F3' }}>
-      {/* Page Header */}
-      <div
+      {/* Page Header — Exact #0A0B0C to seamlessly match sidebar */}
+      <header
         style={{
-          background: 'rgba(6, 11, 25, 0.92)',
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-          padding: '28px 36px',
+          background: '#0A0B0C',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
+          padding: '0 36px',
+          minHeight: 72,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: 16,
         }}
       >
-        <div className="flex items-start justify-between">
-          <div>
-            <h1
-              style={{
-                fontFamily: 'var(--font-heading)',
-                fontSize: 26,
-                fontWeight: 300,
-                color: '#FFFFFF',
-                letterSpacing: '-0.02em',
-              }}
-            >
-              Tableau de bord
-            </h1>
-            <p style={{ fontSize: 13, color: '#A1A1AA', marginTop: 4, display: 'flex', alignItems: 'center', gap: 6 }}>
-              <Clock className="inline w-3.5 h-3.5 text-[#d1aa5c]" />
-              {dayName.charAt(0).toUpperCase() + dayName.slice(1)}
-            </p>
+        <div>
+          <div className="flex items-center gap-2 mb-1">
+            <span style={{ fontSize: 10, letterSpacing: '0.12em', color: '#4A4D55', textTransform: 'uppercase', fontWeight: 600 }}>Château d&apos;art</span>
+            <span style={{ color: '#2A2D35', fontSize: 11 }}>/</span>
+            <span style={{ fontSize: 10, letterSpacing: '0.08em', color: '#7C8089', textTransform: 'uppercase', fontWeight: 500 }}>Admin</span>
           </div>
+          <h1
+            style={{
+              fontFamily: 'var(--font-heading)',
+              fontSize: 22,
+              fontWeight: 400,
+              color: '#F2F1EF',
+              letterSpacing: '-0.02em',
+              lineHeight: 1.2,
+            }}
+          >
+            Tableau de bord
+          </h1>
+        </div>
+
+        <div className="flex items-center gap-3">
           <div
             style={{
-              background: 'rgba(255, 255, 255, 0.06)',
-              border: '1px solid rgba(74, 222, 128, 0.3)',
-              color: '#F2F1EF',
-              padding: '10px 20px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6,
+              padding: '6px 14px',
               borderRadius: 99,
-              fontSize: 12.5,
-              fontWeight: 500,
-              letterSpacing: '0.04em',
+              background: 'rgba(255, 255, 255, 0.03)',
+              border: '1px solid rgba(255, 255, 255, 0.07)',
+              fontSize: 12,
+              color: '#7C8089',
+            }}
+          >
+            <Clock className="w-3.5 h-3.5 text-[#d1aa5c]" />
+            <span>{dayName.charAt(0).toUpperCase() + dayName.slice(1)}</span>
+          </div>
+
+          <div
+            style={{
               display: 'flex',
               alignItems: 'center',
               gap: 8,
-              cursor: 'default',
-              boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)',
+              padding: '6px 14px',
+              borderRadius: 99,
+              background: 'rgba(255, 255, 255, 0.03)',
+              border: '1px solid rgba(74, 222, 128, 0.25)',
+              fontSize: 12,
+              color: '#F2F1EF',
+              letterSpacing: '0.02em',
             }}
           >
-            <span
-              style={{
-                width: 7,
-                height: 7,
-                borderRadius: 99,
-                background: '#4ade80',
-                boxShadow: '0 0 8px #4ade80',
-                display: 'inline-block',
-              }}
-            />
-            Site en ligne
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500 shadow-[0_0_8px_#10B981]" />
+            </span>
+            <span style={{ fontSize: 11.5, fontWeight: 500, color: '#D4D6DA' }}>En direct</span>
           </div>
         </div>
-      </div>
+      </header>
 
       <div style={{ padding: '36px' }}>
         {/* Stats Grid */}
@@ -203,25 +217,42 @@ export default function AdminDashboard() {
             <div
               key={i}
               style={{
-                background: 'rgba(6, 11, 25, 0.92)',
-                backdropFilter: 'blur(20px)',
-                WebkitBackdropFilter: 'blur(20px)',
+                background: 'linear-gradient(145deg, rgba(14, 22, 45, 0.94) 0%, rgba(7, 12, 28, 0.97) 50%, rgba(3, 6, 16, 0.99) 100%)',
+                backdropFilter: 'blur(28px)',
+                WebkitBackdropFilter: 'blur(28px)',
                 borderRadius: 18,
                 padding: '24px',
-                border: '1px solid rgba(255, 255, 255, 0.09)',
-                boxShadow: '0 14px 36px 0 rgba(0, 0, 0, 0.28), inset 0 1px 0 0 rgba(255, 255, 255, 0.10)',
-                transition: 'all 0.25s ease',
+                border: '1px solid rgba(255, 255, 255, 0.10)',
+                boxShadow: 'inset 0 1px 0 0 rgba(255, 255, 255, 0.18), inset 0 0 0 1px rgba(255, 255, 255, 0.04), 0 20px 45px -12px rgba(0, 0, 0, 0.55), 0 8px 18px -4px rgba(2, 6, 23, 0.35)',
+                transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+                position: 'relative',
+                overflow: 'hidden',
               }}
-              className="hover:shadow-2xl hover:-translate-y-1 hover:border-[#60a5fa]/30"
+              className="hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.25),0_24px_50px_-10px_rgba(0,0,0,0.65)] hover:border-[#60a5fa]/40 hover:-translate-y-1"
             >
-              <div className="flex items-start justify-between mb-4">
+              {/* Subtle top-right ambient glass glow */}
+              <div
+                style={{
+                  position: 'absolute',
+                  top: -40,
+                  right: -40,
+                  width: 100,
+                  height: 100,
+                  borderRadius: 99,
+                  background: 'radial-gradient(circle, rgba(96, 165, 250, 0.15) 0%, transparent 70%)',
+                  pointerEvents: 'none',
+                }}
+              />
+
+              <div className="flex items-start justify-between mb-4 relative z-10">
                 <div
                   style={{
                     width: 40,
                     height: 40,
                     borderRadius: 12,
-                    background: 'rgba(209, 170, 92, 0.12)',
-                    border: '1px solid rgba(209, 170, 92, 0.25)',
+                    background: 'linear-gradient(135deg, rgba(209, 170, 92, 0.18) 0%, rgba(209, 170, 92, 0.05) 100%)',
+                    border: '1px solid rgba(209, 170, 92, 0.3)',
+                    boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.12)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -255,14 +286,29 @@ export default function AdminDashboard() {
                   letterSpacing: '-0.03em',
                   lineHeight: 1,
                   fontFamily: 'var(--font-heading)',
+                  position: 'relative',
+                  zIndex: 10,
                 }}
               >
                 {s.value}
               </p>
-              <p style={{ fontSize: 13, fontWeight: 500, color: '#E5E7EB', marginTop: 8 }}>
+              <p style={{ fontSize: 13, fontWeight: 500, color: '#E5E7EB', marginTop: 8, position: 'relative', zIndex: 10 }}>
                 {s.label}
               </p>
-              <p style={{ fontSize: 12, color: '#9CA3AF', marginTop: 2 }}>{s.sub}</p>
+              <p style={{ fontSize: 12, color: '#9CA3AF', marginTop: 2, position: 'relative', zIndex: 10 }}>{s.sub}</p>
+
+              {/* Bottom micro-meter accent line */}
+              <div
+                style={{
+                  position: 'absolute',
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  height: 2,
+                  background: 'linear-gradient(90deg, rgba(209, 170, 92, 0.4) 0%, rgba(96, 165, 250, 0.3) 50%, transparent 100%)',
+                  opacity: 0.6,
+                }}
+              />
             </div>
           ))}
         </div>
@@ -272,13 +318,13 @@ export default function AdminDashboard() {
           {/* Quick Actions */}
           <div
             style={{
-              background: 'rgba(6, 11, 25, 0.92)',
-              backdropFilter: 'blur(20px)',
-              WebkitBackdropFilter: 'blur(20px)',
+              background: 'linear-gradient(145deg, rgba(14, 22, 45, 0.94) 0%, rgba(7, 12, 28, 0.97) 50%, rgba(3, 6, 16, 0.99) 100%)',
+              backdropFilter: 'blur(28px)',
+              WebkitBackdropFilter: 'blur(28px)',
               borderRadius: 18,
               padding: '28px',
-              border: '1px solid rgba(255, 255, 255, 0.09)',
-              boxShadow: '0 14px 36px 0 rgba(0, 0, 0, 0.28), inset 0 1px 0 0 rgba(255, 255, 255, 0.10)',
+              border: '1px solid rgba(255, 255, 255, 0.10)',
+              boxShadow: 'inset 0 1px 0 0 rgba(255, 255, 255, 0.18), inset 0 0 0 1px rgba(255, 255, 255, 0.04), 0 20px 45px -12px rgba(0, 0, 0, 0.55), 0 8px 18px -4px rgba(2, 6, 23, 0.35)',
             }}
           >
             <h2
@@ -311,10 +357,11 @@ export default function AdminDashboard() {
                     justifyContent: 'space-between',
                     padding: '14px 16px',
                     borderRadius: 12,
-                    background: 'rgba(255, 255, 255, 0.04)',
+                    background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%)',
                     border: '1px solid rgba(255, 255, 255, 0.06)',
+                    boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.05)',
                     textDecoration: 'none',
-                    transition: 'all 0.15s ease',
+                    transition: 'all 0.2s ease',
                   }}
                   className="hover:bg-white/[0.08] hover:border-white/[0.12] hover:translate-x-1"
                 >
@@ -331,13 +378,13 @@ export default function AdminDashboard() {
           {/* Database connection status */}
           <div
             style={{
-              background: 'rgba(6, 11, 25, 0.92)',
-              backdropFilter: 'blur(20px)',
-              WebkitBackdropFilter: 'blur(20px)',
+              background: 'linear-gradient(145deg, rgba(14, 22, 45, 0.94) 0%, rgba(7, 12, 28, 0.97) 50%, rgba(3, 6, 16, 0.99) 100%)',
+              backdropFilter: 'blur(28px)',
+              WebkitBackdropFilter: 'blur(28px)',
               borderRadius: 18,
               padding: '28px',
-              border: '1px solid rgba(255, 255, 255, 0.09)',
-              boxShadow: '0 14px 36px 0 rgba(0, 0, 0, 0.28), inset 0 1px 0 0 rgba(255, 255, 255, 0.10)',
+              border: '1px solid rgba(255, 255, 255, 0.10)',
+              boxShadow: 'inset 0 1px 0 0 rgba(255, 255, 255, 0.18), inset 0 0 0 1px rgba(255, 255, 255, 0.04), 0 20px 45px -12px rgba(0, 0, 0, 0.55), 0 8px 18px -4px rgba(2, 6, 23, 0.35)',
             }}
           >
             <h2

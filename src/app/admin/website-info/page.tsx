@@ -140,23 +140,25 @@ export default function AdminWebsiteInfoPage() {
   return (
     <div className="min-h-screen" style={{ background: '#F6F5F3' }}>
       {/* Header */}
-      <div
+      <header
         style={{
-          background: 'rgba(6, 10, 22, 0.95)',
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-          padding: '28px 36px',
+          background: '#0A0B0C',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
+          padding: '0 36px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
+          minHeight: 72,
         }}
       >
         <div>
+          <p style={{ fontSize: 11, color: '#52525B', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 3 }}>
+            Château d&apos;art / Admin
+          </p>
           <h1
             style={{
               fontFamily: 'var(--font-heading)',
-              fontSize: 26,
+              fontSize: 22,
               fontWeight: 300,
               color: '#FFFFFF',
               letterSpacing: '-0.02em',
@@ -164,7 +166,7 @@ export default function AdminWebsiteInfoPage() {
           >
             Infos du site
           </h1>
-          <p style={{ fontSize: 13, color: '#A1A1AA', marginTop: 4 }}>
+          <p style={{ fontSize: 12, color: '#52525B', marginTop: 2 }}>
             Modifiez le contenu du site sans toucher au code
           </p>
         </div>
@@ -173,18 +175,18 @@ export default function AdminWebsiteInfoPage() {
             display: 'flex',
             alignItems: 'center',
             gap: 8,
-            padding: '10px 18px',
-            background: 'rgba(245, 158, 11, 0.12)',
-            border: '1px solid rgba(245, 158, 11, 0.25)',
+            padding: '8px 16px',
+            background: 'rgba(245, 158, 11, 0.10)',
+            border: '1px solid rgba(245, 158, 11, 0.2)',
             borderRadius: 99,
-            fontSize: 12.5,
+            fontSize: 12,
             color: '#fbbf24',
           }}
         >
-          <Clock className="w-4 h-4 text-[#d1aa5c]" />
+          <Clock className="w-3.5 h-3.5 text-[#d1aa5c]" />
           Connexion Supabase requise pour sauvegarder en live
         </div>
-      </div>
+      </header>
 
       <div style={{ padding: '36px', maxWidth: 720, margin: '0 auto' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
@@ -198,14 +200,14 @@ export default function AdminWebsiteInfoPage() {
               <div
                 key={section.key}
                 style={{
-                  background: 'rgba(7, 11, 24, 0.95)',
-                  backdropFilter: 'blur(20px)',
-                  WebkitBackdropFilter: 'blur(20px)',
+                  background: 'linear-gradient(145deg, rgba(14,22,45,0.94) 0%, rgba(7,12,28,0.97) 50%, rgba(3,6,16,0.99) 100%)',
+                  backdropFilter: 'blur(28px)',
+                  WebkitBackdropFilter: 'blur(28px)',
                   borderRadius: 18,
-                  border: '1px solid rgba(255, 255, 255, 0.08)',
-                  boxShadow: '0 14px 36px 0 rgba(0, 0, 0, 0.35), inset 0 1px 0 0 rgba(255, 255, 255, 0.10)',
+                  border: '1px solid rgba(255, 255, 255, 0.10)',
+                  boxShadow: 'inset 0 1px 0 0 rgba(255,255,255,0.18), inset 0 0 0 1px rgba(255,255,255,0.04), 0 20px 45px -12px rgba(0,0,0,0.55), 0 8px 18px -4px rgba(2,6,23,0.35)',
                   overflow: 'hidden',
-                  transition: 'all 0.2s ease',
+                  transition: 'all 0.28s cubic-bezier(0.4,0,0.2,1)',
                 }}
                 className="hover:shadow-2xl hover:border-[#60a5fa]/30"
               >
@@ -384,12 +386,12 @@ export default function AdminWebsiteInfoPage() {
           style={{
             marginTop: 24,
             padding: '16px 20px',
-            background: 'rgba(7, 11, 24, 0.95)',
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
+            background: 'linear-gradient(145deg, rgba(14,22,45,0.94) 0%, rgba(7,12,28,0.97) 50%, rgba(3,6,16,0.99) 100%)',
+            backdropFilter: 'blur(28px)',
+            WebkitBackdropFilter: 'blur(28px)',
             borderRadius: 14,
-            border: '1px solid rgba(255, 255, 255, 0.08)',
-            boxShadow: '0 14px 36px 0 rgba(0, 0, 0, 0.35), inset 0 1px 0 0 rgba(255, 255, 255, 0.10)',
+            border: '1px solid rgba(255, 255, 255, 0.10)',
+            boxShadow: 'inset 0 1px 0 0 rgba(255,255,255,0.18), inset 0 0 0 1px rgba(255,255,255,0.04), 0 20px 45px -12px rgba(0,0,0,0.55), 0 8px 18px -4px rgba(2,6,23,0.35)',
             fontSize: 12.5,
             color: '#A1A1AA',
             lineHeight: 1.6,
