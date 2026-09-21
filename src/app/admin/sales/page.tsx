@@ -126,7 +126,7 @@ export default function AdminSalesPage() {
       {/* Header */}
       <div
         style={{
-          background: 'rgba(18, 15, 12, 0.70)',
+          background: 'rgba(6, 11, 25, 0.92)',
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
           borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
@@ -232,7 +232,7 @@ export default function AdminSalesPage() {
                           width: 40,
                           height: 40,
                           borderRadius: 99,
-                          background: 'rgba(20, 16, 12, 0.9)',
+                          background: 'rgba(6, 11, 25, 0.92)',
                           border: `2.5px solid ${stage.dot}`,
                           display: 'flex',
                           alignItems: 'center',
@@ -287,16 +287,16 @@ export default function AdminSalesPage() {
                         <div
                           key={lead.id}
                           style={{
-                            background: 'rgba(22, 18, 14, 0.65)',
-                            backdropFilter: 'blur(16px)',
-                            WebkitBackdropFilter: 'blur(16px)',
+                            background: 'rgba(6, 11, 25, 0.92)',
+                            backdropFilter: 'blur(20px)',
+                            WebkitBackdropFilter: 'blur(20px)',
                             borderRadius: 16,
                             padding: '16px',
-                            border: '1px solid rgba(255, 255, 255, 0.08)',
-                            boxShadow: '0 12px 32px 0 rgba(0, 0, 0, 0.35), inset 0 1px 0 0 rgba(255, 255, 255, 0.08)',
+                            border: '1px solid rgba(255, 255, 255, 0.09)',
+                            boxShadow: '0 14px 36px 0 rgba(0, 0, 0, 0.28), inset 0 1px 0 0 rgba(255, 255, 255, 0.10)',
                             transition: 'all 0.2s ease',
                           }}
-                          className="hover:shadow-2xl hover:border-[#d1aa5c]/40 hover:-translate-y-0.5"
+                          className="hover:shadow-2xl hover:border-[#60a5fa]/40 hover:-translate-y-0.5"
                         >
                           {/* Lead top */}
                           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 }}>
@@ -543,12 +543,12 @@ export default function AdminSalesPage() {
                 style={{
                   textAlign: 'center',
                   padding: '60px 20px',
-                  background: 'rgba(22, 18, 14, 0.65)',
-                  backdropFilter: 'blur(16px)',
-                  WebkitBackdropFilter: 'blur(16px)',
+                  background: 'rgba(7, 11, 24, 0.95)',
+                  backdropFilter: 'blur(20px)',
+                  WebkitBackdropFilter: 'blur(20px)',
                   borderRadius: 20,
                   border: '1px solid rgba(255, 255, 255, 0.08)',
-                  boxShadow: '0 12px 32px 0 rgba(0, 0, 0, 0.35)',
+                  boxShadow: '0 14px 36px 0 rgba(0, 0, 0, 0.35), inset 0 1px 0 0 rgba(255, 255, 255, 0.10)',
                   marginTop: 24,
                 }}
               >

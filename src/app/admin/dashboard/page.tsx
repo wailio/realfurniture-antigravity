@@ -132,7 +132,7 @@ export default function AdminDashboard() {
       {/* Page Header */}
       <div
         style={{
-          background: 'rgba(18, 15, 12, 0.70)',
+          background: 'rgba(6, 11, 25, 0.92)',
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
           borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
@@ -203,16 +203,16 @@ export default function AdminDashboard() {
             <div
               key={i}
               style={{
-                background: 'rgba(22, 18, 14, 0.65)',
-                backdropFilter: 'blur(16px)',
-                WebkitBackdropFilter: 'blur(16px)',
+                background: 'rgba(6, 11, 25, 0.92)',
+                backdropFilter: 'blur(20px)',
+                WebkitBackdropFilter: 'blur(20px)',
                 borderRadius: 18,
                 padding: '24px',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
-                boxShadow: '0 12px 32px 0 rgba(0, 0, 0, 0.35), inset 0 1px 0 0 rgba(255, 255, 255, 0.08)',
+                border: '1px solid rgba(255, 255, 255, 0.09)',
+                boxShadow: '0 14px 36px 0 rgba(0, 0, 0, 0.28), inset 0 1px 0 0 rgba(255, 255, 255, 0.10)',
                 transition: 'all 0.25s ease',
               }}
-              className="hover:shadow-2xl hover:-translate-y-1 hover:border-[#d1aa5c]/30"
+              className="hover:shadow-2xl hover:-translate-y-1 hover:border-[#60a5fa]/30"
             >
               <div className="flex items-start justify-between mb-4">
                 <div
@@ -272,13 +272,13 @@ export default function AdminDashboard() {
           {/* Quick Actions */}
           <div
             style={{
-              background: 'rgba(22, 18, 14, 0.65)',
-              backdropFilter: 'blur(16px)',
-              WebkitBackdropFilter: 'blur(16px)',
+              background: 'rgba(6, 11, 25, 0.92)',
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)',
               borderRadius: 18,
               padding: '28px',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
-              boxShadow: '0 12px 32px 0 rgba(0, 0, 0, 0.35), inset 0 1px 0 0 rgba(255, 255, 255, 0.08)',
+              border: '1px solid rgba(255, 255, 255, 0.09)',
+              boxShadow: '0 14px 36px 0 rgba(0, 0, 0, 0.28), inset 0 1px 0 0 rgba(255, 255, 255, 0.10)',
             }}
           >
             <h2
@@ -331,13 +331,13 @@ export default function AdminDashboard() {
           {/* Database connection status */}
           <div
             style={{
-              background: 'rgba(22, 18, 14, 0.65)',
-              backdropFilter: 'blur(16px)',
-              WebkitBackdropFilter: 'blur(16px)',
+              background: 'rgba(6, 11, 25, 0.92)',
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)',
               borderRadius: 18,
               padding: '28px',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
-              boxShadow: '0 12px 32px 0 rgba(0, 0, 0, 0.35), inset 0 1px 0 0 rgba(255, 255, 255, 0.08)',
+              border: '1px solid rgba(255, 255, 255, 0.09)',
+              boxShadow: '0 14px 36px 0 rgba(0, 0, 0, 0.28), inset 0 1px 0 0 rgba(255, 255, 255, 0.10)',
             }}
           >
             <h2

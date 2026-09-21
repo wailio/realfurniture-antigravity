@@ -142,7 +142,7 @@ export default function AdminWebsiteInfoPage() {
       {/* Header */}
       <div
         style={{
-          background: 'rgba(18, 15, 12, 0.70)',
+          background: 'rgba(6, 10, 22, 0.95)',
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
           borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
@@ -198,16 +198,16 @@ export default function AdminWebsiteInfoPage() {
               <div
                 key={section.key}
                 style={{
-                  background: 'rgba(22, 18, 14, 0.65)',
-                  backdropFilter: 'blur(16px)',
-                  WebkitBackdropFilter: 'blur(16px)',
+                  background: 'rgba(7, 11, 24, 0.95)',
+                  backdropFilter: 'blur(20px)',
+                  WebkitBackdropFilter: 'blur(20px)',
                   borderRadius: 18,
                   border: '1px solid rgba(255, 255, 255, 0.08)',
-                  boxShadow: '0 12px 32px 0 rgba(0, 0, 0, 0.35), inset 0 1px 0 0 rgba(255, 255, 255, 0.08)',
+                  boxShadow: '0 14px 36px 0 rgba(0, 0, 0, 0.35), inset 0 1px 0 0 rgba(255, 255, 255, 0.10)',
                   overflow: 'hidden',
                   transition: 'all 0.2s ease',
                 }}
-                className="hover:shadow-2xl hover:border-[#d1aa5c]/30"
+                className="hover:shadow-2xl hover:border-[#60a5fa]/30"
               >
                 {/* Section header */}
                 <button
@@ -384,11 +384,12 @@ export default function AdminWebsiteInfoPage() {
           style={{
             marginTop: 24,
             padding: '16px 20px',
-            background: 'rgba(22, 18, 14, 0.65)',
-            backdropFilter: 'blur(16px)',
-            WebkitBackdropFilter: 'blur(16px)',
+            background: 'rgba(7, 11, 24, 0.95)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
             borderRadius: 14,
             border: '1px solid rgba(255, 255, 255, 0.08)',
+            boxShadow: '0 14px 36px 0 rgba(0, 0, 0, 0.35), inset 0 1px 0 0 rgba(255, 255, 255, 0.10)',
             fontSize: 12.5,
             color: '#A1A1AA',
             lineHeight: 1.6,

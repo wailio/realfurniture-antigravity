@@ -122,7 +122,7 @@ export default function AdminOrdersPage() {
       {/* Header */}
       <div
         style={{
-          background: 'rgba(18, 15, 12, 0.70)',
+          background: 'rgba(6, 11, 25, 0.92)',
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
           borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
@@ -182,11 +182,11 @@ export default function AdminOrdersPage() {
                 borderRadius: 99,
                 fontSize: 12.5,
                 fontWeight: 600,
-                border: filterStatus === tab.value ? 'none' : '1px solid rgba(255, 255, 255, 0.08)',
+                border: filterStatus === tab.value ? 'none' : '1px solid rgba(255, 255, 255, 0.09)',
                 cursor: 'pointer',
-                background: filterStatus === tab.value ? '#d1aa5c' : 'rgba(22, 18, 14, 0.65)',
-                backdropFilter: 'blur(16px)',
-                WebkitBackdropFilter: 'blur(16px)',
+                background: filterStatus === tab.value ? '#d1aa5c' : 'rgba(6, 11, 25, 0.88)',
+                backdropFilter: 'blur(20px)',
+                WebkitBackdropFilter: 'blur(20px)',
                 color: filterStatus === tab.value ? '#14120f' : '#D4D4D8',
                 boxShadow: filterStatus === tab.value
                   ? '0 4px 14px rgba(209, 170, 92, 0.3)'
@@ -230,12 +230,12 @@ export default function AdminOrdersPage() {
             style={{
               textAlign: 'center',
               padding: '80px 20px',
-              background: 'rgba(22, 18, 14, 0.65)',
-              backdropFilter: 'blur(16px)',
-              WebkitBackdropFilter: 'blur(16px)',
+              background: 'rgba(6, 11, 25, 0.92)',
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)',
               borderRadius: 20,
-              border: '1px solid rgba(255, 255, 255, 0.08)',
-              boxShadow: '0 12px 32px 0 rgba(0, 0, 0, 0.35)',
+              border: '1px solid rgba(255, 255, 255, 0.09)',
+              boxShadow: '0 14px 36px 0 rgba(0, 0, 0, 0.28), inset 0 1px 0 0 rgba(255, 255, 255, 0.10)',
             }}
           >
             <MessageSquare className="w-10 h-10 mx-auto mb-4 text-[#d1aa5c]" />
@@ -252,12 +252,12 @@ export default function AdminOrdersPage() {
                 <div
                   key={order.id}
                   style={{
-                    background: 'rgba(22, 18, 14, 0.65)',
-                    backdropFilter: 'blur(16px)',
-                    WebkitBackdropFilter: 'blur(16px)',
+                    background: 'rgba(6, 11, 25, 0.92)',
+                    backdropFilter: 'blur(20px)',
+                    WebkitBackdropFilter: 'blur(20px)',
                     borderRadius: 18,
-                    border: order.status === 'new' ? '1px solid rgba(209, 170, 92, 0.45)' : '1px solid rgba(255, 255, 255, 0.08)',
-                    boxShadow: '0 12px 32px 0 rgba(0, 0, 0, 0.35), inset 0 1px 0 0 rgba(255, 255, 255, 0.08)',
+                    border: order.status === 'new' ? '1px solid rgba(209, 170, 92, 0.45)' : '1px solid rgba(255, 255, 255, 0.09)',
+                    boxShadow: '0 14px 36px 0 rgba(0, 0, 0, 0.28), inset 0 1px 0 0 rgba(255, 255, 255, 0.10)',
                     padding: '20px 24px',
                     display: 'flex',
                     alignItems: 'flex-start',
@@ -265,7 +265,7 @@ export default function AdminOrdersPage() {
                     transition: 'all 0.2s ease',
                     position: 'relative',
                   }}
-                  className="hover:shadow-2xl hover:border-[#d1aa5c]/40"
+                  className="hover:shadow-2xl hover:border-[#60a5fa]/40"
                 >
                   {/* Avatar */}
                   <div
@@ -357,7 +357,7 @@ export default function AdminOrdersPage() {
                                 right: 0,
                                 top: '100%',
                                 marginTop: 6,
-                                background: 'rgba(20, 16, 12, 0.96)',
+                                background: 'rgba(5, 9, 22, 0.96)',
                                 backdropFilter: 'blur(20px)',
                                 WebkitBackdropFilter: 'blur(20px)',
                                 borderRadius: 14,

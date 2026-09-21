@@ -252,7 +252,7 @@ export default function AdminProductsPage() {
       {/* Header */}
       <div
         style={{
-          background: 'rgba(18, 15, 12, 0.70)',
+          background: 'rgba(6, 11, 25, 0.92)',
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
           borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
@@ -363,12 +363,12 @@ export default function AdminProductsPage() {
               display: 'flex',
               alignItems: 'center',
               padding: '24px 20px',
-              background: 'rgba(22, 18, 14, 0.65)',
-              backdropFilter: 'blur(16px)',
-              WebkitBackdropFilter: 'blur(16px)',
+              background: 'rgba(6, 11, 25, 0.92)',
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)',
               borderRadius: 20,
-              border: '1px solid rgba(255, 255, 255, 0.08)',
-              boxShadow: '0 12px 32px 0 rgba(0, 0, 0, 0.35), inset 0 1px 0 0 rgba(255, 255, 255, 0.08)',
+              border: '1px solid rgba(255, 255, 255, 0.09)',
+              boxShadow: '0 14px 36px 0 rgba(0, 0, 0, 0.28), inset 0 1px 0 0 rgba(255, 255, 255, 0.10)',
               overflowX: 'auto',
               minHeight: 220,
             }}
@@ -442,8 +442,8 @@ export default function AdminProductsPage() {
                         position: 'absolute',
                         top: 8,
                         left: 8,
-                        background: 'rgba(20, 16, 12, 0.85)',
-                        backdropFilter: 'blur(6px)',
+                        background: 'rgba(8, 14, 32, 0.90)',
+                        backdropFilter: 'blur(8px)',
                         border: '1px solid rgba(209, 170, 92, 0.3)',
                         padding: '3px 8px',
                         borderRadius: 6,
@@ -501,15 +501,15 @@ export default function AdminProductsPage() {
               display: 'flex',
               alignItems: 'center',
               gap: 8,
-              background: 'rgba(22, 18, 14, 0.65)',
-              backdropFilter: 'blur(16px)',
-              WebkitBackdropFilter: 'blur(16px)',
+              background: 'rgba(6, 11, 25, 0.92)',
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)',
               borderRadius: 14,
               padding: '10px 16px',
-              border: '1px solid rgba(255, 255, 255, 0.10)',
+              border: '1px solid rgba(255, 255, 255, 0.09)',
               flex: 1,
               maxWidth: 340,
-              boxShadow: '0 4px 14px rgba(0, 0, 0, 0.2)',
+              boxShadow: '0 4px 14px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.08)',
             }}
           >
             <Search className="w-4 h-4 text-[#d1aa5c] shrink-0" />
@@ -540,12 +540,12 @@ export default function AdminProductsPage() {
                   borderRadius: 99,
                   fontSize: 12.5,
                   fontWeight: 600,
-                  border: filter === cat.value ? 'none' : '1px solid rgba(255, 255, 255, 0.08)',
+                  border: filter === cat.value ? 'none' : '1px solid rgba(255, 255, 255, 0.09)',
                   cursor: 'pointer',
                   transition: 'all 0.2s ease',
-                  background: filter === cat.value ? '#d1aa5c' : 'rgba(22, 18, 14, 0.65)',
-                  backdropFilter: 'blur(16px)',
-                  WebkitBackdropFilter: 'blur(16px)',
+                  background: filter === cat.value ? '#d1aa5c' : 'rgba(6, 11, 25, 0.88)',
+                  backdropFilter: 'blur(20px)',
+                  WebkitBackdropFilter: 'blur(20px)',
                   color: filter === cat.value ? '#14120f' : '#D4D4D8',
                   boxShadow: filter === cat.value
                     ? '0 4px 14px rgba(209, 170, 92, 0.3)'
@@ -609,12 +609,12 @@ export default function AdminProductsPage() {
             style={{
               textAlign: 'center',
               padding: '70px 24px',
-              background: 'rgba(22, 18, 14, 0.65)',
-              backdropFilter: 'blur(16px)',
-              WebkitBackdropFilter: 'blur(16px)',
+              background: 'rgba(6, 11, 25, 0.92)',
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)',
               borderRadius: 20,
-              border: '1px solid rgba(255, 255, 255, 0.08)',
-              boxShadow: '0 12px 32px 0 rgba(0, 0, 0, 0.35)',
+              border: '1px solid rgba(255, 255, 255, 0.09)',
+              boxShadow: '0 14px 36px 0 rgba(0, 0, 0, 0.28), inset 0 1px 0 0 rgba(255, 255, 255, 0.10)',
             }}
           >
             <div
@@ -698,16 +698,16 @@ export default function AdminProductsPage() {
               <div
                 key={product.id}
                 style={{
-                  background: 'rgba(22, 18, 14, 0.65)',
-                  backdropFilter: 'blur(16px)',
-                  WebkitBackdropFilter: 'blur(16px)',
+                  background: 'rgba(6, 11, 25, 0.92)',
+                  backdropFilter: 'blur(20px)',
+                  WebkitBackdropFilter: 'blur(20px)',
                   borderRadius: 18,
                   overflow: 'hidden',
-                  border: '1px solid rgba(255, 255, 255, 0.08)',
-                  boxShadow: '0 12px 32px 0 rgba(0, 0, 0, 0.35), inset 0 1px 0 0 rgba(255, 255, 255, 0.08)',
+                  border: '1px solid rgba(255, 255, 255, 0.09)',
+                  boxShadow: '0 14px 36px 0 rgba(0, 0, 0, 0.28), inset 0 1px 0 0 rgba(255, 255, 255, 0.10)',
                   transition: 'all 0.25s ease',
                 }}
-                className="hover:shadow-2xl hover:-translate-y-1 hover:border-[#d1aa5c]/30"
+                className="hover:shadow-2xl hover:-translate-y-1 hover:border-[#60a5fa]/30"
               >
                 {/* Product Image */}
                 <div style={{ position: 'relative', height: 200, background: 'rgba(0,0,0,0.3)', overflow: 'hidden' }}>
@@ -911,7 +911,7 @@ export default function AdminProductsPage() {
         >
           <div
             style={{
-              background: 'rgba(20, 16, 12, 0.95)',
+              background: 'rgba(5, 9, 22, 0.96)',
               backdropFilter: 'blur(24px)',
               WebkitBackdropFilter: 'blur(24px)',
               borderRadius: 20,

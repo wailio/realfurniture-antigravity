@@ -9,7 +9,7 @@ export default function AdminSettingsPage() {
     <div className="min-h-screen" style={{ background: '#F6F5F3' }}>
       <div
         style={{
-          background: 'rgba(18, 15, 12, 0.70)',
+          background: 'rgba(6, 10, 22, 0.95)',
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
           borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
@@ -72,20 +72,20 @@ export default function AdminSettingsPage() {
           <div
             key={i}
             style={{
-              background: 'rgba(22, 18, 14, 0.65)',
-              backdropFilter: 'blur(16px)',
-              WebkitBackdropFilter: 'blur(16px)',
+              background: 'rgba(7, 11, 24, 0.95)',
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)',
               borderRadius: 18,
               padding: '20px 22px',
               border: '1px solid rgba(255, 255, 255, 0.08)',
-              boxShadow: '0 12px 32px 0 rgba(0, 0, 0, 0.35), inset 0 1px 0 0 rgba(255, 255, 255, 0.08)',
+              boxShadow: '0 14px 36px 0 rgba(0, 0, 0, 0.35), inset 0 1px 0 0 rgba(255, 255, 255, 0.10)',
               display: 'flex',
               alignItems: 'center',
               gap: 16,
               marginBottom: 12,
               transition: 'all 0.2s ease',
             }}
-            className="hover:shadow-2xl hover:border-[#d1aa5c]/30 hover:translate-x-1"
+            className="hover:shadow-2xl hover:border-[#60a5fa]/30 hover:translate-x-1"
           >
             <div
               style={{
@@ -127,11 +127,11 @@ export default function AdminSettingsPage() {
         <div
           style={{
             marginTop: 24,
-            background: 'rgba(14, 11, 8, 0.85)',
+            background: 'rgba(7, 11, 24, 0.95)',
             backdropFilter: 'blur(20px)',
             WebkitBackdropFilter: 'blur(20px)',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
-            boxShadow: '0 12px 32px rgba(0,0,0,0.4)',
+            border: '1px solid rgba(255, 255, 255, 0.08)',
+            boxShadow: '0 14px 36px 0 rgba(0, 0, 0, 0.35), inset 0 1px 0 0 rgba(255, 255, 255, 0.10)',
             borderRadius: 18,
             padding: '22px 24px',
           }}
