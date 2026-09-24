@@ -366,12 +366,10 @@ export default function AdminProductsPage() {
               display: 'flex',
               alignItems: 'center',
               padding: '24px 20px',
-              background: 'linear-gradient(145deg, rgba(8, 14, 28, 0.95) 0%, rgba(4, 7, 16, 0.98) 50%, rgba(2, 3, 8, 0.99) 100%)',
-              backdropFilter: 'blur(28px)',
-              WebkitBackdropFilter: 'blur(28px)',
+              background: '#FFFFFF',
               borderRadius: 20,
-              border: '1px solid rgba(255, 255, 255, 0.09)',
-              boxShadow: 'inset 0 1px 0 0 rgba(255, 255, 255, 0.14), inset 0 0 20px 0 rgba(30, 58, 138, 0.12), 0 20px 45px -12px rgba(0, 0, 0, 0.70), 0 8px 18px -4px rgba(2, 6, 23, 0.50)',
+              border: '1px solid rgba(0, 0, 0, 0.06)',
+              boxShadow: '0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.03)',
               overflowX: 'auto',
               minHeight: 220,
             }}
@@ -504,18 +502,16 @@ export default function AdminProductsPage() {
               display: 'flex',
               alignItems: 'center',
               gap: 8,
-              background: 'linear-gradient(145deg, rgba(8, 14, 28, 0.95) 0%, rgba(4, 7, 16, 0.98) 100%)',
-              backdropFilter: 'blur(20px)',
-              WebkitBackdropFilter: 'blur(20px)',
+              background: '#FFFFFF',
               borderRadius: 14,
               padding: '10px 16px',
-              border: '1px solid rgba(255, 255, 255, 0.09)',
+              border: '1px solid rgba(0, 0, 0, 0.08)',
               flex: 1,
               maxWidth: 340,
-              boxShadow: 'inset 0 1px 0 0 rgba(255, 255, 255, 0.14), inset 0 0 14px 0 rgba(30, 58, 138, 0.10), 0 6px 18px -2px rgba(0, 0, 0, 0.45)',
+              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)',
             }}
           >
-            <Search className="w-4 h-4 text-[#d1aa5c] shrink-0" />
+            <Search className="w-4 h-4 text-[#6B7280] shrink-0" />
             <input
               type="text"
               placeholder="Rechercher un produit..."
@@ -526,7 +522,7 @@ export default function AdminProductsPage() {
                 outline: 'none',
                 background: 'transparent',
                 fontSize: 13,
-                color: '#FFFFFF',
+                color: '#111827',
                 width: '100%',
               }}
             />
@@ -543,17 +539,16 @@ export default function AdminProductsPage() {
                   borderRadius: 99,
                   fontSize: 12.5,
                   fontWeight: 600,
-                  border: filter === cat.value ? 'none' : '1px solid rgba(255, 255, 255, 0.09)',
+                  border: filter === cat.value ? 'none' : '1px solid rgba(0, 0, 0, 0.08)',
                   cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                  background: filter === cat.value ? 'linear-gradient(135deg, #d1aa5c 0%, #b89347 100%)' : 'linear-gradient(145deg, rgba(8, 14, 28, 0.95) 0%, rgba(3, 6, 14, 0.98) 100%)',
-                  backdropFilter: 'blur(20px)',
-                  WebkitBackdropFilter: 'blur(20px)',
-                  color: filter === cat.value ? '#0A0B0C' : '#D4D4D8',
+                  transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                  background: filter === cat.value ? '#111827' : '#FFFFFF',
+                  color: filter === cat.value ? '#FFFFFF' : '#374151',
                   boxShadow: filter === cat.value
-                    ? '0 4px 14px rgba(209, 170, 92, 0.3)'
-                    : 'inset 0 1px 0 rgba(255, 255, 255, 0.12), inset 0 0 12px 0 rgba(30, 58, 138, 0.08), 0 4px 12px rgba(0,0,0,0.35)',
+                    ? '0 3px 12px rgba(0, 0, 0, 0.2)'
+                    : '0 1px 4px rgba(0, 0, 0, 0.04)',
                 }}
+                className={filter !== cat.value ? 'hover:bg-[#F3F4F6] hover:text-[#111827]' : ''}
               >
                 {cat.label}
               </button>
@@ -612,12 +607,10 @@ export default function AdminProductsPage() {
             style={{
               textAlign: 'center',
               padding: '70px 24px',
-              background: 'linear-gradient(145deg, rgba(8, 14, 28, 0.95) 0%, rgba(4, 7, 16, 0.98) 50%, rgba(2, 3, 8, 0.99) 100%)',
-              backdropFilter: 'blur(28px)',
-              WebkitBackdropFilter: 'blur(28px)',
+              background: '#FFFFFF',
               borderRadius: 20,
-              border: '1px solid rgba(255, 255, 255, 0.09)',
-              boxShadow: 'inset 0 1px 0 0 rgba(255, 255, 255, 0.14), inset 0 0 20px 0 rgba(30, 58, 138, 0.12), 0 20px 45px -12px rgba(0, 0, 0, 0.70), 0 8px 18px -4px rgba(2, 6, 23, 0.50)',
+              border: '1px solid rgba(0, 0, 0, 0.06)',
+              boxShadow: '0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.03)',
               position: 'relative',
               overflow: 'hidden',
             }}
@@ -627,21 +620,21 @@ export default function AdminProductsPage() {
                 width: 64,
                 height: 64,
                 borderRadius: 99,
-                background: 'rgba(209, 170, 92, 0.12)',
-                border: '1px solid rgba(209, 170, 92, 0.25)',
+                background: '#F3F4F6',
+                border: '1px solid rgba(0, 0, 0, 0.04)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 margin: '0 auto 16px',
               }}
             >
-              <Package className="w-7 h-7 text-[#d1aa5c]" />
+              <Package className="w-7 h-7 text-[#111827]" />
             </div>
 
-            <p style={{ color: '#FFFFFF', fontSize: 17, fontWeight: 600 }}>
+            <p style={{ color: '#111827', fontSize: 17, fontWeight: 600 }}>
               {search ? 'Aucun produit trouvé' : 'Le catalogue Supabase est prêt'}
             </p>
-            <p style={{ color: '#A1A1AA', fontSize: 13, marginTop: 6, maxWidth: 440, margin: '6px auto 20px' }}>
+            <p style={{ color: '#6B7280', fontSize: 13, marginTop: 6, maxWidth: 440, margin: '6px auto 20px' }}>
               {search
                 ? 'Essayez une autre recherche ou réinitialisez les filtres.'
                 : 'Votre base de données Supabase est connectée. Vous pouvez importer les 30 modèles de démonstration ou ajouter vos pièces sur-mesure.'}
@@ -653,8 +646,8 @@ export default function AdminProductsPage() {
                 disabled={seeding}
                 style={{
                   padding: '11px 22px',
-                  background: '#d1aa5c',
-                  color: '#14120f',
+                  background: 'linear-gradient(135deg, #d1aa5c 0%, #b89347 100%)',
+                  color: '#0A0B0C',
                   borderRadius: 12,
                   fontSize: 13,
                   fontWeight: 600,
@@ -674,17 +667,18 @@ export default function AdminProductsPage() {
                 onClick={openAdd}
                 style={{
                   padding: '11px 22px',
-                  background: 'rgba(255, 255, 255, 0.06)',
-                  color: '#FFFFFF',
+                  background: '#F3F4F6',
+                  color: '#111827',
                   borderRadius: 12,
                   fontSize: 13,
                   fontWeight: 500,
-                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  border: '1px solid rgba(0, 0, 0, 0.08)',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   gap: 8,
                 }}
+                className="hover:bg-[#E5E7EB]"
               >
                 <Plus className="w-4 h-4" />
                 Ajouter manuellement
@@ -703,20 +697,18 @@ export default function AdminProductsPage() {
               <div
                 key={product.id}
                 style={{
-                  background: 'linear-gradient(145deg, rgba(8, 14, 28, 0.95) 0%, rgba(4, 7, 16, 0.98) 50%, rgba(2, 3, 8, 0.99) 100%)',
-                  backdropFilter: 'blur(28px)',
-                  WebkitBackdropFilter: 'blur(28px)',
-                  borderRadius: 18,
+                  background: '#FFFFFF',
+                  borderRadius: 16,
                   overflow: 'hidden',
-                  border: '1px solid rgba(255, 255, 255, 0.09)',
-                  boxShadow: 'inset 0 1px 0 0 rgba(255, 255, 255, 0.14), inset 0 0 20px 0 rgba(30, 58, 138, 0.12), 0 20px 45px -12px rgba(0, 0, 0, 0.70), 0 8px 18px -4px rgba(2, 6, 23, 0.50)',
-                  transition: 'all 0.28s cubic-bezier(0.4,0,0.2,1)',
+                  border: '1px solid rgba(0, 0, 0, 0.06)',
+                  boxShadow: '0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.03)',
+                  transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
                   position: 'relative',
                 }}
-                className="hover:shadow-2xl hover:-translate-y-1 hover:border-[#60a5fa]/40"
+                className="hover:shadow-lg hover:-translate-y-1"
               >
                 {/* Product Image */}
-                <div style={{ position: 'relative', height: 200, background: 'rgba(0,0,0,0.3)', overflow: 'hidden' }}>
+                <div style={{ position: 'relative', height: 200, background: '#F3F4F6', overflow: 'hidden' }}>
                   {product.images?.[0] ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
@@ -732,7 +724,7 @@ export default function AdminProductsPage() {
                     />
                   ) : (
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
-                      <ImageIcon className="w-10 h-10" style={{ color: 'rgba(255,255,255,0.2)' }} />
+                      <ImageIcon className="w-10 h-10" style={{ color: '#9CA3AF' }} />
                     </div>
                   )}
 
@@ -762,7 +754,7 @@ export default function AdminProductsPage() {
                         position: 'absolute',
                         bottom: 10,
                         right: 10,
-                        background: 'rgba(0,0,0,0.7)',
+                        background: 'rgba(0,0,0,0.6)',
                         color: '#fff',
                         fontSize: 10.5,
                         padding: '3px 8px',
@@ -784,7 +776,7 @@ export default function AdminProductsPage() {
                         style={{
                           fontSize: 14.5,
                           fontWeight: 600,
-                          color: '#FFFFFF',
+                          color: '#111827',
                           lineHeight: 1.3,
                         }}
                       >
@@ -793,13 +785,14 @@ export default function AdminProductsPage() {
                       <span
                         style={{
                           fontSize: 11,
-                          color: '#d1aa5c',
-                          background: 'rgba(209, 170, 92, 0.12)',
-                          border: '1px solid rgba(209, 170, 92, 0.25)',
+                          color: '#4B5563',
+                          background: '#F3F4F6',
+                          border: '1px solid rgba(0, 0, 0, 0.04)',
                           padding: '2px 8px',
                           borderRadius: 99,
                           display: 'inline-block',
                           marginTop: 6,
+                          fontWeight: 500,
                         }}
                       >
                         {CATEGORIES.find(c => c.value === product.category)?.label || product.category}
@@ -809,15 +802,15 @@ export default function AdminProductsPage() {
                     <div style={{ textAlign: 'right', flexShrink: 0 }}>
                       {product.sale_price ? (
                         <>
-                          <p style={{ fontSize: 15, fontWeight: 700, color: '#f87171' }}>
+                          <p style={{ fontSize: 15, fontWeight: 700, color: '#DC2626' }}>
                             {product.sale_price.toLocaleString('fr-DZ')} DA
                           </p>
-                          <p style={{ fontSize: 11, color: '#71717A', textDecoration: 'line-through' }}>
+                          <p style={{ fontSize: 11, color: '#9CA3AF', textDecoration: 'line-through' }}>
                             {product.price.toLocaleString('fr-DZ')}
                           </p>
                         </>
                       ) : (
-                        <p style={{ fontSize: 15, fontWeight: 700, color: '#d1aa5c' }}>
+                        <p style={{ fontSize: 15, fontWeight: 700, color: '#111827' }}>
                           {product.price.toLocaleString('fr-DZ')} DA
                         </p>
                       )}
@@ -828,7 +821,7 @@ export default function AdminProductsPage() {
                     <p
                       style={{
                         fontSize: 12,
-                        color: '#A1A1AA',
+                        color: '#6B7280',
                         lineHeight: 1.5,
                         display: '-webkit-box',
                         WebkitLineClamp: 2,
@@ -851,19 +844,19 @@ export default function AdminProductsPage() {
                         borderRadius: 10,
                         fontSize: 12.5,
                         fontWeight: 500,
-                        background: 'rgba(255, 255, 255, 0.06)',
-                        border: '1px solid rgba(255, 255, 255, 0.10)',
+                        background: '#F3F4F6',
+                        border: '1px solid rgba(0, 0, 0, 0.06)',
                         cursor: 'pointer',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
                         gap: 6,
-                        color: '#F2F1EF',
-                        transition: 'background 0.15s',
+                        color: '#111827',
+                        transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
                       }}
-                      className="hover:bg-white/[0.12]"
+                      className="hover:bg-[#007AFF] hover:text-white hover:border-[#007AFF]"
                     >
-                      <Pencil className="w-3.5 h-3.5 text-[#d1aa5c]" />
+                      <Pencil className="w-3.5 h-3.5 text-current" />
                       Modifier
                     </button>
 
@@ -874,16 +867,16 @@ export default function AdminProductsPage() {
                         padding: '9px 14px',
                         borderRadius: 10,
                         fontSize: 12.5,
-                        background: 'rgba(239, 68, 68, 0.12)',
-                        border: '1px solid rgba(239, 68, 68, 0.25)',
+                        background: '#FEE2E2',
+                        border: '1px solid rgba(239, 68, 68, 0.2)',
                         cursor: 'pointer',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        color: '#f87171',
-                        transition: 'background 0.15s',
+                        color: '#DC2626',
+                        transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
                       }}
-                      className="hover:bg-red-500/20"
+                      className="hover:bg-[#EF4444] hover:text-white"
                     >
                       {deletingId === product.id
                         ? <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -917,14 +910,12 @@ export default function AdminProductsPage() {
         >
           <div
             style={{
-              background: 'linear-gradient(145deg, rgba(8, 14, 28, 0.98) 0%, rgba(3, 6, 14, 0.99) 50%, rgba(1, 2, 6, 1.0) 100%)',
-              backdropFilter: 'blur(32px)',
-              WebkitBackdropFilter: 'blur(32px)',
+              background: '#FFFFFF',
               borderRadius: 20,
               width: '100%',
               maxWidth: 560,
-              border: '1px solid rgba(255, 255, 255, 0.10)',
-              boxShadow: 'inset 0 1px 0 0 rgba(255,255,255,0.16), inset 0 0 24px 0 rgba(30, 58, 138, 0.12), 0 28px 80px -8px rgba(0,0,0,0.85), 0 16px 40px -8px rgba(2,6,23,0.6)',
+              border: '1px solid rgba(0, 0, 0, 0.08)',
+              boxShadow: '0 24px 80px rgba(0, 0, 0, 0.25)',
               overflow: 'hidden',
             }}
           >
@@ -935,7 +926,7 @@ export default function AdminProductsPage() {
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 padding: '22px 28px',
-                borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                borderBottom: '1px solid rgba(0, 0, 0, 0.06)',
               }}
             >
               <div>
@@ -943,32 +934,33 @@ export default function AdminProductsPage() {
                   style={{
                     fontFamily: 'var(--font-heading)',
                     fontSize: 18,
-                    fontWeight: 400,
-                    color: '#FFFFFF',
+                    fontWeight: 600,
+                    color: '#111827',
                     letterSpacing: '-0.01em',
                   }}
                 >
                   {editing ? 'Modifier le produit' : 'Nouveau produit'}
                 </h2>
-                <p style={{ fontSize: 12, color: '#A1A1AA', marginTop: 2 }}>
+                <p style={{ fontSize: 12, color: '#6B7280', marginTop: 2 }}>
                   Étape {step + 1} sur {STEPS.length} — {STEPS[step]}
                 </p>
               </div>
               <button
                 onClick={closeModal}
                 style={{
-                  width: 34,
-                  height: 34,
+                  width: 32,
+                  height: 32,
                   borderRadius: 99,
                   border: 'none',
-                  background: 'rgba(255, 255, 255, 0.06)',
+                  background: '#F3F4F6',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: '#D4D4D8',
+                  color: '#4B5563',
+                  transition: 'background 0.15s',
                 }}
-                className="hover:bg-white/10"
+                className="hover:bg-[#E5E7EB]"
               >
                 <X className="w-4 h-4" />
               </button>

@@ -180,17 +180,16 @@ export default function AdminOrdersPage() {
                 borderRadius: 99,
                 fontSize: 12.5,
                 fontWeight: 600,
-                border: filterStatus === tab.value ? 'none' : '1px solid rgba(255, 255, 255, 0.09)',
+                border: filterStatus === tab.value ? 'none' : '1px solid rgba(0, 0, 0, 0.08)',
                 cursor: 'pointer',
-                background: filterStatus === tab.value ? 'linear-gradient(135deg, #d1aa5c 0%, #b89347 100%)' : 'linear-gradient(145deg, rgba(8, 14, 28, 0.95) 0%, rgba(4, 7, 16, 0.98) 100%)',
-                backdropFilter: filterStatus === tab.value ? 'none' : 'blur(28px)',
-                WebkitBackdropFilter: filterStatus === tab.value ? 'none' : 'blur(28px)',
-                color: filterStatus === tab.value ? '#14120f' : '#D4D4D8',
+                background: filterStatus === tab.value ? '#111827' : '#FFFFFF',
+                color: filterStatus === tab.value ? '#FFFFFF' : '#374151',
                 boxShadow: filterStatus === tab.value
-                  ? '0 4px 14px rgba(209, 170, 92, 0.3)'
-                  : 'inset 0 1px 0 rgba(255, 255, 255, 0.12), inset 0 0 12px 0 rgba(30, 58, 138, 0.08), 0 4px 12px rgba(0,0,0,0.3)',
-                transition: 'all 0.15s ease',
+                  ? '0 3px 12px rgba(0, 0, 0, 0.2)'
+                  : '0 1px 4px rgba(0, 0, 0, 0.04)',
+                transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
               }}
+              className={filterStatus !== tab.value ? 'hover:bg-[#F3F4F6] hover:text-[#111827]' : ''}
             >
               {tab.label}
             </button>
@@ -228,19 +227,17 @@ export default function AdminOrdersPage() {
             style={{
               textAlign: 'center',
               padding: '80px 20px',
-              background: 'linear-gradient(145deg, rgba(8, 14, 28, 0.95) 0%, rgba(4, 7, 16, 0.98) 50%, rgba(2, 3, 8, 0.99) 100%)',
-              backdropFilter: 'blur(28px)',
-              WebkitBackdropFilter: 'blur(28px)',
+              background: '#FFFFFF',
               borderRadius: 20,
-              border: '1px solid rgba(255, 255, 255, 0.09)',
-              boxShadow: 'inset 0 1px 0 0 rgba(255, 255, 255, 0.14), inset 0 0 20px 0 rgba(30, 58, 138, 0.12), 0 20px 45px -12px rgba(0, 0, 0, 0.70), 0 8px 18px -4px rgba(2, 6, 23, 0.50)',
+              border: '1px solid rgba(0, 0, 0, 0.06)',
+              boxShadow: '0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.03)',
               position: 'relative',
               overflow: 'hidden',
             }}
           >
-            <MessageSquare className="w-10 h-10 mx-auto mb-4 text-[#d1aa5c]" />
-            <p style={{ color: '#FFFFFF', fontSize: 16, fontWeight: 600 }}>Aucune commande pour le moment</p>
-            <p style={{ color: '#A1A1AA', fontSize: 13, marginTop: 6 }}>
+            <MessageSquare className="w-10 h-10 mx-auto mb-4 text-[#111827]" />
+            <p style={{ color: '#111827', fontSize: 16, fontWeight: 600 }}>Aucune commande pour le moment</p>
+            <p style={{ color: '#6B7280', fontSize: 13, marginTop: 6 }}>
               Les messages du formulaire de contact apparaîtront ici
             </p>
           </div>
@@ -252,20 +249,18 @@ export default function AdminOrdersPage() {
                 <div
                   key={order.id}
                   style={{
-                    background: 'linear-gradient(145deg, rgba(8, 14, 28, 0.95) 0%, rgba(4, 7, 16, 0.98) 50%, rgba(2, 3, 8, 0.99) 100%)',
-                    backdropFilter: 'blur(28px)',
-                    WebkitBackdropFilter: 'blur(28px)',
-                    borderRadius: 18,
-                    border: order.status === 'new' ? '1px solid rgba(209, 170, 92, 0.45)' : '1px solid rgba(255, 255, 255, 0.09)',
-                    boxShadow: 'inset 0 1px 0 0 rgba(255, 255, 255, 0.14), inset 0 0 20px 0 rgba(30, 58, 138, 0.12), 0 20px 45px -12px rgba(0, 0, 0, 0.70), 0 8px 18px -4px rgba(2, 6, 23, 0.50)',
+                    background: '#FFFFFF',
+                    borderRadius: 16,
+                    border: order.status === 'new' ? '1.5px solid rgba(0, 122, 255, 0.4)' : '1px solid rgba(0, 0, 0, 0.06)',
+                    boxShadow: '0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.03)',
                     padding: '20px 24px',
                     display: 'flex',
                     alignItems: 'flex-start',
                     gap: 16,
-                    transition: 'all 0.28s cubic-bezier(0.4,0,0.2,1)',
+                    transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
                     position: 'relative',
                   }}
-                  className="hover:shadow-2xl hover:border-[#60a5fa]/40"
+                  className="hover:shadow-lg hover:-translate-y-0.5"
                 >
                   {/* Avatar */}
                   <div
@@ -273,15 +268,15 @@ export default function AdminOrdersPage() {
                       width: 44,
                       height: 44,
                       borderRadius: 99,
-                      background: 'rgba(209, 170, 92, 0.12)',
-                      border: '1px solid rgba(209, 170, 92, 0.25)',
+                      background: '#F3F4F6',
+                      border: '1px solid rgba(0, 0, 0, 0.04)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       flexShrink: 0,
                       fontSize: 16,
                       fontWeight: 700,
-                      color: '#d1aa5c',
+                      color: '#111827',
                     }}
                   >
                     {(order.name || '?')[0].toUpperCase()}
@@ -291,28 +286,28 @@ export default function AdminOrdersPage() {
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ display: 'flex', alignItems: 'flex-start', justifyBetween: 'space-between', gap: 8, flexWrap: 'wrap', justifyContent: 'space-between' }}>
                       <div>
-                        <p style={{ fontSize: 15, fontWeight: 600, color: '#FFFFFF' }}>{order.name || '—'}</p>
+                        <p style={{ fontSize: 15, fontWeight: 600, color: '#111827' }}>{order.name || '—'}</p>
                         <div style={{ display: 'flex', gap: 14, marginTop: 4, flexWrap: 'wrap' }}>
                           {order.phone && (
                             <a
                               href={`tel:${order.phone}`}
-                              style={{ fontSize: 12.5, color: '#D4D4D8', display: 'flex', alignItems: 'center', gap: 4, textDecoration: 'none' }}
-                              className="hover:text-[#d1aa5c]"
+                              style={{ fontSize: 12.5, color: '#4B5563', display: 'flex', alignItems: 'center', gap: 4, textDecoration: 'none', transition: 'color 0.2s' }}
+                              className="hover:text-[#007AFF]"
                             >
-                              <Phone className="w-3.5 h-3.5 text-[#d1aa5c]" />{order.phone}
+                              <Phone className="w-3.5 h-3.5 text-[#6B7280]" />{order.phone}
                             </a>
                           )}
                           {order.email && (
                             <a
                               href={`mailto:${order.email}`}
-                              style={{ fontSize: 12.5, color: '#D4D4D8', display: 'flex', alignItems: 'center', gap: 4, textDecoration: 'none' }}
-                              className="hover:text-[#d1aa5c]"
+                              style={{ fontSize: 12.5, color: '#4B5563', display: 'flex', alignItems: 'center', gap: 4, textDecoration: 'none', transition: 'color 0.2s' }}
+                              className="hover:text-[#007AFF]"
                             >
-                              <Mail className="w-3.5 h-3.5 text-[#d1aa5c]" />{order.email}
+                              <Mail className="w-3.5 h-3.5 text-[#6B7280]" />{order.email}
                             </a>
                           )}
                           {order.created_at && (
-                            <span style={{ fontSize: 12.5, color: '#9CA3AF', display: 'flex', alignItems: 'center', gap: 4 }}>
+                            <span style={{ fontSize: 12.5, color: '#6B7280', display: 'flex', alignItems: 'center', gap: 4 }}>
                               <Calendar className="w-3.5 h-3.5 text-[#9CA3AF]" />
                               {formatDate(order.created_at)}
                             </span>
@@ -338,14 +333,15 @@ export default function AdminOrdersPage() {
                           <button
                             onClick={() => setActiveMenu(activeMenu === order.id ? null : order.id)}
                             style={{
-                              padding: '6px',
+                              padding: '6px 8px',
                               borderRadius: 8,
-                              border: '1px solid rgba(255, 255, 255, 0.1)',
-                              background: activeMenu === order.id ? 'rgba(255, 255, 255, 0.12)' : 'rgba(255, 255, 255, 0.05)',
+                              border: '1px solid rgba(0, 0, 0, 0.08)',
+                              background: activeMenu === order.id ? '#E5E7EB' : '#F3F4F6',
                               cursor: 'pointer',
                               display: 'flex',
                               alignItems: 'center',
-                              color: '#D4D4D8',
+                              color: '#374151',
+                              transition: 'all 0.15s cubic-bezier(0.16, 1, 0.3, 1)',
                             }}
                           >
                             <MoreVertical className="w-4 h-4" />
@@ -357,21 +353,23 @@ export default function AdminOrdersPage() {
                                 right: 0,
                                 top: '100%',
                                 marginTop: 6,
-                                background: 'rgba(5, 9, 22, 0.96)',
-                                backdropFilter: 'blur(20px)',
-                                WebkitBackdropFilter: 'blur(20px)',
+                                background: 'rgba(28, 30, 36, 0.95)',
+                                backdropFilter: 'blur(28px)',
+                                WebkitBackdropFilter: 'blur(28px)',
                                 borderRadius: 14,
-                                boxShadow: '0 16px 40px rgba(0, 0, 0, 0.7)',
-                                border: '1px solid rgba(255, 255, 255, 0.12)',
-                                minWidth: 210,
-                                zIndex: 10,
-                                overflow: 'hidden',
+                                boxShadow: '0 20px 40px -10px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.12)',
+                                minWidth: 220,
+                                zIndex: 20,
+                                padding: '6px',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: '2px',
                               }}
                             >
                               {[
                                 { label: 'Marquer comme lu', action: () => updateStatus(order.id, 'read'), icon: CheckCircle },
                                 { label: 'Marquer en traitement', action: () => updateStatus(order.id, 'processing'), icon: Clock },
-                                { label: 'Ajouter au funnel', action: () => addToFunnel(order), icon: TrendingUp, highlight: true },
+                                { label: 'Ajouter au funnel', action: () => addToFunnel(order), icon: TrendingUp },
                                 { label: 'Clôturer', action: () => updateStatus(order.id, 'closed'), icon: X },
                               ].map((action) => (
                                 <button
@@ -382,21 +380,29 @@ export default function AdminOrdersPage() {
                                     alignItems: 'center',
                                     gap: 10,
                                     width: '100%',
-                                    padding: '12px 16px',
+                                    padding: '8px 12px',
                                     border: 'none',
                                     background: 'transparent',
                                     cursor: 'pointer',
                                     fontSize: 13,
-                                    color: action.highlight ? '#34d399' : '#E5E7EB',
+                                    fontWeight: 500,
+                                    color: '#F3F4F6',
+                                    borderRadius: 8,
                                     textAlign: 'left',
-                                    transition: 'background 0.1s',
+                                    transition: 'all 0.15s cubic-bezier(0.16, 1, 0.3, 1)',
                                   }}
-                                  onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)')}
-                                  onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+                                  onMouseEnter={e => {
+                                    e.currentTarget.style.background = '#007AFF'
+                                    e.currentTarget.style.color = '#FFFFFF'
+                                  }}
+                                  onMouseLeave={e => {
+                                    e.currentTarget.style.background = 'transparent'
+                                    e.currentTarget.style.color = '#F3F4F6'
+                                  }}
                                 >
-                                  <action.icon className="w-4 h-4" />
-                                  {action.label}
-                                  {action.highlight && addingToFunnel === order.id && (
+                                  <action.icon className="w-4 h-4 flex-shrink-0" />
+                                  <span>{action.label}</span>
+                                  {action.label === 'Ajouter au funnel' && addingToFunnel === order.id && (
                                     <Loader2 className="w-3.5 h-3.5 animate-spin ml-auto" />
                                   )}
                                 </button>
@@ -412,18 +418,18 @@ export default function AdminOrdersPage() {
                         style={{
                           display: 'inline-flex',
                           alignItems: 'center',
-                          gap: 5,
-                          background: 'rgba(209, 170, 92, 0.12)',
-                          border: '1px solid rgba(209, 170, 92, 0.25)',
+                          gap: 6,
+                          background: '#F3F4F6',
+                          border: '1px solid rgba(0, 0, 0, 0.06)',
                           borderRadius: 99,
-                          padding: '3px 10px',
+                          padding: '3px 12px',
                           fontSize: 12,
-                          color: '#d1aa5c',
-                          marginTop: 8,
+                          color: '#1F2937',
+                          marginTop: 10,
                           fontWeight: 500,
                         }}
                       >
-                        <Package className="w-3 h-3" />
+                        <Package className="w-3.5 h-3.5 text-[#007AFF]" />
                         {order.product}
                       </div>
                     )}
@@ -431,12 +437,12 @@ export default function AdminOrdersPage() {
                     {order.message && (
                       <div
                         onClick={() => setSelectedOrder(selectedOrder?.id === order.id ? null : order)}
-                        style={{ cursor: 'pointer', marginTop: 10 }}
+                        style={{ cursor: 'pointer', marginTop: 12, padding: '10px 14px', borderRadius: 10, background: '#F9FAFB', border: '1px solid rgba(0, 0, 0, 0.04)' }}
                       >
                         <p
                           style={{
                             fontSize: 13,
-                            color: '#D4D4D8',
+                            color: '#374151',
                             lineHeight: 1.6,
                             display: selectedOrder?.id === order.id ? 'block' : '-webkit-box',
                             WebkitLineClamp: 2,
@@ -449,15 +455,16 @@ export default function AdminOrdersPage() {
                         <button
                           style={{
                             fontSize: 12,
-                            color: '#d1aa5c',
+                            color: '#007AFF',
                             background: 'none',
                             border: 'none',
                             cursor: 'pointer',
                             display: 'flex',
                             alignItems: 'center',
                             gap: 3,
-                            marginTop: 4,
+                            marginTop: 6,
                             padding: 0,
+                            fontWeight: 500,
                           }}
                         >
                           <ChevronDown

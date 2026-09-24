@@ -35,79 +35,77 @@ export default function AdminSettingsPage() {
             title: 'Base de données',
             desc: 'Connexion Supabase et état de la synchronisation',
             status: 'Connecté (Live)',
-            statusColor: '#34d399',
-            statusBg: 'rgba(16, 185, 129, 0.15)',
-            statusBorder: 'rgba(16, 185, 129, 0.3)',
+            statusColor: '#10B981',
+            statusBg: 'rgba(16, 185, 129, 0.12)',
+            statusBorder: 'rgba(16, 185, 129, 0.25)',
           },
           {
             icon: Shield,
             title: 'Sécurité & Accès',
             desc: 'Verrouillage de /admin via Cloudflare Access (Zero Trust)',
             status: 'Optionnel',
-            statusColor: '#D4D4D8',
-            statusBg: 'rgba(255, 255, 255, 0.06)',
-            statusBorder: 'rgba(255, 255, 255, 0.1)',
+            statusColor: '#6B7280',
+            statusBg: '#F3F4F6',
+            statusBorder: 'rgba(0, 0, 0, 0.06)',
           },
           {
             icon: Bell,
             title: 'Notifications',
             desc: 'Alertes email / WhatsApp pour les nouvelles commandes',
             status: 'Bientôt',
-            statusColor: '#D4D4D8',
-            statusBg: 'rgba(255, 255, 255, 0.06)',
-            statusBorder: 'rgba(255, 255, 255, 0.1)',
+            statusColor: '#6B7280',
+            statusBg: '#F3F4F6',
+            statusBorder: 'rgba(0, 0, 0, 0.06)',
           },
           {
             icon: Palette,
             title: 'Apparence',
-            desc: 'Design luxury dark glassy exclusif',
+            desc: 'Design Apple Studio exclusif',
             status: 'Actif',
-            statusColor: '#d1aa5c',
-            statusBg: 'rgba(209, 170, 92, 0.15)',
-            statusBorder: 'rgba(209, 170, 92, 0.3)',
+            statusColor: '#007AFF',
+            statusBg: 'rgba(0, 122, 255, 0.12)',
+            statusBorder: 'rgba(0, 122, 255, 0.25)',
           },
         ].map((item, i) => (
           <div
             key={i}
             style={{
-              background: 'linear-gradient(145deg, rgba(8, 14, 28, 0.95) 0%, rgba(4, 7, 16, 0.98) 50%, rgba(2, 3, 8, 0.99) 100%)',
-              backdropFilter: 'blur(28px)',
-              WebkitBackdropFilter: 'blur(28px)',
+              background: '#FFFFFF',
               borderRadius: 18,
               padding: '20px 22px',
-              border: '1px solid rgba(255, 255, 255, 0.09)',
-              boxShadow: 'inset 0 1px 0 0 rgba(255, 255, 255, 0.14), inset 0 0 20px 0 rgba(30, 58, 138, 0.12), 0 20px 45px -12px rgba(0, 0, 0, 0.70), 0 8px 18px -4px rgba(2, 6, 23, 0.50)',
+              border: '1px solid rgba(0, 0, 0, 0.06)',
+              boxShadow: '0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.03)',
               display: 'flex',
               alignItems: 'center',
               gap: 16,
-              marginBottom: 12,
-              transition: 'all 0.28s cubic-bezier(0.4,0,0.2,1)',
+              marginBottom: 14,
+              transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
               position: 'relative',
             }}
-            className="hover:shadow-2xl hover:border-[#60a5fa]/30 hover:translate-x-1"
+            className="hover:shadow-lg hover:translate-x-1"
           >
             <div
               style={{
                 width: 44,
                 height: 44,
                 borderRadius: 12,
-                background: 'rgba(209, 170, 92, 0.12)',
-                border: '1px solid rgba(209, 170, 92, 0.25)',
+                background: '#F3F4F6',
+                border: '1px solid rgba(0, 0, 0, 0.04)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 flexShrink: 0,
               }}
             >
-              <item.icon className="w-5 h-5" style={{ color: '#d1aa5c' }} />
+              <item.icon className="w-5 h-5 text-[#007AFF]" />
             </div>
             <div style={{ flex: 1 }}>
-              <p style={{ fontSize: 14.5, fontWeight: 600, color: '#FFFFFF' }}>{item.title}</p>
-              <p style={{ fontSize: 12.5, color: '#A1A1AA', marginTop: 2 }}>{item.desc}</p>
+              <p style={{ fontSize: 15, fontWeight: 600, color: '#111827' }}>{item.title}</p>
+              <p style={{ fontSize: 13, color: '#6B7280', marginTop: 2 }}>{item.desc}</p>
             </div>
             <span
               style={{
-                fontSize: 11.5,
+                fontSize: 12,
                 fontWeight: 600,
                 color: item.statusColor,
                 background: item.statusBg,

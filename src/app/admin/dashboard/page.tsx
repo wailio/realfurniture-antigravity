@@ -213,56 +213,38 @@ export default function AdminDashboard() {
             <div
               key={i}
               style={{
-                background: 'linear-gradient(145deg, rgba(8, 14, 28, 0.95) 0%, rgba(4, 7, 16, 0.98) 50%, rgba(2, 3, 8, 0.99) 100%)',
-                backdropFilter: 'blur(28px)',
-                WebkitBackdropFilter: 'blur(28px)',
-                borderRadius: 18,
+                background: '#FFFFFF',
+                borderRadius: 16,
                 padding: '24px',
-                border: '1px solid rgba(255, 255, 255, 0.09)',
-                boxShadow: 'inset 0 1px 0 0 rgba(255, 255, 255, 0.14), inset 0 0 20px 0 rgba(30, 58, 138, 0.12), 0 20px 45px -12px rgba(0, 0, 0, 0.70), 0 8px 18px -4px rgba(2, 6, 23, 0.50)',
-                transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+                border: '1px solid rgba(0, 0, 0, 0.06)',
+                boxShadow: '0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.03)',
+                transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
                 position: 'relative',
-                overflow: 'hidden',
               }}
-              className="hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.25),0_24px_50px_-10px_rgba(0,0,0,0.65)] hover:border-[#60a5fa]/40 hover:-translate-y-1"
+              className="hover:shadow-lg hover:-translate-y-1"
             >
-              {/* Subtle top-right ambient glass glow */}
-              <div
-                style={{
-                  position: 'absolute',
-                  top: -40,
-                  right: -40,
-                  width: 100,
-                  height: 100,
-                  borderRadius: 99,
-                  background: 'radial-gradient(circle, rgba(96, 165, 250, 0.15) 0%, transparent 70%)',
-                  pointerEvents: 'none',
-                }}
-              />
-
-              <div className="flex items-start justify-between mb-4 relative z-10">
+              <div className="flex items-start justify-between mb-4">
                 <div
                   style={{
                     width: 40,
                     height: 40,
                     borderRadius: 12,
-                    background: 'linear-gradient(135deg, rgba(209, 170, 92, 0.18) 0%, rgba(209, 170, 92, 0.05) 100%)',
-                    border: '1px solid rgba(209, 170, 92, 0.3)',
-                    boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.12)',
+                    background: '#F3F4F6',
+                    border: '1px solid rgba(0, 0, 0, 0.04)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                   }}
                 >
-                  <s.icon className="w-5 h-5" style={{ color: '#d1aa5c' }} />
+                  <s.icon className="w-5 h-5" style={{ color: '#111827' }} />
                 </div>
                 <span
                   style={{
                     fontSize: 11,
                     fontWeight: 600,
-                    color: s.trendUp ? '#34d399' : '#f87171',
-                    background: s.trendUp ? 'rgba(16, 185, 129, 0.12)' : 'rgba(239, 68, 68, 0.12)',
-                    border: `1px solid ${s.trendUp ? 'rgba(16, 185, 129, 0.25)' : 'rgba(239, 68, 68, 0.25)'}`,
+                    color: s.trendUp ? '#059669' : '#dc2626',
+                    background: s.trendUp ? '#ecfdf5' : '#fef2f2',
+                    border: `1px solid ${s.trendUp ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)'}`,
                     padding: '3px 8px',
                     borderRadius: 99,
                     display: 'flex',
@@ -277,34 +259,19 @@ export default function AdminDashboard() {
               <p
                 style={{
                   fontSize: 28,
-                  fontWeight: 600,
-                  color: '#FFFFFF',
+                  fontWeight: 700,
+                  color: '#111827',
                   letterSpacing: '-0.03em',
                   lineHeight: 1,
                   fontFamily: 'var(--font-heading)',
-                  position: 'relative',
-                  zIndex: 10,
                 }}
               >
                 {s.value}
               </p>
-              <p style={{ fontSize: 13, fontWeight: 500, color: '#E5E7EB', marginTop: 8, position: 'relative', zIndex: 10 }}>
+              <p style={{ fontSize: 13, fontWeight: 600, color: '#374151', marginTop: 8 }}>
                 {s.label}
               </p>
-              <p style={{ fontSize: 12, color: '#9CA3AF', marginTop: 2, position: 'relative', zIndex: 10 }}>{s.sub}</p>
-
-              {/* Bottom micro-meter accent line */}
-              <div
-                style={{
-                  position: 'absolute',
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  height: 2,
-                  background: 'linear-gradient(90deg, rgba(209, 170, 92, 0.4) 0%, rgba(96, 165, 250, 0.3) 50%, transparent 100%)',
-                  opacity: 0.6,
-                }}
-              />
+              <p style={{ fontSize: 12, color: '#6B7280', marginTop: 2 }}>{s.sub}</p>
             </div>
           ))}
         </div>
@@ -314,13 +281,11 @@ export default function AdminDashboard() {
           {/* Quick Actions */}
           <div
             style={{
-              background: 'linear-gradient(145deg, rgba(8, 14, 28, 0.95) 0%, rgba(4, 7, 16, 0.98) 50%, rgba(2, 3, 8, 0.99) 100%)',
-              backdropFilter: 'blur(28px)',
-              WebkitBackdropFilter: 'blur(28px)',
-              borderRadius: 18,
+              background: '#FFFFFF',
+              borderRadius: 16,
               padding: '28px',
-              border: '1px solid rgba(255, 255, 255, 0.09)',
-              boxShadow: 'inset 0 1px 0 0 rgba(255, 255, 255, 0.14), inset 0 0 20px 0 rgba(30, 58, 138, 0.12), 0 20px 45px -12px rgba(0, 0, 0, 0.70), 0 8px 18px -4px rgba(2, 6, 23, 0.50)',
+              border: '1px solid rgba(0, 0, 0, 0.06)',
+              boxShadow: '0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.03)',
             }}
           >
             <h2
@@ -328,13 +293,13 @@ export default function AdminDashboard() {
                 fontFamily: 'var(--font-heading)',
                 fontSize: 17,
                 fontWeight: 600,
-                color: '#FFFFFF',
+                color: '#111827',
                 marginBottom: 6,
               }}
             >
               Actions rapides
             </h2>
-            <p style={{ fontSize: 12.5, color: '#A1A1AA', marginBottom: 20 }}>
+            <p style={{ fontSize: 12.5, color: '#6B7280', marginBottom: 20 }}>
               Accès direct aux fonctionnalités de gestion
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -353,19 +318,18 @@ export default function AdminDashboard() {
                     justifyContent: 'space-between',
                     padding: '14px 16px',
                     borderRadius: 12,
-                    background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%)',
-                    border: '1px solid rgba(255, 255, 255, 0.06)',
-                    boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.05)',
+                    background: '#F9FAFB',
+                    border: '1px solid rgba(0, 0, 0, 0.04)',
                     textDecoration: 'none',
                     transition: 'all 0.2s ease',
                   }}
-                  className="hover:bg-white/[0.08] hover:border-white/[0.12] hover:translate-x-1"
+                  className="hover:bg-[#F3F4F6] hover:border-black/10 hover:translate-x-1"
                 >
                   <div>
-                    <p style={{ fontSize: 13.5, fontWeight: 600, color: '#FFFFFF' }}>{item.title}</p>
-                    <p style={{ fontSize: 12, color: '#9CA3AF', marginTop: 2 }}>{item.desc}</p>
+                    <p style={{ fontSize: 13.5, fontWeight: 600, color: '#111827' }}>{item.title}</p>
+                    <p style={{ fontSize: 12, color: '#6B7280', marginTop: 2 }}>{item.desc}</p>
                   </div>
-                  <ArrowUpRight className="w-4 h-4" style={{ color: '#d1aa5c' }} />
+                  <ArrowUpRight className="w-4 h-4" style={{ color: '#007AFF' }} />
                 </a>
               ))}
             </div>
@@ -374,13 +338,11 @@ export default function AdminDashboard() {
           {/* Database connection status */}
           <div
             style={{
-              background: 'linear-gradient(145deg, rgba(8, 14, 28, 0.95) 0%, rgba(4, 7, 16, 0.98) 50%, rgba(2, 3, 8, 0.99) 100%)',
-              backdropFilter: 'blur(28px)',
-              WebkitBackdropFilter: 'blur(28px)',
-              borderRadius: 18,
+              background: '#FFFFFF',
+              borderRadius: 16,
               padding: '28px',
-              border: '1px solid rgba(255, 255, 255, 0.09)',
-              boxShadow: 'inset 0 1px 0 0 rgba(255, 255, 255, 0.14), inset 0 0 20px 0 rgba(30, 58, 138, 0.12), 0 20px 45px -12px rgba(0, 0, 0, 0.70), 0 8px 18px -4px rgba(2, 6, 23, 0.50)',
+              border: '1px solid rgba(0, 0, 0, 0.06)',
+              boxShadow: '0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.03)',
             }}
           >
             <h2
@@ -388,35 +350,35 @@ export default function AdminDashboard() {
                 fontFamily: 'var(--font-heading)',
                 fontSize: 17,
                 fontWeight: 600,
-                color: '#FFFFFF',
+                color: '#111827',
                 marginBottom: 6,
               }}
             >
               État de synchronisation
             </h2>
-            <p style={{ fontSize: 12.5, color: '#A1A1AA', marginBottom: 20 }}>
+            <p style={{ fontSize: 12.5, color: '#6B7280', marginBottom: 20 }}>
               Base de données Supabase &amp; Cloudflare
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 14px', borderRadius: 12, background: 'rgba(16, 185, 129, 0.08)', border: '1px solid rgba(16, 185, 129, 0.2)' }}>
-                <div style={{ width: 8, height: 8, borderRadius: 99, background: '#10B981', boxShadow: '0 0 6px #10B981' }} />
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 14px', borderRadius: 12, background: '#ecfdf5', border: '1px solid rgba(16, 185, 129, 0.2)' }}>
+                <div style={{ width: 8, height: 8, borderRadius: 99, background: '#10B981' }} />
                 <div style={{ flex: 1 }}>
-                  <p style={{ fontSize: 13, fontWeight: 600, color: '#34d399' }}>Supabase PostgreSQL</p>
-                  <p style={{ fontSize: 11.5, color: '#a7f3d0' }}>Connecté (Tables: products, messages, orders)</p>
+                  <p style={{ fontSize: 13, fontWeight: 600, color: '#065f46' }}>Supabase PostgreSQL</p>
+                  <p style={{ fontSize: 11.5, color: '#047857' }}>Connecté (Tables: products, messages, orders)</p>
                 </div>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 14px', borderRadius: 12, background: 'rgba(59, 130, 246, 0.08)', border: '1px solid rgba(59, 130, 246, 0.2)' }}>
-                <div style={{ width: 8, height: 8, borderRadius: 99, background: '#3b82f6', boxShadow: '0 0 6px #3b82f6' }} />
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 14px', borderRadius: 12, background: '#eff6ff', border: '1px solid rgba(59, 130, 246, 0.2)' }}>
+                <div style={{ width: 8, height: 8, borderRadius: 99, background: '#3b82f6' }} />
                 <div style={{ flex: 1 }}>
-                  <p style={{ fontSize: 13, fontWeight: 600, color: '#60a5fa' }}>Cloudflare Pages Edge</p>
-                  <p style={{ fontSize: 11.5, color: '#bfdbfe' }}>SSR dynamique actif · Instant updates</p>
+                  <p style={{ fontSize: 13, fontWeight: 600, color: '#1e40af' }}>Cloudflare Pages Edge</p>
+                  <p style={{ fontSize: 11.5, color: '#2563eb' }}>SSR dynamique actif · Instant updates</p>
                 </div>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 14px', borderRadius: 12, background: 'rgba(168, 85, 247, 0.08)', border: '1px solid rgba(168, 85, 247, 0.2)' }}>
-                <div style={{ width: 8, height: 8, borderRadius: 99, background: '#a855f7', boxShadow: '0 0 6px #a855f7' }} />
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 14px', borderRadius: 12, background: '#faf5ff', border: '1px solid rgba(168, 85, 247, 0.2)' }}>
+                <div style={{ width: 8, height: 8, borderRadius: 99, background: '#a855f7' }} />
                 <div style={{ flex: 1 }}>
-                  <p style={{ fontSize: 13, fontWeight: 600, color: '#c084fc' }}>Sécurité RLS</p>
-                  <p style={{ fontSize: 11.5, color: '#e9d5ff' }}>Row Level Security activée avec clés d&apos;API</p>
+                  <p style={{ fontSize: 13, fontWeight: 600, color: '#6b21a8' }}>Sécurité RLS</p>
+                  <p style={{ fontSize: 11.5, color: '#7e22ce' }}>Row Level Security activée avec clés d&apos;API</p>
                 </div>
               </div>
             </div>
