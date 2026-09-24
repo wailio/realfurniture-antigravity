@@ -390,48 +390,34 @@ export default function AdminWebsiteInfoPage() {
             const isActive = activePage === page.key
 
             return (
-              <div key={page.key}>
+              <div key={page.key} className="mb-1">
                 {/* Page button */}
                 <button
                   onClick={() => {
                     const first = page.sections[0]
                     if (first) navigate(page.key, first.key)
                   }}
-                  className="w-full flex items-center gap-2.5 transition-all"
-                  style={{
-                    padding: '8px 14px',
-                    background: isActive ? 'rgba(255,255,255,0.05)' : 'transparent',
-                    borderLeft: `2px solid ${isActive ? page.color : 'transparent'}`,
-                  }}
+                  className="ios-page-nav-btn group"
+                  data-active={isActive}
                 >
                   <div
-                    className="w-6 h-6 rounded-lg flex items-center justify-center shrink-0"
+                    className="ios-icon-box"
                     style={{
-                      background: isActive ? `${page.color}22` : 'rgba(255,255,255,0.04)',
+                      background: isActive ? `${page.color}25` : 'rgba(255,255,255,0.04)',
+                      boxShadow: isActive ? `0 0 10px ${page.color}30` : 'none',
                     }}
                   >
                     <PageIcon
-                      style={{ width: 13, height: 13, color: isActive ? page.color : '#4A4D55' }}
+                      style={{ width: 13, height: 13, color: isActive ? page.color : '#8E9199' }}
                     />
                   </div>
-                  <span
-                    style={{
-                      fontSize: 13,
-                      fontWeight: isActive ? 600 : 400,
-                      color: isActive ? '#F2F1EF' : '#5A5D65',
-                      flex: 1,
-                      textAlign: 'left',
-                    }}
-                  >
+                  <span className="ios-page-title">
                     {page.label}
                   </span>
                   <ChevronRight
+                    className="ios-chevron"
                     style={{
-                      width: 12,
-                      height: 12,
-                      color: isActive ? '#5A5D65' : '#2A2D35',
                       transform: isActive ? 'rotate(90deg)' : 'none',
-                      transition: 'transform 0.3s cubic-bezier(0.32, 0.72, 0, 1)',
                     }}
                   />
                 </button>
@@ -452,29 +438,21 @@ export default function AdminWebsiteInfoPage() {
                       <button
                         key={section.key}
                         onClick={() => navigate(page.key, section.key)}
-                        className="w-full flex items-center gap-2 transition-all"
-                        style={{
-                          padding: '9px 14px 9px 38px',
-                          background: isSectionActive ? `${page.color}14` : 'transparent',
-                        }}
+                        className="ios-sub-nav-btn group"
+                        data-active={isSectionActive}
                       >
                         <span
-                          className="w-1.5 h-1.5 rounded-full shrink-0"
-                          style={{ background: isSectionActive ? page.color : '#2A2D35' }}
-                        />
-                        <span
+                          className="ios-dot"
                           style={{
-                            fontSize: 12,
-                            color: isSectionActive ? page.color : '#4A4D55',
-                            fontWeight: isSectionActive ? 500 : 400,
-                            flex: 1,
-                            textAlign: 'left',
+                            background: isSectionActive ? page.color : '#3A3D45',
+                            boxShadow: isSectionActive ? `0 0 8px ${page.color}` : 'none',
                           }}
-                        >
+                        />
+                        <span className="ios-sub-title">
                           {section.label}
                         </span>
                         {wasSaved && (
-                          <Check style={{ width: 10, height: 10, color: '#30D158' }} />
+                          <Check style={{ width: 11, height: 11, color: '#30D158' }} />
                         )}
                       </button>
                     )
@@ -595,17 +573,18 @@ export default function AdminWebsiteInfoPage() {
                   {currentSection.imageFields!.map((imgField) => (
                     <div
                       key={imgField.key}
-                      className="rounded-2xl p-5"
+                      className="rounded-2xl p-5 transition-all duration-300 hover:border-white/[0.14] hover:shadow-xl group"
                       style={{
                         background: 'rgba(14, 15, 18, 0.85)',
                         border: '0.5px solid rgba(255,255,255,0.07)',
                       }}
                     >
                       <p
+                        className="transition-colors duration-200 group-hover:text-white"
                         style={{
                           fontSize: 10,
                           fontWeight: 600,
-                          color: '#6E7077',
+                          color: '#7C8089',
                           letterSpacing: '0.08em',
                           textTransform: 'uppercase',
                           marginBottom: 10,
@@ -617,20 +596,21 @@ export default function AdminWebsiteInfoPage() {
                       {/* Preview or placeholder */}
                       {data[imgField.key] ? (
                         <div
-                          className="relative rounded-xl overflow-hidden mb-3"
+                          className="relative rounded-xl overflow-hidden mb-3 group/img"
                           style={{ aspectRatio: '16/10', background: '#0A0B0D' }}
                         >
                           <img
                             src={data[imgField.key]}
                             alt=""
-                            className="w-full h-full object-cover"
+                            className="w-full h-full object-cover transition-transform duration-300 group-hover/img:scale-105"
                           />
                           <button
                             onClick={() => setData(prev => ({ ...prev, [imgField.key]: '' }))}
-                            className="absolute top-2 right-2 w-6 h-6 rounded-full flex items-center justify-center"
+                            className="absolute top-2 right-2 w-7 h-7 rounded-full flex items-center justify-center transition-all duration-150 hover:scale-110 hover:bg-red-500 cursor-pointer"
                             style={{ background: 'rgba(0,0,0,0.72)', backdropFilter: 'blur(6px)' }}
+                            title="Supprimer l'image"
                           >
-                            <X style={{ width: 12, height: 12, color: '#fff' }} />
+                            <X style={{ width: 13, height: 13, color: '#fff' }} />
                           </button>
                         </div>
                       ) : (
@@ -639,10 +619,10 @@ export default function AdminWebsiteInfoPage() {
                             uploadFieldRef.current = imgField.key
                             fileInputRef.current?.click()
                           }}
-                          className="w-full rounded-xl flex flex-col items-center justify-center gap-1.5 mb-3 transition-all hover:bg-white/5"
+                          className="w-full rounded-xl flex flex-col items-center justify-center gap-2 mb-3 transition-all duration-200 hover:border-[#0A84FF]/60 hover:bg-[#0A84FF]/[0.05] hover:scale-[1.01] active:scale-[0.98] group/box cursor-pointer"
                           style={{
                             aspectRatio: '16/10',
-                            border: '1px dashed rgba(255,255,255,0.1)',
+                            border: '1px dashed rgba(255,255,255,0.12)',
                             background: 'rgba(255,255,255,0.02)',
                           }}
                         >
@@ -650,8 +630,10 @@ export default function AdminWebsiteInfoPage() {
                             <Loader2 className="w-5 h-5 animate-spin" style={{ color: '#0A84FF' }} />
                           ) : (
                             <>
-                              <ImageIcon style={{ width: 20, height: 20, color: '#3A3D45' }} />
-                              <p style={{ fontSize: 11, color: '#3A3D45' }}>Cliquer pour téléverser</p>
+                              <ImageIcon className="w-6 h-6 text-[#4A4D55] transition-all duration-200 group-hover/box:scale-110 group-hover/box:text-[#0A84FF]" />
+                              <p className="text-[11px] text-[#5A5D65] transition-colors duration-200 group-hover/box:text-[#F2F1EF]">
+                                Cliquer pour téléverser
+                              </p>
                             </>
                           )}
                         </button>
@@ -663,22 +645,7 @@ export default function AdminWebsiteInfoPage() {
                         value={data[imgField.key] ?? ''}
                         onChange={e => setData(prev => ({ ...prev, [imgField.key]: e.target.value }))}
                         placeholder="Ou coller une URL d'image..."
-                        style={{
-                          width: '100%',
-                          padding: '7px 11px',
-                          background: 'rgba(255,255,255,0.03)',
-                          border: '0.5px solid rgba(255,255,255,0.08)',
-                          borderRadius: 9,
-                          color: '#7C8089',
-                          fontSize: 11,
-                          outline: 'none',
-                          fontFamily: 'inherit',
-                          boxSizing: 'border-box',
-                          marginBottom: 8,
-                          display: 'block',
-                        }}
-                        onFocus={e => (e.target.style.borderColor = 'rgba(10,132,255,0.4)')}
-                        onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,0.08)')}
+                        className="ios-field-input !py-2 !text-xs !mb-2.5"
                       />
 
                       <button
@@ -686,21 +653,21 @@ export default function AdminWebsiteInfoPage() {
                           uploadFieldRef.current = imgField.key
                           fileInputRef.current?.click()
                         }}
-                        className="w-full flex items-center justify-center gap-1.5 py-2 rounded-xl transition-all"
+                        className="w-full flex items-center justify-center gap-1.5 py-2.5 rounded-xl transition-all duration-200 hover:bg-[#0A84FF]/25 hover:shadow-md hover:scale-[1.01] active:scale-[0.97] cursor-pointer"
                         style={{
-                          fontSize: 11,
-                          fontWeight: 500,
+                          fontSize: 11.5,
+                          fontWeight: 600,
                           color: '#0A84FF',
-                          background: 'rgba(10,132,255,0.1)',
-                          border: '0.5px solid rgba(10,132,255,0.2)',
+                          background: 'rgba(10,132,255,0.12)',
+                          border: '0.5px solid rgba(10,132,255,0.25)',
                         }}
                       >
-                        <Upload style={{ width: 12, height: 12 }} />
+                        <Upload style={{ width: 13, height: 13 }} />
                         Téléverser
                       </button>
 
                       {imgField.hint && (
-                        <p style={{ fontSize: 10, color: '#3A3D45', marginTop: 7, lineHeight: 1.4 }}>
+                        <p style={{ fontSize: 10, color: '#4A4D55', marginTop: 7, lineHeight: 1.4 }}>
                           {imgField.hint}
                         </p>
                       )}
@@ -724,8 +691,165 @@ export default function AdminWebsiteInfoPage() {
 
       <style>{`
         @keyframes wInfoFadeUp {
-          from { opacity: 0; transform: translateY(10px); }
+          from { opacity: 0; transform: translateY(8px); }
           to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── Apple iOS Fluid Sidebar Selection & Hover Styles ── */
+        .ios-page-nav-btn {
+          width: calc(100% - 16px);
+          margin: 3px 8px;
+          padding: 8px 12px;
+          border-radius: 12px;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          background: transparent;
+          border: 0.5px solid transparent;
+          cursor: pointer;
+          user-select: none;
+          transition: all 0.22s cubic-bezier(0.32, 0.72, 0, 1);
+        }
+        .ios-page-nav-btn:hover {
+          background: rgba(255, 255, 255, 0.06);
+          border-color: rgba(255, 255, 255, 0.08);
+          transform: translateX(3px);
+        }
+        .ios-page-nav-btn:active {
+          transform: scale(0.97) translateX(2px);
+        }
+        .ios-page-nav-btn[data-active="true"] {
+          background: rgba(255, 255, 255, 0.08);
+          border-color: rgba(255, 255, 255, 0.12);
+          box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.4), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+        }
+        .ios-icon-box {
+          width: 24px;
+          height: 24px;
+          border-radius: 8px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+          transition: all 0.22s cubic-bezier(0.32, 0.72, 0, 1);
+        }
+        .ios-page-nav-btn:hover .ios-icon-box {
+          transform: scale(1.1);
+        }
+        .ios-page-title {
+          font-size: 13px;
+          font-weight: 450;
+          color: #8E9199;
+          flex: 1;
+          text-align: left;
+          transition: color 0.18s ease;
+        }
+        .ios-page-nav-btn:hover .ios-page-title,
+        .ios-page-nav-btn[data-active="true"] .ios-page-title {
+          color: #FFFFFF;
+          font-weight: 600;
+        }
+        .ios-chevron {
+          width: 12px;
+          height: 12px;
+          color: #3A3D45;
+          transition: all 0.22s cubic-bezier(0.32, 0.72, 0, 1);
+        }
+        .ios-page-nav-btn:hover .ios-chevron {
+          color: #8E9199;
+          transform: translateX(2px);
+        }
+        .ios-page-nav-btn[data-active="true"] .ios-chevron {
+          color: #8E9199;
+        }
+
+        /* Sub-navigation buttons */
+        .ios-sub-nav-btn {
+          width: calc(100% - 24px);
+          margin: 2px 12px 2px 28px;
+          padding: 7px 10px 7px 12px;
+          border-radius: 9px;
+          display: flex;
+          align-items: center;
+          gap: 9px;
+          background: transparent;
+          border: 0.5px solid transparent;
+          cursor: pointer;
+          user-select: none;
+          transition: all 0.2s cubic-bezier(0.32, 0.72, 0, 1);
+        }
+        .ios-sub-nav-btn:hover {
+          background: rgba(255, 255, 255, 0.05);
+          transform: translateX(4px);
+        }
+        .ios-sub-nav-btn:active {
+          transform: scale(0.97) translateX(3px);
+        }
+        .ios-sub-nav-btn[data-active="true"] {
+          background: rgba(255, 255, 255, 0.08);
+          border-color: rgba(255, 255, 255, 0.1);
+        }
+        .ios-dot {
+          width: 6px;
+          height: 6px;
+          border-radius: 99px;
+          flex-shrink: 0;
+          transition: all 0.2s cubic-bezier(0.32, 0.72, 0, 1);
+        }
+        .ios-sub-nav-btn:hover .ios-dot {
+          transform: scale(1.35);
+        }
+        .ios-sub-title {
+          font-size: 12px;
+          color: #6E7077;
+          font-weight: 400;
+          flex: 1;
+          text-align: left;
+          transition: color 0.15s ease;
+        }
+        .ios-sub-nav-btn:hover .ios-sub-title {
+          color: #E4E4E7;
+        }
+        .ios-sub-nav-btn[data-active="true"] .ios-sub-title {
+          color: #FFFFFF;
+          font-weight: 550;
+        }
+
+        /* Form inputs & textareas */
+        .ios-field-input {
+          width: 100%;
+          padding: 10px 14px;
+          background: rgba(255, 255, 255, 0.035);
+          border: 0.5px solid rgba(255, 255, 255, 0.09);
+          border-radius: 12px;
+          color: #F2F1EF;
+          font-size: 13.5px;
+          outline: none;
+          font-family: inherit;
+          box-sizing: border-box;
+          transition: all 0.2s cubic-bezier(0.32, 0.72, 0, 1);
+        }
+        .ios-field-input:hover {
+          background: rgba(255, 255, 255, 0.05);
+          border-color: rgba(255, 255, 255, 0.2);
+        }
+        .ios-field-input:focus {
+          background: rgba(255, 255, 255, 0.07);
+          border-color: #0A84FF;
+          box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.25), 0 4px 16px -2px rgba(0, 0, 0, 0.4);
+          transform: translateY(-1px);
+        }
+
+        /* Save Button Hover */
+        .ios-save-btn {
+          transition: all 0.22s cubic-bezier(0.32, 0.72, 0, 1);
+        }
+        .ios-save-btn:hover:not(:disabled) {
+          transform: scale(1.03) translateY(-1px);
+          filter: brightness(1.1);
+        }
+        .ios-save-btn:active:not(:disabled) {
+          transform: scale(0.96) translateY(0);
         }
       `}</style>
     </div>
@@ -743,31 +867,20 @@ function FieldRow({
   value: string
   onChange: (v: string) => void
 }) {
-  const baseStyle: React.CSSProperties = {
-    width: '100%',
-    padding: '9px 13px',
-    background: 'rgba(255,255,255,0.04)',
-    border: '0.5px solid rgba(255,255,255,0.09)',
-    borderRadius: 11,
-    color: '#E8E9EA',
-    fontSize: 13.5,
-    outline: 'none',
-    fontFamily: 'inherit',
-    boxSizing: 'border-box',
-    transition: 'border-color 0.15s ease',
-  }
+  const [isFocused, setIsFocused] = useState(false)
 
   return (
-    <div>
+    <div className="group">
       <label
+        className="transition-colors duration-150"
         style={{
           display: 'block',
           fontSize: 11,
-          fontWeight: 500,
-          color: '#6E7077',
+          fontWeight: 600,
+          color: isFocused ? '#0A84FF' : '#7C8089',
           letterSpacing: '0.06em',
           textTransform: 'uppercase',
-          marginBottom: 6,
+          marginBottom: 7,
         }}
       >
         {field.label}
@@ -779,9 +892,10 @@ function FieldRow({
           onChange={e => onChange(e.target.value)}
           placeholder={field.placeholder}
           rows={3}
-          style={{ ...baseStyle, resize: 'vertical', lineHeight: 1.6 }}
-          onFocus={e => (e.target.style.borderColor = 'rgba(10,132,255,0.45)')}
-          onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,0.09)')}
+          className="ios-field-input"
+          style={{ resize: 'vertical', lineHeight: 1.6 }}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
         />
       ) : (
         <input
@@ -789,14 +903,14 @@ function FieldRow({
           value={value}
           onChange={e => onChange(e.target.value)}
           placeholder={field.placeholder}
-          style={baseStyle}
-          onFocus={e => (e.target.style.borderColor = 'rgba(10,132,255,0.45)')}
-          onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,0.09)')}
+          className="ios-field-input"
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
         />
       )}
 
       {field.hint && (
-        <p style={{ fontSize: 10.5, color: '#3D4048', marginTop: 4, lineHeight: 1.45 }}>
+        <p style={{ fontSize: 10.5, color: '#4A4D55', marginTop: 5, lineHeight: 1.45 }}>
           {field.hint}
         </p>
       )}
@@ -819,15 +933,15 @@ function SaveButton({
     <button
       onClick={onSave}
       disabled={saving}
-      className="flex items-center gap-2 rounded-full font-semibold transition-all active:scale-95 shrink-0"
+      className="ios-save-btn flex items-center gap-2 rounded-full font-semibold shrink-0 cursor-pointer"
       style={{
-        padding: compact ? '7px 18px' : '9px 22px',
-        fontSize: compact ? 12 : 13,
+        padding: compact ? '8px 18px' : '10px 24px',
+        fontSize: compact ? 12 : 13.5,
         background: saved ? '#30D158' : saving ? 'rgba(10,132,255,0.6)' : '#0A84FF',
         color: '#ffffff',
         boxShadow: saved
-          ? '0 4px 14px rgba(48,209,88,0.35)'
-          : '0 4px 16px rgba(10,132,255,0.35)',
+          ? '0 4px 16px rgba(48,209,88,0.4)'
+          : '0 4px 18px rgba(10,132,255,0.4)',
         letterSpacing: '-0.01em',
       }}
     >
