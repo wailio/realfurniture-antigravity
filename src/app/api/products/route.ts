@@ -53,7 +53,11 @@ export async function GET(request: NextRequest) {
     if (res.ok) {
       const data = await res.json();
       if (Array.isArray(data) && data.length > 0) {
-        return NextResponse.json(data.map(mapDbProduct));
+        return NextResponse.json(data.map(mapDbProduct), {
+          headers: {
+            'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
+          },
+        });
       }
     }
   } catch (err) {
@@ -66,7 +70,11 @@ export async function GET(request: NextRequest) {
     filtered = staticProducts.filter((p) => p.category === category);
   }
 
-  return NextResponse.json(filtered);
+  return NextResponse.json(filtered, {
+    headers: {
+      'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
+    },
+  });
 }
 
 // POST: Add a new product to Supabase

@@ -17,11 +17,11 @@ interface CategoryItem {
 
 const CATEGORIES_CONFIG: CategoryItem[] = [
   { slug: 'all', label: 'Tous les modèles', aliases: ['all', 'tous', 'tout'] },
-  { slug: 'salle-a-manger', label: 'Salle à manger', aliases: ['salle-a-manger', 'salle', 'salles', 'table', 'tables'] },
-  { slug: 'sofas', label: 'Canapés & Salons', aliases: ['sofas', 'sofa', 'canapes', 'canape', 'salon', 'salons'] },
-  { slug: 'chambres', label: 'Chambres', aliases: ['chambres', 'chambre', 'lit', 'lits'] },
-  { slug: 'armoire', label: 'Armoires', aliases: ['armoire', 'armoires', 'dressing'] },
-  { slug: 'accessories', label: 'Accessoires', aliases: ['accessories', 'accessoire', 'accessoires', 'deco', 'decoration'] },
+  { slug: 'salle-a-manger', label: 'Salle à manger', aliases: ['salle-a-manger', 'salle', 'salles', 'table', 'tables', 'dining'] },
+  { slug: 'sofas', label: 'Canapés & Salons', aliases: ['sofas', 'sofa', 'canapes', 'canape', 'salon', 'salons', 'fauteuil', 'fauteuils'] },
+  { slug: 'chambres', label: 'Chambres', aliases: ['chambres', 'chambre', 'lit', 'lits', 'bedroom', 'suite'] },
+  { slug: 'armoire', label: 'Armoires', aliases: ['armoire', 'armoires', 'dressing', 'dressings', 'wardrobe'] },
+  { slug: 'accessories', label: 'Accessoires', aliases: ['accessories', 'accessoire', 'accessoires', 'deco', 'decoration', 'meuble tv', 'tv'] },
 ];
 
 function resolveCategorySlug(raw: string | null): string {
@@ -42,7 +42,7 @@ function AllProductsContent() {
   const [productList, setProductList] = useState<any[]>(products);
 
   useEffect(() => {
-    fetch('/api/products')
+    fetch('/api/products?t=' + Date.now(), { cache: 'no-store' })
       .then(res => res.ok ? res.json() : null)
       .then(data => {
         if (Array.isArray(data) && data.length > 0) {
@@ -76,7 +76,7 @@ function AllProductsContent() {
   const filteredProducts =
     activeCategory === 'all'
       ? productList
-      : productList.filter((p) => p.category === activeCategory);
+      : productList.filter((p) => resolveCategorySlug(p.category) === activeCategory);
 
   return (
     <main className="min-h-screen bg-[#0E0F10]">

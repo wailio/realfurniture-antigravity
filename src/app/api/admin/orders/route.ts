@@ -52,3 +52,28 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json({ error: err.message || 'Failed to update order' }, { status: 500 })
   }
 }
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const { url, key } = getSupabaseConfig()
+    const { searchParams } = new URL(request.url)
+    const id = searchParams.get('id')
+
+    if (!id) return NextResponse.json({ error: 'id is required' }, { status: 400 })
+
+    const res = await fetch(`${url}/rest/v1/messages?id=eq.${id}`, {
+      method: 'DELETE',
+      headers: supabaseHeaders(key),
+    })
+
+    if (!res.ok) {
+      const errText = await res.text()
+      throw new Error(`Supabase error (${res.status}): ${errText}`)
+    }
+
+    return NextResponse.json({ success: true })
+  } catch (err: any) {
+    console.error('DELETE /api/admin/orders error:', err)
+    return NextResponse.json({ error: err.message || 'Failed to delete order' }, { status: 500 })
+  }
+}

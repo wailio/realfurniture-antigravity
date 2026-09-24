@@ -14,6 +14,13 @@ import {
   StickyNote,
   Check,
   X,
+  MessageCircle,
+  Search,
+  DollarSign,
+  Package,
+  Calendar,
+  Sparkles,
+  ArrowRight,
 } from 'lucide-react'
 
 interface Lead {
@@ -32,16 +39,33 @@ interface Lead {
 }
 
 const STAGES = [
-  { key: 'cold', label: 'Cold lead', color: '#94A3B8', bg: 'rgba(148, 163, 184, 0.15)', dot: '#94A3B8' },
-  { key: 'interested', label: 'Intéressé', color: '#F59E0B', bg: 'rgba(245, 158, 11, 0.15)', dot: '#F59E0B' },
-  { key: 'delivering', label: 'En livraison', color: '#60A5FA', bg: 'rgba(59, 130, 246, 0.15)', dot: '#3B82F6' },
-  { key: 'completed', label: 'Vente conclue', color: '#34D399', bg: 'rgba(16, 185, 129, 0.15)', dot: '#10B981' },
+  { key: 'cold', label: 'Prospect (Froid)', color: '#94A3B8', bg: 'rgba(148, 163, 184, 0.15)', dot: '#94A3B8' },
+  { key: 'interested', label: 'Intéressé & Contacté', color: '#F59E0B', bg: 'rgba(245, 158, 11, 0.15)', dot: '#F59E0B' },
+  { key: 'delivering', label: 'En Livraison / Montage', color: '#60A5FA', bg: 'rgba(59, 130, 246, 0.15)', dot: '#3B82F6' },
+  { key: 'completed', label: 'Vente Conclue', color: '#34D399', bg: 'rgba(16, 185, 129, 0.15)', dot: '#10B981' },
 ]
 
 function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString('fr-DZ', {
-    day: '2-digit', month: 'short',
-  })
+  try {
+    return new Date(iso).toLocaleDateString('fr-DZ', {
+      day: '2-digit', month: 'short',
+    })
+  } catch {
+    return iso
+  }
+}
+
+function getWhatsAppUrl(phone: string, name: string, product?: string) {
+  let clean = (phone || '').replace(/[^0-9]/g, '')
+  if (clean.startsWith('0')) {
+    clean = '213' + clean.slice(1)
+  } else if (!clean.startsWith('213') && clean.length === 9) {
+    clean = '213' + clean
+  }
+  const text = encodeURIComponent(
+    `Bonjour ${name || 'cher client'},\n\nNous faisons suite à votre sélection sur Château d'art${product ? ` concernant le ${product}` : ''}.\n\nPouvons-nous vous assister pour finaliser votre commande et planifier la livraison ?`
+  )
+  return `https://wa.me/${clean}?text=${text}`
 }
 
 export default function AdminSalesPage() {
@@ -50,14 +74,25 @@ export default function AdminSalesPage() {
   const [error, setError] = useState('')
   const [editingNotes, setEditingNotes] = useState<string | null>(null)
   const [notesValue, setNotesValue] = useState('')
+  const [editingAmount, setEditingAmount] = useState<string | null>(null)
+  const [amountValue, setAmountValue] = useState('')
   const [movingId, setMovingId] = useState<string | null>(null)
   const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [search, setSearch] = useState('')
+
+  // Modal to add direct/offline lead
+  const [showAddModal, setShowAddModal] = useState(false)
+  const [newLeadName, setNewLeadName] = useState('')
+  const [newLeadPhone, setNewLeadPhone] = useState('')
+  const [newLeadAmount, setNewLeadAmount] = useState('')
+  const [newLeadNotes, setNewLeadNotes] = useState('')
+  const [creatingLead, setCreatingLead] = useState(false)
 
   const fetchLeads = useCallback(async () => {
     setLoading(true)
     setError('')
     try {
-      const res = await fetch('/api/admin/sales')
+      const res = await fetch('/api/admin/sales?t=' + Date.now(), { cache: 'no-store' })
       if (!res.ok) throw new Error('Erreur réseau')
       const data = await res.json()
       setLeads(Array.isArray(data) ? data : [])
@@ -104,8 +139,23 @@ export default function AdminSalesPage() {
     }
   }
 
+  const saveAmount = async (id: string) => {
+    try {
+      const parsed = amountValue ? Number(amountValue) : null
+      await fetch('/api/admin/sales', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, amount: parsed }),
+      })
+      setLeads(prev => prev.map(l => l.id === id ? { ...l, amount: parsed } : l))
+      setEditingAmount(null)
+    } catch {
+      alert('Erreur lors de la mise à jour du montant')
+    }
+  }
+
   const deleteLead = async (id: string) => {
-    if (!confirm('Supprimer ce lead ?')) return
+    if (!confirm('Supprimer définitivement cette opportunité du funnel ?')) return
     setDeletingId(id)
     try {
       await fetch(`/api/admin/sales?id=${id}`, { method: 'DELETE' })
@@ -117,13 +167,62 @@ export default function AdminSalesPage() {
     }
   }
 
+  const handleCreateLead = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!newLeadName.trim() || !newLeadPhone.trim()) {
+      alert('Veuillez renseigner au moins le nom et le téléphone.')
+      return
+    }
+    setCreatingLead(true)
+    try {
+      const res = await fetch('/api/admin/sales', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          customer_name: newLeadName.trim(),
+          phone: newLeadPhone.trim(),
+          amount: newLeadAmount ? Number(newLeadAmount) : null,
+          notes: newLeadNotes.trim(),
+        }),
+      })
+
+      if (!res.ok) throw new Error('Erreur lors de la création')
+
+      setShowAddModal(false)
+      setNewLeadName('')
+      setNewLeadPhone('')
+      setNewLeadAmount('')
+      setNewLeadNotes('')
+      await fetchLeads()
+    } catch (e: any) {
+      alert(e.message || 'Erreur lors de la création du lead')
+    } finally {
+      setCreatingLead(false)
+    }
+  }
+
+  const filteredLeads = leads.filter(l => {
+    const q = search.toLowerCase().trim()
+    if (!q) return true
+    return (
+      (l.customer_name && l.customer_name.toLowerCase().includes(q)) ||
+      (l.phone && l.phone.toLowerCase().includes(q)) ||
+      (l.notes && l.notes.toLowerCase().includes(q)) ||
+      (l.messages?.product && l.messages.product.toLowerCase().includes(q))
+    )
+  })
+
   const completedValue = leads
     .filter(l => l.funnel_stage === 'completed' && l.amount)
     .reduce((sum, l) => sum + (l.amount || 0), 0)
 
+  const pipelineValue = leads
+    .filter(l => l.amount)
+    .reduce((sum, l) => sum + (l.amount || 0), 0)
+
   return (
     <div className="min-h-screen" style={{ background: 'transparent' }}>
-      {/* Header — Exact #0A0B0C matching sidebar, restored original size */}
+      {/* Header — Exact #0A0B0C matching dark sidebar */}
       <div
         style={{
           background: '#0A0B0C',
@@ -132,33 +231,135 @@ export default function AdminSalesPage() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          gap: 16,
         }}
       >
         <div>
-          <h1
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <h1
+              style={{
+                fontFamily: 'var(--font-heading)',
+                fontSize: 26,
+                fontWeight: 300,
+                color: '#FFFFFF',
+                letterSpacing: '-0.02em',
+              }}
+            >
+              Pipeline &amp; Ventes CRM
+            </h1>
+            <span
+              style={{
+                background: 'rgba(209, 170, 92, 0.2)',
+                border: '1px solid rgba(209, 170, 92, 0.4)',
+                color: '#d1aa5c',
+                fontSize: 11,
+                fontWeight: 700,
+                padding: '3px 10px',
+                borderRadius: 99,
+              }}
+            >
+              {leads.length} lead{leads.length > 1 ? 's' : ''} actif{leads.length > 1 ? 's' : ''}
+            </span>
+          </div>
+          <p style={{ fontSize: 13, color: '#A1A1AA', marginTop: 4 }}>
+            Suivi des négociations, conversion et chiffre d&apos;affaires généré
+          </p>
+        </div>
+
+        {/* Right Action: Revenue KPIs & Add Lead */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+          {/* Revenue Pill */}
+          <div
             style={{
-              fontFamily: 'var(--font-heading)',
-              fontSize: 26,
-              fontWeight: 300,
-              color: '#FFFFFF',
-              letterSpacing: '-0.02em',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8,
+              background: 'rgba(255, 255, 255, 0.04)',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
+              padding: '8px 16px',
+              borderRadius: 12,
             }}
           >
-            Funnel de vente
-          </h1>
-          <p style={{ fontSize: 13, color: '#A1A1AA', marginTop: 4 }}>
-            {leads.length} lead{leads.length !== 1 ? 's' : ''} actif{leads.length !== 1 ? 's' : ''}
-            {completedValue > 0 && (
-              <span style={{ color: '#34D399', marginLeft: 10, fontWeight: 600 }}>
-                · {completedValue.toLocaleString('fr-DZ')} DA conclus
-              </span>
-            )}
-          </p>
+            <span style={{ fontSize: 11, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+              Ventes conclues:
+            </span>
+            <strong style={{ fontSize: 13.5, color: '#34D399', fontWeight: 700 }}>
+              {completedValue.toLocaleString('fr-DZ')} DA
+            </strong>
+          </div>
+
+          {/* New Lead Modal Trigger */}
+          <button
+            type="button"
+            onClick={() => setShowAddModal(true)}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8,
+              background: 'linear-gradient(135deg, #d1aa5c 0%, #b89347 100%)',
+              color: '#0A0B0C',
+              padding: '10px 18px',
+              borderRadius: 12,
+              fontSize: 13,
+              fontWeight: 600,
+              border: 'none',
+              cursor: 'pointer',
+              boxShadow: '0 4px 16px rgba(209, 170, 92, 0.25)',
+              transition: 'all 0.15s',
+            }}
+            className="hover:opacity-95"
+          >
+            <Plus className="w-4 h-4" />
+            <span>Nouveau Lead</span>
+          </button>
         </div>
       </div>
 
       <div style={{ padding: '36px', overflowX: 'auto' }}>
-        {/* Error */}
+        {/* Search Filter Bar */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24, gap: 16, flexWrap: 'wrap' }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8,
+              background: '#FFFFFF',
+              borderRadius: 14,
+              padding: '9px 16px',
+              border: '1px solid rgba(0, 0, 0, 0.08)',
+              width: 320,
+              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)',
+            }}
+          >
+            <Search className="w-4 h-4 text-[#6B7280] shrink-0" />
+            <input
+              type="text"
+              placeholder="Rechercher lead, téléphone, produit..."
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              style={{
+                border: 'none',
+                outline: 'none',
+                background: 'transparent',
+                fontSize: 13,
+                color: '#111827',
+                width: '100%',
+              }}
+            />
+            {search && (
+              <button type="button" onClick={() => setSearch('')} style={{ border: 'none', background: 'none', cursor: 'pointer', padding: 0 }}>
+                <X className="w-3.5 h-3.5 text-[#9CA3AF]" />
+              </button>
+            )}
+          </div>
+
+          <span style={{ fontSize: 12.5, color: '#6B7280' }}>
+            Volume total en cours : <strong style={{ color: '#111827' }}>{pipelineValue.toLocaleString('fr-DZ')} DA</strong>
+          </span>
+        </div>
+
+        {/* Error notification */}
         {error && (
           <div
             style={{
@@ -185,103 +386,94 @@ export default function AdminSalesPage() {
           </div>
         ) : (
           <>
-            {/* Pipeline line */}
+            {/* Kanban Pipeline Column Container */}
             <div
               style={{
                 display: 'flex',
                 alignItems: 'flex-start',
-                gap: 0,
-                minWidth: 900,
+                gap: 16,
+                minWidth: 1050,
                 position: 'relative',
               }}
             >
-              {/* Connecting line */}
-              <div
-                style={{
-                  position: 'absolute',
-                  top: 20,
-                  left: '12.5%',
-                  right: '12.5%',
-                  height: 2,
-                  background: 'linear-gradient(to right, #94A3B8, #F59E0B, #3B82F6, #10B981)',
-                  zIndex: 0,
-                  opacity: 0.3,
-                }}
-              />
-
               {STAGES.map((stage, si) => {
-                const stageLeads = leads.filter(l => l.funnel_stage === stage.key)
+                const stageLeads = filteredLeads.filter(l => l.funnel_stage === stage.key)
+                const stageValue = stageLeads.reduce((acc, curr) => acc + (curr.amount || 0), 0)
+
                 return (
                   <div
                     key={stage.key}
-                    style={{ flex: 1, padding: '0 8px', position: 'relative', zIndex: 1 }}
+                    style={{
+                      flex: 1,
+                      background: 'rgba(255, 255, 255, 0.5)',
+                      backdropFilter: 'blur(16px)',
+                      borderRadius: 20,
+                      border: '1px solid rgba(0, 0, 0, 0.06)',
+                      padding: '16px',
+                      boxShadow: '0 4px 20px -2px rgba(0, 0, 0, 0.03)',
+                    }}
                   >
-                    {/* Stage header */}
+                    {/* Stage Header */}
                     <div
                       style={{
                         display: 'flex',
-                        flexDirection: 'column',
                         alignItems: 'center',
-                        marginBottom: 20,
+                        justifyContent: 'space-between',
+                        paddingBottom: 12,
+                        marginBottom: 14,
+                        borderBottom: '1px solid rgba(0, 0, 0, 0.06)',
                       }}
                     >
-                      <div
-                        style={{
-                          width: 40,
-                          height: 40,
-                          borderRadius: 99,
-                          background: '#FFFFFF',
-                          border: `2.5px solid ${stage.dot}`,
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          marginBottom: 10,
-                          boxShadow: `0 4px 12px ${stage.dot}30, 0 2px 6px rgba(0,0,0,0.04)`,
-                        }}
-                      >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                         <span
                           style={{
-                            width: 12,
-                            height: 12,
+                            width: 10,
+                            height: 10,
                             borderRadius: 99,
                             background: stage.dot,
-                            display: 'block',
+                            boxShadow: `0 0 10px ${stage.dot}80`,
                           }}
                         />
+                        <span style={{ fontSize: 13, fontWeight: 700, color: '#111827' }}>
+                          {stage.label}
+                        </span>
                       </div>
-                      <p
+                      <span
                         style={{
-                          fontSize: 12,
+                          fontSize: 11.5,
                           fontWeight: 700,
                           color: stage.color,
-                          letterSpacing: '0.06em',
-                          textTransform: 'uppercase',
-                          textAlign: 'center',
+                          background: stage.bg,
+                          padding: '2px 8px',
+                          borderRadius: 99,
                         }}
                       >
-                        {stage.label}
-                      </p>
-                      <p style={{ fontSize: 11, color: '#6B7280', marginTop: 2, fontWeight: 500 }}>
-                        {stageLeads.length} lead{stageLeads.length !== 1 ? 's' : ''}
-                      </p>
+                        {stageLeads.length}
+                      </span>
                     </div>
 
-                    {/* Stage cards */}
+                    {stageValue > 0 && (
+                      <p style={{ fontSize: 11, color: '#6B7280', marginBottom: 12, fontWeight: 500 }}>
+                        Total: <strong style={{ color: '#111827' }}>{stageValue.toLocaleString('fr-DZ')} DA</strong>
+                      </p>
+                    )}
+
+                    {/* Stage Cards Column */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                       {stageLeads.length === 0 && (
                         <div
                           style={{
                             border: '1.5px dashed rgba(0, 0, 0, 0.1)',
                             borderRadius: 14,
-                            padding: '28px 16px',
+                            padding: '36px 16px',
                             textAlign: 'center',
-                            background: 'rgba(255, 255, 255, 0.6)',
-                            backdropFilter: 'blur(8px)',
+                            background: '#FFFFFF',
                           }}
                         >
-                          <p style={{ fontSize: 12, color: '#9CA3AF', fontWeight: 500 }}>Aucun lead</p>
+                          <p style={{ fontSize: 12, color: '#9CA3AF', fontWeight: 500 }}>Aucune opportunité</p>
                         </div>
                       )}
+
                       {stageLeads.map(lead => (
                         <div
                           key={lead.id}
@@ -290,31 +482,41 @@ export default function AdminSalesPage() {
                             borderRadius: 16,
                             padding: '16px',
                             border: '1px solid rgba(0, 0, 0, 0.06)',
-                            boxShadow: '0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.03)',
+                            boxShadow: '0 4px 16px -2px rgba(0, 0, 0, 0.05)',
                             transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
                           }}
-                          className="hover:shadow-lg hover:-translate-y-0.5"
+                          className="hover:shadow-lg"
                         >
-                          {/* Lead top */}
-                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 }}>
-                            <div
-                              style={{
-                                width: 34,
-                                height: 34,
-                                borderRadius: 99,
-                                background: stage.bg,
-                                border: `1px solid ${stage.color}30`,
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                fontSize: 14,
-                                fontWeight: 700,
-                                color: stage.color,
-                              }}
-                            >
-                              {(lead.customer_name || '?')[0].toUpperCase()}
+                          {/* Card Top: Avatar, Name & Delete */}
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                              <div
+                                style={{
+                                  width: 34,
+                                  height: 34,
+                                  borderRadius: 10,
+                                  background: stage.bg,
+                                  border: `1px solid ${stage.color}30`,
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  fontSize: 13.5,
+                                  fontWeight: 700,
+                                  color: stage.color,
+                                }}
+                              >
+                                {(lead.customer_name || '?')[0].toUpperCase()}
+                              </div>
+                              <div>
+                                <p style={{ fontSize: 14, fontWeight: 600, color: '#111827', lineHeight: 1.2 }}>
+                                  {lead.customer_name}
+                                </p>
+                                <span style={{ fontSize: 11, color: '#9CA3AF' }}>{formatDate(lead.created_at)}</span>
+                              </div>
                             </div>
+
                             <button
+                              type="button"
                               onClick={() => deleteLead(lead.id)}
                               disabled={deletingId === lead.id}
                               style={{
@@ -328,35 +530,76 @@ export default function AdminSalesPage() {
                                 transition: 'all 0.15s ease',
                               }}
                               className="hover:text-red-500 hover:bg-red-50"
+                              title="Supprimer ce lead"
                             >
-                              {deletingId === lead.id
-                                ? <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                                : <Trash2 className="w-3.5 h-3.5" />
-                              }
+                              {deletingId === lead.id ? (
+                                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                              ) : (
+                                <Trash2 className="w-3.5 h-3.5" />
+                              )}
                             </button>
                           </div>
 
-                          <p style={{ fontSize: 14, fontWeight: 600, color: '#111827', marginBottom: 4 }}>
-                            {lead.customer_name}
-                          </p>
-                          {lead.phone && (
-                            <a
-                              href={`tel:${lead.phone}`}
-                              style={{ fontSize: 12, color: '#4B5563', display: 'flex', alignItems: 'center', gap: 4, textDecoration: 'none', marginBottom: 6, transition: 'color 0.15s' }}
-                              className="hover:text-[#007AFF]"
-                            >
-                              <Phone className="w-3 h-3 text-[#6B7280]" />{lead.phone}
-                            </a>
-                          )}
+                          {/* Contact Channels: Phone & WhatsApp */}
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8, margin: '8px 0 10px', flexWrap: 'wrap' }}>
+                            {lead.phone && (
+                              <a
+                                href={`tel:${lead.phone}`}
+                                style={{
+                                  fontSize: 12,
+                                  color: '#4B5563',
+                                  display: 'inline-flex',
+                                  alignItems: 'center',
+                                  gap: 4,
+                                  textDecoration: 'none',
+                                  background: '#F3F4F6',
+                                  padding: '4px 9px',
+                                  borderRadius: 8,
+                                }}
+                                className="hover:text-[#007AFF]"
+                              >
+                                <Phone className="w-3 h-3 text-[#6B7280]" />
+                                <span>{lead.phone}</span>
+                              </a>
+                            )}
+
+                            {lead.phone && (
+                              <a
+                                href={getWhatsAppUrl(lead.phone, lead.customer_name, lead.messages?.product)}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                title="Contacter sur WhatsApp"
+                                style={{
+                                  fontSize: 11.5,
+                                  fontWeight: 600,
+                                  color: '#16a34a',
+                                  display: 'inline-flex',
+                                  alignItems: 'center',
+                                  gap: 4,
+                                  textDecoration: 'none',
+                                  background: 'rgba(37, 211, 102, 0.12)',
+                                  border: '1px solid rgba(37, 211, 102, 0.25)',
+                                  padding: '4px 9px',
+                                  borderRadius: 8,
+                                }}
+                                className="hover:bg-[#25D366] hover:text-white"
+                              >
+                                <MessageCircle className="w-3 h-3" />
+                                <span>WhatsApp</span>
+                              </a>
+                            )}
+                          </div>
+
+                          {/* Product requested tag */}
                           {lead.messages?.product && (
                             <p
                               style={{
-                                fontSize: 11,
+                                fontSize: 11.5,
                                 color: '#1F2937',
-                                background: '#F3F4F6',
-                                border: '1px solid rgba(0, 0, 0, 0.06)',
-                                padding: '3px 8px',
-                                borderRadius: 99,
+                                background: '#F9FAFB',
+                                border: '1px solid rgba(0, 0, 0, 0.05)',
+                                padding: '4px 10px',
+                                borderRadius: 8,
                                 display: 'inline-block',
                                 marginBottom: 10,
                                 maxWidth: '100%',
@@ -366,16 +609,89 @@ export default function AdminSalesPage() {
                                 fontWeight: 500,
                               }}
                             >
-                              {lead.messages.product}
+                              🛋️ {lead.messages.product}
                             </p>
                           )}
-                          <p style={{ fontSize: 11, color: '#9CA3AF', marginBottom: 10 }}>
-                            {formatDate(lead.created_at)}
-                          </p>
 
-                          {/* Notes */}
+                          {/* Deal Amount Editor */}
+                          <div style={{ margin: '8px 0 12px' }}>
+                            {editingAmount === lead.id ? (
+                              <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+                                <input
+                                  type="number"
+                                  placeholder="Montant en DA..."
+                                  value={amountValue}
+                                  onChange={e => setAmountValue(e.target.value)}
+                                  style={{
+                                    flex: 1,
+                                    padding: '5px 8px',
+                                    borderRadius: 8,
+                                    border: '1px solid #d1aa5c',
+                                    fontSize: 12,
+                                    outline: 'none',
+                                  }}
+                                />
+                                <button
+                                  type="button"
+                                  onClick={() => saveAmount(lead.id)}
+                                  style={{
+                                    padding: '5px 10px',
+                                    borderRadius: 7,
+                                    border: 'none',
+                                    background: '#d1aa5c',
+                                    color: '#0A0B0C',
+                                    fontWeight: 700,
+                                    fontSize: 11,
+                                    cursor: 'pointer',
+                                  }}
+                                >
+                                  OK
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => setEditingAmount(null)}
+                                  style={{
+                                    padding: '5px 8px',
+                                    borderRadius: 7,
+                                    border: '1px solid #E5E7EB',
+                                    background: '#F3F4F6',
+                                    color: '#4B5563',
+                                    fontSize: 11,
+                                    cursor: 'pointer',
+                                  }}
+                                >
+                                  ✕
+                                </button>
+                              </div>
+                            ) : (
+                              <div
+                                onClick={() => {
+                                  setEditingAmount(lead.id)
+                                  setAmountValue(lead.amount ? String(lead.amount) : '')
+                                }}
+                                style={{
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'space-between',
+                                  padding: '5px 10px',
+                                  borderRadius: 8,
+                                  background: lead.amount ? 'rgba(52, 211, 153, 0.12)' : '#F9FAFB',
+                                  border: lead.amount ? '1px solid rgba(52, 211, 153, 0.3)' : '1px dashed rgba(0, 0, 0, 0.12)',
+                                  cursor: 'pointer',
+                                }}
+                                title="Cliquer pour définir le montant"
+                              >
+                                <span style={{ fontSize: 11, color: '#6B7280', fontWeight: 500 }}>Valeur devis :</span>
+                                <span style={{ fontSize: 12, fontWeight: 700, color: lead.amount ? '#059669' : '#9CA3AF' }}>
+                                  {lead.amount ? `${lead.amount.toLocaleString('fr-DZ')} DA` : '+ Définir montant'}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Notes / Message section */}
                           {editingNotes === lead.id ? (
-                            <div style={{ marginBottom: 10 }}>
+                            <div style={{ marginBottom: 12 }}>
                               <textarea
                                 value={notesValue}
                                 onChange={e => setNotesValue(e.target.value)}
@@ -395,6 +711,7 @@ export default function AdminSalesPage() {
                               />
                               <div style={{ display: 'flex', gap: 6, marginTop: 6 }}>
                                 <button
+                                  type="button"
                                   onClick={() => saveNotes(lead.id)}
                                   style={{
                                     padding: '5px 12px',
@@ -405,16 +722,12 @@ export default function AdminSalesPage() {
                                     fontWeight: 600,
                                     fontSize: 12,
                                     cursor: 'pointer',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: 4,
-                                    transition: 'background 0.15s',
                                   }}
-                                  className="hover:bg-[#0062CC]"
                                 >
-                                  <Check className="w-3 h-3" />Sauver
+                                  Sauvegarder
                                 </button>
                                 <button
+                                  type="button"
                                   onClick={() => setEditingNotes(null)}
                                   style={{
                                     padding: '5px 10px',
@@ -424,11 +737,9 @@ export default function AdminSalesPage() {
                                     color: '#4B5563',
                                     fontSize: 12,
                                     cursor: 'pointer',
-                                    transition: 'background 0.15s',
                                   }}
-                                  className="hover:bg-[#E5E7EB]"
                                 >
-                                  <X className="w-3 h-3" />
+                                  Annuler
                                 </button>
                               </div>
                             </div>
@@ -442,36 +753,36 @@ export default function AdminSalesPage() {
                                 padding: '8px 10px',
                                 borderRadius: 8,
                                 background: '#F9FAFB',
-                                border: '1px solid rgba(0, 0, 0, 0.05)',
+                                border: '1px solid rgba(0, 0, 0, 0.04)',
                                 cursor: 'pointer',
-                                marginBottom: 10,
+                                marginBottom: 12,
                                 minHeight: 36,
-                                transition: 'background 0.15s',
                               }}
+                              title="Cliquer pour modifier les notes"
                               className="hover:bg-gray-100"
                             >
                               {lead.notes ? (
-                                <p style={{ fontSize: 12, color: '#374151', lineHeight: 1.5 }}>
+                                <p style={{ fontSize: 12, color: '#374151', lineHeight: 1.5, whiteSpace: 'pre-line' }}>
                                   {lead.notes}
                                 </p>
                               ) : (
                                 <p style={{ fontSize: 12, color: '#9CA3AF', display: 'flex', alignItems: 'center', gap: 4 }}>
                                   <StickyNote className="w-3.5 h-3.5 text-[#007AFF]" />
-                                  Ajouter une note...
+                                  Ajouter une note de suivi...
                                 </p>
                               )}
                             </div>
                           )}
 
-                          {/* Move buttons */}
+                          {/* Stage Transition Buttons */}
                           <div style={{ display: 'flex', gap: 6 }}>
                             {si > 0 && (
                               <button
+                                type="button"
                                 onClick={() => moveStage(lead, 'prev')}
                                 disabled={movingId === lead.id}
                                 style={{
-                                  flex: 1,
-                                  padding: '7px 0',
+                                  padding: '7px 10px',
                                   borderRadius: 8,
                                   border: '1px solid rgba(0, 0, 0, 0.08)',
                                   background: '#F3F4F6',
@@ -481,17 +792,16 @@ export default function AdminSalesPage() {
                                   display: 'flex',
                                   alignItems: 'center',
                                   justifyContent: 'center',
-                                  gap: 4,
-                                  transform: 'scaleX(-1)',
-                                  transition: 'background 0.15s',
                                 }}
                                 className="hover:bg-gray-200"
+                                title="Reculer à l'étape précédente"
                               >
-                                <MoveRight className="w-3.5 h-3.5" />
+                                ←
                               </button>
                             )}
-                            {si < STAGES.length - 1 && (
+                            {si < STAGES.length - 1 ? (
                               <button
+                                type="button"
                                 onClick={() => moveStage(lead, 'next')}
                                 disabled={movingId === lead.id}
                                 style={{
@@ -499,27 +809,30 @@ export default function AdminSalesPage() {
                                   padding: '7px 0',
                                   borderRadius: 8,
                                   border: 'none',
-                                  background: '#007AFF',
-                                  boxShadow: '0 2px 8px rgba(0, 122, 255, 0.25)',
+                                  background: '#111827',
+                                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
                                   cursor: 'pointer',
                                   fontSize: 11.5,
                                   color: '#FFFFFF',
                                   display: 'flex',
                                   alignItems: 'center',
                                   justifyContent: 'center',
-                                  gap: 4,
+                                  gap: 5,
                                   fontWeight: 600,
                                   transition: 'background 0.15s',
                                 }}
-                                className="hover:bg-[#0062CC]"
+                                className="hover:bg-[#d1aa5c] hover:text-[#0A0B0C]"
                               >
-                                {movingId === lead.id
-                                  ? <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                                  : <><MoveRight className="w-3.5 h-3.5" /> Avancer</>
-                                }
+                                {movingId === lead.id ? (
+                                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                ) : (
+                                  <>
+                                    <span>Avancer étape</span>
+                                    <MoveRight className="w-3.5 h-3.5" />
+                                  </>
+                                )}
                               </button>
-                            )}
-                            {si === STAGES.length - 1 && (
+                            ) : (
                               <div
                                 style={{
                                   flex: 1,
@@ -527,14 +840,16 @@ export default function AdminSalesPage() {
                                   textAlign: 'center',
                                   fontSize: 11.5,
                                   color: '#10B981',
-                                  fontWeight: 600,
+                                  background: 'rgba(16, 185, 129, 0.1)',
+                                  borderRadius: 8,
+                                  fontWeight: 700,
                                   display: 'flex',
                                   alignItems: 'center',
                                   justifyContent: 'center',
                                   gap: 4,
                                 }}
                               >
-                                <TrendingUp className="w-3.5 h-3.5" /> Conclus
+                                <Check className="w-3.5 h-3.5" /> Vente conclue ✓
                               </div>
                             )}
                           </div>
@@ -557,8 +872,6 @@ export default function AdminSalesPage() {
                   border: '1px solid rgba(0, 0, 0, 0.06)',
                   boxShadow: '0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.03)',
                   marginTop: 24,
-                  position: 'relative',
-                  overflow: 'hidden',
                 }}
               >
                 <div
@@ -573,17 +886,196 @@ export default function AdminSalesPage() {
                     margin: '0 auto 16px',
                   }}
                 >
-                  <TrendingUp className="w-6 h-6 text-[#007AFF]" />
+                  <TrendingUp className="w-6 h-6 text-[#d1aa5c]" />
                 </div>
-                <p style={{ color: '#111827', fontSize: 16, fontWeight: 600 }}>Aucun lead dans le funnel</p>
-                <p style={{ color: '#6B7280', fontSize: 13, marginTop: 6, maxWidth: 320, margin: '8px auto 0' }}>
-                  Utilisez le bouton «Ajouter au funnel» depuis la page Commandes pour déplacer un lead ici
+                <p style={{ color: '#111827', fontSize: 16, fontWeight: 600 }}>Le pipeline de vente est vide</p>
+                <p style={{ color: '#6B7280', fontSize: 13, marginTop: 6, maxWidth: 360, margin: '8px auto 16px' }}>
+                  Ajoutez un prospect manuellement ou cliquez sur « Ajouter au funnel » depuis la page Commandes pour commencer à suivre vos opportunités.
                 </p>
+                <button
+                  type="button"
+                  onClick={() => setShowAddModal(true)}
+                  style={{
+                    padding: '10px 20px',
+                    background: '#111827',
+                    color: '#FFFFFF',
+                    borderRadius: 12,
+                    fontSize: 13,
+                    fontWeight: 600,
+                    border: 'none',
+                    cursor: 'pointer',
+                  }}
+                >
+                  + Ajouter le premier lead
+                </button>
               </div>
             )}
           </>
         )}
       </div>
+
+      {/* Modal: Ajouter un Lead manuellement */}
+      {showAddModal && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 100,
+            background: 'rgba(0, 0, 0, 0.6)',
+            backdropFilter: 'blur(8px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: 20,
+          }}
+        >
+          <div
+            style={{
+              background: '#FFFFFF',
+              borderRadius: 20,
+              width: '100%',
+              maxWidth: 480,
+              padding: 28,
+              boxShadow: '0 24px 60px rgba(0, 0, 0, 0.3)',
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+              <h2 style={{ fontSize: 18, fontWeight: 700, color: '#111827' }}>Ajouter un Lead Commercial</h2>
+              <button
+                type="button"
+                onClick={() => setShowAddModal(false)}
+                style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 4 }}
+              >
+                <X className="w-5 h-5 text-[#6B7280]" />
+              </button>
+            </div>
+
+            <form onSubmit={handleCreateLead} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+              <div>
+                <label style={{ display: 'block', fontSize: 12.5, fontWeight: 600, color: '#374151', marginBottom: 6 }}>
+                  Nom du client *
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="Ex: Mohamed B."
+                  value={newLeadName}
+                  onChange={e => setNewLeadName(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '10px 14px',
+                    borderRadius: 10,
+                    border: '1px solid #D1D5DB',
+                    fontSize: 13,
+                    outline: 'none',
+                    boxSizing: 'border-box',
+                  }}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: 12.5, fontWeight: 600, color: '#374151', marginBottom: 6 }}>
+                  Téléphone *
+                </label>
+                <input
+                  type="tel"
+                  required
+                  placeholder="Ex: 0550123456"
+                  value={newLeadPhone}
+                  onChange={e => setNewLeadPhone(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '10px 14px',
+                    borderRadius: 10,
+                    border: '1px solid #D1D5DB',
+                    fontSize: 13,
+                    outline: 'none',
+                    boxSizing: 'border-box',
+                  }}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: 12.5, fontWeight: 600, color: '#374151', marginBottom: 6 }}>
+                  Montant estimé (DA)
+                </label>
+                <input
+                  type="number"
+                  placeholder="Ex: 180000"
+                  value={newLeadAmount}
+                  onChange={e => setNewLeadAmount(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '10px 14px',
+                    borderRadius: 10,
+                    border: '1px solid #D1D5DB',
+                    fontSize: 13,
+                    outline: 'none',
+                    boxSizing: 'border-box',
+                  }}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: 12.5, fontWeight: 600, color: '#374151', marginBottom: 6 }}>
+                  Notes &amp; Modèles d&apos;intérêt
+                </label>
+                <textarea
+                  rows={3}
+                  placeholder="Ex: Intéressé par le Salon Majestueux velours marron. Rendez-vous prévu samedi."
+                  value={newLeadNotes}
+                  onChange={e => setNewLeadNotes(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '10px 14px',
+                    borderRadius: 10,
+                    border: '1px solid #D1D5DB',
+                    fontSize: 13,
+                    outline: 'none',
+                    resize: 'vertical',
+                    boxSizing: 'border-box',
+                  }}
+                />
+              </div>
+
+              <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end', marginTop: 10 }}>
+                <button
+                  type="button"
+                  onClick={() => setShowAddModal(false)}
+                  style={{
+                    padding: '10px 18px',
+                    borderRadius: 10,
+                    border: '1px solid #D1D5DB',
+                    background: '#F9FAFB',
+                    color: '#374151',
+                    fontSize: 13,
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                  }}
+                >
+                  Annuler
+                </button>
+                <button
+                  type="submit"
+                  disabled={creatingLead}
+                  style={{
+                    padding: '10px 22px',
+                    borderRadius: 10,
+                    border: 'none',
+                    background: '#111827',
+                    color: '#FFFFFF',
+                    fontSize: 13,
+                    fontWeight: 600,
+                    cursor: creatingLead ? 'wait' : 'pointer',
+                  }}
+                >
+                  {creatingLead ? 'Création...' : 'Créer l\'opportunité'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

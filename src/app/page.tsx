@@ -69,7 +69,7 @@ export default function HomePage() {
   const [productList, setProductList] = React.useState<any[]>(products);
 
   React.useEffect(() => {
-    fetch('/api/products')
+    fetch('/api/products?t=' + Date.now(), { cache: 'no-store' })
       .then(res => res.ok ? res.json() : null)
       .then(data => {
         if (Array.isArray(data) && data.length > 0) {
