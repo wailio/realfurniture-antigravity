@@ -3,6 +3,7 @@
 export const runtime = 'edge'
 
 import { useState, useEffect, useCallback, useRef } from 'react'
+import { showIosToast, showIosConfirm } from '@/components/ui/ios-dialog'
 import {
   TrendingUp,
   Phone,
@@ -105,8 +106,9 @@ export default function AdminSalesPage() {
         body: JSON.stringify({ id: leadId, funnel_stage: targetStage }),
       })
       if (!res.ok) throw new Error('Erreur lors du déplacement')
+      showIosToast('Étape mise à jour ✓', 'success')
     } catch {
-      alert('Erreur lors du déplacement')
+      showIosToast('Erreur lors du déplacement', 'error')
       fetchLeads()
     } finally {
       setMovingId(null)
@@ -151,8 +153,9 @@ export default function AdminSalesPage() {
         body: JSON.stringify({ id: lead.id, funnel_stage: STAGES[newIdx].key }),
       })
       setLeads(prev => prev.map(l => l.id === lead.id ? { ...l, funnel_stage: STAGES[newIdx].key } : l))
+      showIosToast(`Avancé vers "${STAGES[newIdx].label}" ✓`, 'success')
     } catch {
-      alert('Erreur lors du déplacement')
+      showIosToast('Erreur lors du déplacement', 'error')
     } finally {
       setMovingId(null)
     }
@@ -167,8 +170,9 @@ export default function AdminSalesPage() {
       })
       setLeads(prev => prev.map(l => l.id === id ? { ...l, notes: notesValue } : l))
       setEditingNotes(null)
+      showIosToast('Notes de suivi sauvegardées ✓', 'success')
     } catch {
-      alert('Erreur lors de la sauvegarde des notes')
+      showIosToast('Erreur lors de la sauvegarde des notes', 'error')
     }
   }
 
@@ -182,19 +186,28 @@ export default function AdminSalesPage() {
       })
       setLeads(prev => prev.map(l => l.id === id ? { ...l, amount: parsed } : l))
       setEditingAmount(null)
+      showIosToast('Montant du devis enregistré ✓', 'success')
     } catch {
-      alert('Erreur lors de la mise à jour du montant')
+      showIosToast('Erreur lors de la mise à jour du montant', 'error')
     }
   }
 
   const deleteLead = async (id: string) => {
-    if (!confirm('Supprimer définitivement cette opportunité du funnel ?')) return
+    const confirmed = await showIosConfirm({
+      title: 'Supprimer du funnel',
+      message: 'Supprimer définitivement cette opportunité du funnel de vente ?',
+      confirmText: 'Supprimer',
+      isDestructive: true,
+    })
+    if (!confirmed) return
+
     setDeletingId(id)
     try {
       await fetch(`/api/admin/sales?id=${id}`, { method: 'DELETE' })
       setLeads(prev => prev.filter(l => l.id !== id))
+      showIosToast('Opportunité supprimée ✓', 'info')
     } catch {
-      alert('Erreur lors de la suppression')
+      showIosToast('Erreur lors de la suppression', 'error')
     } finally {
       setDeletingId(null)
     }
@@ -203,7 +216,7 @@ export default function AdminSalesPage() {
   const handleCreateLead = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!newLeadName.trim() || !newLeadPhone.trim()) {
-      alert('Veuillez renseigner au moins le nom et le téléphone.')
+      showIosToast('Veuillez renseigner au moins le nom et le téléphone.', 'error')
       return
     }
     setCreatingLead(true)
@@ -227,8 +240,9 @@ export default function AdminSalesPage() {
       setNewLeadAmount('')
       setNewLeadNotes('')
       await fetchLeads()
+      showIosToast('Nouvelle opportunité ajoutée au funnel ✓', 'success')
     } catch (e: any) {
-      alert(e.message || 'Erreur lors de la création du lead')
+      showIosToast(e.message || 'Erreur lors de la création du lead', 'error')
     } finally {
       setCreatingLead(false)
     }

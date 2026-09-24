@@ -3,6 +3,7 @@
 export const runtime = 'edge'
 
 import { useState, useEffect, useCallback } from 'react'
+import { showIosToast, showIosConfirm } from '@/components/ui/ios-dialog'
 import {
   MessageSquare,
   Phone,
@@ -113,8 +114,9 @@ export default function AdminOrdersPage() {
         body: JSON.stringify({ id, status }),
       })
       setOrders(prev => prev.map(o => o.id === id ? { ...o, status } : o))
+      showIosToast('Statut de la commande mis à jour ✓', 'success')
     } catch {
-      alert('Erreur lors de la mise à jour')
+      showIosToast('Erreur lors de la mise à jour', 'error')
     }
     setActiveMenu(null)
   }
@@ -146,10 +148,10 @@ export default function AdminOrdersPage() {
       if (redirectNow) {
         window.location.href = '/admin/sales'
       } else {
-        alert('Lead ajouté au funnel de vente avec succès ✓')
+        showIosToast('Lead ajouté au funnel de vente avec succès ✓', 'success')
       }
     } catch (err: any) {
-      alert(err.message || 'Erreur lors de l\'ajout au funnel')
+      showIosToast(err.message || 'Erreur lors de l\'ajout au funnel', 'error')
     } finally {
       setAddingToFunnel(null)
       setActiveMenu(null)
@@ -157,13 +159,21 @@ export default function AdminOrdersPage() {
   }
 
   const deleteOrder = async (id: string) => {
-    if (!confirm('Supprimer définitivement cette commande / message client ?')) return
+    const confirmed = await showIosConfirm({
+      title: 'Supprimer le message',
+      message: 'Voulez-vous supprimer définitivement cette demande client ?',
+      confirmText: 'Supprimer',
+      isDestructive: true,
+    })
+    if (!confirmed) return
+
     try {
       const res = await fetch(`/api/admin/orders?id=${id}`, { method: 'DELETE' })
       if (!res.ok) throw new Error('Erreur de suppression')
       setOrders(prev => prev.filter(o => o.id !== id))
+      showIosToast('Demande client supprimée ✓', 'info')
     } catch {
-      alert('Erreur lors de la suppression')
+      showIosToast('Erreur lors de la suppression', 'error')
     } finally {
       setActiveMenu(null)
     }

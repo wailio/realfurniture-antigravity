@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import AdminSidebar from '@/components/admin/sidebar'
+import IosDialogContainer from '@/components/ui/ios-dialog'
 
 export const runtime = 'edge'
 
@@ -15,6 +16,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         fontFamily: 'var(--font-body)',
       }}
     >
+      <IosDialogContainer />
       <AdminSidebar />
       <main
         className="flex-1 overflow-y-auto relative bg-[#07090E]"

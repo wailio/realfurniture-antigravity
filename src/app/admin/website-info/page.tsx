@@ -3,6 +3,7 @@
 export const runtime = 'edge'
 
 import { useState, useEffect } from 'react'
+import { showIosToast } from '@/components/ui/ios-dialog'
 import {
   Globe,
   Phone,
@@ -152,9 +153,10 @@ export default function AdminWebsiteInfoPage() {
       }
 
       setSaved(prev => ({ ...prev, [sectionKey]: true }))
+      showIosToast('Informations enregistrées et synchronisées en direct ✓', 'success')
       setTimeout(() => setSaved(prev => ({ ...prev, [sectionKey]: false })), 3000)
     } catch (err: any) {
-      alert(err.message || 'Erreur lors de la sauvegarde')
+      showIosToast(err.message || 'Erreur lors de la sauvegarde', 'error')
     } finally {
       setSaving(prev => ({ ...prev, [sectionKey]: false }))
     }

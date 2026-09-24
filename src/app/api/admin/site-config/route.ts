@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { DEFAULT_SITE_CONFIG, PUBLIC_SITE_CONFIG_STORAGE_URL, SiteConfig } from '@/lib/site-config'
+import { getSupabaseConfig } from '@/lib/supabase-config'
 
 export const runtime = 'edge'
 
@@ -24,15 +25,11 @@ export async function GET() {
 export async function PUT(request: NextRequest) {
   try {
     const updates = await request.json()
-    const supabaseUrl =
-      process.env.SUPABASE_URL ||
-      process.env.NEXT_PUBLIC_SUPABASE_URL ||
-      'https://vhzgasepkcdhnpcinntb.supabase.co'
-    const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+    const { url: supabaseUrl, key: serviceKey } = getSupabaseConfig()
 
     if (!serviceKey) {
       return NextResponse.json(
-        { error: 'Missing SUPABASE_SERVICE_ROLE_KEY' },
+        { error: 'Clé Supabase non configurée' },
         { status: 500 }
       )
     }

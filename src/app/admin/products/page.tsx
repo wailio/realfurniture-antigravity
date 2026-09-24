@@ -3,6 +3,7 @@
 export const runtime = 'edge'
 
 import { useState, useEffect, useCallback, useRef } from 'react'
+import { showIosToast, showIosConfirm } from '@/components/ui/ios-dialog'
 import {
   Plus,
   Search,
@@ -198,8 +199,9 @@ export default function AdminProductsPage() {
           images: [...currentValid, ...uploadedUrls],
         }
       })
+      showIosToast('Photo téléversée avec succès ✓', 'success')
     } catch (err: any) {
-      alert(err.message || 'Erreur lors du téléversement de la photo')
+      showIosToast(err.message || 'Erreur lors du téléversement de la photo', 'error')
     } finally {
       setUploading(false)
       if (fileInputRef.current) fileInputRef.current.value = ''
@@ -208,16 +210,23 @@ export default function AdminProductsPage() {
 
   // 1-Click Catalog Seeder for initial launch
   const handleSeed = async () => {
-    if (!confirm('Voulez-vous importer les 30 modèles du catalogue dans Supabase ?')) return
+    const confirmed = await showIosConfirm({
+      title: 'Importer le catalogue',
+      message: 'Voulez-vous importer les 30 modèles du catalogue initial dans Supabase ?',
+      confirmText: 'Importer',
+      isDestructive: false,
+    })
+    if (!confirmed) return
+
     setSeeding(true)
     setError('')
     try {
       const res = await fetch('/api/admin/products?action=seed', { method: 'POST' })
       if (!res.ok) throw new Error('Erreur lors de l\'import')
       await fetchProducts()
-      alert('Catalogue initial importé avec succès dans Supabase !')
+      showIosToast('Catalogue initial importé avec succès dans Supabase ✓', 'success')
     } catch (e: any) {
-      alert(e.message || 'Erreur lors de l\'importation')
+      showIosToast(e.message || 'Erreur lors de l\'importation', 'error')
     } finally {
       setSeeding(false)
     }
@@ -292,13 +301,21 @@ export default function AdminProductsPage() {
   }
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Supprimer ce produit ?')) return
+    const confirmed = await showIosConfirm({
+      title: 'Supprimer le produit',
+      message: 'Voulez-vous supprimer définitivement ce produit du catalogue ?',
+      confirmText: 'Supprimer',
+      isDestructive: true,
+    })
+    if (!confirmed) return
+
     setDeletingId(id)
     try {
       await fetch(`/api/admin/products?id=${id}`, { method: 'DELETE' })
       await fetchProducts()
+      showIosToast('Produit supprimé du catalogue ✓', 'info')
     } catch {
-      alert('Erreur lors de la suppression')
+      showIosToast('Erreur lors de la suppression', 'error')
     } finally {
       setDeletingId(null)
     }
