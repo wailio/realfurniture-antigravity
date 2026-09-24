@@ -2,7 +2,7 @@
 
 export const runtime = 'edge'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import {
   TrendingUp,
   Phone,
@@ -21,6 +21,7 @@ import {
   Calendar,
   Sparkles,
   ArrowRight,
+  GripVertical,
 } from 'lucide-react'
 
 interface Lead {
@@ -79,6 +80,38 @@ export default function AdminSalesPage() {
   const [movingId, setMovingId] = useState<string | null>(null)
   const [deletingId, setDeletingId] = useState<string | null>(null)
   const [search, setSearch] = useState('')
+
+  // Drag and Drop (Mouse & Mobile Touch) state
+  const [draggingLeadId, setDraggingLeadId] = useState<string | null>(null)
+  const [dragOverStage, setDragOverStage] = useState<string | null>(null)
+  const [touchLeadId, setTouchLeadId] = useState<string | null>(null)
+  const [touchOverStage, setTouchOverStage] = useState<string | null>(null)
+  const touchStartPos = useRef<{ x: number; y: number } | null>(null)
+
+  const moveToStage = async (leadId: string, targetStage: string) => {
+    const lead = leads.find(l => l.id === leadId)
+    if (!lead || lead.funnel_stage === targetStage) return
+
+    setMovingId(leadId)
+    // Optimistic update
+    setLeads(prev =>
+      prev.map(l => (l.id === leadId ? { ...l, funnel_stage: targetStage } : l))
+    )
+
+    try {
+      const res = await fetch('/api/admin/sales', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: leadId, funnel_stage: targetStage }),
+      })
+      if (!res.ok) throw new Error('Erreur lors du déplacement')
+    } catch {
+      alert('Erreur lors du déplacement')
+      fetchLeads()
+    } finally {
+      setMovingId(null)
+    }
+  }
 
   // Modal to add direct/offline lead
   const [showAddModal, setShowAddModal] = useState(false)
@@ -386,6 +419,117 @@ export default function AdminSalesPage() {
           </div>
         ) : (
           <>
+            {/* ── Visual Connecting Pipeline Lane with Stage Dots ── */}
+            <div
+              style={{
+                position: 'relative',
+                marginBottom: 26,
+                padding: '0 8px',
+                minWidth: 1050,
+              }}
+            >
+              {/* Continuous Gradient Track */}
+              <div
+                style={{
+                  position: 'absolute',
+                  top: 22,
+                  left: '12.5%',
+                  right: '12.5%',
+                  height: 3,
+                  background: 'linear-gradient(to right, #94A3B8 0%, #F59E0B 35%, #3B82F6 70%, #10B981 100%)',
+                  borderRadius: 99,
+                  zIndex: 0,
+                  opacity: 0.5,
+                }}
+              />
+
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  justifyContent: 'space-between',
+                  position: 'relative',
+                  zIndex: 1,
+                }}
+              >
+                {STAGES.map((stage, si) => {
+                  const stageLeads = filteredLeads.filter(l => l.funnel_stage === stage.key)
+                  const stageValue = stageLeads.reduce((acc, curr) => acc + (curr.amount || 0), 0)
+                  const isDropTarget = dragOverStage === stage.key || touchOverStage === stage.key
+
+                  return (
+                    <div
+                      key={stage.key}
+                      style={{
+                        flex: 1,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        textAlign: 'center',
+                        cursor: 'default',
+                      }}
+                    >
+                      {/* Numbered Circular Dot */}
+                      <div
+                        style={{
+                          width: 44,
+                          height: 44,
+                          borderRadius: 99,
+                          background: '#FFFFFF',
+                          border: `2.5px solid ${stage.dot}`,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          marginBottom: 8,
+                          boxShadow: isDropTarget
+                            ? `0 0 22px ${stage.dot}, 0 4px 14px rgba(0,0,0,0.12)`
+                            : `0 0 14px ${stage.dot}40, 0 2px 6px rgba(0,0,0,0.06)`,
+                          transform: isDropTarget ? 'scale(1.18)' : 'scale(1)',
+                          transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+                        }}
+                      >
+                        <span
+                          style={{
+                            fontSize: 14,
+                            fontWeight: 800,
+                            color: stage.color,
+                          }}
+                        >
+                          {si + 1}
+                        </span>
+                      </div>
+
+                      {/* Stage Name */}
+                      <span
+                        style={{
+                          fontSize: 12,
+                          fontWeight: 700,
+                          color: stage.color,
+                          letterSpacing: '0.04em',
+                          textTransform: 'uppercase',
+                        }}
+                      >
+                        {stage.label}
+                      </span>
+
+                      {/* Count & Value */}
+                      <span
+                        style={{
+                          fontSize: 11,
+                          color: '#6B7280',
+                          marginTop: 3,
+                          fontWeight: 500,
+                        }}
+                      >
+                        {stageLeads.length} lead{stageLeads.length > 1 ? 's' : ''}
+                        {stageValue > 0 ? ` · ${stageValue.toLocaleString('fr-DZ')} DA` : ''}
+                      </span>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+
             {/* Kanban Pipeline Column Container */}
             <div
               style={{
@@ -399,18 +543,46 @@ export default function AdminSalesPage() {
               {STAGES.map((stage, si) => {
                 const stageLeads = filteredLeads.filter(l => l.funnel_stage === stage.key)
                 const stageValue = stageLeads.reduce((acc, curr) => acc + (curr.amount || 0), 0)
+                const isDropTarget = dragOverStage === stage.key || touchOverStage === stage.key
 
                 return (
                   <div
                     key={stage.key}
+                    data-stage={stage.key}
+                    onDragOver={(e) => {
+                      e.preventDefault()
+                      e.dataTransfer.dropEffect = 'move'
+                      if (dragOverStage !== stage.key) {
+                        setDragOverStage(stage.key)
+                      }
+                    }}
+                    onDragLeave={(e) => {
+                      if (e.currentTarget.contains(e.relatedTarget as Node)) return
+                      if (dragOverStage === stage.key) {
+                        setDragOverStage(null)
+                      }
+                    }}
+                    onDrop={async (e) => {
+                      e.preventDefault()
+                      const droppedLeadId = e.dataTransfer.getData('text/plain') || draggingLeadId
+                      if (droppedLeadId) {
+                        await moveToStage(droppedLeadId, stage.key)
+                      }
+                      setDraggingLeadId(null)
+                      setDragOverStage(null)
+                    }}
                     style={{
                       flex: 1,
-                      background: 'rgba(255, 255, 255, 0.5)',
+                      background: isDropTarget ? 'rgba(255, 255, 255, 0.85)' : 'rgba(255, 255, 255, 0.5)',
                       backdropFilter: 'blur(16px)',
                       borderRadius: 20,
-                      border: '1px solid rgba(0, 0, 0, 0.06)',
+                      border: isDropTarget ? `2px dashed ${stage.dot}` : '1px solid rgba(0, 0, 0, 0.06)',
                       padding: '16px',
-                      boxShadow: '0 4px 20px -2px rgba(0, 0, 0, 0.03)',
+                      boxShadow: isDropTarget
+                        ? `0 0 24px ${stage.dot}30, 0 8px 30px rgba(0, 0, 0, 0.08)`
+                        : '0 4px 20px -2px rgba(0, 0, 0, 0.03)',
+                      transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+                      minHeight: 280,
                     }}
                   >
                     {/* Stage Header */}
@@ -470,75 +642,131 @@ export default function AdminSalesPage() {
                             background: '#FFFFFF',
                           }}
                         >
-                          <p style={{ fontSize: 12, color: '#9CA3AF', fontWeight: 500 }}>Aucune opportunité</p>
+                          <p style={{ fontSize: 12, color: '#9CA3AF', fontWeight: 500 }}>
+                            {isDropTarget ? 'Déposer ici' : 'Aucune opportunité'}
+                          </p>
                         </div>
                       )}
 
                       {stageLeads.map(lead => (
-                        <div
-                          key={lead.id}
-                          style={{
-                            background: '#FFFFFF',
-                            borderRadius: 16,
-                            padding: '16px',
-                            border: '1px solid rgba(0, 0, 0, 0.06)',
-                            boxShadow: '0 4px 16px -2px rgba(0, 0, 0, 0.05)',
-                            transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
-                          }}
-                          className="hover:shadow-lg"
-                        >
-                          {/* Card Top: Avatar, Name & Delete */}
-                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                              <div
-                                style={{
-                                  width: 34,
-                                  height: 34,
-                                  borderRadius: 10,
-                                  background: stage.bg,
-                                  border: `1px solid ${stage.color}30`,
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
-                                  fontSize: 13.5,
-                                  fontWeight: 700,
-                                  color: stage.color,
-                                }}
-                              >
-                                {(lead.customer_name || '?')[0].toUpperCase()}
+                          <div
+                            key={lead.id}
+                            draggable={true}
+                            onDragStart={(e) => {
+                              e.dataTransfer.setData('text/plain', lead.id)
+                              e.dataTransfer.effectAllowed = 'move'
+                              setDraggingLeadId(lead.id)
+                            }}
+                            onDragEnd={() => {
+                              setDraggingLeadId(null)
+                              setDragOverStage(null)
+                            }}
+                            onTouchStart={(e) => {
+                              const touch = e.touches[0]
+                              touchStartPos.current = { x: touch.clientX, y: touch.clientY }
+                              setTouchLeadId(lead.id)
+                            }}
+                            onTouchMove={(e) => {
+                              const touch = e.touches[0]
+                              const elem = document.elementFromPoint(touch.clientX, touch.clientY)
+                              const stageElem = elem?.closest('[data-stage]')
+                              const stageKey = stageElem?.getAttribute('data-stage')
+                              if (stageKey && stageKey !== touchOverStage) {
+                                setTouchOverStage(stageKey)
+                              }
+                            }}
+                            onTouchEnd={() => {
+                              if (touchLeadId && touchOverStage && touchOverStage !== lead.funnel_stage) {
+                                moveToStage(touchLeadId, touchOverStage)
+                              }
+                              setTouchLeadId(null)
+                              setTouchOverStage(null)
+                              touchStartPos.current = null
+                            }}
+                            style={{
+                              background: '#FFFFFF',
+                              borderRadius: 16,
+                              padding: '16px',
+                              border: (draggingLeadId === lead.id || touchLeadId === lead.id) ? `2px solid ${stage.dot}` : '1px solid rgba(0, 0, 0, 0.06)',
+                              boxShadow: (draggingLeadId === lead.id || touchLeadId === lead.id)
+                                ? '0 12px 28px rgba(0, 0, 0, 0.15)'
+                                : '0 4px 16px -2px rgba(0, 0, 0, 0.05)',
+                              opacity: (draggingLeadId === lead.id || touchLeadId === lead.id) ? 0.5 : 1,
+                              transform: (draggingLeadId === lead.id || touchLeadId === lead.id) ? 'scale(0.98)' : 'none',
+                              cursor: 'grab',
+                              transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                              userSelect: 'none',
+                            }}
+                            className="hover:shadow-lg"
+                          >
+                            {/* Card Top: Avatar, Name & Delete */}
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                                <div
+                                  style={{
+                                    width: 34,
+                                    height: 34,
+                                    borderRadius: 10,
+                                    background: stage.bg,
+                                    border: `1px solid ${stage.color}30`,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    fontSize: 13.5,
+                                    fontWeight: 700,
+                                    color: stage.color,
+                                  }}
+                                >
+                                  {(lead.customer_name || '?')[0].toUpperCase()}
+                                </div>
+                                <div>
+                                  <p style={{ fontSize: 14, fontWeight: 600, color: '#111827', lineHeight: 1.2 }}>
+                                    {lead.customer_name}
+                                  </p>
+                                  <span style={{ fontSize: 11, color: '#9CA3AF' }}>{formatDate(lead.created_at)}</span>
+                                </div>
                               </div>
-                              <div>
-                                <p style={{ fontSize: 14, fontWeight: 600, color: '#111827', lineHeight: 1.2 }}>
-                                  {lead.customer_name}
-                                </p>
-                                <span style={{ fontSize: 11, color: '#9CA3AF' }}>{formatDate(lead.created_at)}</span>
+
+                              <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                                <div
+                                  title="Glisser-déposer vers une autre étape"
+                                  style={{
+                                    cursor: 'grab',
+                                    color: '#9CA3AF',
+                                    padding: '4px 2px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                  }}
+                                  className="hover:text-[#111827]"
+                                >
+                                  <GripVertical className="w-4 h-4" />
+                                </div>
+
+                                <button
+                                  type="button"
+                                  onClick={() => deleteLead(lead.id)}
+                                  disabled={deletingId === lead.id}
+                                  style={{
+                                    padding: 6,
+                                    borderRadius: 8,
+                                    border: 'none',
+                                    background: 'transparent',
+                                    cursor: 'pointer',
+                                    color: '#9CA3AF',
+                                    display: 'flex',
+                                    transition: 'all 0.15s ease',
+                                  }}
+                                  className="hover:text-red-500 hover:bg-red-50"
+                                  title="Supprimer ce lead"
+                                >
+                                  {deletingId === lead.id ? (
+                                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                  ) : (
+                                    <Trash2 className="w-3.5 h-3.5" />
+                                  )}
+                                </button>
                               </div>
                             </div>
-
-                            <button
-                              type="button"
-                              onClick={() => deleteLead(lead.id)}
-                              disabled={deletingId === lead.id}
-                              style={{
-                                padding: 6,
-                                borderRadius: 8,
-                                border: 'none',
-                                background: 'transparent',
-                                cursor: 'pointer',
-                                color: '#9CA3AF',
-                                display: 'flex',
-                                transition: 'all 0.15s ease',
-                              }}
-                              className="hover:text-red-500 hover:bg-red-50"
-                              title="Supprimer ce lead"
-                            >
-                              {deletingId === lead.id ? (
-                                <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                              ) : (
-                                <Trash2 className="w-3.5 h-3.5" />
-                              )}
-                            </button>
-                          </div>
 
                           {/* Contact Channels: Phone & WhatsApp */}
                           <div style={{ display: 'flex', alignItems: 'center', gap: 8, margin: '8px 0 10px', flexWrap: 'wrap' }}>

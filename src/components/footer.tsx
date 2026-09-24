@@ -1,11 +1,13 @@
-﻿'use client';
+'use client';
 
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { Facebook, Instagram, Youtube, Check, ArrowRight, MapPin, Phone, Mail } from 'lucide-react';
 import { TikTokIcon } from '@/components/icons';
+import { useSiteConfig } from '@/lib/site-config';
 
 export function Footer() {
+  const siteConfig = useSiteConfig();
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
   const handleSubscribe = (e: React.FormEvent) => { e.preventDefault(); if (!email.trim()) return; setSubscribed(true); setEmail(''); };
@@ -18,9 +20,9 @@ export function Footer() {
           <Link href='/' className='inline-block mb-3'><img src='/logo.png' alt="Chateau d'art" className='h-12 w-auto object-contain' /></Link>
           <p className='text-[11px] text-[#A1A1AA] leading-relaxed max-w-xs'>Maison de mobilier et d&apos;art de vivre — l&apos;artisanat d&apos;exception &amp; les lignes contemporaines.</p>
           <div className='mt-4 flex flex-col gap-2 text-[11px]'>
-            <a href='tel:0561719100' className='flex items-center justify-center gap-2 text-white font-semibold'><Phone size={13} className='text-[#b68d40]' />0561 71 91 00</a>
-            <a href='mailto:chateau.art01@gmail.com' className='flex items-center justify-center gap-2 text-[#B7BBC0]'><Mail size={13} className='text-[#b68d40]' />chateau.art01@gmail.com</a>
-            <span className='flex items-center justify-center gap-2 text-[#B7BBC0]'><MapPin size={13} className='text-[#b68d40]' />Alger — 6/7j · 9h30–20h00</span>
+            <a href={`tel:${siteConfig.phone.replace(/[^0-9]/g, '')}`} className='flex items-center justify-center gap-2 text-white font-semibold'><Phone size={13} className='text-[#b68d40]' />{siteConfig.phone}</a>
+            <a href={`mailto:${siteConfig.email}`} className='flex items-center justify-center gap-2 text-[#B7BBC0]'><Mail size={13} className='text-[#b68d40]' />{siteConfig.email}</a>
+            <span className='flex items-center justify-center gap-2 text-[#B7BBC0]'><MapPin size={13} className='text-[#b68d40]' />{siteConfig.address} — {siteConfig.hours}</span>
           </div>
         </div>
         <div className='px-5 py-6 border-b border-white/10'>
@@ -59,10 +61,10 @@ export function Footer() {
           <iframe title="Chateau d'art Maps" src={mapSrc} className='w-full h-40 grayscale brightness-[0.75] contrast-[1.1]' loading='lazy' referrerPolicy='strict-origin-when-cross-origin' />
         </div>
         <div className='px-5 py-5 border-b border-white/10 flex items-center justify-center gap-3'>
-          <a href='https://www.instagram.com/chateau_dart_meubles/' target='_blank' rel='noopener noreferrer' aria-label='Instagram' className='w-9 h-9 rounded-full bg-[#18191B] border border-white/10 flex items-center justify-center text-[#B7BBC0] hover:text-[#b68d40] hover:border-[#b68d40] transition-all'><Instagram size={15} /></a>
-          <a href='https://www.facebook.com/chateau.dart.alger/' target='_blank' rel='noopener noreferrer' aria-label='Facebook' className='w-9 h-9 rounded-full bg-[#18191B] border border-white/10 flex items-center justify-center text-[#B7BBC0] hover:text-[#b68d40] hover:border-[#b68d40] transition-all'><Facebook size={15} /></a>
-          <a href='https://www.tiktok.com/@chateaudart_meubles' target='_blank' rel='noopener noreferrer' aria-label='TikTok' className='w-9 h-9 rounded-full bg-[#18191B] border border-white/10 flex items-center justify-center text-[#B7BBC0] hover:text-[#b68d40] hover:border-[#b68d40] transition-all'><TikTokIcon className='w-3.5 h-3.5' /></a>
-          <a href='https://www.youtube.com/@chateaudart/featured' target='_blank' rel='noopener noreferrer' aria-label='YouTube' className='w-9 h-9 rounded-full bg-[#18191B] border border-white/10 flex items-center justify-center text-[#B7BBC0] hover:text-[#b68d40] hover:border-[#b68d40] transition-all'><Youtube size={15} /></a>
+          <a href={siteConfig.instagram_url || 'https://www.instagram.com/chateau_dart_meubles/'} target='_blank' rel='noopener noreferrer' aria-label='Instagram' className='w-9 h-9 rounded-full bg-[#18191B] border border-white/10 flex items-center justify-center text-[#B7BBC0] hover:text-[#b68d40] hover:border-[#b68d40] transition-all'><Instagram size={15} /></a>
+          <a href={siteConfig.facebook_url || 'https://www.facebook.com/chateau.dart.alger/'} target='_blank' rel='noopener noreferrer' aria-label='Facebook' className='w-9 h-9 rounded-full bg-[#18191B] border border-white/10 flex items-center justify-center text-[#B7BBC0] hover:text-[#b68d40] hover:border-[#b68d40] transition-all'><Facebook size={15} /></a>
+          <a href={siteConfig.tiktok_url || 'https://www.tiktok.com/@chateaudart_meubles'} target='_blank' rel='noopener noreferrer' aria-label='TikTok' className='w-9 h-9 rounded-full bg-[#18191B] border border-white/10 flex items-center justify-center text-[#B7BBC0] hover:text-[#b68d40] hover:border-[#b68d40] transition-all'><TikTokIcon className='w-3.5 h-3.5' /></a>
+          <a href={siteConfig.youtube_url || 'https://www.youtube.com/@chateaudart/featured'} target='_blank' rel='noopener noreferrer' aria-label='YouTube' className='w-9 h-9 rounded-full bg-[#18191B] border border-white/10 flex items-center justify-center text-[#B7BBC0] hover:text-[#b68d40] hover:border-[#b68d40] transition-all'><Youtube size={15} /></a>
         </div>
         <div className='px-5 py-4 flex flex-col items-center gap-2 text-[10px] text-[#71717A] text-center'>
           <p>&copy; 2026 Chateau d&apos;art. Tous droits reserves.</p>
@@ -87,9 +89,9 @@ export function Footer() {
             <div className='bg-[#121316] p-8 border border-white/10 flex flex-col justify-between'>
               <div><h3 className='text-white font-fraunces text-xl font-light mb-4'>L&apos;Atelier &amp; Showroom</h3><p className='text-xs md:text-sm text-[#A1A1AA] leading-relaxed mb-6'>Chaque creation Chateau d&apos;art est concue pour traverser le temps. Visitez notre showroom ou contactez nos conseillers.</p></div>
               <div className='space-y-2.5 text-xs text-[#D1D5DB] border-t border-white/10 pt-4'>
-                <div className='flex items-center gap-2'><Phone size={14} className='text-[#b68d40]' /><a href='tel:0561719100' className='hover:text-white font-semibold'>0561 71 91 00</a></div>
-                <div className='flex items-center gap-2'><Mail size={14} className='text-[#b68d40]' /><a href='mailto:chateau.art01@gmail.com' className='hover:text-white'>chateau.art01@gmail.com</a></div>
-                <div className='flex items-center gap-2'><MapPin size={14} className='text-[#b68d40]' /><span>Alger — 6/7j de 9h30 a 20h00</span></div>
+                <div className='flex items-center gap-2'><Phone size={14} className='text-[#b68d40]' /><a href={`tel:${siteConfig.phone.replace(/[^0-9]/g, '')}`} className='hover:text-white font-semibold'>{siteConfig.phone}</a></div>
+                <div className='flex items-center gap-2'><Mail size={14} className='text-[#b68d40]' /><a href={`mailto:${siteConfig.email}`} className='hover:text-white'>{siteConfig.email}</a></div>
+                <div className='flex items-center gap-2'><MapPin size={14} className='text-[#b68d40]' /><span>Showroom {siteConfig.address} — {siteConfig.hours}</span></div>
               </div>
             </div>
             <div className='bg-[#121316] p-8 border border-white/10 flex flex-col justify-between'>
@@ -105,11 +107,11 @@ export function Footer() {
             </div>
             <div className='bg-[#121316] p-8 border border-white/10 flex flex-col justify-between'>
               <div><h3 className='text-white font-fraunces text-xl font-light mb-6 flex items-center gap-2'><span>Explorer</span><span className='w-6 h-[1px] bg-[#b68d40]' /></h3><ul className='space-y-3 text-xs md:text-sm'><li><Link href='/all-products' className='hover:text-white inline-block hover:translate-x-1 duration-200'>Tous nos meubles</Link></li><li><Link href='/rooms' className='hover:text-white inline-block hover:translate-x-1 duration-200'>Collections par piece</Link></li><li><Link href='/offers' className='hover:text-white inline-block hover:translate-x-1 duration-200'>Offres privileges</Link></li><li><Link href='/inspirations' className='hover:text-white inline-block hover:translate-x-1 duration-200'>Inspirations &amp; Lookbook</Link></li></ul></div>
-              <div className='pt-4 border-t border-white/10 space-y-2.5'><div className='relative rounded-sm overflow-hidden border border-white/10 h-28 w-full'><iframe title="Maps" src={mapSrc} className='w-full h-full grayscale contrast-[1.1] brightness-[0.8] hover:grayscale-0 transition-all duration-500' loading='lazy' referrerPolicy='strict-origin-when-cross-origin' /></div><span className='text-[11px] text-[#A1A1AA] block'>Showroom Alger — 6/7j de 9h30 a 20h00</span></div>
+              <div className='pt-4 border-t border-white/10 space-y-2.5'><div className='relative rounded-sm overflow-hidden border border-white/10 h-28 w-full'><iframe title="Maps" src={mapSrc} className='w-full h-full grayscale contrast-[1.1] brightness-[0.8] hover:grayscale-0 transition-all duration-500' loading='lazy' referrerPolicy='strict-origin-when-cross-origin' /></div><span className='text-[11px] text-[#A1A1AA] block'>Showroom {siteConfig.address} — {siteConfig.hours}</span></div>
             </div>
             <div className='bg-[#121316] p-8 border border-white/10 flex flex-col justify-between'>
               <div><h3 className='text-white font-fraunces text-xl font-light mb-6 flex items-center gap-2'><span>Maison</span><span className='w-6 h-[1px] bg-[#b68d40]' /></h3><ul className='space-y-3 text-xs md:text-sm mb-6'><li><Link href='/about' className='hover:text-white inline-block hover:translate-x-1 duration-200'>Notre histoire &amp; savoir-faire</Link></li><li><Link href='/contact' className='hover:text-white inline-block hover:translate-x-1 duration-200'>Prendre rendez-vous</Link></li><li><Link href='/contact?subject=Devis' className='hover:text-white inline-block hover:translate-x-1 duration-200'>Demande de devis sur mesure</Link></li></ul></div>
-              <div><span className='text-[11px] uppercase tracking-wider text-[#A1A1AA] block mb-3'>Reseaux Officiels</span><div className='flex gap-2.5'><a href='https://www.instagram.com/chateau_dart_meubles/' target='_blank' rel='noopener noreferrer' aria-label='Instagram' className='w-9 h-9 rounded-md bg-[#1A1C20] border border-white/10 flex items-center justify-center text-[#B7BBC0] hover:text-white hover:border-[#b68d40] hover:bg-[#b68d40]/10 transition-all duration-200'><Instagram size={16} /></a><a href='https://www.facebook.com/chateau.dart.alger/' target='_blank' rel='noopener noreferrer' aria-label='Facebook' className='w-9 h-9 rounded-md bg-[#1A1C20] border border-white/10 flex items-center justify-center text-[#B7BBC0] hover:text-white hover:border-[#b68d40] hover:bg-[#b68d40]/10 transition-all duration-200'><Facebook size={16} /></a><a href='https://www.tiktok.com/@chateaudart_meubles' target='_blank' rel='noopener noreferrer' aria-label='TikTok' className='w-9 h-9 rounded-md bg-[#1A1C20] border border-white/10 flex items-center justify-center text-[#B7BBC0] hover:text-white hover:border-[#b68d40] hover:bg-[#b68d40]/10 transition-all duration-200'><TikTokIcon className='w-4 h-4' /></a><a href='https://www.youtube.com/@chateaudart/featured' target='_blank' rel='noopener noreferrer' aria-label='YouTube' className='w-9 h-9 rounded-md bg-[#1A1C20] border border-white/10 flex items-center justify-center text-[#B7BBC0] hover:text-white hover:border-[#b68d40] hover:bg-[#b68d40]/10 transition-all duration-200'><Youtube size={16} /></a></div></div>
+              <div><span className='text-[11px] uppercase tracking-wider text-[#A1A1AA] block mb-3'>Reseaux Officiels</span><div className='flex gap-2.5'><a href={siteConfig.instagram_url || 'https://www.instagram.com/chateau_dart_meubles/'} target='_blank' rel='noopener noreferrer' aria-label='Instagram' className='w-9 h-9 rounded-md bg-[#1A1C20] border border-white/10 flex items-center justify-center text-[#B7BBC0] hover:text-white hover:border-[#b68d40] hover:bg-[#b68d40]/10 transition-all duration-200'><Instagram size={16} /></a><a href={siteConfig.facebook_url || 'https://www.facebook.com/chateau.dart.alger/'} target='_blank' rel='noopener noreferrer' aria-label='Facebook' className='w-9 h-9 rounded-md bg-[#1A1C20] border border-white/10 flex items-center justify-center text-[#B7BBC0] hover:text-white hover:border-[#b68d40] hover:bg-[#b68d40]/10 transition-all duration-200'><Facebook size={16} /></a><a href={siteConfig.tiktok_url || 'https://www.tiktok.com/@chateaudart_meubles'} target='_blank' rel='noopener noreferrer' aria-label='TikTok' className='w-9 h-9 rounded-md bg-[#1A1C20] border border-white/10 flex items-center justify-center text-[#B7BBC0] hover:text-white hover:border-[#b68d40] hover:bg-[#b68d40]/10 transition-all duration-200'><TikTokIcon className='w-4 h-4' /></a><a href={siteConfig.youtube_url || 'https://www.youtube.com/@chateaudart/featured'} target='_blank' rel='noopener noreferrer' aria-label='YouTube' className='w-9 h-9 rounded-md bg-[#1A1C20] border border-white/10 flex items-center justify-center text-[#B7BBC0] hover:text-white hover:border-[#b68d40] hover:bg-[#b68d40]/10 transition-all duration-200'><Youtube size={16} /></a></div></div>
             </div>
           </div>
           <div className='mt-12 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center text-xs text-[#71717A] gap-4'>

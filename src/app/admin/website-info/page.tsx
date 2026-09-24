@@ -2,7 +2,7 @@
 
 export const runtime = 'edge'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   Globe,
   Phone,
@@ -19,6 +19,7 @@ import {
   Megaphone,
   Share2,
   Clock,
+  Sparkles,
 } from 'lucide-react'
 
 interface SectionData {
@@ -108,6 +109,24 @@ export default function AdminWebsiteInfoPage() {
   const [openSections, setOpenSections] = useState<string[]>(['contact'])
   const [saved, setSaved] = useState<Record<string, boolean>>({})
   const [saving, setSaving] = useState<Record<string, boolean>>({})
+  const [loadingConfig, setLoadingConfig] = useState(true)
+
+  useEffect(() => {
+    async function loadConfig() {
+      try {
+        const res = await fetch('/api/admin/site-config?t=' + Date.now(), { cache: 'no-store' })
+        if (res.ok) {
+          const cfg = await res.json()
+          setData(prev => ({ ...prev, ...cfg }))
+        }
+      } catch (err) {
+        console.error('Failed to load site config:', err)
+      } finally {
+        setLoadingConfig(false)
+      }
+    }
+    loadConfig()
+  }, [])
 
   const toggleSection = (key: string) => {
     setOpenSections(prev =>
@@ -120,18 +139,22 @@ export default function AdminWebsiteInfoPage() {
     try {
       // Build payload for this section's fields
       const payload = Object.fromEntries(fields.map(k => [k, data[k] || '']))
-      console.log('Saving section:', sectionKey, payload)
-
-      // TODO: When Supabase is configured, this will call:
-      // await fetch('/api/admin/site-config', { method: 'PUT', body: JSON.stringify(payload) })
       
-      // For now, simulate save
-      await new Promise(r => setTimeout(r, 700))
+      const res = await fetch('/api/admin/site-config', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+
+      if (!res.ok) {
+        const errJson = await res.json().catch(() => ({}))
+        throw new Error(errJson.error || 'Erreur lors de la sauvegarde')
+      }
 
       setSaved(prev => ({ ...prev, [sectionKey]: true }))
-      setTimeout(() => setSaved(prev => ({ ...prev, [sectionKey]: false })), 2500)
-    } catch {
-      alert('Erreur lors de la sauvegarde')
+      setTimeout(() => setSaved(prev => ({ ...prev, [sectionKey]: false })), 3000)
+    } catch (err: any) {
+      alert(err.message || 'Erreur lors de la sauvegarde')
     } finally {
       setSaving(prev => ({ ...prev, [sectionKey]: false }))
     }
@@ -172,16 +195,25 @@ export default function AdminWebsiteInfoPage() {
             alignItems: 'center',
             gap: 8,
             padding: '8px 16px',
-            background: 'rgba(245, 158, 11, 0.15)',
-            border: '1px solid rgba(245, 158, 11, 0.3)',
+            background: 'rgba(16, 185, 129, 0.12)',
+            border: '1px solid rgba(16, 185, 129, 0.3)',
             borderRadius: 99,
             fontSize: 12.5,
-            color: '#F59E0B',
+            color: '#10B981',
             fontWeight: 500,
           }}
         >
-          <Clock className="w-4 h-4 text-[#F59E0B]" />
-          Connexion Supabase requise pour sauvegarder en live
+          <span
+            style={{
+              width: 8,
+              height: 8,
+              borderRadius: 99,
+              background: '#10B981',
+              boxShadow: '0 0 8px #10B981',
+              display: 'inline-block',
+            }}
+          />
+          Synchronisé avec le site en direct ✓
         </div>
       </div>
 

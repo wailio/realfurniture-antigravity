@@ -6,6 +6,7 @@ import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { LuxuryReveal } from '@/components/luxury-reveal';
 import { Phone, Mail, MapPin, Clock, MessageSquare, Check, ArrowRight, ArrowUpRight } from 'lucide-react';
+import { useSiteConfig } from '@/lib/site-config';
 
 function ShowroomMap() {
   return (
@@ -47,6 +48,7 @@ function ContactContent() {
   const searchParams = useSearchParams();
   const formRef = useRef<HTMLFormElement>(null);
   const messageRef = useRef<HTMLTextAreaElement>(null);
+  const siteConfig = useSiteConfig();
   
   const [formData, setFormData] = useState({
     name: '',
@@ -168,26 +170,26 @@ function ContactContent() {
             <LuxuryReveal className="w-full">
               <div className="grid grid-cols-2 gap-2.5 sm:gap-3.5 w-full">
                 <a 
-                  href="tel:0561719100" 
+                  href={`tel:${siteConfig.phone.replace(/[^0-9]/g, '')}`} 
                   className="interactive-tap group bg-[#121316] border border-white/10 hover:border-[#b68d40]/50 p-3 sm:p-4 md:p-6 flex flex-col items-center text-center rounded-sm transition-all duration-300 shadow-md"
                 >
                   <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-[#b68d40] mb-2 md:mb-3 group-hover:bg-[#b68d40] group-hover:text-white transition-colors">
                     <Phone size={14} />
                   </div>
                   <h3 className="font-fraunces text-xs md:text-base text-white mb-0.5 leading-tight font-medium">Téléphone</h3>
-                  <p className="font-sora text-[10px] md:text-xs text-[#b68d40] font-bold">0561 71 91 00</p>
+                  <p className="font-sora text-[10px] md:text-xs text-[#b68d40] font-bold">{siteConfig.phone}</p>
                   <span className="text-[9px] text-[#71717A] mt-1 hidden sm:block">Appel / WhatsApp</span>
                 </a>
 
                 <a 
-                  href="mailto:chateau.art01@gmail.com" 
+                  href={`mailto:${siteConfig.email}`} 
                   className="interactive-tap group bg-[#121316] border border-white/10 hover:border-[#b68d40]/50 p-3 sm:p-4 md:p-6 flex flex-col items-center text-center rounded-sm transition-all duration-300 shadow-md"
                 >
                   <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-[#b68d40] mb-2 md:mb-3 group-hover:bg-[#b68d40] group-hover:text-white transition-colors">
                     <Mail size={14} />
                   </div>
                   <h3 className="font-fraunces text-xs md:text-base text-white mb-0.5 leading-tight font-medium">Email</h3>
-                  <p className="font-sora text-[9px] md:text-xs text-white font-medium truncate max-w-[120px] sm:max-w-none">chateau.art01@gmail.com</p>
+                  <p className="font-sora text-[9px] md:text-xs text-white font-medium truncate max-w-[120px] sm:max-w-none">{siteConfig.email}</p>
                   <span className="text-[9px] text-[#71717A] mt-1 hidden sm:block">Réponse 24h</span>
                 </a>
 
@@ -208,7 +210,7 @@ function ContactContent() {
                   </div>
                   <h3 className="font-fraunces text-xs md:text-base text-white mb-0.5 leading-tight font-medium">Horaires</h3>
                   <p className="font-sora text-[10px] md:text-xs text-[#A1A1AA] leading-snug">
-                    6/7j &middot; <span className="text-white font-semibold">09h30 - 20h</span>
+                    {siteConfig.hours}
                   </p>
                   <span className="text-[9px] text-[#71717A] mt-1 hidden sm:block">Showroom ouvert</span>
                 </div>
@@ -228,7 +230,7 @@ function ContactContent() {
                   </div>
                 </div>
                 <a 
-                  href="https://wa.me/213561719100" 
+                  href={`https://wa.me/${siteConfig.whatsapp || siteConfig.phone.replace(/[^0-9]/g, '')}`} 
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className="interactive-tap px-3.5 py-2 bg-[#25D366] hover:bg-[#20bd5a] text-white text-[10px] md:text-xs font-bold rounded-sm uppercase tracking-wider flex items-center gap-1.5 flex-shrink-0 transition-colors shadow-sm"
