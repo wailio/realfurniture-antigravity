@@ -17,21 +17,53 @@ export async function GET(request: NextRequest) {
 
     const res = await fetch(query, {
       headers: supabaseHeaders(key),
-      cache: 'no-store',
     })
 
     if (!res.ok) {
       const errText = await res.text()
       console.error('Supabase products GET error:', res.status, errText)
-      // Return empty array instead of crashing so UI works cleanly
-      return NextResponse.json([])
+      return NextResponse.json(staticCatalog.map(p => ({
+        id: String(p.id),
+        name: p.name,
+        slug: p.name.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+        description: p.description,
+        price: p.price,
+        sale_price: p.originalPrice || null,
+        category: p.category,
+        images: p.images || [p.image],
+        in_stock: true,
+      })))
     }
 
     const data = await res.json()
-    return NextResponse.json(Array.isArray(data) ? data : [])
+    if (Array.isArray(data) && data.length > 0) {
+      return NextResponse.json(data)
+    }
+
+    return NextResponse.json(staticCatalog.map(p => ({
+      id: String(p.id),
+      name: p.name,
+      slug: p.name.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+      description: p.description,
+      price: p.price,
+      sale_price: p.originalPrice || null,
+      category: p.category,
+      images: p.images || [p.image],
+      in_stock: true,
+    })))
   } catch (err: any) {
     console.error('GET /api/admin/products error:', err)
-    return NextResponse.json([], { status: 200 })
+    return NextResponse.json(staticCatalog.map(p => ({
+      id: String(p.id),
+      name: p.name,
+      slug: p.name.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+      description: p.description,
+      price: p.price,
+      sale_price: p.originalPrice || null,
+      category: p.category,
+      images: p.images || [p.image],
+      in_stock: true,
+    })))
   }
 }
 

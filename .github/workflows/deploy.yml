@@ -19,11 +19,11 @@ jobs:
         run: npm ci
 
       - name: Build
-        run: npx @cloudflare/next-on-pages@1
+        run: npx --legacy-peer-deps @cloudflare/next-on-pages@1
         env:
           NODE_ENV: production
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://vhzgasepkcdhnpcinntb.supabase.co' }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'sb_publishable_Y8IDfShXEdIbvjYhQX6oUg_HN3GvT7h' }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
 
       - name: Deploy to Cloudflare Pages

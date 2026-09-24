@@ -10,7 +10,6 @@ export async function GET() {
       `${url}/rest/v1/messages?select=*&order=created_at.desc`,
       {
         headers: supabaseHeaders(key),
-        cache: 'no-store',
       }
     )
 

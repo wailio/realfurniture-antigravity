@@ -284,7 +284,7 @@ export default function AdminOrdersPage() {
 
                   {/* Content */}
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ display: 'flex', alignItems: 'flex-start', justifyBetween: 'space-between', gap: 8, flexWrap: 'wrap', justifyContent: 'space-between' }}>
+                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8, flexWrap: 'wrap', justifyContent: 'space-between' }}>
                       <div>
                         <p style={{ fontSize: 15, fontWeight: 600, color: '#111827' }}>{order.name || '—'}</p>
                         <div style={{ display: 'flex', gap: 14, marginTop: 4, flexWrap: 'wrap' }}>

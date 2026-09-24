@@ -66,8 +66,21 @@ export default function HomePage() {
     },
   ];
 
-  const carouselProducts = products.slice(0, 6);
-  const gridProducts = products.slice(6, 12);
+  const [productList, setProductList] = React.useState<any[]>(products);
+
+  React.useEffect(() => {
+    fetch('/api/products')
+      .then(res => res.ok ? res.json() : null)
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          setProductList(data);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const carouselProducts = productList.slice(0, 6);
+  const gridProducts = productList.slice(6, 12);
 
   return (
     <main className="min-h-screen bg-[#0E0F10] font-sans">

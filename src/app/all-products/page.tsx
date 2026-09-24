@@ -39,6 +39,18 @@ function AllProductsContent() {
   const searchParams = useSearchParams();
   const rawParam = searchParams.get('category');
   const [activeCategory, setActiveCategory] = useState<string>(() => resolveCategorySlug(rawParam));
+  const [productList, setProductList] = useState<any[]>(products);
+
+  useEffect(() => {
+    fetch('/api/products')
+      .then(res => res.ok ? res.json() : null)
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          setProductList(data);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     const param = searchParams.get('category');
@@ -58,8 +70,8 @@ function AllProductsContent() {
 
   const filteredProducts =
     activeCategory === 'all'
-      ? products
-      : products.filter((p) => p.category === activeCategory);
+      ? productList
+      : productList.filter((p) => p.category === activeCategory);
 
   return (
     <main className="min-h-screen bg-[#0E0F10]">

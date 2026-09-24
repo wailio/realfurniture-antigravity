@@ -80,7 +80,7 @@ export default function AdminSalesPage() {
       await fetch('/api/admin/sales', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id, funnel_stage: STAGES[newIdx].key }),
+        body: JSON.stringify({ id: lead.id, funnel_stage: STAGES[newIdx].key }),
       })
       setLeads(prev => prev.map(l => l.id === lead.id ? { ...l, funnel_stage: STAGES[newIdx].key } : l))
     } catch {
@@ -306,7 +306,6 @@ export default function AdminSalesPage() {
                                 border: `1px solid ${stage.color}30`,
                                 display: 'flex',
                                 alignItems: 'center',
-                                justifyCenter: 'center',
                                 justifyContent: 'center',
                                 fontSize: 14,
                                 fontWeight: 700,
