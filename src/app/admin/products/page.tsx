@@ -248,14 +248,13 @@ export default function AdminProductsPage() {
   }
 
   return (
-    <div className="min-h-screen" style={{ background: '#F6F5F3' }}>
-      {/* Header — Exact #0A0B0C to seamlessly match sidebar */}
-      <header
+    <div className="min-h-screen" style={{ background: 'transparent' }}>
+      {/* Header — Exact #0A0B0C matching sidebar, restored original size */}
+      <div
         style={{
           background: '#0A0B0C',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
-          padding: '0 36px',
-          minHeight: 72,
+          borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+          padding: '28px 36px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -264,28 +263,25 @@ export default function AdminProductsPage() {
         }}
       >
         <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span style={{ fontSize: 10, letterSpacing: '0.12em', color: '#4A4D55', textTransform: 'uppercase', fontWeight: 600 }}>Château d&apos;art</span>
-            <span style={{ color: '#2A2D35', fontSize: 11 }}>/</span>
-            <span style={{ fontSize: 10, letterSpacing: '0.08em', color: '#7C8089', textTransform: 'uppercase', fontWeight: 500 }}>Admin</span>
-          </div>
-          <div className="flex items-baseline gap-3">
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: 12 }}>
             <h1
               style={{
                 fontFamily: 'var(--font-heading)',
-                fontSize: 22,
-                fontWeight: 400,
-                color: '#F2F1EF',
+                fontSize: 26,
+                fontWeight: 300,
+                color: '#FFFFFF',
                 letterSpacing: '-0.02em',
-                lineHeight: 1.2,
               }}
             >
-              Catalogue Produits
+              Produits
             </h1>
-            <span style={{ fontSize: 12, color: '#7C8089' }}>
-              ({products.length} référence{products.length !== 1 ? 's' : ''})
+            <span style={{ fontSize: 13, color: '#A1A1AA' }}>
+              ({products.length} produit{products.length !== 1 ? 's' : ''})
             </span>
           </div>
+          <p style={{ fontSize: 13, color: '#A1A1AA', marginTop: 4 }}>
+            Gérez votre catalogue de mobilier de prestige
+          </p>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -297,11 +293,11 @@ export default function AdminProductsPage() {
                 display: 'flex',
                 alignItems: 'center',
                 gap: 8,
-                background: 'rgba(255, 255, 255, 0.03)',
+                background: 'rgba(255, 255, 255, 0.04)',
                 color: '#F2F1EF',
-                padding: '9px 16px',
-                borderRadius: 10,
-                fontSize: 12.5,
+                padding: '10px 18px',
+                borderRadius: 12,
+                fontSize: 13,
                 fontWeight: 500,
                 border: '1px solid rgba(255, 255, 255, 0.10)',
                 cursor: seeding ? 'wait' : 'pointer',
@@ -322,9 +318,9 @@ export default function AdminProductsPage() {
               gap: 8,
               background: 'linear-gradient(135deg, #d1aa5c 0%, #b89347 100%)',
               color: '#0A0B0C',
-              padding: '9px 20px',
-              borderRadius: 10,
-              fontSize: 12.5,
+              padding: '11px 22px',
+              borderRadius: 12,
+              fontSize: 13,
               fontWeight: 600,
               letterSpacing: '0.02em',
               border: 'none',
@@ -339,7 +335,7 @@ export default function AdminProductsPage() {
             Nouveau produit
           </button>
         </div>
-      </header>
+      </div>
 
       <div style={{ padding: '36px' }}>
         {/* ── HORIZONTAL STACKED FILES DECK (As requested) ── */}

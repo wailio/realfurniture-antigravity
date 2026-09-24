@@ -128,14 +128,13 @@ export default function AdminDashboard() {
 
 
   return (
-    <div className="min-h-screen" style={{ background: '#F6F5F3' }}>
-      {/* Page Header — Exact #0A0B0C to seamlessly match sidebar */}
-      <header
+    <div className="min-h-screen" style={{ background: 'transparent' }}>
+      {/* Page Header — Exact #0A0B0C matching sidebar, restored original size */}
+      <div
         style={{
           background: '#0A0B0C',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
-          padding: '0 36px',
-          minHeight: 72,
+          borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+          padding: '28px 36px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -143,23 +142,20 @@ export default function AdminDashboard() {
         }}
       >
         <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span style={{ fontSize: 10, letterSpacing: '0.12em', color: '#4A4D55', textTransform: 'uppercase', fontWeight: 600 }}>Château d&apos;art</span>
-            <span style={{ color: '#2A2D35', fontSize: 11 }}>/</span>
-            <span style={{ fontSize: 10, letterSpacing: '0.08em', color: '#7C8089', textTransform: 'uppercase', fontWeight: 500 }}>Admin</span>
-          </div>
           <h1
             style={{
               fontFamily: 'var(--font-heading)',
-              fontSize: 22,
-              fontWeight: 400,
-              color: '#F2F1EF',
+              fontSize: 26,
+              fontWeight: 300,
+              color: '#FFFFFF',
               letterSpacing: '-0.02em',
-              lineHeight: 1.2,
             }}
           >
             Tableau de bord
           </h1>
+          <p style={{ fontSize: 13, color: '#A1A1AA', marginTop: 4 }}>
+            Vue d&apos;ensemble et indicateurs clés
+          </p>
         </div>
 
         <div className="flex items-center gap-3">
@@ -168,12 +164,12 @@ export default function AdminDashboard() {
               display: 'flex',
               alignItems: 'center',
               gap: 6,
-              padding: '6px 14px',
+              padding: '8px 16px',
               borderRadius: 99,
-              background: 'rgba(255, 255, 255, 0.03)',
-              border: '1px solid rgba(255, 255, 255, 0.07)',
-              fontSize: 12,
-              color: '#7C8089',
+              background: 'rgba(255, 255, 255, 0.04)',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
+              fontSize: 12.5,
+              color: '#D4D4D8',
             }}
           >
             <Clock className="w-3.5 h-3.5 text-[#d1aa5c]" />
@@ -185,11 +181,11 @@ export default function AdminDashboard() {
               display: 'flex',
               alignItems: 'center',
               gap: 8,
-              padding: '6px 14px',
+              padding: '8px 16px',
               borderRadius: 99,
-              background: 'rgba(255, 255, 255, 0.03)',
+              background: 'rgba(74, 222, 128, 0.08)',
               border: '1px solid rgba(74, 222, 128, 0.25)',
-              fontSize: 12,
+              fontSize: 12.5,
               color: '#F2F1EF',
               letterSpacing: '0.02em',
             }}
@@ -198,10 +194,10 @@ export default function AdminDashboard() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
               <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500 shadow-[0_0_8px_#10B981]" />
             </span>
-            <span style={{ fontSize: 11.5, fontWeight: 500, color: '#D4D6DA' }}>En direct</span>
+            <span style={{ fontSize: 12, fontWeight: 500, color: '#4ade80' }}>Site en ligne</span>
           </div>
         </div>
-      </header>
+      </div>
 
       <div style={{ padding: '36px' }}>
         {/* Stats Grid */}

@@ -138,27 +138,23 @@ export default function AdminWebsiteInfoPage() {
   }
 
   return (
-    <div className="min-h-screen" style={{ background: '#F6F5F3' }}>
-      {/* Header */}
-      <header
+    <div className="min-h-screen" style={{ background: 'transparent' }}>
+      {/* Header — Exact #0A0B0C matching sidebar, restored original size */}
+      <div
         style={{
           background: '#0A0B0C',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
-          padding: '0 36px',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+          padding: '28px 36px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          minHeight: 72,
         }}
       >
         <div>
-          <p style={{ fontSize: 11, color: '#52525B', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 3 }}>
-            Château d&apos;art / Admin
-          </p>
           <h1
             style={{
               fontFamily: 'var(--font-heading)',
-              fontSize: 22,
+              fontSize: 26,
               fontWeight: 300,
               color: '#FFFFFF',
               letterSpacing: '-0.02em',
@@ -166,7 +162,7 @@ export default function AdminWebsiteInfoPage() {
           >
             Infos du site
           </h1>
-          <p style={{ fontSize: 12, color: '#52525B', marginTop: 2 }}>
+          <p style={{ fontSize: 13, color: '#A1A1AA', marginTop: 4 }}>
             Modifiez le contenu du site sans toucher au code
           </p>
         </div>
@@ -175,18 +171,18 @@ export default function AdminWebsiteInfoPage() {
             display: 'flex',
             alignItems: 'center',
             gap: 8,
-            padding: '8px 16px',
-            background: 'rgba(245, 158, 11, 0.10)',
-            border: '1px solid rgba(245, 158, 11, 0.2)',
+            padding: '10px 18px',
+            background: 'rgba(245, 158, 11, 0.12)',
+            border: '1px solid rgba(245, 158, 11, 0.25)',
             borderRadius: 99,
-            fontSize: 12,
+            fontSize: 12.5,
             color: '#fbbf24',
           }}
         >
-          <Clock className="w-3.5 h-3.5 text-[#d1aa5c]" />
+          <Clock className="w-4 h-4 text-[#d1aa5c]" />
           Connexion Supabase requise pour sauvegarder en live
         </div>
-      </header>
+      </div>
 
       <div style={{ padding: '36px', maxWidth: 720, margin: '0 auto' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>

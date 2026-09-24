@@ -118,28 +118,24 @@ export default function AdminOrdersPage() {
   const newCount = orders.filter(o => o.status === 'new').length
 
   return (
-    <div className="min-h-screen" style={{ background: '#F6F5F3' }}>
-      {/* Header */}
-      <header
+    <div className="min-h-screen" style={{ background: 'transparent' }}>
+      {/* Header — Exact #0A0B0C matching sidebar, restored original size */}
+      <div
         style={{
           background: '#0A0B0C',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
-          padding: '0 36px',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+          padding: '28px 36px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          minHeight: 72,
         }}
       >
         <div>
-          <p style={{ fontSize: 11, color: '#52525B', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 3 }}>
-            Château d&apos;art / Admin
-          </p>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <h1
               style={{
                 fontFamily: 'var(--font-heading)',
-                fontSize: 22,
+                fontSize: 26,
                 fontWeight: 300,
                 color: '#FFFFFF',
                 letterSpacing: '-0.02em',
@@ -163,11 +159,11 @@ export default function AdminOrdersPage() {
               </span>
             )}
           </div>
-          <p style={{ fontSize: 12, color: '#52525B', marginTop: 2 }}>
+          <p style={{ fontSize: 13, color: '#A1A1AA', marginTop: 4 }}>
             Messages et demandes reçus via le formulaire de contact
           </p>
         </div>
-      </header>
+      </div>
 
       <div style={{ padding: '36px' }}>
         {/* Status filter tabs */}

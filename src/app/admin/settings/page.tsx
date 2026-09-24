@@ -6,35 +6,27 @@ import { Shield, Database, Bell, Palette } from 'lucide-react'
 
 export default function AdminSettingsPage() {
   return (
-    <div className="min-h-screen" style={{ background: '#F6F5F3' }}>
-      <header
+    <div className="min-h-screen" style={{ background: 'transparent' }}>
+      <div
         style={{
           background: '#0A0B0C',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
-          padding: '0 36px',
-          minHeight: 72,
-          display: 'flex',
-          alignItems: 'center',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+          padding: '28px 36px',
         }}
       >
-        <div>
-          <p style={{ fontSize: 11, color: '#52525B', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 3 }}>
-            Château d&apos;art / Admin
-          </p>
-          <h1
-            style={{
-              fontFamily: 'var(--font-heading)',
-              fontSize: 22,
-              fontWeight: 300,
-              color: '#FFFFFF',
-              letterSpacing: '-0.02em',
-            }}
-          >
-            Paramètres
-          </h1>
-          <p style={{ fontSize: 12, color: '#52525B', marginTop: 2 }}>Configuration du panneau d&apos;administration</p>
-        </div>
-      </header>
+        <h1
+          style={{
+            fontFamily: 'var(--font-heading)',
+            fontSize: 26,
+            fontWeight: 300,
+            color: '#FFFFFF',
+            letterSpacing: '-0.02em',
+          }}
+        >
+          Paramètres
+        </h1>
+        <p style={{ fontSize: 13, color: '#A1A1AA', marginTop: 4 }}>Configuration du panneau d&apos;administration</p>
+      </div>
 
       <div style={{ padding: '36px', maxWidth: 680 }}>
         {[
