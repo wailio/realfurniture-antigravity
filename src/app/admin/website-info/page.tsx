@@ -215,7 +215,7 @@ const SITE_PAGES: SitePage[] = [
 
 export default function AdminWebsiteInfoPage() {
   const [data, setData] = useState<Record<string, string>>({ ...DEFAULT_SITE_CONFIG })
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [saving, setSaving] = useState(false)
   const [savedSection, setSavedSection] = useState<string | null>(null)
   const [activePage, setActivePage] = useState('contact')
@@ -235,7 +235,6 @@ export default function AdminWebsiteInfoPage() {
       }
     } catch {}
 
-    setLoading(true)
     try {
       const res = await fetch('/api/admin/site-config?t=' + Date.now(), { cache: 'no-store' })
       if (res.ok) {
@@ -248,8 +247,6 @@ export default function AdminWebsiteInfoPage() {
       }
     } catch {
       // use defaults
-    } finally {
-      setLoading(false)
     }
   }, [])
 
