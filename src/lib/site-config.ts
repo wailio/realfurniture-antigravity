@@ -1,7 +1,3 @@
-'use client'
-
-import { useState, useEffect } from 'react'
-
 export interface SiteConfig {
   // Contact
   phone: string
@@ -133,22 +129,3 @@ export const DEFAULT_SITE_CONFIG: SiteConfig = {
 
 export const PUBLIC_SITE_CONFIG_STORAGE_URL =
   'https://vhzgasepkcdhnpcinntb.supabase.co/storage/v1/object/public/products/site-config.json'
-
-export function useSiteConfig(): SiteConfig {
-  const [config, setConfig] = useState<SiteConfig>(DEFAULT_SITE_CONFIG)
-
-  useEffect(() => {
-    let isMounted = true
-    fetch(`${PUBLIC_SITE_CONFIG_STORAGE_URL}?t=${Date.now()}`)
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data) => {
-        if (isMounted && data) {
-          setConfig({ ...DEFAULT_SITE_CONFIG, ...data })
-        }
-      })
-      .catch(() => {})
-    return () => { isMounted = false }
-  }, [])
-
-  return config
-}

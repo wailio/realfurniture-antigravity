@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Facebook, Instagram, Youtube, Check, ArrowRight, MapPin, Phone, Mail } from 'lucide-react';
 import { TikTokIcon } from '@/components/icons';
-import { useSiteConfig } from '@/lib/site-config';
+import { useSiteConfig } from '@/lib/use-site-config';
 
 export function Footer() {
   const siteConfig = useSiteConfig();

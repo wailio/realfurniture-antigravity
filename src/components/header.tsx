@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { Phone, ChevronDown, Menu, X, Check, Instagram, Facebook, Youtube } from 'lucide-react';
 import { TikTokIcon } from '@/components/icons';
-import { useSiteConfig } from '@/lib/site-config';
+import { useSiteConfig } from '@/lib/use-site-config';
 
 interface HeaderProps {
   theme?: 'dark' | 'light';

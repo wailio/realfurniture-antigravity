@@ -20,7 +20,7 @@ import { CurvedProductShowcase } from '@/components/curved-product-showcase';
 import { DesignStories } from '@/components/design-stories';
 import { ReviewsSection } from '@/components/reviews-section';
 import { products, formatPrice } from '@/lib/products';
-import { useSiteConfig } from '@/lib/site-config';
+import { useSiteConfig } from '@/lib/use-site-config';
 
 export default function HomePage() {
   const siteConfig = useSiteConfig();

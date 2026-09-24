@@ -6,7 +6,7 @@ import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { LuxuryReveal } from '@/components/luxury-reveal';
 import { Phone, Mail, MapPin, Clock, MessageSquare, Check, ArrowRight, ArrowUpRight } from 'lucide-react';
-import { useSiteConfig } from '@/lib/site-config';
+import { useSiteConfig } from '@/lib/use-site-config';
 
 function ShowroomMap() {
   return (

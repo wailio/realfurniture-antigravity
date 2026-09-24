@@ -6,7 +6,7 @@ import { Footer } from '@/components/footer';
 import { LuxuryReveal } from '@/components/luxury-reveal';
 import { Award, Feather, Headset, Sparkles, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
-import { useSiteConfig } from '@/lib/site-config';
+import { useSiteConfig } from '@/lib/use-site-config';
 
 export default function AboutPage() {
   const siteConfig = useSiteConfig();
