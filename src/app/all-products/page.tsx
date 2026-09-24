@@ -52,19 +52,24 @@ function AllProductsContent() {
       .catch(() => {});
   }, []);
 
+  const initialScrollDone = React.useRef(false);
+
   useEffect(() => {
     const param = searchParams.get('category');
     if (param) {
       const resolved = resolveCategorySlug(param);
       setActiveCategory(resolved);
       
-      // Smooth scroll to the products filter tabs if coming directly from another section
-      setTimeout(() => {
-        const target = document.getElementById('products-filter-section');
-        if (target) {
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      }, 120);
+      // Smooth scroll to the products filter tabs only on initial landing from external link
+      if (!initialScrollDone.current) {
+        initialScrollDone.current = true;
+        setTimeout(() => {
+          const target = document.getElementById('products-filter-section');
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }, 150);
+      }
     }
   }, [searchParams]);
 
@@ -107,8 +112,15 @@ function AllProductsContent() {
               const isActive = activeCategory === cat.slug;
               return (
                 <button
+                  type="button"
                   key={cat.slug}
-                  onClick={() => setActiveCategory(cat.slug)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setActiveCategory(cat.slug);
+                    try {
+                      window.history.replaceState(null, '', cat.slug === 'all' ? '/all-products' : `/all-products?category=${cat.slug}`);
+                    } catch {}
+                  }}
                   className={`interactive-tap px-5 py-2.5 rounded-sm font-sora text-xs uppercase tracking-wider transition-all duration-200 whitespace-nowrap cursor-pointer ${
                     isActive
                       ? 'bg-[#b68d40] text-white font-bold shadow-md'

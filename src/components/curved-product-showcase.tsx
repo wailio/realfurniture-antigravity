@@ -212,6 +212,7 @@ export function CurvedProductShowcase() {
             <Link
               key={cat.slug}
               href={`/all-products?category=${cat.slug}`}
+              scroll={false}
               style={cardStyle}
               onMouseEnter={() => setHoveredSlot(slotIdx)}
               onMouseLeave={() => setHoveredSlot(null)}

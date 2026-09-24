@@ -2,7 +2,7 @@
 
 export const runtime = 'edge'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import {
   Plus,
   Search,
@@ -19,6 +19,9 @@ import {
   Sparkles,
   Layers,
   RefreshCw,
+  UploadCloud,
+  ImagePlus,
+  CheckCircle2,
 } from 'lucide-react'
 
 interface Product {
@@ -116,15 +119,14 @@ export default function AdminProductsPage() {
   const [saveMsg, setSaveMsg] = useState('')
   const [deletingId, setDeletingId] = useState<string | null>(null)
   const [hoveredFileIndex, setHoveredFileIndex] = useState<number | null>(null)
+  const [uploading, setUploading] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const fetchProducts = useCallback(async () => {
     setLoading(true)
     setError('')
     try {
-      const url = filter === 'all'
-        ? '/api/admin/products'
-        : `/api/admin/products?category=${filter}`
-      const res = await fetch(url)
+      const res = await fetch('/api/admin/products')
       if (!res.ok) throw new Error('Erreur réseau')
       const data = await res.json()
       setProducts(Array.isArray(data) ? data : [])
@@ -134,9 +136,52 @@ export default function AdminProductsPage() {
     } finally {
       setLoading(false)
     }
-  }, [filter])
+  }, [])
 
   useEffect(() => { fetchProducts() }, [fetchProducts])
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files
+    if (!files || files.length === 0) return
+
+    setUploading(true)
+    try {
+      const uploadedUrls: string[] = []
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i]
+        const fd = new FormData()
+        fd.append('file', file)
+
+        const res = await fetch('/api/admin/upload', {
+          method: 'POST',
+          body: fd,
+        })
+
+        if (!res.ok) {
+          const err = await res.json()
+          throw new Error(err.error || 'Erreur lors du téléversement')
+        }
+
+        const data = await res.json()
+        if (data.url) {
+          uploadedUrls.push(data.url)
+        }
+      }
+
+      setForm(prev => {
+        const currentValid = prev.images.filter(Boolean)
+        return {
+          ...prev,
+          images: [...currentValid, ...uploadedUrls],
+        }
+      })
+    } catch (err: any) {
+      alert(err.message || 'Erreur lors du téléversement de la photo')
+    } finally {
+      setUploading(false)
+      if (fileInputRef.current) fileInputRef.current.value = ''
+    }
+  }
 
   // 1-Click Catalog Seeder for initial launch
   const handleSeed = async () => {
@@ -236,9 +281,11 @@ export default function AdminProductsPage() {
     }
   }
 
-  const filteredProducts = products.filter(p =>
-    search === '' || p.name.toLowerCase().includes(search.toLowerCase())
-  )
+  const filteredProducts = products.filter(p => {
+    const matchesCat = filter === 'all' || p.category === filter
+    const matchesSearch = search === '' || p.name.toLowerCase().includes(search.toLowerCase())
+    return matchesCat && matchesSearch
+  })
 
   const canNextStep = () => {
     if (step === 0) return form.name.trim().length > 0 && form.price.trim().length > 0
@@ -287,6 +334,7 @@ export default function AdminProductsPage() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           {products.length === 0 && (
             <button
+              type="button"
               onClick={handleSeed}
               disabled={seeding}
               style={{
@@ -311,6 +359,7 @@ export default function AdminProductsPage() {
           )}
 
           <button
+            type="button"
             onClick={openAdd}
             style={{
               display: 'flex',
@@ -389,7 +438,11 @@ export default function AdminProductsPage() {
                 return (
                   <div
                     key={i}
-                    onClick={() => setFilter(file.category)}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setFilter(file.category);
+                    }}
                     onMouseEnter={() => setHoveredFileIndex(i)}
                     onMouseLeave={() => setHoveredFileIndex(null)}
                     style={{
@@ -532,8 +585,13 @@ export default function AdminProductsPage() {
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
             {CATEGORIES.map(cat => (
               <button
+                type="button"
                 key={cat.value}
-                onClick={() => setFilter(cat.value)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setFilter(cat.value);
+                }}
                 style={{
                   padding: '9px 18px',
                   borderRadius: 99,
@@ -837,7 +895,12 @@ export default function AdminProductsPage() {
 
                   <div style={{ display: 'flex', gap: 8, marginTop: 14 }}>
                     <button
-                      onClick={() => openEdit(product)}
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        openEdit(product);
+                      }}
                       style={{
                         flex: 1,
                         padding: '9px 0',
@@ -861,7 +924,12 @@ export default function AdminProductsPage() {
                     </button>
 
                     <button
-                      onClick={() => handleDelete(product.id)}
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleDelete(product.id);
+                      }}
                       disabled={deletingId === product.id}
                       style={{
                         padding: '9px 14px',
@@ -1108,102 +1176,217 @@ export default function AdminProductsPage() {
               {/* Step 2: Images */}
               {step === 2 && (
                 <div>
-                  <p style={{ fontSize: 13, color: '#A1A1AA', marginBottom: 16, lineHeight: 1.5 }}>
-                    Entrez les URLs des photos. La <strong style={{ color: '#d1aa5c' }}>première image</strong> est la couverture.
-                  </p>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                    {form.images.map((img, i) => (
-                      <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                        <div
-                          style={{
-                            width: 48,
-                            height: 48,
-                            borderRadius: 10,
-                            overflow: 'hidden',
-                            background: 'rgba(0,0,0,0.3)',
-                            border: '1px solid rgba(255, 255, 255, 0.08)',
-                            flexShrink: 0,
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            position: 'relative',
-                          }}
-                        >
-                          {img ? (
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img src={img} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                          ) : (
-                            <ImageIcon className="w-5 h-5" style={{ color: 'rgba(255,255,255,0.2)' }} />
-                          )}
-                          {i === 0 && (
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    onChange={handleFileUpload}
+                    style={{ display: 'none' }}
+                  />
+
+                  {/* Device File Upload Dropzone */}
+                  <div
+                    onClick={() => {
+                      if (!uploading) fileInputRef.current?.click()
+                    }}
+                    style={{
+                      border: '2px dashed #007AFF',
+                      background: 'rgba(0, 122, 255, 0.04)',
+                      borderRadius: 16,
+                      padding: '28px 20px',
+                      textAlign: 'center',
+                      cursor: uploading ? 'wait' : 'pointer',
+                      transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                      marginBottom: 20,
+                    }}
+                    onMouseEnter={e => (e.currentTarget.style.background = 'rgba(0, 122, 255, 0.08)')}
+                    onMouseLeave={e => (e.currentTarget.style.background = 'rgba(0, 122, 255, 0.04)')}
+                  >
+                    <div
+                      style={{
+                        width: 52,
+                        height: 52,
+                        borderRadius: 99,
+                        background: '#EBF5FF',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        margin: '0 auto 12px',
+                      }}
+                    >
+                      {uploading ? (
+                        <Loader2 className="w-6 h-6 animate-spin text-[#007AFF]" />
+                      ) : (
+                        <UploadCloud className="w-6 h-6 text-[#007AFF]" />
+                      )}
+                    </div>
+
+                    <p style={{ fontSize: 14.5, fontWeight: 600, color: '#111827' }}>
+                      {uploading ? 'Téléversement en cours sur Supabase...' : 'Importer depuis votre appareil'}
+                    </p>
+                    <p style={{ fontSize: 12.5, color: '#6B7280', marginTop: 4 }}>
+                      Sélectionnez une ou plusieurs photos (PNG, JPG, WEBP)
+                    </p>
+                    <button
+                      type="button"
+                      disabled={uploading}
+                      style={{
+                        marginTop: 14,
+                        padding: '8px 20px',
+                        borderRadius: 99,
+                        background: '#007AFF',
+                        color: '#FFFFFF',
+                        fontSize: 12.5,
+                        fontWeight: 600,
+                        border: 'none',
+                        cursor: 'pointer',
+                        boxShadow: '0 2px 8px rgba(0, 122, 255, 0.25)',
+                      }}
+                    >
+                      Choisir les photos
+                    </button>
+                  </div>
+
+                  {/* Uploaded Photos Gallery */}
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+                      <span style={{ fontSize: 12.5, fontWeight: 600, color: '#374151' }}>
+                        Photos du produit ({form.images.filter(Boolean).length})
+                      </span>
+                      {form.images.filter(Boolean).length > 0 && (
+                        <span style={{ fontSize: 11, color: '#6B7280' }}>
+                          La 1ère image est la couverture
+                        </span>
+                      )}
+                    </div>
+
+                    {form.images.filter(Boolean).length === 0 ? (
+                      <div
+                        style={{
+                          padding: '20px',
+                          borderRadius: 12,
+                          background: '#F9FAFB',
+                          border: '1px solid rgba(0, 0, 0, 0.05)',
+                          textAlign: 'center',
+                          color: '#9CA3AF',
+                          fontSize: 12.5,
+                        }}
+                      >
+                        Aucune photo importée. Cliquez sur le bouton ci-dessus pour importer depuis votre téléphone ou PC.
+                      </div>
+                    ) : (
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))', gap: 10 }}>
+                        {form.images.filter(Boolean).map((img, i) => (
+                          <div
+                            key={i}
+                            style={{
+                              position: 'relative',
+                              borderRadius: 12,
+                              overflow: 'hidden',
+                              border: i === 0 ? '2px solid #007AFF' : '1px solid rgba(0, 0, 0, 0.1)',
+                              aspectRatio: '1',
+                              background: '#F3F4F6',
+                              boxShadow: '0 2px 6px rgba(0,0,0,0.06)',
+                            }}
+                          >
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={img}
+                              alt=""
+                              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                            />
+
+                            {/* Cover Badge */}
+                            {i === 0 && (
+                              <div
+                                style={{
+                                  position: 'absolute',
+                                  top: 4,
+                                  left: 4,
+                                  background: '#007AFF',
+                                  color: '#FFFFFF',
+                                  borderRadius: 99,
+                                  padding: '2px 6px',
+                                  fontSize: 9,
+                                  fontWeight: 700,
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  gap: 2,
+                                  boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+                                }}
+                              >
+                                <Star className="w-2.5 h-2.5 fill-white text-white" />
+                                <span>Couverture</span>
+                              </div>
+                            )}
+
+                            {/* Action overlay */}
                             <div
                               style={{
                                 position: 'absolute',
-                                bottom: 2,
-                                right: 2,
-                                background: '#d1aa5c',
-                                borderRadius: 99,
-                                padding: '2px',
+                                bottom: 0,
+                                insetInline: 0,
+                                background: 'linear-gradient(to top, rgba(0,0,0,0.75), transparent)',
+                                padding: '4px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
                               }}
                             >
-                              <Star className="w-2.5 h-2.5" style={{ color: '#14120f' }} />
+                              {i !== 0 ? (
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    const valid = form.images.filter(Boolean)
+                                    const item = valid[i]
+                                    valid.splice(i, 1)
+                                    valid.unshift(item)
+                                    setForm(f => ({ ...f, images: valid }))
+                                  }}
+                                  title="Définir comme photo principale"
+                                  style={{
+                                    border: 'none',
+                                    background: 'rgba(255, 255, 255, 0.25)',
+                                    color: '#FFFFFF',
+                                    fontSize: 9.5,
+                                    fontWeight: 600,
+                                    borderRadius: 4,
+                                    padding: '2px 5px',
+                                    cursor: 'pointer',
+                                  }}
+                                >
+                                  ★ Principal
+                                </button>
+                              ) : <span />}
+
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const valid = form.images.filter(Boolean)
+                                  valid.splice(i, 1)
+                                  setForm(f => ({ ...f, images: valid.length ? valid : [''] }))
+                                }}
+                                title="Supprimer cette photo"
+                                style={{
+                                  border: 'none',
+                                  background: 'rgba(239, 68, 68, 0.85)',
+                                  color: '#FFFFFF',
+                                  borderRadius: 99,
+                                  width: 20,
+                                  height: 20,
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  cursor: 'pointer',
+                                }}
+                              >
+                                <X className="w-3 h-3" />
+                              </button>
                             </div>
-                          )}
-                        </div>
-                        <input
-                          type="text"
-                          value={img}
-                          onChange={e => {
-                            const newImgs = [...form.images]
-                            newImgs[i] = e.target.value
-                            setForm(f => ({ ...f, images: newImgs }))
-                          }}
-                          placeholder={i === 0 ? 'Ex: /products/salon/aa.jpg ou URL web' : `URL image ${i + 1}`}
-                          style={{ ...inputStyle, flex: 1 }}
-                        />
-                        {form.images.length > 1 && (
-                          <button
-                            type="button"
-                            onClick={() => {
-                              const newImgs = form.images.filter((_, ii) => ii !== i)
-                              setForm(f => ({ ...f, images: newImgs }))
-                            }}
-                            style={{
-                              padding: '8px',
-                              borderRadius: 8,
-                              border: 'none',
-                              background: 'rgba(239, 68, 68, 0.15)',
-                              color: '#f87171',
-                              cursor: 'pointer',
-                              display: 'flex',
-                            }}
-                          >
-                            <X className="w-4 h-4" />
-                          </button>
-                        )}
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                    {form.images.length < 10 && (
-                      <button
-                        type="button"
-                        onClick={() => setForm(f => ({ ...f, images: [...f.images, ''] }))}
-                        style={{
-                          padding: '10px',
-                          borderRadius: 10,
-                          border: '1.5px dashed rgba(255, 255, 255, 0.15)',
-                          background: 'rgba(255, 255, 255, 0.02)',
-                          color: '#A1A1AA',
-                          cursor: 'pointer',
-                          fontSize: 13,
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          gap: 6,
-                        }}
-                      >
-                        <Plus className="w-4 h-4 text-[#d1aa5c]" />
-                        Ajouter une photo
-                      </button>
                     )}
                   </div>
                 </div>
