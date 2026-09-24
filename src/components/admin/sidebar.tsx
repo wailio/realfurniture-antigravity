@@ -122,19 +122,41 @@ export default function AdminSidebar() {
                   key={item.href}
                   href={item.href}
                   title={collapsed ? item.label : undefined}
-                  className="flex items-center gap-3 transition-all duration-150 group"
+                  className="flex items-center gap-3 transition-all duration-200 group"
                   style={{
-                    padding: collapsed ? '9px 0' : '9px 20px',
+                    padding: collapsed ? '9px 0' : '9px 16px',
                     justifyContent: collapsed ? 'center' : 'flex-start',
-                    margin: '2px 8px',
+                    margin: '3px 10px',
                     borderRadius: 10,
-                    background: active ? 'rgba(255,255,255,0.07)' : 'transparent',
-                    color: active ? '#F2F1EF' : '#7C8089',
+                    border: active ? '1px solid rgba(255, 255, 255, 0.18)' : '1px solid transparent',
+                    background: active
+                      ? 'linear-gradient(145deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.04) 100%)'
+                      : 'transparent',
+                    color: active ? '#FFFFFF' : '#8E929B',
+                    boxShadow: active
+                      ? 'inset 0 1px 0 0 rgba(255, 255, 255, 0.12), 0 4px 12px rgba(0, 0, 0, 0.4)'
+                      : 'none',
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!active) {
+                      e.currentTarget.style.border = '1px solid rgba(255, 255, 255, 0.18)'
+                      e.currentTarget.style.background = 'linear-gradient(145deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%)'
+                      e.currentTarget.style.color = '#FFFFFF'
+                      e.currentTarget.style.boxShadow = 'inset 0 1px 0 0 rgba(255, 255, 255, 0.10), 0 4px 12px rgba(0, 0, 0, 0.3)'
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!active) {
+                      e.currentTarget.style.border = '1px solid transparent'
+                      e.currentTarget.style.background = 'transparent'
+                      e.currentTarget.style.color = '#8E929B'
+                      e.currentTarget.style.boxShadow = 'none'
+                    }
                   }}
                 >
                   <item.icon
                     className="shrink-0 transition-colors"
-                    style={{ width: 17, height: 17, color: active ? '#F2F1EF' : '#7C8089' }}
+                    style={{ width: 17, height: 17, color: active ? '#FFFFFF' : 'inherit' }}
                   />
                   {!collapsed && (
                     <span
@@ -142,17 +164,18 @@ export default function AdminSidebar() {
                         fontSize: 13.5,
                         fontWeight: active ? 500 : 400,
                         letterSpacing: '0.01em',
-                        color: active ? '#F2F1EF' : '#7C8089',
                         transition: 'color 0.15s',
                       }}
                     >
                       {item.label}
                     </span>
                   )}
-                  {active && !collapsed && (
+                  {!collapsed && (
                     <div
-                      className="ml-auto"
-                      style={{ width: 4, height: 4, borderRadius: 99, background: '#C7CBD1' }}
+                      className={`ml-auto transition-opacity duration-200 ${
+                        active ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+                      }`}
+                      style={{ width: 4, height: 4, borderRadius: 99, background: '#FFFFFF' }}
                     />
                   )}
                 </Link>

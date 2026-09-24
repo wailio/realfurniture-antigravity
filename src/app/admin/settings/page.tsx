@@ -70,13 +70,13 @@ export default function AdminSettingsPage() {
           <div
             key={i}
             style={{
-              background: 'linear-gradient(145deg, rgba(14,22,45,0.94) 0%, rgba(7,12,28,0.97) 50%, rgba(3,6,16,0.99) 100%)',
+              background: 'linear-gradient(145deg, rgba(8, 14, 28, 0.95) 0%, rgba(4, 7, 16, 0.98) 50%, rgba(2, 3, 8, 0.99) 100%)',
               backdropFilter: 'blur(28px)',
               WebkitBackdropFilter: 'blur(28px)',
               borderRadius: 18,
               padding: '20px 22px',
-              border: '1px solid rgba(255, 255, 255, 0.10)',
-              boxShadow: 'inset 0 1px 0 0 rgba(255,255,255,0.18), inset 0 0 0 1px rgba(255,255,255,0.04), 0 20px 45px -12px rgba(0,0,0,0.55), 0 8px 18px -4px rgba(2,6,23,0.35)',
+              border: '1px solid rgba(255, 255, 255, 0.09)',
+              boxShadow: 'inset 0 1px 0 0 rgba(255, 255, 255, 0.14), inset 0 0 20px 0 rgba(30, 58, 138, 0.12), 0 20px 45px -12px rgba(0, 0, 0, 0.70), 0 8px 18px -4px rgba(2, 6, 23, 0.50)',
               display: 'flex',
               alignItems: 'center',
               gap: 16,
@@ -121,103 +121,6 @@ export default function AdminSettingsPage() {
             </span>
           </div>
         ))}
-
-        {/* Supabase SQL */}
-        <div
-          style={{
-            marginTop: 24,
-            background: 'linear-gradient(145deg, rgba(14,22,45,0.94) 0%, rgba(7,12,28,0.97) 50%, rgba(3,6,16,0.99) 100%)',
-            backdropFilter: 'blur(28px)',
-            WebkitBackdropFilter: 'blur(28px)',
-            border: '1px solid rgba(255, 255, 255, 0.10)',
-            boxShadow: 'inset 0 1px 0 0 rgba(255,255,255,0.18), inset 0 0 0 1px rgba(255,255,255,0.04), 0 20px 45px -12px rgba(0,0,0,0.55), 0 8px 18px -4px rgba(2,6,23,0.35)',
-            borderRadius: 18,
-            padding: '22px 24px',
-            position: 'relative',
-            overflow: 'hidden',
-          }}
-        >
-          <p
-            style={{
-              fontSize: 13,
-              fontWeight: 600,
-              color: '#FFFFFF',
-              marginBottom: 4,
-              letterSpacing: '0.02em',
-            }}
-          >
-            Script SQL — Configuration Supabase
-          </p>
-          <p style={{ fontSize: 12, color: '#A1A1AA', marginBottom: 16 }}>
-            Copiez ce script dans Supabase → SQL Editor → Run
-          </p>
-          <pre
-            style={{
-              fontSize: 11,
-              color: '#D4D4D8',
-              lineHeight: 1.7,
-              overflowX: 'auto',
-              fontFamily: 'monospace',
-              whiteSpace: 'pre-wrap',
-            }}
-          >
-{`-- Products
-CREATE TABLE products (
-  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
-  name text NOT NULL,
-  slug text UNIQUE,
-  description text,
-  price numeric NOT NULL,
-  sale_price numeric,
-  category text NOT NULL,
-  images text[] DEFAULT '{}',
-  in_stock boolean DEFAULT true,
-  created_at timestamptz DEFAULT now()
-);
-
--- Messages (contact form)
-CREATE TABLE messages (
-  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
-  name text, email text, phone text,
-  subject text, message text, product text,
-  status text DEFAULT 'new',
-  created_at timestamptz DEFAULT now()
-);
-
--- Orders / Sales funnel
-CREATE TABLE orders (
-  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
-  customer_name text, phone text,
-  product_id uuid REFERENCES products(id),
-  amount numeric,
-  source_message_id uuid REFERENCES messages(id),
-  funnel_stage text DEFAULT 'cold',
-  notes text,
-  created_at timestamptz DEFAULT now()
-);
-
--- Page views
-CREATE TABLE page_views (
-  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
-  path text, referrer text,
-  visitor_id text,
-  created_at timestamptz DEFAULT now()
-);
-
--- RLS
-ALTER TABLE products ENABLE ROW LEVEL SECURITY;
-ALTER TABLE messages ENABLE ROW LEVEL SECURITY;
-ALTER TABLE orders ENABLE ROW LEVEL SECURITY;
-ALTER TABLE page_views ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "public_read_products" ON products
-  FOR SELECT USING (true);
-CREATE POLICY "public_insert_messages" ON messages
-  FOR INSERT WITH CHECK (true);
-CREATE POLICY "public_insert_page_views" ON page_views
-  FOR INSERT WITH CHECK (true);`}
-          </pre>
-        </div>
       </div>
     </div>
   )

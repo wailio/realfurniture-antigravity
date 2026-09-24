@@ -230,7 +230,7 @@ export default function AdminSalesPage() {
                           width: 40,
                           height: 40,
                           borderRadius: 99,
-                          background: 'linear-gradient(145deg, rgba(14,22,45,0.94) 0%, rgba(7,12,28,0.97) 50%, rgba(3,6,16,0.99) 100%)',
+                          background: 'linear-gradient(145deg, rgba(8, 14, 28, 0.95) 0%, rgba(4, 7, 16, 0.98) 50%, rgba(2, 3, 8, 0.99) 100%)',
                           border: `2.5px solid ${stage.dot}`,
                           display: 'flex',
                           alignItems: 'center',
@@ -285,13 +285,13 @@ export default function AdminSalesPage() {
                         <div
                           key={lead.id}
                           style={{
-                            background: 'linear-gradient(145deg, rgba(14,22,45,0.94) 0%, rgba(7,12,28,0.97) 50%, rgba(3,6,16,0.99) 100%)',
+                            background: 'linear-gradient(145deg, rgba(8, 14, 28, 0.95) 0%, rgba(4, 7, 16, 0.98) 50%, rgba(2, 3, 8, 0.99) 100%)',
                             backdropFilter: 'blur(28px)',
                             WebkitBackdropFilter: 'blur(28px)',
                             borderRadius: 16,
                             padding: '16px',
-                            border: '1px solid rgba(255, 255, 255, 0.10)',
-                            boxShadow: 'inset 0 1px 0 0 rgba(255,255,255,0.18), inset 0 0 0 1px rgba(255,255,255,0.04), 0 20px 45px -12px rgba(0,0,0,0.55), 0 8px 18px -4px rgba(2,6,23,0.35)',
+                            border: '1px solid rgba(255, 255, 255, 0.09)',
+                            boxShadow: 'inset 0 1px 0 0 rgba(255, 255, 255, 0.14), inset 0 0 20px 0 rgba(30, 58, 138, 0.12), 0 20px 45px -12px rgba(0, 0, 0, 0.70), 0 8px 18px -4px rgba(2, 6, 23, 0.50)',
                             transition: 'all 0.28s cubic-bezier(0.4,0,0.2,1)',
                           }}
                           className="hover:shadow-2xl hover:border-[#60a5fa]/40 hover:-translate-y-0.5"
@@ -541,12 +541,12 @@ export default function AdminSalesPage() {
                 style={{
                   textAlign: 'center',
                   padding: '60px 20px',
-                  background: 'linear-gradient(145deg, rgba(14,22,45,0.94) 0%, rgba(7,12,28,0.97) 50%, rgba(3,6,16,0.99) 100%)',
+                  background: 'linear-gradient(145deg, rgba(8, 14, 28, 0.95) 0%, rgba(4, 7, 16, 0.98) 50%, rgba(2, 3, 8, 0.99) 100%)',
                   backdropFilter: 'blur(28px)',
                   WebkitBackdropFilter: 'blur(28px)',
                   borderRadius: 20,
-                  border: '1px solid rgba(255, 255, 255, 0.10)',
-                  boxShadow: 'inset 0 1px 0 0 rgba(255,255,255,0.18), inset 0 0 0 1px rgba(255,255,255,0.04), 0 20px 45px -12px rgba(0,0,0,0.55), 0 8px 18px -4px rgba(2,6,23,0.35)',
+                  border: '1px solid rgba(255, 255, 255, 0.09)',
+                  boxShadow: 'inset 0 1px 0 0 rgba(255, 255, 255, 0.14), inset 0 0 20px 0 rgba(30, 58, 138, 0.12), 0 20px 45px -12px rgba(0, 0, 0, 0.70), 0 8px 18px -4px rgba(2, 6, 23, 0.50)',
                   marginTop: 24,
                   position: 'relative',
                   overflow: 'hidden',

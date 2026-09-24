@@ -366,12 +366,12 @@ export default function AdminProductsPage() {
               display: 'flex',
               alignItems: 'center',
               padding: '24px 20px',
-              background: 'linear-gradient(145deg, rgba(14, 22, 45, 0.94) 0%, rgba(7, 12, 28, 0.97) 50%, rgba(3, 6, 16, 0.99) 100%)',
+              background: 'linear-gradient(145deg, rgba(8, 14, 28, 0.95) 0%, rgba(4, 7, 16, 0.98) 50%, rgba(2, 3, 8, 0.99) 100%)',
               backdropFilter: 'blur(28px)',
               WebkitBackdropFilter: 'blur(28px)',
               borderRadius: 20,
-              border: '1px solid rgba(255, 255, 255, 0.10)',
-              boxShadow: 'inset 0 1px 0 0 rgba(255, 255, 255, 0.18), inset 0 0 0 1px rgba(255, 255, 255, 0.04), 0 20px 45px -12px rgba(0, 0, 0, 0.55), 0 8px 18px -4px rgba(2, 6, 23, 0.35)',
+              border: '1px solid rgba(255, 255, 255, 0.09)',
+              boxShadow: 'inset 0 1px 0 0 rgba(255, 255, 255, 0.14), inset 0 0 20px 0 rgba(30, 58, 138, 0.12), 0 20px 45px -12px rgba(0, 0, 0, 0.70), 0 8px 18px -4px rgba(2, 6, 23, 0.50)',
               overflowX: 'auto',
               minHeight: 220,
             }}
@@ -504,15 +504,15 @@ export default function AdminProductsPage() {
               display: 'flex',
               alignItems: 'center',
               gap: 8,
-              background: 'linear-gradient(145deg, rgba(14, 22, 45, 0.92) 0%, rgba(6, 10, 24, 0.97) 100%)',
+              background: 'linear-gradient(145deg, rgba(8, 14, 28, 0.95) 0%, rgba(4, 7, 16, 0.98) 100%)',
               backdropFilter: 'blur(20px)',
               WebkitBackdropFilter: 'blur(20px)',
               borderRadius: 14,
               padding: '10px 16px',
-              border: '1px solid rgba(255, 255, 255, 0.10)',
+              border: '1px solid rgba(255, 255, 255, 0.09)',
               flex: 1,
               maxWidth: 340,
-              boxShadow: 'inset 0 1px 0 0 rgba(255, 255, 255, 0.16), 0 6px 18px -2px rgba(0, 0, 0, 0.35)',
+              boxShadow: 'inset 0 1px 0 0 rgba(255, 255, 255, 0.14), inset 0 0 14px 0 rgba(30, 58, 138, 0.10), 0 6px 18px -2px rgba(0, 0, 0, 0.45)',
             }}
           >
             <Search className="w-4 h-4 text-[#d1aa5c] shrink-0" />
@@ -543,16 +543,16 @@ export default function AdminProductsPage() {
                   borderRadius: 99,
                   fontSize: 12.5,
                   fontWeight: 600,
-                  border: filter === cat.value ? 'none' : '1px solid rgba(255, 255, 255, 0.10)',
+                  border: filter === cat.value ? 'none' : '1px solid rgba(255, 255, 255, 0.09)',
                   cursor: 'pointer',
                   transition: 'all 0.2s ease',
-                  background: filter === cat.value ? 'linear-gradient(135deg, #d1aa5c 0%, #b89347 100%)' : 'linear-gradient(145deg, rgba(14, 22, 45, 0.90) 0%, rgba(6, 10, 24, 0.96) 100%)',
+                  background: filter === cat.value ? 'linear-gradient(135deg, #d1aa5c 0%, #b89347 100%)' : 'linear-gradient(145deg, rgba(8, 14, 28, 0.95) 0%, rgba(3, 6, 14, 0.98) 100%)',
                   backdropFilter: 'blur(20px)',
                   WebkitBackdropFilter: 'blur(20px)',
                   color: filter === cat.value ? '#0A0B0C' : '#D4D4D8',
                   boxShadow: filter === cat.value
                     ? '0 4px 14px rgba(209, 170, 92, 0.3)'
-                    : 'inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 4px 12px rgba(0,0,0,0.25)',
+                    : 'inset 0 1px 0 rgba(255, 255, 255, 0.12), inset 0 0 12px 0 rgba(30, 58, 138, 0.08), 0 4px 12px rgba(0,0,0,0.35)',
                 }}
               >
                 {cat.label}
@@ -612,12 +612,12 @@ export default function AdminProductsPage() {
             style={{
               textAlign: 'center',
               padding: '70px 24px',
-              background: 'linear-gradient(145deg, rgba(14,22,45,0.94) 0%, rgba(7,12,28,0.97) 50%, rgba(3,6,16,0.99) 100%)',
+              background: 'linear-gradient(145deg, rgba(8, 14, 28, 0.95) 0%, rgba(4, 7, 16, 0.98) 50%, rgba(2, 3, 8, 0.99) 100%)',
               backdropFilter: 'blur(28px)',
               WebkitBackdropFilter: 'blur(28px)',
               borderRadius: 20,
-              border: '1px solid rgba(255, 255, 255, 0.10)',
-              boxShadow: 'inset 0 1px 0 0 rgba(255,255,255,0.18), inset 0 0 0 1px rgba(255,255,255,0.04), 0 20px 45px -12px rgba(0,0,0,0.55), 0 8px 18px -4px rgba(2,6,23,0.35)',
+              border: '1px solid rgba(255, 255, 255, 0.09)',
+              boxShadow: 'inset 0 1px 0 0 rgba(255, 255, 255, 0.14), inset 0 0 20px 0 rgba(30, 58, 138, 0.12), 0 20px 45px -12px rgba(0, 0, 0, 0.70), 0 8px 18px -4px rgba(2, 6, 23, 0.50)',
               position: 'relative',
               overflow: 'hidden',
             }}
@@ -703,13 +703,13 @@ export default function AdminProductsPage() {
               <div
                 key={product.id}
                 style={{
-                  background: 'linear-gradient(145deg, rgba(14,22,45,0.94) 0%, rgba(7,12,28,0.97) 50%, rgba(3,6,16,0.99) 100%)',
+                  background: 'linear-gradient(145deg, rgba(8, 14, 28, 0.95) 0%, rgba(4, 7, 16, 0.98) 50%, rgba(2, 3, 8, 0.99) 100%)',
                   backdropFilter: 'blur(28px)',
                   WebkitBackdropFilter: 'blur(28px)',
                   borderRadius: 18,
                   overflow: 'hidden',
-                  border: '1px solid rgba(255, 255, 255, 0.10)',
-                  boxShadow: 'inset 0 1px 0 0 rgba(255,255,255,0.18), inset 0 0 0 1px rgba(255,255,255,0.04), 0 20px 45px -12px rgba(0,0,0,0.55), 0 8px 18px -4px rgba(2,6,23,0.35)',
+                  border: '1px solid rgba(255, 255, 255, 0.09)',
+                  boxShadow: 'inset 0 1px 0 0 rgba(255, 255, 255, 0.14), inset 0 0 20px 0 rgba(30, 58, 138, 0.12), 0 20px 45px -12px rgba(0, 0, 0, 0.70), 0 8px 18px -4px rgba(2, 6, 23, 0.50)',
                   transition: 'all 0.28s cubic-bezier(0.4,0,0.2,1)',
                   position: 'relative',
                 }}
@@ -917,14 +917,14 @@ export default function AdminProductsPage() {
         >
           <div
             style={{
-              background: 'linear-gradient(145deg, rgba(14,22,45,0.97) 0%, rgba(7,12,28,0.99) 50%, rgba(3,6,16,1.0) 100%)',
+              background: 'linear-gradient(145deg, rgba(8, 14, 28, 0.98) 0%, rgba(3, 6, 14, 0.99) 50%, rgba(1, 2, 6, 1.0) 100%)',
               backdropFilter: 'blur(32px)',
               WebkitBackdropFilter: 'blur(32px)',
               borderRadius: 20,
               width: '100%',
               maxWidth: 560,
-              border: '1px solid rgba(255, 255, 255, 0.12)',
-              boxShadow: 'inset 0 1px 0 0 rgba(255,255,255,0.18), inset 0 0 0 1px rgba(255,255,255,0.04), 0 28px 80px -8px rgba(0,0,0,0.75), 0 16px 40px -8px rgba(2,6,23,0.5)',
+              border: '1px solid rgba(255, 255, 255, 0.10)',
+              boxShadow: 'inset 0 1px 0 0 rgba(255,255,255,0.16), inset 0 0 24px 0 rgba(30, 58, 138, 0.12), 0 28px 80px -8px rgba(0,0,0,0.85), 0 16px 40px -8px rgba(2,6,23,0.6)',
               overflow: 'hidden',
             }}
           >

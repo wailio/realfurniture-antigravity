@@ -182,13 +182,13 @@ export default function AdminOrdersPage() {
                 fontWeight: 600,
                 border: filterStatus === tab.value ? 'none' : '1px solid rgba(255, 255, 255, 0.09)',
                 cursor: 'pointer',
-                background: filterStatus === tab.value ? 'linear-gradient(135deg, #d1aa5c 0%, #b89347 100%)' : 'linear-gradient(145deg, rgba(14,22,45,0.94) 0%, rgba(7,12,28,0.97) 50%, rgba(3,6,16,0.99) 100%)',
+                background: filterStatus === tab.value ? 'linear-gradient(135deg, #d1aa5c 0%, #b89347 100%)' : 'linear-gradient(145deg, rgba(8, 14, 28, 0.95) 0%, rgba(4, 7, 16, 0.98) 100%)',
                 backdropFilter: filterStatus === tab.value ? 'none' : 'blur(28px)',
                 WebkitBackdropFilter: filterStatus === tab.value ? 'none' : 'blur(28px)',
                 color: filterStatus === tab.value ? '#14120f' : '#D4D4D8',
                 boxShadow: filterStatus === tab.value
                   ? '0 4px 14px rgba(209, 170, 92, 0.3)'
-                  : '0 4px 12px rgba(0,0,0,0.2)',
+                  : 'inset 0 1px 0 rgba(255, 255, 255, 0.12), inset 0 0 12px 0 rgba(30, 58, 138, 0.08), 0 4px 12px rgba(0,0,0,0.3)',
                 transition: 'all 0.15s ease',
               }}
             >
@@ -228,12 +228,12 @@ export default function AdminOrdersPage() {
             style={{
               textAlign: 'center',
               padding: '80px 20px',
-              background: 'linear-gradient(145deg, rgba(14,22,45,0.94) 0%, rgba(7,12,28,0.97) 50%, rgba(3,6,16,0.99) 100%)',
+              background: 'linear-gradient(145deg, rgba(8, 14, 28, 0.95) 0%, rgba(4, 7, 16, 0.98) 50%, rgba(2, 3, 8, 0.99) 100%)',
               backdropFilter: 'blur(28px)',
               WebkitBackdropFilter: 'blur(28px)',
               borderRadius: 20,
-              border: '1px solid rgba(255, 255, 255, 0.10)',
-              boxShadow: 'inset 0 1px 0 0 rgba(255,255,255,0.18), inset 0 0 0 1px rgba(255,255,255,0.04), 0 20px 45px -12px rgba(0,0,0,0.55), 0 8px 18px -4px rgba(2,6,23,0.35)',
+              border: '1px solid rgba(255, 255, 255, 0.09)',
+              boxShadow: 'inset 0 1px 0 0 rgba(255, 255, 255, 0.14), inset 0 0 20px 0 rgba(30, 58, 138, 0.12), 0 20px 45px -12px rgba(0, 0, 0, 0.70), 0 8px 18px -4px rgba(2, 6, 23, 0.50)',
               position: 'relative',
               overflow: 'hidden',
             }}
@@ -252,12 +252,12 @@ export default function AdminOrdersPage() {
                 <div
                   key={order.id}
                   style={{
-                    background: 'linear-gradient(145deg, rgba(14,22,45,0.94) 0%, rgba(7,12,28,0.97) 50%, rgba(3,6,16,0.99) 100%)',
+                    background: 'linear-gradient(145deg, rgba(8, 14, 28, 0.95) 0%, rgba(4, 7, 16, 0.98) 50%, rgba(2, 3, 8, 0.99) 100%)',
                     backdropFilter: 'blur(28px)',
                     WebkitBackdropFilter: 'blur(28px)',
                     borderRadius: 18,
-                    border: order.status === 'new' ? '1px solid rgba(209, 170, 92, 0.45)' : '1px solid rgba(255, 255, 255, 0.10)',
-                    boxShadow: 'inset 0 1px 0 0 rgba(255,255,255,0.18), inset 0 0 0 1px rgba(255,255,255,0.04), 0 20px 45px -12px rgba(0,0,0,0.55), 0 8px 18px -4px rgba(2,6,23,0.35)',
+                    border: order.status === 'new' ? '1px solid rgba(209, 170, 92, 0.45)' : '1px solid rgba(255, 255, 255, 0.09)',
+                    boxShadow: 'inset 0 1px 0 0 rgba(255, 255, 255, 0.14), inset 0 0 20px 0 rgba(30, 58, 138, 0.12), 0 20px 45px -12px rgba(0, 0, 0, 0.70), 0 8px 18px -4px rgba(2, 6, 23, 0.50)',
                     padding: '20px 24px',
                     display: 'flex',
                     alignItems: 'flex-start',
