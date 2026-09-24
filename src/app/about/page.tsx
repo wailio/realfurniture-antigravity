@@ -1,11 +1,16 @@
+'use client';
+
 import React from 'react';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { LuxuryReveal } from '@/components/luxury-reveal';
 import { Award, Feather, Headset, Sparkles, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
+import { useSiteConfig } from '@/lib/site-config';
 
 export default function AboutPage() {
+  const siteConfig = useSiteConfig();
+
   return (
     <main className="min-h-screen bg-[#0E0F10]">
       <Header theme="dark" />
@@ -18,7 +23,7 @@ export default function AboutPage() {
             <span>Maison de Haute Création</span>
           </div>
           <h1 className="font-fraunces font-light text-3xl md:text-6xl lg:text-7xl text-white tracking-tight mb-4 md:mb-6">
-            À Propos de Château d&apos;art
+            {siteConfig.about_tagline || "À Propos de Château d'art"}
           </h1>
           <div className="flex justify-center w-full mb-8">
             <svg width="200" height="2" viewBox="0 0 200 2" fill="none" xmlns="http://www.w3.org/2000/svg" className="heading-underline">
@@ -26,7 +31,7 @@ export default function AboutPage() {
             </svg>
           </div>
           <p className="text-[#D1D5DB] font-sora text-sm md:text-xl max-w-2xl mx-auto leading-relaxed">
-            Redéfinir le luxe d&apos;intérieur à travers des pièces sculpturales, conçues pour transcender les modes et magnifier le quotidien.
+            {siteConfig.about_philosophie || "Redéfinir le luxe d'intérieur à travers des pièces sculpturales, conçues pour transcender les modes et magnifier le quotidien."}
           </p>
         </LuxuryReveal>
       </section>
@@ -43,7 +48,7 @@ export default function AboutPage() {
                 L&apos;Art de Vivre Réinventé
               </h2>
               <p className="font-sora text-[#B7BBC0] text-xs md:text-base leading-relaxed">
-                Chez <strong className="text-white">Château d&apos;art</strong>, nous concevons le mobilier comme l&apos;âme d&apos;un espace intérieur. Chaque pièce est pensée comme une composition architecturale alliant confort absolu, durabilité des matériaux et pureté esthétique.
+                {siteConfig.about_philosophie || "Chez Château d'art, nous concevons le mobilier comme l'âme d'un espace intérieur. Chaque pièce est pensée comme une composition architecturale alliant confort absolu, durabilité des matériaux et pureté esthétique."}
               </p>
               <p className="font-sora text-[#B7BBC0] text-xs md:text-base leading-relaxed">
                 Du bois massif séché aux velours et bouclettes haut de gamme, nos maîtres ébénistes et tapissiers façonnent chaque modèle avec un soin minutieux. Nous refusons l&apos;uniformité pour privilégier l&apos;émotion et la personnalisation.
@@ -81,10 +86,12 @@ export default function AboutPage() {
                 <div className="w-11 h-11 md:w-14 md:h-14 border border-[#b68d40]/30 rounded-full flex items-center justify-center mb-4 md:mb-6 bg-[#b68d40]/10">
                   <Award className="w-5 h-5 md:w-7 md:h-7 text-[#b68d40]" />
                 </div>
-                <h3 className="font-fraunces text-lg md:text-2xl text-white mb-2 md:mb-3 font-light">Excellence</h3>
+                <h3 className="font-fraunces text-lg md:text-2xl text-white mb-2 md:mb-3 font-light">
+                  {siteConfig.valeur_1_title || "Excellence"}
+                </h3>
                 <div className="w-10 h-[1px] bg-[#b68d40] mb-3 md:mb-4"></div>
                 <p className="font-sora text-[#A1A1AA] text-xs md:text-sm leading-relaxed">
-                  Sélection intransigeante des essences de bois, des aciers laqués et des tissus anti-taches haute résistance.
+                  {siteConfig.valeur_1_text || "Sélection intransigeante des essences de bois, des aciers laqués et des tissus anti-taches haute résistance."}
                 </p>
               </div>
             </LuxuryReveal>
@@ -94,10 +101,12 @@ export default function AboutPage() {
                 <div className="w-11 h-11 md:w-14 md:h-14 border border-[#b68d40]/30 rounded-full flex items-center justify-center mb-4 md:mb-6 bg-[#b68d40]/10">
                   <Feather className="w-5 h-5 md:w-7 md:h-7 text-[#b68d40]" />
                 </div>
-                <h3 className="font-fraunces text-lg md:text-2xl text-white mb-2 md:mb-3 font-light">Intemporalité</h3>
+                <h3 className="font-fraunces text-lg md:text-2xl text-white mb-2 md:mb-3 font-light">
+                  {siteConfig.valeur_2_title || "Authenticité"}
+                </h3>
                 <div className="w-10 h-[1px] bg-[#b68d40] mb-3 md:mb-4"></div>
                 <p className="font-sora text-[#A1A1AA] text-xs md:text-sm leading-relaxed">
-                  Des lignes sobres et épurées qui défient les tendances éphémères pour s&apos;épanouir durablement chez vous.
+                  {siteConfig.valeur_2_text || "Des lignes sobres et épurées qui défient les tendances éphémères pour s'épanouir durablement chez vous."}
                 </p>
               </div>
             </LuxuryReveal>
@@ -107,10 +116,12 @@ export default function AboutPage() {
                 <div className="w-11 h-11 md:w-14 md:h-14 border border-[#b68d40]/30 rounded-full flex items-center justify-center mb-4 md:mb-6 bg-[#b68d40]/10">
                   <Headset className="w-5 h-5 md:w-7 md:h-7 text-[#b68d40]" />
                 </div>
-                <h3 className="font-fraunces text-lg md:text-2xl text-white mb-2 md:mb-3 font-light">Service Dédié</h3>
+                <h3 className="font-fraunces text-lg md:text-2xl text-white mb-2 md:mb-3 font-light">
+                  {siteConfig.valeur_3_title || "Service Client"}
+                </h3>
                 <div className="w-10 h-[1px] bg-[#b68d40] mb-3 md:mb-4"></div>
                 <p className="font-sora text-[#A1A1AA] text-xs md:text-sm leading-relaxed">
-                  Accompagnement personnalisé, livraison et montage soigné partout en Algérie pour une tranquillité d&apos;esprit totale.
+                  {siteConfig.valeur_3_text || "Accompagnement personnalisé, livraison et montage soigné partout en Algérie pour une tranquillité d'esprit totale."}
                 </p>
               </div>
             </LuxuryReveal>
@@ -124,7 +135,7 @@ export default function AboutPage() {
           <LuxuryReveal variant="left">
             <div className="relative aspect-[4/3] w-full border border-white/10 overflow-hidden shadow-2xl rounded-2xl group">
               <img
-                src="/images/acbd.jpg"
+                src={siteConfig.about_image || "/images/acbd.jpg"}
                 alt="Showroom Château d'art - Façade"
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
@@ -141,46 +152,48 @@ export default function AboutPage() {
                 Notre Histoire
               </h2>
               <p className="font-sora text-[#B7BBC0] text-xs md:text-base leading-relaxed">
-                Née de l&apos;amour des belles matières et du design sculptural, <strong className="text-white">Château d&apos;art</strong> s&apos;est développée avec une conviction claire: offrir des meubles d&apos;un raffinement international tout en restant proche des besoins de nos clients.
+                {siteConfig.about_histoire || "Née de l'amour des belles matières et du design sculptural, Château d'art s'est développée avec une conviction claire: offrir des meubles d'un raffinement international tout en restant proche des besoins de nos clients."}
               </p>
-              <p className="font-sora text-[#B7BBC0] text-xs md:text-base leading-relaxed">
-                Nous avons continuellement perfectionné nos processus, sélectionné des partenaires de premier ordre et développé un réseau de livraison couvrant l&apos;ensemble du territoire national.
-              </p>
-              <p className="font-sora text-[#B7BBC0] text-xs md:text-base leading-relaxed">
-                Aujourd&apos;hui, Château d&apos;art habille salons, chambres et réceptions d&apos;hôtels avec une élégance intemporelle, où le graphite mat et les touches d&apos;or célèbrent l&apos;harmonie.
-              </p>
+              {siteConfig.about_histoire_2 && (
+                <p className="font-sora text-[#B7BBC0] text-xs md:text-base leading-relaxed">
+                  {siteConfig.about_histoire_2}
+                </p>
+              )}
+              {siteConfig.about_histoire_3 && (
+                <p className="font-sora text-[#B7BBC0] text-xs md:text-base leading-relaxed">
+                  {siteConfig.about_histoire_3}
+                </p>
+              )}
             </div>
           </LuxuryReveal>
         </div>
       </section>
 
       {/* ── Section 5 - CTA ── */}
-      <section className="w-full py-14 md:py-36 bg-gradient-to-t from-[#141518] to-[#0E0F10] px-4 border-t border-white/10">
-        <div className="max-w-4xl mx-auto text-center space-y-6 md:space-y-8">
-          <LuxuryReveal>
-            <h2 className="font-fraunces text-2xl md:text-5xl lg:text-6xl text-white font-light leading-tight">
-              Prêt à Sublimer Votre Espace ?
-            </h2>
-            <p className="font-sora text-[#A1A1AA] text-xs md:text-base max-w-xl mx-auto mt-3 md:mt-4">
-              Explorez nos pièces en ligne ou échangez avec notre équipe pour concrétiser votre vision.
-            </p>
-            <div className="flex flex-col sm:flex-row justify-center gap-3 md:gap-4 pt-5 md:pt-6">
-              <Link
-                href="/all-products"
-                className="interactive-tap inline-flex items-center justify-center gap-2 px-6 md:px-8 py-3.5 md:py-4 bg-[#b68d40] hover:bg-[#a37c35] text-white font-sora text-xs font-bold uppercase tracking-wider transition-all duration-300 shadow-xl"
-              >
-                <span>Découvrir les collections</span>
-                <ArrowRight size={14} />
-              </Link>
-              <Link
-                href="/contact"
-                className="interactive-tap inline-flex items-center justify-center px-6 md:px-8 py-3.5 md:py-4 border border-white/20 hover:border-white/50 bg-[#0E0F10] text-white font-sora text-xs font-medium uppercase tracking-wider transition-colors duration-300"
-              >
-                Nous contacter
-              </Link>
-            </div>
-          </LuxuryReveal>
-        </div>
+      <section className="w-full py-16 md:py-24 bg-gradient-to-b from-[#121316] to-[#0E0F10] border-t border-white/10 text-center px-4">
+        <LuxuryReveal>
+          <h2 className="font-fraunces text-2xl md:text-5xl text-white mb-6 font-light">
+            Donnez Vie à Vos Plus Beaux Projets
+          </h2>
+          <p className="font-sora text-[#A1A1AA] text-xs md:text-base max-w-xl mx-auto mb-8 leading-relaxed">
+            Visitez notre showroom ou contactez nos designers d&apos;intérieur pour une consultation sur mesure.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Link
+              href="/contact"
+              className="inline-flex items-center gap-2 bg-[#b68d40] hover:bg-[#a37c35] text-white px-8 py-4 text-xs font-bold uppercase tracking-[2px] transition-all duration-300 shadow-xl hover:scale-105"
+            >
+              <span>Prendre Rendez-vous</span>
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+            <Link
+              href="/all-products"
+              className="inline-flex items-center gap-2 border border-white/20 hover:border-white text-white px-8 py-4 text-xs font-medium uppercase tracking-[2px] transition-all duration-300 hover:bg-white/5"
+            >
+              <span>Voir le Catalogue</span>
+            </Link>
+          </div>
+        </LuxuryReveal>
       </section>
 
       <Footer />

@@ -20,8 +20,10 @@ import { CurvedProductShowcase } from '@/components/curved-product-showcase';
 import { DesignStories } from '@/components/design-stories';
 import { ReviewsSection } from '@/components/reviews-section';
 import { products, formatPrice } from '@/lib/products';
+import { useSiteConfig } from '@/lib/site-config';
 
 export default function HomePage() {
+  const siteConfig = useSiteConfig();
   const carouselRef = useRef<HTMLDivElement>(null);
 
   const scrollCarousel = (direction: 'left' | 'right') => {
@@ -41,27 +43,27 @@ export default function HomePage() {
 
   const reviews = [
     { 
-      name: 'Dr. Amina K.', 
+      name: siteConfig.review_1_name || 'Dr. Amina K.', 
       city: 'Alger',
-      text: 'La qualité des finitions et le confort du salon dépassent toutes mes attentes. Une véritable pièce maîtresse dans notre maison.',
+      text: siteConfig.review_1_text || 'La qualité des finitions et le confort du salon dépassent toutes mes attentes. Une véritable pièce maîtresse dans notre maison.',
       rating: 5 
     },
     { 
-      name: 'Yacine M.', 
+      name: siteConfig.review_2_name || 'Yacine M.', 
       city: 'Oran',
-      text: 'Livraison ponctuelle et montage très professionnel. Les matériaux en bois massif et les tissus sont d\'un raffinement rare.',
+      text: siteConfig.review_2_text || "Livraison ponctuelle et montage très professionnel. Les matériaux en bois massif et les tissus sont d'un raffinement rare.",
       rating: 5 
     },
     { 
-      name: 'Nadia & Farouk B.', 
+      name: siteConfig.review_3_name || 'Nadia & Farouk B.', 
       city: 'Constantine',
-      text: 'Nous avons meublé notre salle à manger et notre chambre complète. L\'accompagnement de l\'équipe a été exceptionnel du début à la fin.',
+      text: siteConfig.review_3_text || "Nous avons meublé notre salle à manger et notre chambre complète. L'accompagnement de l'équipe a été exceptionnel du début à la fin.",
       rating: 5 
     },
     { 
-      name: 'Karim S.', 
+      name: siteConfig.review_4_name || 'Karim S.', 
       city: 'Sétif',
-      text: 'Le design contemporain s\'intègre avec une élégance naturelle. Service client réactif et conseils avisés. Je recommande sans réserve.',
+      text: siteConfig.review_4_text || "Le design contemporain s'intègre avec une élégance naturelle. Service client réactif et conseils avisés. Je recommande sans réserve.",
       rating: 5 
     },
   ];
@@ -88,16 +90,24 @@ export default function HomePage() {
 
       {/* ── Section 1: Cinematic Hero with Video Background ── */}
       <section className="relative w-full h-[600px] md:h-[750px] lg:h-[880px] overflow-hidden flex items-center justify-center">
-        {/* Background Video */}
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover"
-        >
-          <source src="/bgvideo.mp4" type="video/mp4" />
-        </video>
+        {/* Background Video or Custom Image */}
+        {siteConfig.hero_image_1 ? (
+          <img
+            src={siteConfig.hero_image_1}
+            alt="Hero background"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        ) : (
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="absolute inset-0 w-full h-full object-cover"
+          >
+            <source src="/bgvideo.mp4" type="video/mp4" />
+          </video>
+        )}
 
         {/* Ambient Dark Overlay for Editorial Contrast */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#0E0F10]/70 via-[#0E0F10]/50 to-[#0E0F10] z-10 pointer-events-none" />
@@ -110,8 +120,7 @@ export default function HomePage() {
           >
             <span className="inline-flex items-center gap-2 border border-white/20 bg-black/40 backdrop-blur-md px-3 py-1 md:px-4 md:py-1.5 rounded-none text-[9px] md:text-[11px] font-sora text-[#E4E4E7] tracking-[3px] md:tracking-[4px] uppercase shadow-sm">
               <span className="w-1 h-1 md:w-1.5 md:h-1.5 bg-[#b68d40]" />
-              <span className="md:hidden">CHÂTEAU D&apos;ART</span>
-              <span className="hidden md:inline">CHÂTEAU D&apos;ART · MAISON DE DESIGN</span>
+              <span>{siteConfig.hero_eyebrow || "CHÂTEAU D'ART · MAISON DE DESIGN"}</span>
             </span>
           </div>
           
@@ -121,7 +130,7 @@ export default function HomePage() {
             style={{ animationDelay: '120ms', animationFillMode: 'both' }}
           >
             <span className="font-fraunces font-light text-xl md:text-3xl text-white/90">
-              L&apos;art du confort pour
+              {siteConfig.hero_subheading || "L'art du confort pour"}
             </span>
           </div>
 
@@ -131,7 +140,7 @@ export default function HomePage() {
             style={{ animationDelay: '200ms', animationFillMode: 'both' }}
           >
             <h1 className="font-fraunces font-light text-[clamp(2rem,8vw,5.8rem)] md:text-[clamp(2.8rem,9vw,5.8rem)] text-white leading-[1.08] tracking-tight">
-              espaces d&apos;exception
+              {siteConfig.hero_heading || "espaces d'exception"}
             </h1>
             <svg 
               viewBox="0 0 360 34" 
@@ -154,7 +163,7 @@ export default function HomePage() {
             style={{ animationDelay: '300ms', animationFillMode: 'both' }}
           >
             <p className="font-sora text-xs md:text-base text-white/80 leading-relaxed">
-              Matières nobles, proportions sculpturales et finitions artisanales pensées pour sublimer vos espaces de vie.
+              {siteConfig.hero_subtitle || "Matières nobles, proportions sculpturales et finitions artisanales pensées pour sublimer vos espaces de vie."}
             </p>
           </div>
 
@@ -175,7 +184,7 @@ export default function HomePage() {
               href="/contact" 
               className="inline-flex items-center justify-center gap-1.5 border border-white/20 hover:border-white/50 bg-black/30 backdrop-blur-xs text-white/90 hover:text-white px-4 py-2.5 md:px-8 md:py-4 uppercase tracking-[1.5px] md:tracking-[2.5px] text-[9px] md:text-xs font-medium transition-all duration-300"
             >
-              <span>Rendez-vous</span>
+              <span>{siteConfig.hero_cta || "Rendez-vous"}</span>
             </Link>
           </div>
         </div>
