@@ -40,11 +40,34 @@ interface Product {
 const CATEGORIES = [
   { value: 'all', label: 'Tous' },
   { value: 'sofas', label: 'Salons' },
-  { value: 'dining', label: 'Salles à manger' },
-  { value: 'bedroom', label: 'Chambres' },
-  { value: 'armoires', label: 'Armoires' },
+  { value: 'salle-a-manger', label: 'Salles à manger' },
+  { value: 'chambres', label: 'Chambres' },
+  { value: 'armoire', label: 'Armoires' },
   { value: 'accessories', label: 'Accessoires' },
 ]
+
+const CATEGORY_ALIASES: Record<string, string[]> = {
+  'sofas': ['sofas', 'sofa', 'salons', 'salon', 'canapes', 'canape'],
+  'salle-a-manger': ['salle-a-manger', 'salle', 'salles', 'dining', 'table', 'tables'],
+  'chambres': ['chambres', 'chambre', 'bedroom', 'lit', 'lits'],
+  'armoire': ['armoire', 'armoires', 'dressing', 'wardrobe'],
+  'accessories': ['accessories', 'accessoire', 'accessoires', 'deco', 'decoration'],
+}
+
+function matchCategory(productCat: string | undefined, filterVal: string): boolean {
+  if (filterVal === 'all') return true
+  const pNorm = (productCat || '').toLowerCase().trim()
+  const fNorm = filterVal.toLowerCase().trim()
+  if (!pNorm) return false
+  if (pNorm === fNorm) return true
+  for (const [canonical, aliases] of Object.entries(CATEGORY_ALIASES)) {
+    const isFilterMatch = canonical === fNorm || aliases.includes(fNorm)
+    if (isFilterMatch) {
+      if (canonical === pNorm || aliases.includes(pNorm)) return true
+    }
+  }
+  return false
+}
 
 // Authentic Château d'art collection files for the horizontal stacked deck
 const COLLECTION_FILES = [
@@ -57,21 +80,21 @@ const COLLECTION_FILES = [
   },
   {
     name: 'Salles à Manger',
-    category: 'dining',
+    category: 'salle-a-manger',
     tag: 'Salles à manger',
     image: '/products/salle/11.jpg',
     angle: -2,
   },
   {
     name: 'Suites & Chambres',
-    category: 'bedroom',
+    category: 'chambres',
     tag: 'Chambres',
     image: '/products/chambre/-1.jpg',
     angle: 0,
   },
   {
     name: 'Dressings & Armoires',
-    category: 'armoires',
+    category: 'armoire',
     tag: 'Armoires',
     image: '/products/armoire/ar1.jpg',
     angle: 3,
@@ -282,7 +305,7 @@ export default function AdminProductsPage() {
   }
 
   const filteredProducts = products.filter(p => {
-    const matchesCat = filter === 'all' || p.category === filter
+    const matchesCat = matchCategory(p.category, filter)
     const matchesSearch = search === '' || p.name.toLowerCase().includes(search.toLowerCase())
     return matchesCat && matchesSearch
   })
@@ -690,38 +713,66 @@ export default function AdminProductsPage() {
             </div>
 
             <p style={{ color: '#111827', fontSize: 17, fontWeight: 600 }}>
-              {search ? 'Aucun produit trouvé' : 'Le catalogue Supabase est prêt'}
+              {products.length === 0
+                ? 'Le catalogue Supabase est prêt'
+                : 'Aucun produit dans cette catégorie'}
             </p>
             <p style={{ color: '#6B7280', fontSize: 13, marginTop: 6, maxWidth: 440, margin: '6px auto 20px' }}>
-              {search
-                ? 'Essayez une autre recherche ou réinitialisez les filtres.'
-                : 'Votre base de données Supabase est connectée. Vous pouvez importer les 30 modèles de démonstration ou ajouter vos pièces sur-mesure.'}
+              {products.length === 0
+                ? 'Votre base de données Supabase est connectée. Vous pouvez importer les modèles de démonstration ou ajouter vos pièces sur-mesure.'
+                : search
+                ? 'Aucun modèle ne correspond à votre recherche.'
+                : 'Aucune pièce trouvée pour cette catégorie. Vous pouvez ajouter un produit ou réinitialiser le filtre.'}
             </p>
 
             <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-              <button
-                onClick={handleSeed}
-                disabled={seeding}
-                style={{
-                  padding: '11px 22px',
-                  background: 'linear-gradient(135deg, #d1aa5c 0%, #b89347 100%)',
-                  color: '#0A0B0C',
-                  borderRadius: 12,
-                  fontSize: 13,
-                  fontWeight: 600,
-                  border: 'none',
-                  cursor: seeding ? 'wait' : 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 8,
-                  boxShadow: '0 4px 14px rgba(209, 170, 92, 0.25)',
-                }}
-              >
-                {seeding ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
-                {seeding ? 'Importation...' : '✨ Importer les 30 modèles du catalogue'}
-              </button>
+              {products.length === 0 ? (
+                <button
+                  type="button"
+                  onClick={handleSeed}
+                  disabled={seeding}
+                  style={{
+                    padding: '11px 22px',
+                    background: 'linear-gradient(135deg, #d1aa5c 0%, #b89347 100%)',
+                    color: '#0A0B0C',
+                    borderRadius: 12,
+                    fontSize: 13,
+                    fontWeight: 600,
+                    border: 'none',
+                    cursor: seeding ? 'wait' : 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 8,
+                    boxShadow: '0 4px 14px rgba(209, 170, 92, 0.25)',
+                  }}
+                >
+                  {seeding ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+                  {seeding ? 'Importation...' : '✨ Importer les modèles du catalogue'}
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => { setFilter('all'); setSearch('') }}
+                  style={{
+                    padding: '11px 22px',
+                    background: '#111827',
+                    color: '#FFFFFF',
+                    borderRadius: 12,
+                    fontSize: 13,
+                    fontWeight: 600,
+                    border: 'none',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 8,
+                  }}
+                >
+                  Voir tous les produits ({products.length})
+                </button>
+              )}
 
               <button
+                type="button"
                 onClick={openAdd}
                 style={{
                   padding: '11px 22px',
