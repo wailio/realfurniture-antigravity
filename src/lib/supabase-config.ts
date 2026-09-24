@@ -8,12 +8,12 @@ export function getSupabaseConfig() {
   const envUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL
   const url = (envUrl && envUrl.trim() !== '') ? envUrl : DEFAULT_SUPABASE_URL
 
-  let key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  if (!key || key.trim() === '') {
+  let key = process.env.SUPABASE_SERVICE_ROLE_KEY
+  if (!key || key.trim() === '' || key.startsWith('sb_publishable_')) {
     try {
       key = typeof atob === 'function' ? atob(FALLBACK_ENC) : Buffer.from(FALLBACK_ENC, 'base64').toString('utf-8')
     } catch {
-      key = DEFAULT_SUPABASE_ANON_KEY
+      key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || DEFAULT_SUPABASE_ANON_KEY
     }
   }
 
