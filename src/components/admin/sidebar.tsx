@@ -1,9 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import {
   LayoutDashboard,
   Package,
@@ -55,7 +55,49 @@ const REST_STYLE = {
 
 export default function AdminSidebar() {
   const pathname = usePathname()
+  const router = useRouter()
   const [collapsed, setCollapsed] = useState(false)
+  const [loggingOut, setLoggingOut] = useState(false)
+  const [currentUser, setCurrentUser] = useState<{ username: string; role: string; displayName: string }>({
+    username: 'admin',
+    role: 'admin',
+    displayName: 'Admin',
+  })
+
+  useEffect(() => {
+    try {
+      const stored = sessionStorage.getItem('admin_user')
+      if (stored) {
+        setCurrentUser(JSON.parse(stored))
+      }
+    } catch {}
+
+    fetch('/api/admin/me')
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.authenticated && data.user) {
+          setCurrentUser(data.user)
+          try {
+            sessionStorage.setItem('admin_user', JSON.stringify(data.user))
+          } catch {}
+        }
+      })
+      .catch(() => {})
+  }, [])
+
+  async function handleLogout() {
+    setLoggingOut(true)
+    try {
+      await fetch('/api/admin/logout', { method: 'POST' })
+    } catch {}
+    if (typeof window !== 'undefined') {
+      try {
+        sessionStorage.removeItem('admin_auth')
+        sessionStorage.removeItem('admin_user')
+      } catch {}
+      window.location.href = '/admin/login'
+    }
+  }
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/')
 
@@ -261,29 +303,35 @@ export default function AdminSidebar() {
           }}
           onMouseEnter={(e) => applyHover(e.currentTarget as HTMLElement)}
           onMouseLeave={(e) => removeHover(e.currentTarget as HTMLElement, false)}
-          onClick={() => { window.location.href = '/admin' }}
+          onClick={handleLogout}
           title="Se déconnecter"
         >
           <div
             style={{
               width: 30, height: 30, borderRadius: 99, flexShrink: 0,
-              background: 'linear-gradient(135deg, #2A2B2E 0%, #1A1B1E 100%)',
-              border: '1px solid rgba(255,255,255,0.12)',
+              background: currentUser.role === 'developer'
+                ? 'linear-gradient(135deg, #1E293B 0%, #0F172A 100%)'
+                : 'linear-gradient(135deg, #2A2B2E 0%, #1A1B1E 100%)',
+              border: currentUser.role === 'developer'
+                ? '1px solid rgba(209, 170, 92, 0.35)'
+                : '1px solid rgba(255,255,255,0.12)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 12, color: '#C7CBD1', fontWeight: 600,
+              fontSize: 12, color: currentUser.role === 'developer' ? '#d1aa5c' : '#C7CBD1', fontWeight: 600,
             }}
           >
-            A
+            {currentUser.displayName ? currentUser.displayName.charAt(0).toUpperCase() : 'A'}
           </div>
           {!collapsed && (
             <>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.85)', fontWeight: 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                  Admin
+                <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.92)', fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {currentUser.displayName || 'Admin'}
                 </p>
-                <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', marginTop: 1 }}>Manager</p>
+                <p style={{ fontSize: 11, color: currentUser.role === 'developer' ? '#d1aa5c' : 'rgba(255,255,255,0.4)', marginTop: 1, fontWeight: 500 }}>
+                  {currentUser.role === 'developer' ? 'Développeur (Accès Total)' : 'Administrateur'}
+                </p>
               </div>
-              <LogOut style={{ width: 14, height: 14, color: 'rgba(255,255,255,0.3)', flexShrink: 0 }} />
+              <LogOut style={{ width: 14, height: 14, color: loggingOut ? '#f87171' : 'rgba(255,255,255,0.3)', flexShrink: 0, transition: 'color 0.2s' }} />
             </>
           )}
         </div>

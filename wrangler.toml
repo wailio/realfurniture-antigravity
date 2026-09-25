@@ -7,3 +7,7 @@ pages_build_output_dir = ".vercel/output/static"
 [vars]
 NEXT_PUBLIC_SUPABASE_URL = "https://vhzgasepkcdhnpcinntb.supabase.co"
 NEXT_PUBLIC_SUPABASE_ANON_KEY = "sb_publishable_Y8IDfShXEdIbvjYhQX6oUg_HN3GvT7h"
+AUTH_SALT = "chateau_art_tower_2026"
+SESSION_SECRET = "7f4a2c1b9e8d6f3a0b5c4d2e1f9a8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d3e2f1"
+WAILIO_PW_HASH = "2317b8a7ec208a462af2edeab15ff81479d9edb4ce5d6c16adf1d44e830c75e6"
+TOWERADMIN_PW_HASH = "4b578bed0a8bb6d67590d59b2c05835091c304aab14efccd86b36bd0cba881de"
