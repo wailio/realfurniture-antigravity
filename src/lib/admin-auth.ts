@@ -91,3 +91,10 @@ export async function verifySessionToken(token: string): Promise<SessionPayload 
     return null
   }
 }
+
+export async function requireAdminSession(request: { cookies: { get: (name: string) => { value?: string } | undefined } }): Promise<SessionPayload | null> {
+  const token = request.cookies.get(SESSION_COOKIE_NAME)?.value
+  if (!token) return null
+  return await verifySessionToken(token)
+}
+
