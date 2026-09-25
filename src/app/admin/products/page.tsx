@@ -384,7 +384,7 @@ export default function AdminProductsPage() {
                 background: 'rgba(255, 255, 255, 0.04)',
                 color: '#F2F1EF',
                 padding: '10px 18px',
-                borderRadius: 12,
+                borderRadius: 6,
                 fontSize: 13,
                 fontWeight: 500,
                 border: '1px solid rgba(255, 255, 255, 0.10)',
@@ -408,7 +408,7 @@ export default function AdminProductsPage() {
               background: 'linear-gradient(135deg, #d1aa5c 0%, #b89347 100%)',
               color: '#0A0B0C',
               padding: '11px 22px',
-              borderRadius: 12,
+              borderRadius: 6,
               fontSize: 13,
               fontWeight: 600,
               letterSpacing: '0.02em',
@@ -456,7 +456,7 @@ export default function AdminProductsPage() {
               alignItems: 'center',
               padding: '24px 20px',
               background: '#FFFFFF',
-              borderRadius: 20,
+              borderRadius: 10,
               border: '1px solid rgba(0, 0, 0, 0.06)',
               boxShadow: '0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.03)',
               overflowX: 'auto',
@@ -596,7 +596,7 @@ export default function AdminProductsPage() {
               alignItems: 'center',
               gap: 8,
               background: '#FFFFFF',
-              borderRadius: 14,
+              borderRadius: 6,
               padding: '10px 16px',
               border: '1px solid rgba(0, 0, 0, 0.08)',
               flex: 1,
@@ -634,7 +634,7 @@ export default function AdminProductsPage() {
                 }}
                 style={{
                   padding: '9px 18px',
-                  borderRadius: 99,
+                  borderRadius: 5,
                   fontSize: 12.5,
                   fontWeight: 600,
                   border: filter === cat.value ? 'none' : '1px solid rgba(0, 0, 0, 0.08)',
@@ -660,7 +660,7 @@ export default function AdminProductsPage() {
             style={{
               background: 'rgba(239, 68, 68, 0.12)',
               border: '1px solid rgba(239, 68, 68, 0.25)',
-              borderRadius: 14,
+              borderRadius: 6,
               padding: '14px 18px',
               display: 'flex',
               alignItems: 'center',
@@ -706,7 +706,7 @@ export default function AdminProductsPage() {
               textAlign: 'center',
               padding: '70px 24px',
               background: '#FFFFFF',
-              borderRadius: 20,
+              borderRadius: 8,
               border: '1px solid rgba(0, 0, 0, 0.06)',
               boxShadow: '0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.03)',
               position: 'relative',
@@ -717,7 +717,7 @@ export default function AdminProductsPage() {
               style={{
                 width: 64,
                 height: 64,
-                borderRadius: 99,
+                borderRadius: 8,
                 background: '#F3F4F6',
                 border: '1px solid rgba(0, 0, 0, 0.04)',
                 display: 'flex',
@@ -752,7 +752,7 @@ export default function AdminProductsPage() {
                     padding: '11px 22px',
                     background: 'linear-gradient(135deg, #d1aa5c 0%, #b89347 100%)',
                     color: '#0A0B0C',
-                    borderRadius: 12,
+                    borderRadius: 6,
                     fontSize: 13,
                     fontWeight: 600,
                     border: 'none',
@@ -774,7 +774,7 @@ export default function AdminProductsPage() {
                     padding: '11px 22px',
                     background: '#111827',
                     color: '#FFFFFF',
-                    borderRadius: 12,
+                    borderRadius: 6,
                     fontSize: 13,
                     fontWeight: 600,
                     border: 'none',
@@ -795,7 +795,7 @@ export default function AdminProductsPage() {
                   padding: '11px 22px',
                   background: '#F3F4F6',
                   color: '#111827',
-                  borderRadius: 12,
+                  borderRadius: 6,
                   fontSize: 13,
                   fontWeight: 500,
                   border: '1px solid rgba(0, 0, 0, 0.08)',
@@ -824,7 +824,7 @@ export default function AdminProductsPage() {
                 key={product.id}
                 style={{
                   background: '#FFFFFF',
-                  borderRadius: 16,
+                  borderRadius: 8,
                   overflow: 'hidden',
                   border: '1px solid rgba(0, 0, 0, 0.06)',
                   boxShadow: '0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.03)',
@@ -866,7 +866,7 @@ export default function AdminProductsPage() {
                       fontSize: 10,
                       fontWeight: 700,
                       padding: '3px 9px',
-                      borderRadius: 99,
+                      borderRadius: 4,
                       letterSpacing: '0.06em',
                     }}
                   >
@@ -884,7 +884,7 @@ export default function AdminProductsPage() {
                         color: '#fff',
                         fontSize: 10.5,
                         padding: '3px 8px',
-                        borderRadius: 99,
+                        borderRadius: 4,
                         backdropFilter: 'blur(4px)',
                         border: '1px solid rgba(255,255,255,0.1)',
                       }}
@@ -915,7 +915,7 @@ export default function AdminProductsPage() {
                           background: '#F3F4F6',
                           border: '1px solid rgba(0, 0, 0, 0.04)',
                           padding: '2px 8px',
-                          borderRadius: 99,
+                          borderRadius: 4,
                           display: 'inline-block',
                           marginTop: 6,
                           fontWeight: 500,
@@ -972,7 +972,7 @@ export default function AdminProductsPage() {
                       style={{
                         flex: 1,
                         padding: '9px 0',
-                        borderRadius: 10,
+                        borderRadius: 6,
                         fontSize: 12.5,
                         fontWeight: 500,
                         background: '#F3F4F6',
@@ -1001,7 +1001,7 @@ export default function AdminProductsPage() {
                       disabled={deletingId === product.id}
                       style={{
                         padding: '9px 14px',
-                        borderRadius: 10,
+                        borderRadius: 6,
                         fontSize: 12.5,
                         background: '#FEE2E2',
                         border: '1px solid rgba(239, 68, 68, 0.2)',
@@ -1047,7 +1047,7 @@ export default function AdminProductsPage() {
           <div
             style={{
               background: '#FFFFFF',
-              borderRadius: 20,
+              borderRadius: 10,
               width: '100%',
               maxWidth: 560,
               border: '1px solid rgba(0, 0, 0, 0.08)',
@@ -1464,7 +1464,7 @@ export default function AdminProductsPage() {
               {step === 3 && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
                   <p style={{ fontSize: 13, color: '#A1A1AA', marginBottom: 4 }}>Vérifiez avant d&apos;enregistrer :</p>
-                  <div style={{ background: 'rgba(0, 0, 0, 0.35)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: 12, padding: '16px 18px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+                  <div style={{ background: 'rgba(0, 0, 0, 0.35)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: 8, padding: '16px 18px', display: 'flex', flexDirection: 'column', gap: 10 }}>
                     {[
                       { label: 'Nom', value: form.name },
                       { label: 'Catégorie', value: CATEGORIES.find(c => c.value === form.category)?.label },
@@ -1513,8 +1513,8 @@ export default function AdminProductsPage() {
               <button
                 onClick={step === 0 ? closeModal : () => setStep(s => s - 1)}
                 style={{
-                  padding: '10px 22px',
-                  borderRadius: 10,
+                   padding: '10px 22px',
+                  borderRadius: 6,
                   border: '1px solid rgba(255, 255, 255, 0.1)',
                   background: 'rgba(255, 255, 255, 0.05)',
                   color: '#D4D4D8',
@@ -1531,7 +1531,7 @@ export default function AdminProductsPage() {
                   disabled={!canNextStep()}
                   style={{
                     padding: '10px 22px',
-                    borderRadius: 10,
+                    borderRadius: 6,
                     border: 'none',
                     background: canNextStep() ? '#d1aa5c' : 'rgba(255, 255, 255, 0.08)',
                     color: canNextStep() ? '#14120f' : '#71717A',
@@ -1552,7 +1552,7 @@ export default function AdminProductsPage() {
                   disabled={saving}
                   style={{
                     padding: '10px 26px',
-                    borderRadius: 10,
+                    borderRadius: 6,
                     border: 'none',
                     background: '#d1aa5c',
                     color: '#14120f',
@@ -1590,7 +1590,7 @@ const labelStyle: React.CSSProperties = {
 const inputStyle: React.CSSProperties = {
   width: '100%',
   padding: '11px 14px',
-  borderRadius: 10,
+  borderRadius: 8,
   border: '1px solid rgba(255, 255, 255, 0.12)',
   background: 'rgba(0, 0, 0, 0.35)',
   fontSize: 14,

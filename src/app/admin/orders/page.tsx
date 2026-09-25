@@ -233,7 +233,7 @@ export default function AdminOrdersPage() {
                   fontSize: 11,
                   fontWeight: 700,
                   padding: '3px 9px',
-                  borderRadius: 99,
+                  borderRadius: 5,
                 }}
               >
                 {newCount} nouveau{newCount > 1 ? 'x' : ''}
@@ -255,7 +255,7 @@ export default function AdminOrdersPage() {
               background: 'rgba(255, 255, 255, 0.04)',
               border: '1px solid rgba(255, 255, 255, 0.08)',
               padding: '8px 14px',
-              borderRadius: 12,
+              borderRadius: 6,
             }}
           >
             <Clock className="w-3.5 h-3.5 text-[#60a5fa]" />
@@ -273,7 +273,7 @@ export default function AdminOrdersPage() {
               background: 'linear-gradient(135deg, #d1aa5c 0%, #b89347 100%)',
               color: '#0A0B0C',
               padding: '9px 18px',
-              borderRadius: 12,
+              borderRadius: 6,
               fontSize: 12.5,
               fontWeight: 600,
               textDecoration: 'none',
@@ -303,7 +303,7 @@ export default function AdminOrdersPage() {
                 onClick={() => setFilterStatus(tab.value)}
                 style={{
                   padding: '8px 18px',
-                  borderRadius: 99,
+                  borderRadius: 6,
                   fontSize: 12.5,
                   fontWeight: 600,
                   border: filterStatus === tab.value ? 'none' : '1px solid rgba(0, 0, 0, 0.08)',
@@ -329,7 +329,7 @@ export default function AdminOrdersPage() {
               alignItems: 'center',
               gap: 8,
               background: '#FFFFFF',
-              borderRadius: 14,
+              borderRadius: 6,
               padding: '9px 16px',
               border: '1px solid rgba(0, 0, 0, 0.08)',
               width: 280,
@@ -365,7 +365,7 @@ export default function AdminOrdersPage() {
             style={{
               background: 'rgba(239, 68, 68, 0.12)',
               border: '1px solid rgba(239, 68, 68, 0.25)',
-              borderRadius: 14,
+              borderRadius: 6,
               padding: '14px 18px',
               display: 'flex',
               alignItems: 'center',
@@ -391,7 +391,7 @@ export default function AdminOrdersPage() {
               textAlign: 'center',
               padding: '80px 20px',
               background: '#FFFFFF',
-              borderRadius: 20,
+              borderRadius: 8,
               border: '1px solid rgba(0, 0, 0, 0.06)',
               boxShadow: '0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.03)',
               position: 'relative',
@@ -414,7 +414,7 @@ export default function AdminOrdersPage() {
                   padding: '9px 18px',
                   background: '#111827',
                   color: '#FFFFFF',
-                  borderRadius: 10,
+                  borderRadius: 6,
                   fontSize: 12.5,
                   fontWeight: 600,
                   border: 'none',
@@ -437,7 +437,7 @@ export default function AdminOrdersPage() {
                   key={order.id}
                   style={{
                     background: '#FFFFFF',
-                    borderRadius: 18,
+                    borderRadius: 8,
                     border: order.status === 'new' ? '1.5px solid rgba(0, 122, 255, 0.4)' : '1px solid rgba(0, 0, 0, 0.06)',
                     boxShadow: isMenuOpen
                       ? '0 12px 30px -4px rgba(0, 0, 0, 0.12)'
@@ -457,7 +457,7 @@ export default function AdminOrdersPage() {
                     style={{
                       width: 46,
                       height: 46,
-                      borderRadius: 14,
+                      borderRadius: 8,
                       background: isInFunnel ? 'rgba(209, 170, 92, 0.15)' : '#F3F4F6',
                       border: isInFunnel ? '1px solid rgba(209, 170, 92, 0.3)' : '1px solid rgba(0, 0, 0, 0.06)',
                       display: 'flex',
@@ -527,13 +527,13 @@ export default function AdminOrdersPage() {
                             background: st.bg,
                             border: `1px solid ${st.border}`,
                             padding: '4px 11px',
-                            borderRadius: 99,
+                            borderRadius: 5,
                             display: 'inline-flex',
                             alignItems: 'center',
                             gap: 5,
                           }}
                         >
-                          <span style={{ width: 5, height: 5, borderRadius: 99, background: st.color }} />
+                          <span style={{ width: 5, height: 5, borderRadius: 2, background: st.color }} />
                           {st.label}
                         </span>
 
@@ -549,7 +549,7 @@ export default function AdminOrdersPage() {
                               alignItems: 'center',
                               gap: 6,
                               padding: '7px 13px',
-                              borderRadius: 10,
+                              borderRadius: 6,
                               background: 'rgba(37, 211, 102, 0.12)',
                               border: '1px solid rgba(37, 211, 102, 0.3)',
                               color: '#16a34a',
@@ -575,7 +575,7 @@ export default function AdminOrdersPage() {
                               alignItems: 'center',
                               gap: 6,
                               padding: '7px 13px',
-                              borderRadius: 10,
+                              borderRadius: 6,
                               background: 'rgba(209, 170, 92, 0.15)',
                               border: '1px solid rgba(209, 170, 92, 0.4)',
                               color: '#b89347',
@@ -599,7 +599,7 @@ export default function AdminOrdersPage() {
                               alignItems: 'center',
                               gap: 6,
                               padding: '7px 13px',
-                              borderRadius: 10,
+                              borderRadius: 6,
                               background: '#111827',
                               color: '#FFFFFF',
                               border: 'none',
@@ -631,7 +631,7 @@ export default function AdminOrdersPage() {
                             }}
                             style={{
                               padding: '7px 9px',
-                              borderRadius: 10,
+                              borderRadius: 6,
                               border: '1px solid rgba(0, 0, 0, 0.08)',
                               background: isMenuOpen ? '#E5E7EB' : '#F3F4F6',
                               cursor: 'pointer',
@@ -656,7 +656,7 @@ export default function AdminOrdersPage() {
                                 background: 'rgba(26, 28, 34, 0.98)',
                                 backdropFilter: 'blur(30px)',
                                 WebkitBackdropFilter: 'blur(30px)',
-                                borderRadius: 16,
+                                borderRadius: 10,
                                 boxShadow: '0 24px 50px -10px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.12)',
                                 minWidth: 240,
                                 zIndex: 60,

@@ -38,11 +38,42 @@ const NAV = [
   },
 ]
 
+// Shared frosted glass hover state for all sidebar items
+const HOVER_STYLE = {
+  border: '1px solid rgba(255, 255, 255, 0.14)',
+  background: 'linear-gradient(145deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%)',
+  color: '#FFFFFF',
+  boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.10), 0 4px 12px rgba(0,0,0,0.3)',
+}
+
+const REST_STYLE = {
+  border: '1px solid transparent',
+  background: 'transparent',
+  color: '#8E929B',
+  boxShadow: 'none',
+}
+
 export default function AdminSidebar() {
   const pathname = usePathname()
   const [collapsed, setCollapsed] = useState(false)
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/')
+
+  const isSettingsActive = pathname === '/admin/settings' || pathname.startsWith('/admin/settings/')
+
+  function applyHover(el: HTMLElement) {
+    el.style.border = HOVER_STYLE.border
+    el.style.background = HOVER_STYLE.background
+    el.style.color = HOVER_STYLE.color
+    el.style.boxShadow = HOVER_STYLE.boxShadow
+  }
+  function removeHover(el: HTMLElement, keepActive: boolean) {
+    if (keepActive) return
+    el.style.border = REST_STYLE.border
+    el.style.background = REST_STYLE.background
+    el.style.color = REST_STYLE.color
+    el.style.boxShadow = REST_STYLE.boxShadow
+  }
 
   return (
     <aside
@@ -56,7 +87,7 @@ export default function AdminSidebar() {
         top: 0,
       }}
     >
-      {/* Logo */}
+      {/* Logo / Collapse */}
       <div
         className="flex items-center shrink-0"
         style={{
@@ -68,10 +99,21 @@ export default function AdminSidebar() {
         {collapsed ? (
           <button
             onClick={() => setCollapsed(false)}
-            className="flex items-center justify-center w-8 h-8 rounded-lg hover:bg-white/5 transition-colors"
             aria-label="Expand sidebar"
+            style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              width: 36, height: 36,
+              borderRadius: 10,
+              border: '1px solid transparent',
+              background: 'transparent',
+              color: '#8E929B',
+              cursor: 'pointer',
+              transition: 'all 0.2s cubic-bezier(0.32,0.72,0,1)',
+            }}
+            onMouseEnter={e => applyHover(e.currentTarget as HTMLElement)}
+            onMouseLeave={e => removeHover(e.currentTarget as HTMLElement, false)}
           >
-            <ChevronRight className="w-4 h-4 text-[#B7BBC0]" />
+            <ChevronRight style={{ width: 16, height: 16 }} />
           </button>
         ) : (
           <div className="flex items-center justify-between w-full">
@@ -85,28 +127,34 @@ export default function AdminSidebar() {
             />
             <button
               onClick={() => setCollapsed(true)}
-              className="flex items-center justify-center w-7 h-7 rounded-lg hover:bg-white/5 transition-colors ml-2"
               aria-label="Collapse sidebar"
+              style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                width: 30, height: 30, borderRadius: 8,
+                border: '1px solid transparent',
+                background: 'transparent',
+                color: '#8E929B',
+                cursor: 'pointer',
+                transition: 'all 0.2s cubic-bezier(0.32,0.72,0,1)',
+              }}
+              onMouseEnter={e => applyHover(e.currentTarget as HTMLElement)}
+              onMouseLeave={e => removeHover(e.currentTarget as HTMLElement, false)}
             >
-              <ChevronRight className="w-3.5 h-3.5 text-[#4A4D55] rotate-180" />
+              <ChevronRight style={{ width: 14, height: 14, transform: 'rotate(180deg)' }} />
             </button>
           </div>
         )}
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto py-4 space-y-1" style={{ padding: '16px 0' }}>
+      <nav className="flex-1 overflow-y-auto" style={{ padding: '16px 0' }}>
         {NAV.map((section, si) => (
           <div key={si}>
             {section.group && !collapsed && (
               <p
                 style={{
-                  fontSize: 10,
-                  fontWeight: 600,
-                  letterSpacing: '0.12em',
-                  color: '#4A4D55',
-                  textTransform: 'uppercase',
-                  padding: '16px 20px 6px',
+                  fontSize: 10, fontWeight: 600, letterSpacing: '0.12em',
+                  color: '#4A4D55', textTransform: 'uppercase', padding: '16px 20px 6px',
                 }}
               >
                 {section.group}
@@ -128,43 +176,28 @@ export default function AdminSidebar() {
                     justifyContent: collapsed ? 'center' : 'flex-start',
                     margin: '3px 10px',
                     borderRadius: 10,
-                    border: active ? '1px solid rgba(255, 255, 255, 0.18)' : '1px solid transparent',
+                    border: active ? '1px solid rgba(255,255,255,0.18)' : '1px solid transparent',
                     background: active
-                      ? 'linear-gradient(145deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.04) 100%)'
+                      ? 'linear-gradient(145deg, rgba(255,255,255,0.09) 0%, rgba(255,255,255,0.04) 100%)'
                       : 'transparent',
                     color: active ? '#FFFFFF' : '#8E929B',
                     boxShadow: active
-                      ? 'inset 0 1px 0 0 rgba(255, 255, 255, 0.12), 0 4px 12px rgba(0, 0, 0, 0.4)'
+                      ? 'inset 0 1px 0 0 rgba(255,255,255,0.12), 0 4px 12px rgba(0,0,0,0.4)'
                       : 'none',
+                    transition: 'all 0.2s cubic-bezier(0.32,0.72,0,1)',
                   }}
-                  onMouseEnter={(e) => {
-                    if (!active) {
-                      e.currentTarget.style.border = '1px solid rgba(255, 255, 255, 0.18)'
-                      e.currentTarget.style.background = 'linear-gradient(145deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%)'
-                      e.currentTarget.style.color = '#FFFFFF'
-                      e.currentTarget.style.boxShadow = 'inset 0 1px 0 0 rgba(255, 255, 255, 0.10), 0 4px 12px rgba(0, 0, 0, 0.3)'
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!active) {
-                      e.currentTarget.style.border = '1px solid transparent'
-                      e.currentTarget.style.background = 'transparent'
-                      e.currentTarget.style.color = '#8E929B'
-                      e.currentTarget.style.boxShadow = 'none'
-                    }
-                  }}
+                  onMouseEnter={(e) => { if (!active) applyHover(e.currentTarget as HTMLElement) }}
+                  onMouseLeave={(e) => { if (!active) removeHover(e.currentTarget as HTMLElement, false) }}
                 >
                   <item.icon
-                    className="shrink-0 transition-colors"
-                    style={{ width: 17, height: 17, color: active ? '#FFFFFF' : 'inherit' }}
+                    className="shrink-0"
+                    style={{ width: 17, height: 17, color: active ? '#FFFFFF' : 'inherit', transition: 'color 0.15s' }}
                   />
                   {!collapsed && (
                     <span
                       style={{
-                        fontSize: 13.5,
-                        fontWeight: active ? 500 : 400,
-                        letterSpacing: '0.01em',
-                        transition: 'color 0.15s',
+                        fontSize: 13.5, fontWeight: active ? 500 : 400,
+                        letterSpacing: '0.01em', transition: 'color 0.15s',
                       }}
                     >
                       {item.label}
@@ -172,9 +205,7 @@ export default function AdminSidebar() {
                   )}
                   {!collapsed && (
                     <div
-                      className={`ml-auto transition-opacity duration-200 ${
-                        active ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
-                      }`}
+                      className={`ml-auto transition-opacity duration-200 ${active ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
                       style={{ width: 4, height: 4, borderRadius: 99, background: '#FFFFFF' }}
                     />
                   )}
@@ -186,82 +217,76 @@ export default function AdminSidebar() {
       </nav>
 
       {/* Bottom Block */}
-      <div
-        style={{ borderTop: '1px solid rgba(255,255,255,0.05)', padding: '12px 8px' }}
-      >
+      <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', padding: '12px 10px' }}>
         {/* Settings */}
         <Link
           href="/admin/settings"
           title={collapsed ? 'Paramètres' : undefined}
-          className="flex items-center gap-3 transition-all duration-150"
+          className="flex items-center gap-3"
           style={{
-            padding: collapsed ? '9px 0' : '9px 12px',
+            padding: collapsed ? '9px 0' : '9px 16px',
             justifyContent: collapsed ? 'center' : 'flex-start',
             borderRadius: 10,
-            color: '#7C8089',
+            border: isSettingsActive ? '1px solid rgba(255,255,255,0.18)' : '1px solid transparent',
+            background: isSettingsActive
+              ? 'linear-gradient(145deg, rgba(255,255,255,0.09) 0%, rgba(255,255,255,0.04) 100%)'
+              : 'transparent',
+            color: isSettingsActive ? '#FFFFFF' : '#8E929B',
+            boxShadow: isSettingsActive ? 'inset 0 1px 0 0 rgba(255,255,255,0.12), 0 4px 12px rgba(0,0,0,0.4)' : 'none',
+            transition: 'all 0.2s cubic-bezier(0.32,0.72,0,1)',
+            textDecoration: 'none',
+            margin: '2px 0',
           }}
+          onMouseEnter={(e) => { if (!isSettingsActive) applyHover(e.currentTarget as HTMLElement) }}
+          onMouseLeave={(e) => { if (!isSettingsActive) removeHover(e.currentTarget as HTMLElement, false) }}
         >
-          <Settings style={{ width: 17, height: 17 }} />
-          {!collapsed && (
-            <span style={{ fontSize: 13.5, letterSpacing: '0.01em' }}>Paramètres</span>
-          )}
+          <Settings style={{ width: 17, height: 17, flexShrink: 0 }} />
+          {!collapsed && <span style={{ fontSize: 13.5, fontWeight: isSettingsActive ? 500 : 400, letterSpacing: '0.01em' }}>Paramètres</span>}
         </Link>
 
-        {/* Account */}
-        {!collapsed && (
+        {/* Account row */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: collapsed ? 0 : 10,
+            padding: collapsed ? '9px 0' : '9px 12px',
+            justifyContent: collapsed ? 'center' : 'flex-start',
+            marginTop: 6,
+            borderRadius: 10,
+            border: '1px solid transparent',
+            background: 'transparent',
+            cursor: 'pointer',
+            transition: 'all 0.2s cubic-bezier(0.32,0.72,0,1)',
+          }}
+          onMouseEnter={(e) => applyHover(e.currentTarget as HTMLElement)}
+          onMouseLeave={(e) => removeHover(e.currentTarget as HTMLElement, false)}
+          onClick={() => { window.location.href = '/admin' }}
+          title="Se déconnecter"
+        >
           <div
-            className="flex items-center gap-3"
             style={{
-              padding: '10px 12px',
-              marginTop: 4,
-              borderRadius: 12,
-              background: 'rgba(255,255,255,0.03)',
+              width: 30, height: 30, borderRadius: 99, flexShrink: 0,
+              background: 'linear-gradient(135deg, #2A2B2E 0%, #1A1B1E 100%)',
+              border: '1px solid rgba(255,255,255,0.12)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 12, color: '#C7CBD1', fontWeight: 600,
             }}
           >
-            <div
-              style={{
-                width: 34,
-                height: 34,
-                borderRadius: 99,
-                background: 'linear-gradient(135deg, #2A2B2E 0%, #1A1B1E 100%)',
-                border: '1px solid rgba(255,255,255,0.1)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0,
-                fontSize: 13,
-                color: '#C7CBD1',
-                fontWeight: 600,
-              }}
-            >
-              A
-            </div>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <p style={{ fontSize: 12.5, color: '#D4D6DA', fontWeight: 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                Admin
-              </p>
-              <p style={{ fontSize: 11, color: '#4A4D55', marginTop: 1 }}>Manager</p>
-            </div>
-            <button
-              onClick={() => { window.location.href = '/admin' }}
-              title="Se déconnecter"
-              className="hover:text-white transition-colors"
-              style={{ color: '#4A4D55', padding: 4 }}
-            >
-              <LogOut style={{ width: 14, height: 14 }} />
-            </button>
+            A
           </div>
-        )}
-
-        {collapsed && (
-          <button
-            title="Se déconnecter"
-            className="flex items-center justify-center w-full hover:bg-white/5 transition-colors"
-            style={{ padding: '9px 0', borderRadius: 10, color: '#4A4D55' }}
-          >
-            <LogOut style={{ width: 17, height: 17 }} />
-          </button>
-        )}
+          {!collapsed && (
+            <>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.85)', fontWeight: 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  Admin
+                </p>
+                <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', marginTop: 1 }}>Manager</p>
+              </div>
+              <LogOut style={{ width: 14, height: 14, color: 'rgba(255,255,255,0.3)', flexShrink: 0 }} />
+            </>
+          )}
+        </div>
       </div>
     </aside>
   )

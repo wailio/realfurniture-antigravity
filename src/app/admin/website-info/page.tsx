@@ -375,11 +375,11 @@ export default function AdminWebsiteInfoPage() {
             href="https://realfurniture-antigravity.pages.dev"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 hover:opacity-80 transition-opacity"
+            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[5px] bg-[#30D158]/10 border border-[#30D158]/25 hover:bg-[#30D158]/15 transition-all"
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-[#30D158] flex-shrink-0 animate-pulse" />
-            <span style={{ fontSize: 11, color: '#30D158', fontWeight: 500 }}>Site en ligne</span>
-            <ExternalLink style={{ width: 9, height: 9, color: '#30D158' }} />
+            <span className="w-1.5 h-1.5 rounded-[2px] bg-[#30D158] flex-shrink-0 animate-pulse" />
+            <span style={{ fontSize: 11, color: '#30D158', fontWeight: 600 }}>Site en ligne</span>
+            <ExternalLink style={{ width: 10, height: 10, color: '#30D158' }} />
           </a>
         </div>
 
@@ -821,7 +821,7 @@ export default function AdminWebsiteInfoPage() {
           padding: 10px 14px;
           background: rgba(255, 255, 255, 0.035);
           border: 0.5px solid rgba(255, 255, 255, 0.09);
-          border-radius: 12px;
+          border-radius: 6px;
           color: #F2F1EF;
           font-size: 13.5px;
           outline: none;
@@ -933,7 +933,7 @@ function SaveButton({
     <button
       onClick={onSave}
       disabled={saving}
-      className="ios-save-btn flex items-center gap-2 rounded-full font-semibold shrink-0 cursor-pointer"
+      className="ios-save-btn flex items-center gap-2 rounded-[6px] font-semibold shrink-0 cursor-pointer"
       style={{
         padding: compact ? '8px 18px' : '10px 24px',
         fontSize: compact ? 12 : 13.5,

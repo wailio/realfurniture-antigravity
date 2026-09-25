@@ -1,20 +1,27 @@
+'use client'
+
 import type { ReactNode } from 'react'
+import { usePathname } from 'next/navigation'
 import AdminSidebar from '@/components/admin/sidebar'
 import IosDialogContainer from '@/components/ui/ios-dialog'
 
-export const runtime = 'edge'
-
-export const metadata = {
-  title: "Admin — Château d'art",
-}
-
 export default function AdminLayout({ children }: { children: ReactNode }) {
+  const pathname = usePathname()
+  const isLoginPage = pathname === '/admin/login' || pathname === '/admin'
+
+  if (isLoginPage) {
+    // No sidebar — full screen for login
+    return (
+      <div style={{ fontFamily: 'var(--font-body)' }}>
+        {children}
+      </div>
+    )
+  }
+
   return (
     <div
       className="flex h-screen overflow-hidden bg-[#0A0B0C]"
-      style={{
-        fontFamily: 'var(--font-body)',
-      }}
+      style={{ fontFamily: 'var(--font-body)' }}
     >
       <IosDialogContainer />
       <AdminSidebar />

@@ -303,7 +303,7 @@ export default function AdminSalesPage() {
                 fontSize: 11,
                 fontWeight: 700,
                 padding: '3px 10px',
-                borderRadius: 99,
+                borderRadius: 5,
               }}
             >
               {leads.length} lead{leads.length > 1 ? 's' : ''} actif{leads.length > 1 ? 's' : ''}
@@ -325,7 +325,7 @@ export default function AdminSalesPage() {
               background: 'rgba(255, 255, 255, 0.04)',
               border: '1px solid rgba(255, 255, 255, 0.08)',
               padding: '8px 16px',
-              borderRadius: 12,
+              borderRadius: 6,
             }}
           >
             <span style={{ fontSize: 11, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
@@ -347,7 +347,7 @@ export default function AdminSalesPage() {
               background: 'linear-gradient(135deg, #d1aa5c 0%, #b89347 100%)',
               color: '#0A0B0C',
               padding: '10px 18px',
-              borderRadius: 12,
+              borderRadius: 6,
               fontSize: 13,
               fontWeight: 600,
               border: 'none',
@@ -372,7 +372,7 @@ export default function AdminSalesPage() {
               alignItems: 'center',
               gap: 8,
               background: '#FFFFFF',
-              borderRadius: 14,
+              borderRadius: 6,
               padding: '9px 16px',
               border: '1px solid rgba(0, 0, 0, 0.08)',
               width: 320,
@@ -589,7 +589,7 @@ export default function AdminSalesPage() {
                       flex: 1,
                       background: isDropTarget ? 'rgba(255, 255, 255, 0.85)' : 'rgba(255, 255, 255, 0.5)',
                       backdropFilter: 'blur(16px)',
-                      borderRadius: 20,
+                      borderRadius: 10,
                       border: isDropTarget ? `2px dashed ${stage.dot}` : '1px solid rgba(0, 0, 0, 0.06)',
                       padding: '16px',
                       boxShadow: isDropTarget
@@ -631,7 +631,7 @@ export default function AdminSalesPage() {
                           color: stage.color,
                           background: stage.bg,
                           padding: '2px 8px',
-                          borderRadius: 99,
+                          borderRadius: 5,
                         }}
                       >
                         {stageLeads.length}
@@ -699,7 +699,7 @@ export default function AdminSalesPage() {
                             }}
                             style={{
                               background: '#FFFFFF',
-                              borderRadius: 16,
+                              borderRadius: 8,
                               padding: '16px',
                               border: (draggingLeadId === lead.id || touchLeadId === lead.id) ? `2px solid ${stage.dot}` : '1px solid rgba(0, 0, 0, 0.06)',
                               boxShadow: (draggingLeadId === lead.id || touchLeadId === lead.id)
@@ -720,7 +720,7 @@ export default function AdminSalesPage() {
                                   style={{
                                     width: 34,
                                     height: 34,
-                                    borderRadius: 10,
+                                    borderRadius: 6,
                                     background: stage.bg,
                                     border: `1px solid ${stage.color}30`,
                                     display: 'flex',
@@ -1110,7 +1110,7 @@ export default function AdminSalesPage() {
                   textAlign: 'center',
                   padding: '60px 20px',
                   background: '#FFFFFF',
-                  borderRadius: 20,
+                  borderRadius: 8,
                   border: '1px solid rgba(0, 0, 0, 0.06)',
                   boxShadow: '0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.03)',
                   marginTop: 24,
@@ -1120,7 +1120,7 @@ export default function AdminSalesPage() {
                   style={{
                     width: 56,
                     height: 56,
-                    borderRadius: 16,
+                    borderRadius: 8,
                     background: '#F3F4F6',
                     display: 'flex',
                     alignItems: 'center',
@@ -1141,7 +1141,7 @@ export default function AdminSalesPage() {
                     padding: '10px 20px',
                     background: '#111827',
                     color: '#FFFFFF',
-                    borderRadius: 12,
+                    borderRadius: 6,
                     fontSize: 13,
                     fontWeight: 600,
                     border: 'none',
@@ -1174,7 +1174,7 @@ export default function AdminSalesPage() {
           <div
             style={{
               background: '#FFFFFF',
-              borderRadius: 20,
+              borderRadius: 10,
               width: '100%',
               maxWidth: 480,
               padding: 28,
@@ -1286,7 +1286,7 @@ export default function AdminSalesPage() {
                   onClick={() => setShowAddModal(false)}
                   style={{
                     padding: '10px 18px',
-                    borderRadius: 10,
+                    borderRadius: 6,
                     border: '1px solid #D1D5DB',
                     background: '#F9FAFB',
                     color: '#374151',
@@ -1302,7 +1302,7 @@ export default function AdminSalesPage() {
                   disabled={creatingLead}
                   style={{
                     padding: '10px 22px',
-                    borderRadius: 10,
+                    borderRadius: 6,
                     border: 'none',
                     background: '#111827',
                     color: '#FFFFFF',
