@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 export const runtime = 'edge'
 
@@ -70,11 +70,11 @@ export default function AdminSettingsPage() {
           <div
             key={i}
             style={{
-              background: '#FFFFFF',
+              background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
               borderRadius: 18,
               padding: '20px 22px',
-              border: '1px solid rgba(0, 0, 0, 0.06)',
-              boxShadow: '0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.03)',
+              border: '1px solid rgba(255,255,255,0.10)',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.10)',
               display: 'flex',
               alignItems: 'center',
               gap: 16,
@@ -89,8 +89,8 @@ export default function AdminSettingsPage() {
                 width: 44,
                 height: 44,
                 borderRadius: 12,
-                background: '#F3F4F6',
-                border: '1px solid rgba(0, 0, 0, 0.04)',
+                background: 'rgba(255,255,255,0.07)',
+                border: '1px solid rgba(255,255,255,0.07)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -100,8 +100,8 @@ export default function AdminSettingsPage() {
               <item.icon className="w-5 h-5 text-[#007AFF]" />
             </div>
             <div style={{ flex: 1 }}>
-              <p style={{ fontSize: 15, fontWeight: 600, color: '#111827' }}>{item.title}</p>
-              <p style={{ fontSize: 13, color: '#6B7280', marginTop: 2 }}>{item.desc}</p>
+              <p style={{ fontSize: 15, fontWeight: 600, color: '#FFFFFF' }}>{item.title}</p>
+              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.42)', marginTop: 2 }}>{item.desc}</p>
             </div>
             <span
               style={{

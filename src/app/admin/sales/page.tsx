@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 export const runtime = 'edge'
 
@@ -328,7 +328,7 @@ export default function AdminSalesPage() {
               borderRadius: 6,
             }}
           >
-            <span style={{ fontSize: 11, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+            <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.30)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
               Ventes conclues:
             </span>
             <strong style={{ fontSize: 13.5, color: '#34D399', fontWeight: 700 }}>
@@ -371,12 +371,12 @@ export default function AdminSalesPage() {
               display: 'flex',
               alignItems: 'center',
               gap: 8,
-              background: '#FFFFFF',
+              background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
               borderRadius: 6,
               padding: '9px 16px',
-              border: '1px solid rgba(0, 0, 0, 0.08)',
+              border: '1px solid rgba(255,255,255,0.12)',
               width: 320,
-              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
             }}
           >
             <Search className="w-4 h-4 text-[#6B7280] shrink-0" />
@@ -390,7 +390,7 @@ export default function AdminSalesPage() {
                 outline: 'none',
                 background: 'transparent',
                 fontSize: 13,
-                color: '#111827',
+                color: '#FFFFFF',
                 width: '100%',
               }}
             />
@@ -401,8 +401,8 @@ export default function AdminSalesPage() {
             )}
           </div>
 
-          <span style={{ fontSize: 12.5, color: '#6B7280' }}>
-            Volume total en cours : <strong style={{ color: '#111827' }}>{pipelineValue.toLocaleString('fr-DZ')} DA</strong>
+          <span style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.42)' }}>
+            Volume total en cours : <strong style={{ color: '#FFFFFF' }}>{pipelineValue.toLocaleString('fr-DZ')} DA</strong>
           </span>
         </div>
 
@@ -489,7 +489,7 @@ export default function AdminSalesPage() {
                           width: 44,
                           height: 44,
                           borderRadius: 99,
-                          background: '#FFFFFF',
+                          background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
                           border: `2.5px solid ${stage.dot}`,
                           display: 'flex',
                           alignItems: 'center',
@@ -530,7 +530,7 @@ export default function AdminSalesPage() {
                       <span
                         style={{
                           fontSize: 11,
-                          color: '#6B7280',
+                          color: 'rgba(255,255,255,0.42)',
                           marginTop: 3,
                           fontWeight: 500,
                         }}
@@ -587,10 +587,10 @@ export default function AdminSalesPage() {
                     }}
                     style={{
                       flex: 1,
-                      background: isDropTarget ? 'rgba(255, 255, 255, 0.85)' : 'rgba(255, 255, 255, 0.5)',
+                      background: isDropTarget ? 'rgba(255,255,255,0.13)' : 'rgba(255,255,255,0.06)',
                       backdropFilter: 'blur(16px)',
                       borderRadius: 10,
-                      border: isDropTarget ? `2px dashed ${stage.dot}` : '1px solid rgba(0, 0, 0, 0.06)',
+                      border: isDropTarget ? `2px dashed ${stage.dot}` : '1px solid rgba(255,255,255,0.10)',
                       padding: '16px',
                       boxShadow: isDropTarget
                         ? `0 0 24px ${stage.dot}30, 0 8px 30px rgba(0, 0, 0, 0.08)`
@@ -607,7 +607,7 @@ export default function AdminSalesPage() {
                         justifyContent: 'space-between',
                         paddingBottom: 12,
                         marginBottom: 14,
-                        borderBottom: '1px solid rgba(0, 0, 0, 0.06)',
+                        borderBottom: '1px solid rgba(255,255,255,0.10)',
                       }}
                     >
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -620,7 +620,7 @@ export default function AdminSalesPage() {
                             boxShadow: `0 0 10px ${stage.dot}80`,
                           }}
                         />
-                        <span style={{ fontSize: 13, fontWeight: 700, color: '#111827' }}>
+                        <span style={{ fontSize: 13, fontWeight: 700, color: '#FFFFFF' }}>
                           {stage.label}
                         </span>
                       </div>
@@ -639,8 +639,8 @@ export default function AdminSalesPage() {
                     </div>
 
                     {stageValue > 0 && (
-                      <p style={{ fontSize: 11, color: '#6B7280', marginBottom: 12, fontWeight: 500 }}>
-                        Total: <strong style={{ color: '#111827' }}>{stageValue.toLocaleString('fr-DZ')} DA</strong>
+                      <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.42)', marginBottom: 12, fontWeight: 500 }}>
+                        Total: <strong style={{ color: '#FFFFFF' }}>{stageValue.toLocaleString('fr-DZ')} DA</strong>
                       </p>
                     )}
 
@@ -649,14 +649,14 @@ export default function AdminSalesPage() {
                       {stageLeads.length === 0 && (
                         <div
                           style={{
-                            border: '1.5px dashed rgba(0, 0, 0, 0.1)',
+                            border: '1.5px dashed rgba(255,255,255,0.12)',
                             borderRadius: 14,
                             padding: '36px 16px',
                             textAlign: 'center',
-                            background: '#FFFFFF',
+                            background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
                           }}
                         >
-                          <p style={{ fontSize: 12, color: '#9CA3AF', fontWeight: 500 }}>
+                          <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.30)', fontWeight: 500 }}>
                             {isDropTarget ? 'Déposer ici' : 'Aucune opportunité'}
                           </p>
                         </div>
@@ -698,10 +698,10 @@ export default function AdminSalesPage() {
                               touchStartPos.current = null
                             }}
                             style={{
-                              background: '#FFFFFF',
+                              background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
                               borderRadius: 8,
                               padding: '16px',
-                              border: (draggingLeadId === lead.id || touchLeadId === lead.id) ? `2px solid ${stage.dot}` : '1px solid rgba(0, 0, 0, 0.06)',
+                              border: (draggingLeadId === lead.id || touchLeadId === lead.id) ? `2px solid ${stage.dot}` : '1px solid rgba(255,255,255,0.10)',
                               boxShadow: (draggingLeadId === lead.id || touchLeadId === lead.id)
                                 ? '0 12px 28px rgba(0, 0, 0, 0.15)'
                                 : '0 4px 16px -2px rgba(0, 0, 0, 0.05)',
@@ -734,10 +734,10 @@ export default function AdminSalesPage() {
                                   {(lead.customer_name || '?')[0].toUpperCase()}
                                 </div>
                                 <div>
-                                  <p style={{ fontSize: 14, fontWeight: 600, color: '#111827', lineHeight: 1.2 }}>
+                                  <p style={{ fontSize: 14, fontWeight: 600, color: '#FFFFFF', lineHeight: 1.2 }}>
                                     {lead.customer_name}
                                   </p>
-                                  <span style={{ fontSize: 11, color: '#9CA3AF' }}>{formatDate(lead.created_at)}</span>
+                                  <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.30)' }}>{formatDate(lead.created_at)}</span>
                                 </div>
                               </div>
 
@@ -746,7 +746,7 @@ export default function AdminSalesPage() {
                                   title="Glisser-déposer vers une autre étape"
                                   style={{
                                     cursor: 'grab',
-                                    color: '#9CA3AF',
+                                    color: 'rgba(255,255,255,0.30)',
                                     padding: '4px 2px',
                                     display: 'flex',
                                     alignItems: 'center',
@@ -766,7 +766,7 @@ export default function AdminSalesPage() {
                                     border: 'none',
                                     background: 'transparent',
                                     cursor: 'pointer',
-                                    color: '#9CA3AF',
+                                    color: 'rgba(255,255,255,0.30)',
                                     display: 'flex',
                                     transition: 'all 0.15s ease',
                                   }}
@@ -789,12 +789,12 @@ export default function AdminSalesPage() {
                                 href={`tel:${lead.phone}`}
                                 style={{
                                   fontSize: 12,
-                                  color: '#4B5563',
+                                  color: 'rgba(255,255,255,0.60)',
                                   display: 'inline-flex',
                                   alignItems: 'center',
                                   gap: 4,
                                   textDecoration: 'none',
-                                  background: '#F3F4F6',
+                                  background: 'rgba(255,255,255,0.07)',
                                   padding: '4px 9px',
                                   borderRadius: 8,
                                 }}
@@ -819,7 +819,7 @@ export default function AdminSalesPage() {
                                   alignItems: 'center',
                                   gap: 4,
                                   textDecoration: 'none',
-                                  background: 'rgba(37, 211, 102, 0.12)',
+                                  background: 'rgba(37,211,102,0.12)',
                                   border: '1px solid rgba(37, 211, 102, 0.25)',
                                   padding: '4px 9px',
                                   borderRadius: 8,
@@ -837,9 +837,9 @@ export default function AdminSalesPage() {
                             <p
                               style={{
                                 fontSize: 11.5,
-                                color: '#1F2937',
-                                background: '#F9FAFB',
-                                border: '1px solid rgba(0, 0, 0, 0.05)',
+                                color: 'rgba(255,255,255,0.90)',
+                                background: 'rgba(255,255,255,0.05)',
+                                border: '1px solid rgba(255,255,255,0.08)',
                                 padding: '4px 10px',
                                 borderRadius: 8,
                                 display: 'inline-block',
@@ -896,8 +896,8 @@ export default function AdminSalesPage() {
                                     padding: '5px 8px',
                                     borderRadius: 7,
                                     border: '1px solid #E5E7EB',
-                                    background: '#F3F4F6',
-                                    color: '#4B5563',
+                                    background: 'rgba(255,255,255,0.07)',
+                                    color: 'rgba(255,255,255,0.60)',
                                     fontSize: 11,
                                     cursor: 'pointer',
                                   }}
@@ -917,13 +917,13 @@ export default function AdminSalesPage() {
                                   justifyContent: 'space-between',
                                   padding: '5px 10px',
                                   borderRadius: 8,
-                                  background: lead.amount ? 'rgba(52, 211, 153, 0.12)' : '#F9FAFB',
-                                  border: lead.amount ? '1px solid rgba(52, 211, 153, 0.3)' : '1px dashed rgba(0, 0, 0, 0.12)',
+                                  background: lead.amount ? 'rgba(52, 211, 153, 0.12)' : 'rgba(255,255,255,0.05)',
+                                  border: lead.amount ? '1px solid rgba(52, 211, 153, 0.3)' : '1px dashed rgba(255,255,255,0.13)',
                                   cursor: 'pointer',
                                 }}
                                 title="Cliquer pour définir le montant"
                               >
-                                <span style={{ fontSize: 11, color: '#6B7280', fontWeight: 500 }}>Valeur devis :</span>
+                                <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.42)', fontWeight: 500 }}>Valeur devis :</span>
                                 <span style={{ fontSize: 12, fontWeight: 700, color: lead.amount ? '#059669' : '#9CA3AF' }}>
                                   {lead.amount ? `${lead.amount.toLocaleString('fr-DZ')} DA` : '+ Définir montant'}
                                 </span>
@@ -943,8 +943,8 @@ export default function AdminSalesPage() {
                                   padding: '8px 10px',
                                   borderRadius: 8,
                                   border: '1px solid #007AFF',
-                                  background: '#F9FAFB',
-                                  color: '#111827',
+                                  background: 'rgba(255,255,255,0.05)',
+                                  color: '#FFFFFF',
                                   fontSize: 12,
                                   resize: 'vertical',
                                   outline: 'none',
@@ -974,9 +974,9 @@ export default function AdminSalesPage() {
                                   style={{
                                     padding: '5px 10px',
                                     borderRadius: 7,
-                                    border: '1px solid rgba(0, 0, 0, 0.08)',
-                                    background: '#F3F4F6',
-                                    color: '#4B5563',
+                                    border: '1px solid rgba(255,255,255,0.12)',
+                                    background: 'rgba(255,255,255,0.07)',
+                                    color: 'rgba(255,255,255,0.60)',
                                     fontSize: 12,
                                     cursor: 'pointer',
                                   }}
@@ -994,8 +994,8 @@ export default function AdminSalesPage() {
                               style={{
                                 padding: '8px 10px',
                                 borderRadius: 8,
-                                background: '#F9FAFB',
-                                border: '1px solid rgba(0, 0, 0, 0.04)',
+                                background: 'rgba(255,255,255,0.05)',
+                                border: '1px solid rgba(255,255,255,0.07)',
                                 cursor: 'pointer',
                                 marginBottom: 12,
                                 minHeight: 36,
@@ -1004,11 +1004,11 @@ export default function AdminSalesPage() {
                               className="hover:bg-gray-100"
                             >
                               {lead.notes ? (
-                                <p style={{ fontSize: 12, color: '#374151', lineHeight: 1.5, whiteSpace: 'pre-line' }}>
+                                <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.75)', lineHeight: 1.5, whiteSpace: 'pre-line' }}>
                                   {lead.notes}
                                 </p>
                               ) : (
-                                <p style={{ fontSize: 12, color: '#9CA3AF', display: 'flex', alignItems: 'center', gap: 4 }}>
+                                <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.30)', display: 'flex', alignItems: 'center', gap: 4 }}>
                                   <StickyNote className="w-3.5 h-3.5 text-[#007AFF]" />
                                   Ajouter une note de suivi...
                                 </p>
@@ -1026,11 +1026,11 @@ export default function AdminSalesPage() {
                                 style={{
                                   padding: '7px 10px',
                                   borderRadius: 8,
-                                  border: '1px solid rgba(0, 0, 0, 0.08)',
-                                  background: '#F3F4F6',
+                                  border: '1px solid rgba(255,255,255,0.12)',
+                                  background: 'rgba(255,255,255,0.07)',
                                   cursor: 'pointer',
                                   fontSize: 11.5,
-                                  color: '#374151',
+                                  color: 'rgba(255,255,255,0.75)',
                                   display: 'flex',
                                   alignItems: 'center',
                                   justifyContent: 'center',
@@ -1109,10 +1109,10 @@ export default function AdminSalesPage() {
                 style={{
                   textAlign: 'center',
                   padding: '60px 20px',
-                  background: '#FFFFFF',
+                  background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
                   borderRadius: 8,
-                  border: '1px solid rgba(0, 0, 0, 0.06)',
-                  boxShadow: '0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.03)',
+                  border: '1px solid rgba(255,255,255,0.10)',
+                  boxShadow: '0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.10)',
                   marginTop: 24,
                 }}
               >
@@ -1121,7 +1121,7 @@ export default function AdminSalesPage() {
                     width: 56,
                     height: 56,
                     borderRadius: 8,
-                    background: '#F3F4F6',
+                    background: 'rgba(255,255,255,0.07)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -1130,8 +1130,8 @@ export default function AdminSalesPage() {
                 >
                   <TrendingUp className="w-6 h-6 text-[#d1aa5c]" />
                 </div>
-                <p style={{ color: '#111827', fontSize: 16, fontWeight: 600 }}>Le pipeline de vente est vide</p>
-                <p style={{ color: '#6B7280', fontSize: 13, marginTop: 6, maxWidth: 360, margin: '8px auto 16px' }}>
+                <p style={{ color: '#FFFFFF', fontSize: 16, fontWeight: 600 }}>Le pipeline de vente est vide</p>
+                <p style={{ color: 'rgba(255,255,255,0.42)', fontSize: 13, marginTop: 6, maxWidth: 360, margin: '8px auto 16px' }}>
                   Ajoutez un prospect manuellement ou cliquez sur « Ajouter au funnel » depuis la page Commandes pour commencer à suivre vos opportunités.
                 </p>
                 <button
@@ -1173,7 +1173,7 @@ export default function AdminSalesPage() {
         >
           <div
             style={{
-              background: '#FFFFFF',
+              background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
               borderRadius: 10,
               width: '100%',
               maxWidth: 480,
@@ -1182,7 +1182,7 @@ export default function AdminSalesPage() {
             }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-              <h2 style={{ fontSize: 18, fontWeight: 700, color: '#111827' }}>Ajouter un Lead Commercial</h2>
+              <h2 style={{ fontSize: 18, fontWeight: 700, color: '#FFFFFF' }}>Ajouter un Lead Commercial</h2>
               <button
                 type="button"
                 onClick={() => setShowAddModal(false)}
@@ -1194,7 +1194,7 @@ export default function AdminSalesPage() {
 
             <form onSubmit={handleCreateLead} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
               <div>
-                <label style={{ display: 'block', fontSize: 12.5, fontWeight: 600, color: '#374151', marginBottom: 6 }}>
+                <label style={{ display: 'block', fontSize: 12.5, fontWeight: 600, color: 'rgba(255,255,255,0.75)', marginBottom: 6 }}>
                   Nom du client *
                 </label>
                 <input
@@ -1207,7 +1207,7 @@ export default function AdminSalesPage() {
                     width: '100%',
                     padding: '10px 14px',
                     borderRadius: 10,
-                    border: '1px solid #D1D5DB',
+                    border: '1px solid rgba(255,255,255,0.15)',
                     fontSize: 13,
                     outline: 'none',
                     boxSizing: 'border-box',
@@ -1216,7 +1216,7 @@ export default function AdminSalesPage() {
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 12.5, fontWeight: 600, color: '#374151', marginBottom: 6 }}>
+                <label style={{ display: 'block', fontSize: 12.5, fontWeight: 600, color: 'rgba(255,255,255,0.75)', marginBottom: 6 }}>
                   Téléphone *
                 </label>
                 <input
@@ -1229,7 +1229,7 @@ export default function AdminSalesPage() {
                     width: '100%',
                     padding: '10px 14px',
                     borderRadius: 10,
-                    border: '1px solid #D1D5DB',
+                    border: '1px solid rgba(255,255,255,0.15)',
                     fontSize: 13,
                     outline: 'none',
                     boxSizing: 'border-box',
@@ -1238,7 +1238,7 @@ export default function AdminSalesPage() {
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 12.5, fontWeight: 600, color: '#374151', marginBottom: 6 }}>
+                <label style={{ display: 'block', fontSize: 12.5, fontWeight: 600, color: 'rgba(255,255,255,0.75)', marginBottom: 6 }}>
                   Montant estimé (DA)
                 </label>
                 <input
@@ -1250,7 +1250,7 @@ export default function AdminSalesPage() {
                     width: '100%',
                     padding: '10px 14px',
                     borderRadius: 10,
-                    border: '1px solid #D1D5DB',
+                    border: '1px solid rgba(255,255,255,0.15)',
                     fontSize: 13,
                     outline: 'none',
                     boxSizing: 'border-box',
@@ -1259,7 +1259,7 @@ export default function AdminSalesPage() {
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 12.5, fontWeight: 600, color: '#374151', marginBottom: 6 }}>
+                <label style={{ display: 'block', fontSize: 12.5, fontWeight: 600, color: 'rgba(255,255,255,0.75)', marginBottom: 6 }}>
                   Notes &amp; Modèles d&apos;intérêt
                 </label>
                 <textarea
@@ -1271,7 +1271,7 @@ export default function AdminSalesPage() {
                     width: '100%',
                     padding: '10px 14px',
                     borderRadius: 10,
-                    border: '1px solid #D1D5DB',
+                    border: '1px solid rgba(255,255,255,0.15)',
                     fontSize: 13,
                     outline: 'none',
                     resize: 'vertical',
@@ -1287,9 +1287,9 @@ export default function AdminSalesPage() {
                   style={{
                     padding: '10px 18px',
                     borderRadius: 6,
-                    border: '1px solid #D1D5DB',
-                    background: '#F9FAFB',
-                    color: '#374151',
+                    border: '1px solid rgba(255,255,255,0.15)',
+                    background: 'rgba(255,255,255,0.05)',
+                    color: 'rgba(255,255,255,0.75)',
                     fontSize: 13,
                     fontWeight: 600,
                     cursor: 'pointer',

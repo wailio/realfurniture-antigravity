@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 export const runtime = 'edge'
 
@@ -306,16 +306,16 @@ export default function AdminOrdersPage() {
                   borderRadius: 6,
                   fontSize: 12.5,
                   fontWeight: 600,
-                  border: filterStatus === tab.value ? 'none' : '1px solid rgba(0, 0, 0, 0.08)',
+                  border: filterStatus === tab.value ? 'none' : '1px solid rgba(255,255,255,0.12)',
                   cursor: 'pointer',
-                  background: filterStatus === tab.value ? '#111827' : '#FFFFFF',
-                  color: filterStatus === tab.value ? '#FFFFFF' : '#374151',
+                  background: filterStatus === tab.value ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.05)',
+                  color: filterStatus === tab.value ? '#FFFFFF' : 'rgba(255,255,255,0.60)',
                   boxShadow: filterStatus === tab.value
-                    ? '0 3px 12px rgba(0, 0, 0, 0.2)'
-                    : '0 1px 4px rgba(0, 0, 0, 0.04)',
+                    ? '0 4px 16px rgba(0,0,0,0.5)'
+                    : '0 2px 8px rgba(0,0,0,0.3)',
                   transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
                 }}
-                className={filterStatus !== tab.value ? 'hover:bg-[#F3F4F6] hover:text-[#111827]' : ''}
+                className={filterStatus !== tab.value ? 'hover:bg-white/10 hover:text-white' : ''}
               >
                 {tab.label}
               </button>
@@ -328,12 +328,12 @@ export default function AdminOrdersPage() {
               display: 'flex',
               alignItems: 'center',
               gap: 8,
-              background: '#FFFFFF',
+              background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
               borderRadius: 6,
               padding: '9px 16px',
-              border: '1px solid rgba(0, 0, 0, 0.08)',
+              border: '1px solid rgba(255,255,255,0.12)',
               width: 280,
-              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
             }}
           >
             <Search className="w-4 h-4 text-[#6B7280] shrink-0" />
@@ -347,7 +347,7 @@ export default function AdminOrdersPage() {
                 outline: 'none',
                 background: 'transparent',
                 fontSize: 13,
-                color: '#111827',
+                color: '#FFFFFF',
                 width: '100%',
               }}
             />
@@ -390,19 +390,19 @@ export default function AdminOrdersPage() {
             style={{
               textAlign: 'center',
               padding: '80px 20px',
-              background: '#FFFFFF',
+              background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
               borderRadius: 8,
-              border: '1px solid rgba(0, 0, 0, 0.06)',
-              boxShadow: '0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.03)',
+              border: '1px solid rgba(255,255,255,0.10)',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.10)',
               position: 'relative',
               overflow: 'hidden',
             }}
           >
             <MessageSquare className="w-10 h-10 mx-auto mb-4 text-[#111827]" />
-            <p style={{ color: '#111827', fontSize: 16, fontWeight: 600 }}>
+            <p style={{ color: '#FFFFFF', fontSize: 16, fontWeight: 600 }}>
               {search ? 'Aucune demande ne correspond à votre recherche' : 'Aucune commande dans cette sélection'}
             </p>
-            <p style={{ color: '#6B7280', fontSize: 13, marginTop: 6 }}>
+            <p style={{ color: 'rgba(255,255,255,0.42)', fontSize: 13, marginTop: 6 }}>
               {search ? 'Essayez avec un autre nom, numéro ou terme de recherche.' : 'Les messages du formulaire de contact apparaîtront ici.'}
             </p>
             {(search || filterStatus !== 'all') && (
@@ -436,12 +436,12 @@ export default function AdminOrdersPage() {
                 <div
                   key={order.id}
                   style={{
-                    background: '#FFFFFF',
+                    background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
                     borderRadius: 8,
-                    border: order.status === 'new' ? '1.5px solid rgba(0, 122, 255, 0.4)' : '1px solid rgba(0, 0, 0, 0.06)',
+                    border: order.status === 'new' ? '1.5px solid rgba(0, 122, 255, 0.4)' : '1px solid rgba(255,255,255,0.10)',
                     boxShadow: isMenuOpen
-                      ? '0 12px 30px -4px rgba(0, 0, 0, 0.12)'
-                      : '0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.03)',
+                      ? '0 16px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.12)'
+                      : '0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.10)',
                     padding: '22px 24px',
                     display: 'flex',
                     alignItems: 'flex-start',
@@ -458,8 +458,8 @@ export default function AdminOrdersPage() {
                       width: 46,
                       height: 46,
                       borderRadius: 8,
-                      background: isInFunnel ? 'rgba(209, 170, 92, 0.15)' : '#F3F4F6',
-                      border: isInFunnel ? '1px solid rgba(209, 170, 92, 0.3)' : '1px solid rgba(0, 0, 0, 0.06)',
+                      background: isInFunnel ? 'rgba(209, 170, 92, 0.15)' : 'rgba(255,255,255,0.08)',
+                      border: isInFunnel ? '1px solid rgba(209, 170, 92, 0.3)' : '1px solid rgba(255,255,255,0.10)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -477,7 +477,7 @@ export default function AdminOrdersPage() {
                     <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, flexWrap: 'wrap', justifyContent: 'space-between' }}>
                       <div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                          <p style={{ fontSize: 16, fontWeight: 600, color: '#111827' }}>
+                          <p style={{ fontSize: 16, fontWeight: 600, color: '#FFFFFF' }}>
                             {order.name || 'Client sans nom'}
                           </p>
                           {order.status === 'new' && (
@@ -490,7 +490,7 @@ export default function AdminOrdersPage() {
                           {order.phone && (
                             <a
                               href={`tel:${order.phone}`}
-                              style={{ fontSize: 13, color: '#4B5563', display: 'flex', alignItems: 'center', gap: 5, textDecoration: 'none' }}
+                              style={{ fontSize: 13, color: 'rgba(255,255,255,0.60)', display: 'flex', alignItems: 'center', gap: 5, textDecoration: 'none' }}
                               className="hover:text-[#007AFF]"
                             >
                               <Phone className="w-3.5 h-3.5 text-[#6B7280]" />
@@ -500,7 +500,7 @@ export default function AdminOrdersPage() {
                           {order.email && (
                             <a
                               href={`mailto:${order.email}`}
-                              style={{ fontSize: 13, color: '#4B5563', display: 'flex', alignItems: 'center', gap: 5, textDecoration: 'none' }}
+                              style={{ fontSize: 13, color: 'rgba(255,255,255,0.60)', display: 'flex', alignItems: 'center', gap: 5, textDecoration: 'none' }}
                               className="hover:text-[#007AFF]"
                             >
                               <Mail className="w-3.5 h-3.5 text-[#6B7280]" />
@@ -508,7 +508,7 @@ export default function AdminOrdersPage() {
                             </a>
                           )}
                           {order.created_at && (
-                            <span style={{ fontSize: 12.5, color: '#9CA3AF', display: 'flex', alignItems: 'center', gap: 5 }}>
+                            <span style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.30)', display: 'flex', alignItems: 'center', gap: 5 }}>
                               <Calendar className="w-3.5 h-3.5 text-[#9CA3AF]" />
                               {formatDate(order.created_at)}
                             </span>
@@ -550,7 +550,7 @@ export default function AdminOrdersPage() {
                               gap: 6,
                               padding: '7px 13px',
                               borderRadius: 6,
-                              background: 'rgba(37, 211, 102, 0.12)',
+                              background: 'rgba(37,211,102,0.12)',
                               border: '1px solid rgba(37, 211, 102, 0.3)',
                               color: '#16a34a',
                               fontSize: 12,
@@ -632,12 +632,12 @@ export default function AdminOrdersPage() {
                             style={{
                               padding: '7px 9px',
                               borderRadius: 6,
-                              border: '1px solid rgba(0, 0, 0, 0.08)',
-                              background: isMenuOpen ? '#E5E7EB' : '#F3F4F6',
+                              border: '1px solid rgba(255,255,255,0.12)',
+                              background: isMenuOpen ? '#E5E7EB' : 'rgba(255,255,255,0.08)',
                               cursor: 'pointer',
                               display: 'flex',
                               alignItems: 'center',
-                              color: '#374151',
+                              color: 'rgba(255,255,255,0.75)',
                               transition: 'all 0.15s cubic-bezier(0.16, 1, 0.3, 1)',
                             }}
                             title="Actions &amp; Options"
@@ -844,12 +844,12 @@ export default function AdminOrdersPage() {
                           display: 'inline-flex',
                           alignItems: 'center',
                           gap: 6,
-                          background: '#F3F4F6',
-                          border: '1px solid rgba(0, 0, 0, 0.06)',
+                          background: 'rgba(255,255,255,0.07)',
+                          border: '1px solid rgba(255,255,255,0.10)',
                           borderRadius: 99,
                           padding: '4px 12px',
                           fontSize: 12,
-                          color: '#1F2937',
+                          color: 'rgba(255,255,255,0.90)',
                           marginTop: 10,
                           fontWeight: 500,
                         }}
@@ -868,14 +868,14 @@ export default function AdminOrdersPage() {
                           marginTop: 12,
                           padding: '12px 16px',
                           borderRadius: 12,
-                          background: '#F9FAFB',
-                          border: '1px solid rgba(0, 0, 0, 0.05)',
+                          background: 'rgba(255,255,255,0.05)',
+                          border: '1px solid rgba(255,255,255,0.08)',
                         }}
                       >
                         <p
                           style={{
                             fontSize: 13,
-                            color: '#374151',
+                            color: 'rgba(255,255,255,0.75)',
                             lineHeight: 1.6,
                             display: selectedOrder?.id === order.id ? 'block' : '-webkit-box',
                             WebkitLineClamp: 2,

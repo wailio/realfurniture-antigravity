@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 export const runtime = 'edge'
 
@@ -455,10 +455,10 @@ export default function AdminProductsPage() {
               display: 'flex',
               alignItems: 'center',
               padding: '24px 20px',
-              background: '#FFFFFF',
+              background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
               borderRadius: 10,
-              border: '1px solid rgba(0, 0, 0, 0.06)',
-              boxShadow: '0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.03)',
+              border: '1px solid rgba(255,255,255,0.10)',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.10)',
               overflowX: 'auto',
               minHeight: 220,
             }}
@@ -595,13 +595,13 @@ export default function AdminProductsPage() {
               display: 'flex',
               alignItems: 'center',
               gap: 8,
-              background: '#FFFFFF',
+              background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
               borderRadius: 6,
               padding: '10px 16px',
-              border: '1px solid rgba(0, 0, 0, 0.08)',
+              border: '1px solid rgba(255,255,255,0.12)',
               flex: 1,
               maxWidth: 340,
-              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
             }}
           >
             <Search className="w-4 h-4 text-[#6B7280] shrink-0" />
@@ -615,7 +615,7 @@ export default function AdminProductsPage() {
                 outline: 'none',
                 background: 'transparent',
                 fontSize: 13,
-                color: '#111827',
+                color: '#FFFFFF',
                 width: '100%',
               }}
             />
@@ -637,16 +637,16 @@ export default function AdminProductsPage() {
                   borderRadius: 5,
                   fontSize: 12.5,
                   fontWeight: 600,
-                  border: filter === cat.value ? 'none' : '1px solid rgba(0, 0, 0, 0.08)',
+                  border: filter === cat.value ? 'none' : '1px solid rgba(255,255,255,0.12)',
                   cursor: 'pointer',
                   transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
-                  background: filter === cat.value ? '#111827' : '#FFFFFF',
-                  color: filter === cat.value ? '#FFFFFF' : '#374151',
+                  background: filter === cat.value ? 'rgba(255,255,255,0.18)' : 'rgba(255,255,255,0.05)',
+                  color: filter === cat.value ? '#FFFFFF' : 'rgba(255,255,255,0.60)',
                   boxShadow: filter === cat.value
-                    ? '0 3px 12px rgba(0, 0, 0, 0.2)'
-                    : '0 1px 4px rgba(0, 0, 0, 0.04)',
+                    ? '0 4px 16px rgba(0,0,0,0.5)'
+                    : '0 2px 8px rgba(0,0,0,0.3)',
                 }}
-                className={filter !== cat.value ? 'hover:bg-[#F3F4F6] hover:text-[#111827]' : ''}
+                className={filter !== cat.value ? 'hover:bg-white/10 hover:text-white' : ''}
               >
                 {cat.label}
               </button>
@@ -705,10 +705,10 @@ export default function AdminProductsPage() {
             style={{
               textAlign: 'center',
               padding: '70px 24px',
-              background: '#FFFFFF',
+              background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
               borderRadius: 8,
-              border: '1px solid rgba(0, 0, 0, 0.06)',
-              boxShadow: '0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.03)',
+              border: '1px solid rgba(255,255,255,0.10)',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.10)',
               position: 'relative',
               overflow: 'hidden',
             }}
@@ -718,8 +718,8 @@ export default function AdminProductsPage() {
                 width: 64,
                 height: 64,
                 borderRadius: 8,
-                background: '#F3F4F6',
-                border: '1px solid rgba(0, 0, 0, 0.04)',
+                background: 'rgba(255,255,255,0.07)',
+                border: '1px solid rgba(255,255,255,0.07)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -729,12 +729,12 @@ export default function AdminProductsPage() {
               <Package className="w-7 h-7 text-[#111827]" />
             </div>
 
-            <p style={{ color: '#111827', fontSize: 17, fontWeight: 600 }}>
+            <p style={{ color: '#FFFFFF', fontSize: 17, fontWeight: 600 }}>
               {products.length === 0
                 ? 'Le catalogue Supabase est prêt'
                 : 'Aucun produit dans cette catégorie'}
             </p>
-            <p style={{ color: '#6B7280', fontSize: 13, marginTop: 6, maxWidth: 440, margin: '6px auto 20px' }}>
+            <p style={{ color: 'rgba(255,255,255,0.42)', fontSize: 13, marginTop: 6, maxWidth: 440, margin: '6px auto 20px' }}>
               {products.length === 0
                 ? 'Votre base de données Supabase est connectée. Vous pouvez importer les modèles de démonstration ou ajouter vos pièces sur-mesure.'
                 : search
@@ -793,12 +793,12 @@ export default function AdminProductsPage() {
                 onClick={openAdd}
                 style={{
                   padding: '11px 22px',
-                  background: '#F3F4F6',
-                  color: '#111827',
+                  background: 'rgba(255,255,255,0.07)',
+                  color: '#FFFFFF',
                   borderRadius: 6,
                   fontSize: 13,
                   fontWeight: 500,
-                  border: '1px solid rgba(0, 0, 0, 0.08)',
+                  border: '1px solid rgba(255,255,255,0.12)',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
@@ -823,18 +823,18 @@ export default function AdminProductsPage() {
               <div
                 key={product.id}
                 style={{
-                  background: '#FFFFFF',
+                  background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
                   borderRadius: 8,
                   overflow: 'hidden',
-                  border: '1px solid rgba(0, 0, 0, 0.06)',
-                  boxShadow: '0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.03)',
+                  border: '1px solid rgba(255,255,255,0.10)',
+                  boxShadow: '0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.10)',
                   transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
                   position: 'relative',
                 }}
                 className="hover:shadow-lg hover:-translate-y-1"
               >
                 {/* Product Image */}
-                <div style={{ position: 'relative', height: 200, background: '#F3F4F6', overflow: 'hidden' }}>
+                <div style={{ position: 'relative', height: 200, background: 'rgba(255,255,255,0.07)', overflow: 'hidden' }}>
                   {product.images?.[0] ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
@@ -850,7 +850,7 @@ export default function AdminProductsPage() {
                     />
                   ) : (
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
-                      <ImageIcon className="w-10 h-10" style={{ color: '#9CA3AF' }} />
+                      <ImageIcon className="w-10 h-10" style={{ color: 'rgba(255,255,255,0.30)' }} />
                     </div>
                   )}
 
@@ -902,7 +902,7 @@ export default function AdminProductsPage() {
                         style={{
                           fontSize: 14.5,
                           fontWeight: 600,
-                          color: '#111827',
+                          color: '#FFFFFF',
                           lineHeight: 1.3,
                         }}
                       >
@@ -911,9 +911,9 @@ export default function AdminProductsPage() {
                       <span
                         style={{
                           fontSize: 11,
-                          color: '#4B5563',
-                          background: '#F3F4F6',
-                          border: '1px solid rgba(0, 0, 0, 0.04)',
+                          color: 'rgba(255,255,255,0.60)',
+                          background: 'rgba(255,255,255,0.07)',
+                          border: '1px solid rgba(255,255,255,0.07)',
                           padding: '2px 8px',
                           borderRadius: 4,
                           display: 'inline-block',
@@ -928,15 +928,15 @@ export default function AdminProductsPage() {
                     <div style={{ textAlign: 'right', flexShrink: 0 }}>
                       {product.sale_price ? (
                         <>
-                          <p style={{ fontSize: 15, fontWeight: 700, color: '#DC2626' }}>
+                          <p style={{ fontSize: 15, fontWeight: 700, color: '#f87171' }}>
                             {product.sale_price.toLocaleString('fr-DZ')} DA
                           </p>
-                          <p style={{ fontSize: 11, color: '#9CA3AF', textDecoration: 'line-through' }}>
+                          <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.30)', textDecoration: 'line-through' }}>
                             {product.price.toLocaleString('fr-DZ')}
                           </p>
                         </>
                       ) : (
-                        <p style={{ fontSize: 15, fontWeight: 700, color: '#111827' }}>
+                        <p style={{ fontSize: 15, fontWeight: 700, color: '#FFFFFF' }}>
                           {product.price.toLocaleString('fr-DZ')} DA
                         </p>
                       )}
@@ -947,7 +947,7 @@ export default function AdminProductsPage() {
                     <p
                       style={{
                         fontSize: 12,
-                        color: '#6B7280',
+                        color: 'rgba(255,255,255,0.42)',
                         lineHeight: 1.5,
                         display: '-webkit-box',
                         WebkitLineClamp: 2,
@@ -975,14 +975,14 @@ export default function AdminProductsPage() {
                         borderRadius: 6,
                         fontSize: 12.5,
                         fontWeight: 500,
-                        background: '#F3F4F6',
-                        border: '1px solid rgba(0, 0, 0, 0.06)',
+                        background: 'rgba(255,255,255,0.07)',
+                        border: '1px solid rgba(255,255,255,0.10)',
                         cursor: 'pointer',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
                         gap: 6,
-                        color: '#111827',
+                        color: '#FFFFFF',
                         transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
                       }}
                       className="hover:bg-[#007AFF] hover:text-white hover:border-[#007AFF]"
@@ -1003,13 +1003,13 @@ export default function AdminProductsPage() {
                         padding: '9px 14px',
                         borderRadius: 6,
                         fontSize: 12.5,
-                        background: '#FEE2E2',
+                        background: 'rgba(239,68,68,0.15)',
                         border: '1px solid rgba(239, 68, 68, 0.2)',
                         cursor: 'pointer',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        color: '#DC2626',
+                        color: '#f87171',
                         transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
                       }}
                       className="hover:bg-[#EF4444] hover:text-white"
@@ -1046,11 +1046,11 @@ export default function AdminProductsPage() {
         >
           <div
             style={{
-              background: '#FFFFFF',
+              background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
               borderRadius: 10,
               width: '100%',
               maxWidth: 560,
-              border: '1px solid rgba(0, 0, 0, 0.08)',
+              border: '1px solid rgba(255,255,255,0.12)',
               boxShadow: '0 24px 80px rgba(0, 0, 0, 0.25)',
               overflow: 'hidden',
             }}
@@ -1062,7 +1062,7 @@ export default function AdminProductsPage() {
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 padding: '22px 28px',
-                borderBottom: '1px solid rgba(0, 0, 0, 0.06)',
+                borderBottom: '1px solid rgba(255,255,255,0.10)',
               }}
             >
               <div>
@@ -1071,13 +1071,13 @@ export default function AdminProductsPage() {
                     fontFamily: 'var(--font-heading)',
                     fontSize: 18,
                     fontWeight: 600,
-                    color: '#111827',
+                    color: '#FFFFFF',
                     letterSpacing: '-0.01em',
                   }}
                 >
                   {editing ? 'Modifier le produit' : 'Nouveau produit'}
                 </h2>
-                <p style={{ fontSize: 12, color: '#6B7280', marginTop: 2 }}>
+                <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.42)', marginTop: 2 }}>
                   Étape {step + 1} sur {STEPS.length} — {STEPS[step]}
                 </p>
               </div>
@@ -1088,12 +1088,12 @@ export default function AdminProductsPage() {
                   height: 32,
                   borderRadius: 99,
                   border: 'none',
-                  background: '#F3F4F6',
+                  background: 'rgba(255,255,255,0.07)',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: '#4B5563',
+                  color: 'rgba(255,255,255,0.60)',
                   transition: 'background 0.15s',
                 }}
                 className="hover:bg-[#E5E7EB]"
@@ -1290,10 +1290,10 @@ export default function AdminProductsPage() {
                       )}
                     </div>
 
-                    <p style={{ fontSize: 14.5, fontWeight: 600, color: '#111827' }}>
+                    <p style={{ fontSize: 14.5, fontWeight: 600, color: '#FFFFFF' }}>
                       {uploading ? 'Téléversement en cours sur Supabase...' : 'Importer depuis votre appareil'}
                     </p>
-                    <p style={{ fontSize: 12.5, color: '#6B7280', marginTop: 4 }}>
+                    <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.42)', marginTop: 4 }}>
                       Sélectionnez une ou plusieurs photos (PNG, JPG, WEBP)
                     </p>
                     <button
@@ -1319,11 +1319,11 @@ export default function AdminProductsPage() {
                   {/* Uploaded Photos Gallery */}
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-                      <span style={{ fontSize: 12.5, fontWeight: 600, color: '#374151' }}>
+                      <span style={{ fontSize: 12.5, fontWeight: 600, color: 'rgba(255,255,255,0.75)' }}>
                         Photos du produit ({form.images.filter(Boolean).length})
                       </span>
                       {form.images.filter(Boolean).length > 0 && (
-                        <span style={{ fontSize: 11, color: '#6B7280' }}>
+                        <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.42)' }}>
                           La 1ère image est la couverture
                         </span>
                       )}
@@ -1334,10 +1334,10 @@ export default function AdminProductsPage() {
                         style={{
                           padding: '20px',
                           borderRadius: 12,
-                          background: '#F9FAFB',
-                          border: '1px solid rgba(0, 0, 0, 0.05)',
+                          background: 'rgba(255,255,255,0.05)',
+                          border: '1px solid rgba(255,255,255,0.08)',
                           textAlign: 'center',
-                          color: '#9CA3AF',
+                          color: 'rgba(255,255,255,0.30)',
                           fontSize: 12.5,
                         }}
                       >
@@ -1354,7 +1354,7 @@ export default function AdminProductsPage() {
                               overflow: 'hidden',
                               border: i === 0 ? '2px solid #007AFF' : '1px solid rgba(0, 0, 0, 0.1)',
                               aspectRatio: '1',
-                              background: '#F3F4F6',
+                              background: 'rgba(255,255,255,0.07)',
                               boxShadow: '0 2px 6px rgba(0,0,0,0.06)',
                             }}
                           >
@@ -1474,7 +1474,7 @@ export default function AdminProductsPage() {
                       { label: 'Stock', value: form.in_stock ? 'En stock' : 'Rupture' },
                     ].map(row => (
                       <div key={row.label} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13 }}>
-                        <span style={{ color: '#9CA3AF' }}>{row.label}</span>
+                        <span style={{ color: 'rgba(255,255,255,0.30)' }}>{row.label}</span>
                         <span style={{ color: '#FFFFFF', fontWeight: 500 }}>{row.value}</span>
                       </div>
                     ))}
