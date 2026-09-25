@@ -371,3 +371,22 @@ button.ios-btn:active,
   -webkit-overflow-scrolling: touch;
 }
 
+
+/* -- Admin area: iOS glass overrides -- */
+.admin-area input::placeholder,
+.admin-area textarea::placeholder {
+  color: rgba(255,255,255,0.28) !important;
+}
+.admin-area ::selection {
+  background: rgba(255,255,255,0.2);
+  color: #ffffff;
+}
+.admin-area ::-webkit-scrollbar { width: 4px; height: 4px; }
+.admin-area ::-webkit-scrollbar-track { background: transparent; }
+.admin-area ::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.12);
+  border-radius: 99px;
+}
+.admin-area ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,0.22);
+}
