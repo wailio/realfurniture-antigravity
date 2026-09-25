@@ -14,7 +14,7 @@ export default function AdminLoginPage() {
   const [showPw, setShowPw] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-  const [checkingAuth, setCheckingAuth] = useState(true)
+  const [checkingAuth, setCheckingAuth] = useState(false)
   const [shake, setShake] = useState(false)
   const cardRef = useRef<HTMLDivElement>(null)
 
