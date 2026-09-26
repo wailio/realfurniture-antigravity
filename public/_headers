@@ -1,0 +1,8 @@
+/admin/*
+  Cache-Control: no-store, no-cache, must-revalidate, private
+  Pragma: no-cache
+  Surrogate-Control: no-store
+  X-Robots-Tag: noindex, nofollow
+
+/api/admin/*
+  Cache-Control: no-store, no-cache, must-revalidate, private

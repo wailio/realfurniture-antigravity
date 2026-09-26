@@ -3,55 +3,71 @@
 import { useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 
+// Generates a persistent anonymous device ID stored in localStorage
+function getOrCreateVisitorId(): string {
+  try {
+    let id = localStorage.getItem('chateau_visitor_id')
+    if (!id) {
+      // Crypto-quality random ID: 'c_' + 16 random hex chars + timestamp base36
+      const arr = new Uint8Array(8)
+      crypto.getRandomValues(arr)
+      const hex = Array.from(arr).map(b => b.toString(16).padStart(2, '0')).join('')
+      id = `c_${hex}${Date.now().toString(36)}`
+      localStorage.setItem('chateau_visitor_id', id)
+    }
+    return id
+  } catch {
+    // Fallback if localStorage blocked (private mode etc.)
+    return `c_anon_${Date.now().toString(36)}`
+  }
+}
+
 export function VisitorTracker() {
   const pathname = usePathname()
 
   useEffect(() => {
-    try {
-      // 1. If currently visiting any /admin route, permanently flag this browser as Admin
-      if (pathname?.startsWith('/admin')) {
+    // Never run on admin pages
+    if (!pathname || pathname.startsWith('/admin')) {
+      // When visiting admin, flag this browser as admin so visitor count won't be inflated
+      try {
         localStorage.setItem('chateau_is_admin', 'true')
-        document.cookie = 'chateau_admin=1; path=/; max-age=31536000; SameSite=Lax'
-        return
-      }
+      } catch {}
+      return
+    }
 
-      // 2. If this browser is flagged as Admin or localhost, DO NOT COUNT!
+    try {
+      // Skip if flagged as admin
       const isAdmin = localStorage.getItem('chateau_is_admin') === 'true'
-      const isLocalhost =
-        typeof window !== 'undefined' &&
-        (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+      if (isAdmin) return
 
-      if (isAdmin || isLocalhost) {
-        return // Owner/Admin testing designs — excluded from visitor metrics!
-      }
+      // Skip on localhost / dev
+      const host = window.location.hostname
+      if (host === 'localhost' || host === '127.0.0.1' || host.endsWith('.local')) return
 
-      // 3. For real external visitors: count unique session once per day
+      // Only ping once per device per calendar day
+      // We store 'YYYY-MM-DD' in localStorage (persists across tabs & sessions)
       const today = new Date().toISOString().slice(0, 10)
-      const lastPing = sessionStorage.getItem('chateau_visit_logged')
+      const lastLogged = localStorage.getItem('chateau_last_visit_date')
+      if (lastLogged === today) return // Already counted this device today
 
-      if (lastPing === today) {
-        return // Already counted this visitor today
-      }
+      const visitorId = getOrCreateVisitorId()
 
-      // Get or create persistent anonymous visitor ID
-      let visitorId = localStorage.getItem('chateau_visitor_id')
-      if (!visitorId) {
-        visitorId = 'c_' + Math.random().toString(36).substring(2, 11) + Date.now().toString(36)
-        localStorage.setItem('chateau_visitor_id', visitorId)
-      }
-
-      // Send lightweight heartbeat
       fetch('/api/analytics/visitors', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ visitorId, isAdmin: false }),
+        // Don't block page rendering
+        keepalive: true,
       })
-        .then(() => {
-          sessionStorage.setItem('chateau_visit_logged', today)
+        .then(res => {
+          if (res.ok) {
+            // Mark today as logged so we don't re-ping on next page navigation
+            try { localStorage.setItem('chateau_last_visit_date', today) } catch {}
+          }
         })
         .catch(() => {})
     } catch {
-      // Silently fail if localStorage or fetch is disabled
+      // Silently handle any localStorage / fetch errors
     }
   }, [pathname])
 
