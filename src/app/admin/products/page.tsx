@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 export const runtime = 'edge'
 
@@ -634,7 +634,7 @@ export default function AdminProductsPage() {
                 }}
                 style={{
                   padding: '9px 18px',
-                  borderRadius: 5,
+                  borderRadius: 99,
                   fontSize: 12.5,
                   fontWeight: 600,
                   border: filter === cat.value ? 'none' : '1px solid rgba(255,255,255,0.12)',
