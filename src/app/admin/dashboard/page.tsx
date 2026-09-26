@@ -48,10 +48,10 @@ export default function AdminDashboard() {
     async function loadStats() {
       try {
         const [prodRes, ordersRes, salesRes, visitorsRes] = await Promise.allSettled([
-          fetch('/api/admin/products').then(r => r.ok ? r.json() : []),
-          fetch('/api/admin/orders').then(r => r.ok ? r.json() : []),
-          fetch('/api/admin/sales').then(r => r.ok ? r.json() : []),
-          fetch('/api/analytics/visitors').then(r => r.ok ? r.json() : { todayUniqueVisitors: 0 }),
+          fetch('/api/admin/products', { cache: 'no-store' }).then(r => r.ok ? r.json() : []),
+          fetch('/api/admin/orders', { cache: 'no-store' }).then(r => r.ok ? r.json() : []),
+          fetch('/api/admin/sales', { cache: 'no-store' }).then(r => r.ok ? r.json() : []),
+          fetch('/api/analytics/visitors', { cache: 'no-store' }).then(r => r.ok ? r.json() : { todayUniqueVisitors: 0 }),
         ])
         const prods = prodRes.status === 'fulfilled' && Array.isArray(prodRes.value) ? prodRes.value : []
         const ords = ordersRes.status === 'fulfilled' && Array.isArray(ordersRes.value) ? ordersRes.value : []
