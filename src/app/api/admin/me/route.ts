@@ -9,9 +9,21 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ authenticated: false }, { status: 401 })
   }
 
-  const payload = await verifySessionToken(session)
+  // Decode URL-encoding that cookies might have
+  const decoded = decodeURIComponent(session)
+  const payload = await verifySessionToken(decoded)
   if (!payload) {
-    return NextResponse.json({ authenticated: false }, { status: 401 })
+    const res = NextResponse.json({ authenticated: false }, { status: 401 })
+    // Clear the stale cookie
+    res.cookies.set(SESSION_COOKIE_NAME, '', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 0,
+      path: '/',
+      expires: new Date(0),
+    })
+    return res
   }
 
   const user = KNOWN_USERS[payload.u]

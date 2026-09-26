@@ -73,7 +73,9 @@ export async function createSessionToken(user: AdminUser): Promise<string> {
 
 export async function verifySessionToken(token: string): Promise<SessionPayload | null> {
   try {
-    const parts = token.split('.')
+    // Handle URL-encoded cookie values (Cloudflare encodes them)
+    const raw = token.includes('%') ? decodeURIComponent(token) : token
+    const parts = raw.split('.')
     if (parts.length !== 2) return null
     const [payloadStr, sig] = parts
     const expected = await hmacSign(payloadStr, SESSION_SECRET)
