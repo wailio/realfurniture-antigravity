@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 export const runtime = 'edge'
 
@@ -274,7 +274,7 @@ export default function AdminSalesPage() {
         style={{
           background: '#0A0B0C',
           borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
-          padding: '28px 36px',
+          padding: 'clamp(16px, 2.5vw, 28px) clamp(16px, 4vw, 36px)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -363,7 +363,7 @@ export default function AdminSalesPage() {
         </div>
       </div>
 
-      <div style={{ padding: '36px', overflowX: 'auto' }}>
+      <div style={{ padding: 'clamp(16px, 3.5vw, 36px)' }}>
         {/* Search Filter Bar */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24, gap: 16, flexWrap: 'wrap' }}>
           <div
@@ -375,7 +375,8 @@ export default function AdminSalesPage() {
               borderRadius: 6,
               padding: '9px 16px',
               border: '1px solid rgba(255,255,255,0.12)',
-              width: 320,
+              width: '100%',
+              maxWidth: 320,
               boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
             }}
           >
@@ -433,13 +434,15 @@ export default function AdminSalesPage() {
           </div>
         ) : (
           <>
+            {/* ── Kanban Scroll Wrapper (mobile: horizontal scroll) ── */}
+            <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', marginLeft: 'clamp(-16px,-3.5vw,-36px)', marginRight: 'clamp(-16px,-3.5vw,-36px)', paddingLeft: 'clamp(16px,3.5vw,36px)', paddingRight: 'clamp(16px,3.5vw,36px)' } as React.CSSProperties}>
             {/* ── Visual Connecting Pipeline Lane with Stage Dots ── */}
             <div
               style={{
                 position: 'relative',
                 marginBottom: 26,
                 padding: '0 8px',
-                minWidth: 1050,
+                minWidth: 720,
               }}
             >
               {/* Continuous Gradient Track */}
@@ -550,7 +553,7 @@ export default function AdminSalesPage() {
                 display: 'flex',
                 alignItems: 'flex-start',
                 gap: 16,
-                minWidth: 1050,
+                minWidth: 720,
                 position: 'relative',
               }}
             >
@@ -1101,6 +1104,8 @@ export default function AdminSalesPage() {
                   </div>
                 )
               })}
+            </div>
+            {/* End kanban scroll wrapper */}
             </div>
 
             {/* Empty state */}

@@ -341,7 +341,7 @@ export default function AdminProductsPage() {
         style={{
           background: '#0A0B0C',
           borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
-          padding: '28px 36px',
+          padding: 'clamp(16px, 2.5vw, 28px) clamp(16px, 4vw, 36px)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -426,15 +426,15 @@ export default function AdminProductsPage() {
         </div>
       </div>
 
-      <div style={{ padding: '36px' }}>
-        {/* ── HORIZONTAL STACKED FILES DECK (As requested) ── */}
+      <div style={{ padding: 'clamp(16px, 3.5vw, 36px)' }}>
+        {/* ── HORIZONTAL STACKED FILES DECK (Directly on background, bigger & wider, no transparent shape) ── */}
         <div style={{ marginBottom: 36 }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16, flexWrap: 'wrap', gap: 8 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <Layers className="w-4 h-4" style={{ color: '#d1aa5c' }} />
               <span
                 style={{
-                  fontSize: 12,
+                  fontSize: 12.5,
                   fontWeight: 600,
                   textTransform: 'uppercase',
                   letterSpacing: '0.08em',
@@ -449,18 +449,16 @@ export default function AdminProductsPage() {
             </span>
           </div>
 
-          {/* Horizontal Overlapping File Cards Container */}
+          {/* Overlapping File Cards — directly on background with NO surrounding card box */}
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
-              padding: '24px 20px',
-              background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
-              borderRadius: 10,
-              border: '1px solid rgba(255,255,255,0.10)',
-              boxShadow: '0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.10)',
               overflowX: 'auto',
-              minHeight: 220,
+              padding: '16px 8px 30px 8px',
+              WebkitOverflowScrolling: 'touch',
+              scrollbarWidth: 'none',
+              msOverflowStyle: 'none',
             }}
           >
             <div
@@ -468,7 +466,7 @@ export default function AdminProductsPage() {
                 display: 'flex',
                 alignItems: 'center',
                 margin: '0 auto',
-                padding: '10px 30px',
+                padding: '10px 16px',
               }}
             >
               {COLLECTION_FILES.map((file, i) => {
@@ -487,22 +485,22 @@ export default function AdminProductsPage() {
                     onMouseLeave={() => setHoveredFileIndex(null)}
                     style={{
                       position: 'relative',
-                      width: 140,
-                      height: 180,
-                      marginLeft: i === 0 ? 0 : -38,
-                      borderRadius: 16,
-                      background: '#18191B',
+                      width: 'clamp(180px, 22vw, 235px)',
+                      height: 'clamp(230px, 28vw, 290px)',
+                      marginLeft: i === 0 ? 0 : 'clamp(-28px, -4vw, -45px)',
+                      borderRadius: 18,
+                      background: '#151619',
                       border: isActive ? '3px solid #d1aa5c' : '2px solid rgba(255, 255, 255, 0.25)',
                       boxShadow: isHovered
-                        ? '0 20px 35px -5px rgba(0,0,0,0.5), 0 0 20px rgba(209, 170, 92, 0.3)'
+                        ? '0 26px 50px -5px rgba(0,0,0,0.75), 0 0 30px rgba(209, 170, 92, 0.45)'
                         : isActive
-                        ? '0 12px 28px -5px rgba(209, 170, 92, 0.35)'
-                        : '0 10px 25px -5px rgba(0,0,0,0.3)',
+                        ? '0 18px 38px -5px rgba(209, 170, 92, 0.5)'
+                        : '0 12px 30px -5px rgba(0,0,0,0.5)',
                       transform: isHovered
-                        ? 'translateY(-16px) scale(1.08) rotate(0deg)'
+                        ? 'translateY(-20px) scale(1.07) rotate(0deg)'
                         : `rotate(${file.angle}deg)`,
                       zIndex: isHovered ? 40 : isActive ? 20 : i + 1,
-                      transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+                      transition: 'all 0.28s cubic-bezier(0.16, 1, 0.3, 1)',
                       cursor: 'pointer',
                       overflow: 'hidden',
                       flexShrink: 0,
@@ -526,7 +524,7 @@ export default function AdminProductsPage() {
                       style={{
                         position: 'absolute',
                         inset: 0,
-                        background: 'linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.25) 50%, transparent 100%)',
+                        background: 'linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.30) 50%, transparent 100%)',
                       }}
                     />
 
@@ -534,14 +532,14 @@ export default function AdminProductsPage() {
                     <div
                       style={{
                         position: 'absolute',
-                        top: 8,
-                        left: 8,
+                        top: 10,
+                        left: 10,
                         background: 'rgba(8, 14, 32, 0.90)',
                         backdropFilter: 'blur(8px)',
-                        border: '1px solid rgba(209, 170, 92, 0.3)',
-                        padding: '3px 8px',
+                        border: '1px solid rgba(209, 170, 92, 0.35)',
+                        padding: '4px 10px',
                         borderRadius: 6,
-                        fontSize: 9.5,
+                        fontSize: 10.5,
                         fontWeight: 700,
                         color: '#d1aa5c',
                         letterSpacing: '0.04em',
@@ -555,18 +553,18 @@ export default function AdminProductsPage() {
                     <div
                       style={{
                         position: 'absolute',
-                        bottom: 10,
-                        left: 10,
-                        right: 10,
+                        bottom: 12,
+                        left: 12,
+                        right: 12,
                       }}
                     >
                       <p
                         style={{
-                          fontSize: 12,
+                          fontSize: 13.5,
                           fontWeight: 600,
                           color: '#FFFFFF',
-                          lineHeight: 1.2,
-                          textShadow: '0 1px 3px rgba(0,0,0,0.8)',
+                          lineHeight: 1.25,
+                          textShadow: '0 2px 6px rgba(0,0,0,0.9)',
                         }}
                       >
                         {file.name}
@@ -600,6 +598,7 @@ export default function AdminProductsPage() {
               padding: '10px 16px',
               border: '1px solid rgba(255,255,255,0.12)',
               flex: 1,
+              minWidth: 220,
               maxWidth: 340,
               boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
             }}
@@ -622,7 +621,18 @@ export default function AdminProductsPage() {
           </div>
 
           {/* Category Clickable Pills */}
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          <div
+            style={{
+              display: 'flex',
+              gap: 8,
+              flexWrap: 'nowrap',
+              overflowX: 'auto',
+              WebkitOverflowScrolling: 'touch',
+              scrollbarWidth: 'none',
+              paddingBottom: 4,
+              maxWidth: '100%',
+            }}
+          >
             {CATEGORIES.map(cat => (
               <button
                 type="button"
@@ -645,6 +655,8 @@ export default function AdminProductsPage() {
                   boxShadow: filter === cat.value
                     ? '0 4px 16px rgba(0,0,0,0.5)'
                     : '0 2px 8px rgba(0,0,0,0.3)',
+                  whiteSpace: 'nowrap',
+                  flexShrink: 0,
                 }}
                 className={filter !== cat.value ? 'hover:bg-white/10 hover:text-white' : ''}
               >
@@ -815,7 +827,7 @@ export default function AdminProductsPage() {
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 260px), 1fr))',
               gap: 20,
             }}
           >

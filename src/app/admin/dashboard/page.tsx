@@ -130,7 +130,7 @@ export default function AdminDashboard() {
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
           borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
-          padding: '24px 36px',
+          padding: 'clamp(14px, 2.5vw, 24px) clamp(16px, 4vw, 36px)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -189,12 +189,12 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      <div style={{ padding: '32px 36px' }}>
+      <div style={{ padding: 'clamp(16px, 3.5vw, 32px) clamp(14px, 4vw, 36px)' }}>
         {/* Stats Grid */}
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 220px), 1fr))',
             gap: 14,
             marginBottom: 28,
           }}

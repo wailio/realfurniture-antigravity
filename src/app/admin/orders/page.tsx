@@ -203,7 +203,7 @@ export default function AdminOrdersPage() {
         style={{
           background: '#0A0B0C',
           borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
-          padding: '28px 36px',
+          padding: 'clamp(16px, 2.5vw, 28px) clamp(16px, 4vw, 36px)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -288,11 +288,11 @@ export default function AdminOrdersPage() {
         </div>
       </div>
 
-      <div style={{ padding: '36px' }}>
+      <div style={{ padding: 'clamp(16px, 3.5vw, 36px)' }}>
         {/* Search & Status Filter Bar */}
         <div style={{ display: 'flex', gap: 12, marginBottom: 24, flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
-          {/* Status filter tabs */}
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          {/* Status filter tabs — scrollable on mobile */}
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch', paddingBottom: 2 } as React.CSSProperties}>
             {[{ value: 'all', label: `Tous (${orders.length})` }, ...Object.entries(STATUS_LABELS).map(([k, v]) => ({
               value: k,
               label: `${v.label} (${orders.filter(o => o.status === k).length})`,
@@ -332,7 +332,8 @@ export default function AdminOrdersPage() {
               borderRadius: 6,
               padding: '9px 16px',
               border: '1px solid rgba(255,255,255,0.12)',
-              width: 280,
+              width: '100%',
+              maxWidth: 280,
               boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
             }}
           >
