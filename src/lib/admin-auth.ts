@@ -112,17 +112,33 @@ export async function requireAdminSession(request: { cookies: { get: (name: stri
   return await verifySessionToken(token)
 }
 
-// ── Supabase Dynamic Users Storage ──────────────────────────────────────────
+// ── Supabase Dynamic Users Storage (Secure & Cloudflare Edge Compatible) ────
 export async function loadDynamicUsers(): Promise<DynamicUserRecord[]> {
   try {
-    const { url } = getSupabaseConfig()
-    const fetchUrl = `${url}/storage/v1/object/public/products/admin-users.json?t=${Date.now()}`
+    const { url, key } = getSupabaseConfig()
+    // Authenticated Supabase storage endpoint ensures strict privacy & avoids public cache
+    const fetchUrl = `${url}/storage/v1/object/authenticated/products/admin-users.json?t=${Date.now()}`
     const res = await fetch(fetchUrl, {
-      cache: 'no-store',
-      headers: { 'Cache-Control': 'no-cache' },
+      headers: {
+        'apikey': key,
+        'Authorization': `Bearer ${key}`,
+      },
     })
     if (res.ok) {
       const data = await res.json()
+      return Array.isArray(data.users) ? data.users : []
+    }
+
+    // Fallback to direct object if authenticated subpath differs
+    const directUrl = `${url}/storage/v1/object/products/admin-users.json?t=${Date.now()}`
+    const resDirect = await fetch(directUrl, {
+      headers: {
+        'apikey': key,
+        'Authorization': `Bearer ${key}`,
+      },
+    })
+    if (resDirect.ok) {
+      const data = await resDirect.json()
       return Array.isArray(data.users) ? data.users : []
     }
   } catch (err) {

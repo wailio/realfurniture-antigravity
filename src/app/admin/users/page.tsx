@@ -191,6 +191,12 @@ export default function AdminUsersPage() {
         return
       }
 
+      if (data.user) {
+        setUsers(prev => [data.user, ...prev.filter(u => u.username !== data.user.username)])
+        setCustomCount(prev => prev + 1)
+        setSelectedId(data.user.id)
+      }
+
       showIosToast('Utilisateur créé avec succès et prêt à se connecter !')
       setShowCreateModal(false)
       setForm({
