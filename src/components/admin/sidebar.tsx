@@ -15,6 +15,7 @@ import {
   ChevronRight,
   Menu,
   X,
+  Users2,
 } from 'lucide-react'
 
 const NAV = [
@@ -36,6 +37,12 @@ const NAV = [
     items: [
       { label: 'Commandes', href: '/admin/orders', icon: ShoppingBag },
       { label: 'Ventes', href: '/admin/sales', icon: TrendingUp },
+    ],
+  },
+  {
+    group: 'Accès',
+    items: [
+      { label: 'Utilisateurs', href: '/admin/users', icon: Users2, devOnly: true },
     ],
   },
 ]
@@ -242,7 +249,7 @@ export default function AdminSidebar() {
                   {section.group}
                 </p>
               )}
-              {section.items.map((item) => {
+              {section.items.filter(item => !('devOnly' in item && item.devOnly) || currentUser.role === 'developer').map((item) => {
                 const active = isActive(item.href)
                 return (
                   <Link
@@ -387,7 +394,7 @@ export default function AdminSidebar() {
               {section.group && collapsed && (
                 <div style={{ height: 1, background: 'rgba(255,255,255,0.05)', margin: '12px 10px' }} />
               )}
-              {section.items.map((item) => {
+              {section.items.filter(item => !('devOnly' in item && item.devOnly) || currentUser.role === 'developer').map((item) => {
                 const active = isActive(item.href)
                 return (
                   <Link
