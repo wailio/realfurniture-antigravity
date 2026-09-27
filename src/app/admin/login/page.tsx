@@ -16,10 +16,11 @@ export default function AdminLoginPage() {
   const [loading, setLoading] = useState(false)
   const [checkingAuth, setCheckingAuth] = useState(false)
   const [shake, setShake] = useState(false)
+  const [userFocused, setUserFocused] = useState(false)
+  const [pwFocused, setPwFocused] = useState(false)
   const cardRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    // Check if already authenticated
     async function checkSession() {
       try {
         const res = await fetch('/api/admin/me')
@@ -33,7 +34,6 @@ export default function AdminLoginPage() {
       } catch {}
       setCheckingAuth(false)
     }
-
     checkSession()
   }, [router])
 
@@ -98,11 +98,12 @@ export default function AdminLoginPage() {
         }}
       />
 
-      {/* Main card - The 'info shape' styled with abbc.jpg background and glassmorphism */}
+      {/* Main card — smaller on mobile so sides are visible */}
       <div
         ref={cardRef}
-        className="relative z-10 w-full max-w-[430px] rounded-[28px] overflow-hidden"
+        className="relative z-10 w-full rounded-[28px] overflow-hidden"
         style={{
+          maxWidth: 'min(390px, calc(100vw - 48px))',
           boxShadow: '0 28px 75px -10px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
           animation: shake ? 'shake 0.5s cubic-bezier(.36,.07,.19,.97) both' : undefined,
           transition: 'transform 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
@@ -128,7 +129,7 @@ export default function AdminLoginPage() {
           }}
         />
 
-        {/* Top Half-tone dots pattern (bgdots) exactly like reference */}
+        {/* Top Half-tone dots pattern */}
         <div
           className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[360px] h-[135px] pointer-events-none select-none"
           style={{
@@ -142,75 +143,74 @@ export default function AdminLoginPage() {
         />
 
         {/* Card Content */}
-        <div className="relative z-10 px-7 sm:px-9 pt-8 pb-9 flex flex-col items-center">
-          {/* Logo container matching reference layout with shop logo (logos.png) */}
-          <div
-            className="w-18 h-18 sm:w-20 sm:h-20 rounded-[20px] flex items-center justify-center mb-5"
-            style={{
-              background: 'linear-gradient(145deg, rgba(28, 30, 38, 0.95) 0%, rgba(15, 17, 22, 0.95) 100%)',
-              border: '1px solid rgba(209, 170, 92, 0.32)',
-              boxShadow: '0 12px 28px -6px rgba(0, 0, 0, 0.6), 0 0 24px rgba(209, 170, 92, 0.20), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
-              backdropFilter: 'blur(10px)',
-            }}
-          >
+        <div className="relative z-10 px-6 sm:px-8 pt-8 pb-8 flex flex-col items-center">
+
+          {/* ── Logo: directly on the blue bg — no surrounding box ── */}
+          <div className="mb-5 relative flex items-center justify-center">
             <Image
               src="/logos.png"
               alt="Château d'art"
-              width={54}
-              height={54}
-              className="object-contain drop-shadow-[0_4px_12px_rgba(209,170,92,0.45)]"
+              width={66}
+              height={66}
+              className="object-contain drop-shadow-[0_6px_18px_rgba(209,170,92,0.55)]"
               priority
             />
           </div>
 
-          {/* Heading - Welcome Admin (matching reference typography) */}
+          {/* Heading */}
           <h1
-            className="text-[25px] sm:text-[27px] font-bold text-white tracking-[-0.02em] text-center"
+            className="text-[24px] sm:text-[26px] font-bold text-white tracking-[-0.02em] text-center"
             style={{ fontFamily: 'var(--font-heading)' }}
           >
             Welcome Admin
           </h1>
 
-          {/* Subtitle - Please enter your details to sign in */}
-          <p className="text-[13px] sm:text-[13.5px] text-[#A1A1AA] text-center mt-1.5 mb-7">
+          {/* Subtitle */}
+          <p className="text-[12.5px] sm:text-[13px] text-[#A1A1AA] text-center mt-1.5 mb-6">
             Please enter your details to sign in
           </p>
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="w-full flex flex-col gap-4">
-            {/* Username / Email field */}
+          <form onSubmit={handleSubmit} className="w-full flex flex-col gap-3.5">
+
+            {/* ── Username field ── */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-[12.5px] font-medium text-white/90 pl-0.5">
-                Email address
+              <label className="text-[12px] font-medium text-white/80 pl-0.5">
+                Username
               </label>
               <div
                 className="flex items-center gap-3 px-3.5 py-3 rounded-[12px] transition-all duration-200"
                 style={{
                   background: 'rgba(255, 255, 255, 0.055)',
                   border: error
-                    ? '1px solid rgba(248, 113, 113, 0.5)'
-                    : '1px solid rgba(255, 255, 255, 0.12)',
+                    ? '1.5px solid rgba(248, 113, 113, 0.6)'
+                    : userFocused
+                    ? '1.5px solid rgba(209, 170, 92, 0.7)'
+                    : '1.5px solid rgba(255, 255, 255, 0.12)',
+                  boxShadow: userFocused
+                    ? '0 0 0 3px rgba(209, 170, 92, 0.18), 0 2px 12px rgba(209, 170, 92, 0.08)'
+                    : 'none',
                 }}
               >
-                <User className="w-4 h-4 text-white/40 shrink-0" />
+                <User className="w-4 h-4 shrink-0" style={{ color: userFocused ? '#d1aa5c' : 'rgba(255,255,255,0.35)' }} />
                 <input
                   type="text"
                   value={username}
-                  onChange={(e) => {
-                    setUsername(e.target.value)
-                    setError('')
-                  }}
-                  placeholder="Enter your email"
+                  onChange={(e) => { setUsername(e.target.value); setError('') }}
+                  onFocus={() => setUserFocused(true)}
+                  onBlur={() => setUserFocused(false)}
+                  placeholder="Enter your username"
                   autoComplete="username"
                   required
-                  className="w-full bg-transparent text-[13.5px] text-white placeholder-white/30 outline-none border-none"
+                  className="w-full bg-transparent text-[13px] text-white placeholder-white/25 border-none"
+                  style={{ outline: 'none', boxShadow: 'none' }}
                 />
               </div>
             </div>
 
-            {/* Password field */}
+            {/* ── Password field ── */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-[12.5px] font-medium text-white/90 pl-0.5">
+              <label className="text-[12px] font-medium text-white/80 pl-0.5">
                 Password
               </label>
               <div
@@ -218,28 +218,33 @@ export default function AdminLoginPage() {
                 style={{
                   background: 'rgba(255, 255, 255, 0.055)',
                   border: error
-                    ? '1px solid rgba(248, 113, 113, 0.5)'
-                    : '1px solid rgba(255, 255, 255, 0.12)',
+                    ? '1.5px solid rgba(248, 113, 113, 0.6)'
+                    : pwFocused
+                    ? '1.5px solid rgba(209, 170, 92, 0.7)'
+                    : '1.5px solid rgba(255, 255, 255, 0.12)',
+                  boxShadow: pwFocused
+                    ? '0 0 0 3px rgba(209, 170, 92, 0.18), 0 2px 12px rgba(209, 170, 92, 0.08)'
+                    : 'none',
                 }}
               >
-                <Lock className="w-4 h-4 text-white/40 shrink-0" />
+                <Lock className="w-4 h-4 shrink-0" style={{ color: pwFocused ? '#d1aa5c' : 'rgba(255,255,255,0.35)' }} />
                 <input
                   type={showPw ? 'text' : 'password'}
                   value={password}
-                  onChange={(e) => {
-                    setPassword(e.target.value)
-                    setError('')
-                  }}
+                  onChange={(e) => { setPassword(e.target.value); setError('') }}
+                  onFocus={() => setPwFocused(true)}
+                  onBlur={() => setPwFocused(false)}
                   placeholder="Password"
                   autoComplete="current-password"
                   required
-                  className="w-full bg-transparent text-[13.5px] text-white placeholder-white/30 outline-none border-none"
+                  className="w-full bg-transparent text-[13px] text-white placeholder-white/25 border-none flex-1"
+                  style={{ outline: 'none', boxShadow: 'none' }}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPw(!showPw)}
                   tabIndex={-1}
-                  className="text-white/40 hover:text-white/80 transition-colors p-1"
+                  className="text-white/35 hover:text-white/70 transition-colors p-1 shrink-0"
                 >
                   {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -248,8 +253,8 @@ export default function AdminLoginPage() {
 
             {/* Error message */}
             {error && (
-              <div className="flex items-center gap-2 p-3 rounded-[10px] bg-red-500/10 border border-red-500/30 text-red-400 text-[12.5px]">
-                <AlertCircle className="w-4 h-4 shrink-0" />
+              <div className="flex items-center gap-2 p-3 rounded-[10px] bg-red-500/10 border border-red-500/30 text-red-400 text-[12px]">
+                <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                 <span>{error}</span>
               </div>
             )}
@@ -258,7 +263,7 @@ export default function AdminLoginPage() {
             <button
               type="submit"
               disabled={loading || !username.trim() || !password}
-              className="w-full mt-2 py-3.5 rounded-[12px] font-semibold text-[14px] flex items-center justify-center gap-2 transition-all duration-200"
+              className="w-full mt-1.5 py-3.5 rounded-[14px] font-semibold text-[14px] flex items-center justify-center gap-2 transition-all duration-200 active:scale-[0.98]"
               style={{
                 background:
                   loading || !username.trim() || !password
@@ -283,15 +288,24 @@ export default function AdminLoginPage() {
             </button>
           </form>
 
-          {/* Reference caption at bottom: 'Here you just enter the access code' */}
-          <p className="text-[12px] text-[#A1A1AA]/80 text-center mt-6">
+          <p className="text-[11.5px] text-[#A1A1AA]/70 text-center mt-5">
             Here you just enter the access code
           </p>
         </div>
       </div>
 
-      {/* Shake keyframes */}
+      {/* Global style: remove ALL native input focus outlines */}
       <style>{`
+        input:focus {
+          outline: none !important;
+          box-shadow: none !important;
+          -webkit-box-shadow: none !important;
+        }
+        input:-webkit-autofill,
+        input:-webkit-autofill:focus {
+          -webkit-box-shadow: 0 0 0 1000px rgba(16, 18, 24, 0.97) inset !important;
+          -webkit-text-fill-color: #FFFFFF !important;
+        }
         @keyframes shake {
           10%, 90% { transform: translate3d(-1px, 0, 0); }
           20%, 80% { transform: translate3d(2px, 0, 0); }

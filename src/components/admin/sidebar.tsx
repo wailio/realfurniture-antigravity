@@ -61,6 +61,7 @@ export default function AdminSidebar() {
   const [collapsed, setCollapsed] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [loggingOut, setLoggingOut] = useState(false)
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
   const [currentUser, setCurrentUser] = useState<{ username: string; role: string; displayName: string }>({
     username: 'admin',
     role: 'admin',
@@ -72,16 +73,16 @@ export default function AdminSidebar() {
     setMobileOpen(false)
   }, [pathname])
 
-  // Prevent background scrolling when mobile drawer is open
+  // Prevent background scrolling when mobile drawer is open OR confirm is shown
   useEffect(() => {
     if (typeof document !== 'undefined') {
-      if (mobileOpen) {
+      if (mobileOpen || showLogoutConfirm) {
         document.body.style.overflow = 'hidden'
       } else {
         document.body.style.overflow = ''
       }
     }
-  }, [mobileOpen])
+  }, [mobileOpen, showLogoutConfirm])
 
   useEffect(() => {
     try {
@@ -104,7 +105,14 @@ export default function AdminSidebar() {
       .catch(() => {})
   }, [])
 
+  // Show iOS action-sheet confirm instead of logging out immediately
+  function confirmLogout() {
+    setMobileOpen(false)
+    setTimeout(() => setShowLogoutConfirm(true), 50)
+  }
+
   async function handleLogout() {
+    setShowLogoutConfirm(false)
     setLoggingOut(true)
     try {
       await fetch('/api/admin/logout', { method: 'POST' })
@@ -172,7 +180,7 @@ export default function AdminSidebar() {
         {/* User Pill / Logout on mobile header */}
         <button
           type="button"
-          onClick={handleLogout}
+          onClick={confirmLogout}
           className="flex items-center justify-center w-9 h-9 rounded-full border border-white/10 text-white/80 active:scale-95 transition-all"
           style={{
             background: currentUser.role === 'developer'
@@ -278,7 +286,7 @@ export default function AdminSidebar() {
           </Link>
 
           <div
-            onClick={handleLogout}
+            onClick={confirmLogout}
             className="flex items-center gap-3 p-2.5 rounded-xl border border-white/5 bg-white/[0.03] cursor-pointer hover:bg-white/[0.06] transition-colors"
           >
             <div
@@ -483,7 +491,7 @@ export default function AdminSidebar() {
             }}
             onMouseEnter={(e) => applyHover(e.currentTarget as HTMLElement)}
             onMouseLeave={(e) => removeHover(e.currentTarget as HTMLElement, false)}
-            onClick={handleLogout}
+            onClick={confirmLogout}
             title="Se déconnecter"
           >
             <div
@@ -517,6 +525,119 @@ export default function AdminSidebar() {
           </div>
         </div>
       </aside>
+
+      {/* ─────────────────────────────────────────────────────────────────
+          iOS-STYLE LOGOUT CONFIRMATION ACTION SHEET
+         ───────────────────────────────────────────────────────────────── */}
+      {showLogoutConfirm && (
+        <div
+          className="fixed inset-0 z-[9999] flex items-end justify-center md:items-center"
+          style={{ fontFamily: 'var(--font-body)' }}
+        >
+          {/* Scrim */}
+          <div
+            className="absolute inset-0"
+            style={{ background: 'rgba(0, 0, 0, 0.5)', backdropFilter: 'blur(4px)', WebkitBackdropFilter: 'blur(4px)' }}
+            onClick={() => setShowLogoutConfirm(false)}
+          />
+
+          {/* Action Sheet */}
+          <div
+            className="relative w-full mx-4 mb-6 md:mb-0 md:w-[340px] flex flex-col gap-2.5"
+            style={{ maxWidth: 380, animation: 'iosSheetIn 0.38s cubic-bezier(0.32, 0.72, 0, 1) both' }}
+          >
+            {/* Main card */}
+            <div
+              style={{
+                background: 'rgba(28, 28, 30, 0.95)',
+                backdropFilter: 'blur(30px)',
+                WebkitBackdropFilter: 'blur(30px)',
+                borderRadius: 16,
+                overflow: 'hidden',
+                boxShadow: '0 20px 60px rgba(0,0,0,0.6)',
+                border: '1px solid rgba(255,255,255,0.09)',
+              }}
+            >
+              {/* Title + message */}
+              <div
+                style={{
+                  padding: '18px 20px 14px',
+                  textAlign: 'center',
+                  borderBottom: '1px solid rgba(255,255,255,0.08)',
+                }}
+              >
+                <p style={{ fontSize: 14, fontWeight: 700, color: '#FFFFFF', marginBottom: 4 }}>
+                  Se déconnecter ?
+                </p>
+                <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.45)', lineHeight: 1.5 }}>
+                  Vous allez quitter l'espace admin. Vous devrez vous reconnecter pour accéder à nouveau au tableau de bord.
+                </p>
+              </div>
+
+              {/* Confirm (Destructive) */}
+              <button
+                type="button"
+                onClick={handleLogout}
+                disabled={loggingOut}
+                style={{
+                  width: '100%',
+                  padding: '16px 20px',
+                  textAlign: 'center',
+                  fontSize: 17,
+                  fontWeight: 600,
+                  color: '#FF453A',
+                  background: 'transparent',
+                  border: 'none',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 8,
+                  transition: 'background 0.15s',
+                }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,69,58,0.08)' }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.background = 'transparent' }}
+              >
+                <LogOut style={{ width: 18, height: 18 }} />
+                {loggingOut ? 'Déconnexion...' : 'Se déconnecter'}
+              </button>
+            </div>
+
+            {/* Cancel button — separate pill, iOS style */}
+            <button
+              type="button"
+              onClick={() => setShowLogoutConfirm(false)}
+              style={{
+                width: '100%',
+                padding: '17px 20px',
+                textAlign: 'center',
+                fontSize: 17,
+                fontWeight: 700,
+                color: '#FFFFFF',
+                background: 'rgba(28, 28, 30, 0.95)',
+                backdropFilter: 'blur(30px)',
+                WebkitBackdropFilter: 'blur(30px)',
+                borderRadius: 16,
+                border: '1px solid rgba(255,255,255,0.09)',
+                cursor: 'pointer',
+                boxShadow: '0 8px 30px rgba(0,0,0,0.4)',
+                transition: 'background 0.15s',
+              }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(44,44,46,0.98)' }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(28,28,30,0.95)' }}
+            >
+              Annuler
+            </button>
+          </div>
+
+          <style>{`
+            @keyframes iosSheetIn {
+              from { opacity: 0; transform: translateY(30px) scale(0.97); }
+              to   { opacity: 1; transform: translateY(0)    scale(1); }
+            }
+          `}</style>
+        </div>
+      )}
     </>
   )
 }
