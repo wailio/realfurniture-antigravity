@@ -130,6 +130,11 @@ export default function AdminSalesPage() {
       prev.map(l => (l.id === leadId ? { ...l, funnel_stage: targetStage } : l))
     )
 
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('lead_funnel_updated', { detail: { leadId, targetStage } }))
+      try { localStorage.setItem('lead_funnel_updated_at', Date.now().toString()) } catch {}
+    }
+
     try {
       const res = await fetch('/api/admin/sales', {
         method: 'PATCH',
@@ -138,6 +143,10 @@ export default function AdminSalesPage() {
       })
       if (!res.ok) throw new Error('Erreur lors du déplacement')
       showIosToast('Étape mise à jour ✓', 'success')
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('lead_funnel_updated', { detail: { leadId, targetStage } }))
+        try { localStorage.setItem('lead_funnel_updated_at', Date.now().toString()) } catch {}
+      }
     } catch {
       showIosToast('Erreur lors du déplacement', 'error')
       fetchLeads()
@@ -303,6 +312,10 @@ export default function AdminSalesPage() {
       })
       setLeads(prev => prev.map(l => l.id === lead.id ? { ...l, funnel_stage: STAGES[newIdx].key } : l))
       showIosToast(`Avancé vers "${STAGES[newIdx].label}" ✓`, 'success')
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('lead_funnel_updated', { detail: { leadId: lead.id, targetStage: STAGES[newIdx].key } }))
+        try { localStorage.setItem('lead_funnel_updated_at', Date.now().toString()) } catch {}
+      }
     } catch {
       showIosToast('Erreur lors du déplacement', 'error')
     } finally {

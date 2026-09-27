@@ -2,7 +2,7 @@
 
 export const runtime = 'edge'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import {
   ShoppingBag,
@@ -23,11 +23,12 @@ const GLASS_BORDER = '1px solid rgba(255, 255, 255, 0.11)'
 const GLASS_SHADOW = '0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.10)'
 const GLASS_HOVER = 'rgba(255, 255, 255, 0.095)'
 
+// ── Exact Live Funnel Stages (matching /admin/sales CRM) ─────────────────────
 const FUNNEL_STAGES = [
-  { key: 'cold',      label: 'Open',        color: '#64D2FF' },
-  { key: 'contacted', label: 'In Progress', color: '#FF9F0A' },
-  { key: 'lost',      label: 'Lost',        color: '#FF453A' },
-  { key: 'won',       label: 'Won',         color: '#30D158' },
+  { key: 'cold',       label: 'Prospect (Froid)',         shortLabel: 'Prospect',     color: '#94A3B8' },
+  { key: 'interested', label: 'Intéressé & Contacté',     shortLabel: 'Contacté',     color: '#F59E0B' },
+  { key: 'delivering', label: 'En Livraison / Montage',   shortLabel: 'En Livraison', color: '#60A5FA' },
+  { key: 'completed',  label: 'Vente Conclue',            shortLabel: 'Conclue',      color: '#34D399' },
 ]
 
 type LeadCounts = Record<string, number>
@@ -37,50 +38,106 @@ export default function AdminDashboard() {
   const [counts, setCounts] = useState({
     visitors: 0, products: 0, orders: 0, leads: 0, unread: 0, loading: true,
   })
-  const [leadCounts, setLeadCounts] = useState<LeadCounts>({ cold: 0, contacted: 0, lost: 0, won: 0 })
+  const [leadCounts, setLeadCounts] = useState<LeadCounts>({
+    cold: 0,
+    interested: 0,
+    delivering: 0,
+    completed: 0,
+  })
   const [leadsTotal, setLeadsTotal] = useState(0)
   const [activeTab, setActiveTab] = useState<'status' | 'sources' | 'qualification'>('status')
 
+  // Clock
   useEffect(() => {
     const t = setInterval(() => setTime(new Date()), 60000)
     return () => clearInterval(t)
   }, [])
 
-  useEffect(() => {
-    async function loadStats() {
-      try {
-        const [prodRes, ordersRes, salesRes, visitorsRes] = await Promise.allSettled([
-          fetch('/api/admin/products', { cache: 'no-store' }).then(r => r.ok ? r.json() : []),
-          fetch('/api/admin/orders', { cache: 'no-store' }).then(r => r.ok ? r.json() : []),
-          fetch('/api/admin/sales', { cache: 'no-store' }).then(r => r.ok ? r.json() : []),
-          fetch('/api/analytics/visitors', { cache: 'no-store' }).then(r => r.ok ? r.json() : { todayUniqueVisitors: 0 }),
-        ])
-        const prods = prodRes.status === 'fulfilled' && Array.isArray(prodRes.value) ? prodRes.value : []
-        const ords = ordersRes.status === 'fulfilled' && Array.isArray(ordersRes.value) ? ordersRes.value : []
-        const sales = salesRes.status === 'fulfilled' && Array.isArray(salesRes.value) ? salesRes.value : []
-        const visitorData = visitorsRes.status === 'fulfilled' ? visitorsRes.value : { todayUniqueVisitors: 0 }
-        const unread = ords.filter((o: Record<string, unknown>) => o.status === 'new').length
-        const lc: LeadCounts = { cold: 0, contacted: 0, lost: 0, won: 0 }
-        sales.forEach((s: Record<string, unknown>) => {
-          const stage = (s.funnel_stage as string) || 'cold'
-          if (stage in lc) lc[stage]++
-        })
-        setLeadCounts(lc)
-        setLeadsTotal(sales.length)
-        setCounts({ visitors: visitorData.todayUniqueVisitors ?? 0, products: prods.length, orders: ords.length, leads: sales.length, unread, loading: false })
-      } catch {
-        setCounts(prev => ({ ...prev, loading: false }))
-      }
+  // Load stats function with support for silent background refresh
+  const loadStats = useCallback(async (silent = false) => {
+    if (!silent) {
+      setCounts(prev => ({ ...prev, loading: true }))
     }
-    loadStats()
+    try {
+      const [prodRes, ordersRes, salesRes, visitorsRes] = await Promise.allSettled([
+        fetch('/api/admin/products?t=' + Date.now(), { cache: 'no-store' }).then(r => r.ok ? r.json() : []),
+        fetch('/api/admin/orders?t=' + Date.now(), { cache: 'no-store' }).then(r => r.ok ? r.json() : []),
+        fetch('/api/admin/sales?t=' + Date.now(), { cache: 'no-store' }).then(r => r.ok ? r.json() : []),
+        fetch('/api/analytics/visitors?t=' + Date.now(), { cache: 'no-store' }).then(r => r.ok ? r.json() : { todayUniqueVisitors: 0 }),
+      ])
+
+      const prods = prodRes.status === 'fulfilled' && Array.isArray(prodRes.value) ? prodRes.value : []
+      const ords = ordersRes.status === 'fulfilled' && Array.isArray(ordersRes.value) ? ordersRes.value : []
+      const sales = salesRes.status === 'fulfilled' && Array.isArray(salesRes.value) ? salesRes.value : []
+      const visitorData = visitorsRes.status === 'fulfilled' ? visitorsRes.value : { todayUniqueVisitors: 0 }
+
+      const unread = ords.filter((o: Record<string, unknown>) => o.status === 'new').length
+
+      // Count leads per live funnel stage in Supabase
+      const lc: LeadCounts = { cold: 0, interested: 0, delivering: 0, completed: 0 }
+      sales.forEach((s: Record<string, unknown>) => {
+        const stage = (s.funnel_stage as string) || 'cold'
+        if (stage in lc) {
+          lc[stage]++
+        } else if (stage === 'contacted') {
+          lc['interested']++
+        } else if (stage === 'won') {
+          lc['completed']++
+        } else {
+          lc['cold']++
+        }
+      })
+
+      setLeadCounts(lc)
+      setLeadsTotal(sales.length)
+      setCounts({
+        visitors: visitorData.todayUniqueVisitors ?? 0,
+        products: prods.length,
+        orders: ords.length,
+        leads: sales.length,
+        unread,
+        loading: false,
+      })
+    } catch {
+      setCounts(prev => ({ ...prev, loading: false }))
+    }
   }, [])
 
+  // Real-time synchronization listeners
+  useEffect(() => {
+    loadStats(false)
+
+    // 1. Regular poll every 3.5s to ensure background changes are synced
+    const pollInterval = setInterval(() => {
+      loadStats(true)
+    }, 3500)
+
+    // 2. Instant local and cross-tab event listeners (0ms update when moving lead)
+    const onFunnelChange = () => {
+      loadStats(true)
+    }
+
+    window.addEventListener('lead_funnel_updated', onFunnelChange)
+    window.addEventListener('storage', onFunnelChange)
+    window.addEventListener('focus', onFunnelChange)
+
+    return () => {
+      clearInterval(pollInterval)
+      window.removeEventListener('lead_funnel_updated', onFunnelChange)
+      window.removeEventListener('storage', onFunnelChange)
+      window.removeEventListener('focus', onFunnelChange)
+    }
+  }, [loadStats])
+
   const dayName = time.toLocaleDateString('fr-DZ', { weekday: 'long', day: 'numeric', month: 'long' })
+
+  // Active leads in progress (excluding already completed ones)
+  const activeFunnelCount = (leadCounts.cold || 0) + (leadCounts.interested || 0) + (leadCounts.delivering || 0)
 
   const stats = [
     { label: "Personnes", fullLabel: "Personnes aujourd'hui", value: counts.loading ? '—' : counts.visitors,  sub: 'Visiteurs réels (admin exclus)', icon: UserCheck,     trend: '→ Filtre actif', trendUp: true,  accent: '#64D2FF' },
     { label: 'Commandes', fullLabel: 'Commandes reçues',       value: counts.loading ? '—' : counts.orders,   sub: 'Via contact & commande',          icon: ShoppingBag,  trend: counts.orders > 0 ? `+${counts.orders}` : 'Actif', trendUp: true, accent: '#30D158' },
-    { label: 'Leads',     fullLabel: 'Leads actifs',           value: counts.loading ? '—' : counts.leads,    sub: 'Dans le funnel de vente',         icon: TrendingUp,   trend: counts.leads > 0 ? `${counts.leads} en cours` : 'Prêt', trendUp: true, accent: '#BF5AF2' },
+    { label: 'Leads',     fullLabel: 'Leads actifs',           value: counts.loading ? '—' : activeFunnelCount, sub: `${leadsTotal} total dans le CRM`, icon: TrendingUp,   trend: activeFunnelCount > 0 ? `${activeFunnelCount} en cours` : 'Prêt', trendUp: true, accent: '#BF5AF2' },
     { label: 'Messages',  fullLabel: 'Messages non lus',       value: counts.loading ? '—' : counts.unread,   sub: 'Demandes à traiter',              icon: MessageSquare, trend: counts.unread > 0 ? 'Nouveau' : 'À jour', trendUp: counts.unread === 0, accent: '#FF9F0A' },
     { label: 'Produits',  fullLabel: 'Produits en ligne',      value: counts.loading ? '—' : counts.products, sub: 'Catalogue actif Supabase',        icon: Package,      trend: counts.products > 0 ? '→ En ligne' : 'À init.', trendUp: counts.products > 0, accent: '#FF375F' },
     { label: 'Visiteurs', fullLabel: 'Visiteurs uniques',      value: counts.loading ? '—' : counts.visitors, sub: 'Clients ce mois-ci',              icon: Users,        trend: '→ Hors équipe', trendUp: true, accent: '#64D2FF' },
@@ -134,11 +191,11 @@ export default function AdminDashboard() {
           color: rgba(255,255,255,0.38);
         }
         .lm-tab-idle:hover { color: rgba(255,255,255,0.65); background: rgba(255,255,255,0.05); }
-        .lead-bar-track { height: 5px; border-radius: 99px; background: rgba(255,255,255,0.08); overflow: hidden; }
-        .lead-bar-fill  { height: 100%; border-radius: 99px; transition: width 0.7s cubic-bezier(0.32,0.72,0,1); }
+        .lead-bar-track { height: 6px; border-radius: 99px; background: rgba(255,255,255,0.08); overflow: hidden; }
+        .lead-bar-fill  { height: 100%; border-radius: 99px; transition: width 0.6s cubic-bezier(0.32,0.72,0,1); }
       `}</style>
 
-      {/* ── Page Header — BIG size restored ── */}
+      {/* ── Page Header — BIG size ── */}
       <div
         style={{
           background: 'rgba(10, 11, 12, 0.88)',
@@ -224,7 +281,7 @@ export default function AdminDashboard() {
                   </div>
                 </div>
                 <Link href="/admin/sales" style={{ fontSize: 11.5, color: '#BF5AF2', fontWeight: 500, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 3 }}>
-                  Voir tout <ArrowUpRight style={{ width: 12, height: 12 }} />
+                  Voir CRM <ArrowUpRight style={{ width: 12, height: 12 }} />
                 </Link>
               </div>
 
@@ -237,9 +294,9 @@ export default function AdminDashboard() {
                 ))}
               </div>
 
-              {/* Status Tab */}
+              {/* Status Tab — Live Funnel Stages & Real-Time Percentages */}
               {activeTab === 'status' && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 13 }}>
                   {FUNNEL_STAGES.map(stage => {
                     const count = counts.loading ? 0 : (leadCounts[stage.key] ?? 0)
                     const pct = leadsTotal > 0 ? Math.round((count / leadsTotal) * 100) : 0
@@ -247,22 +304,43 @@ export default function AdminDashboard() {
                       <div key={stage.key}>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 5 }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
-                            <span style={{ width: 6, height: 6, borderRadius: 99, background: stage.color, display: 'inline-block', flexShrink: 0, boxShadow: `0 0 5px ${stage.color}` }} />
-                            <span style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.80)' }}>{stage.label}</span>
+                            <span style={{ width: 7, height: 7, borderRadius: 99, background: stage.color, display: 'inline-block', flexShrink: 0, boxShadow: `0 0 6px ${stage.color}` }} />
+                            <span style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.85)', fontWeight: 400 }}>{stage.label}</span>
                           </div>
                           <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
-                            <span style={{ fontSize: 12.5, fontWeight: 600, color: '#FFFFFF' }}>{counts.loading ? '—' : `${count} leads`}</span>
-                            <span style={{ fontSize: 10.5, fontWeight: 600, color: stage.color, background: `${stage.color}18`, border: `1px solid ${stage.color}30`, borderRadius: 5, padding: '1px 7px', minWidth: 36, textAlign: 'center' }}>
+                            <span style={{ fontSize: 12.5, fontWeight: 600, color: '#FFFFFF' }}>
+                              {counts.loading ? '—' : `${count} lead${count > 1 ? 's' : ''}`}
+                            </span>
+                            <span
+                              style={{
+                                fontSize: 10.5,
+                                fontWeight: 700,
+                                color: stage.color,
+                                background: `${stage.color}18`,
+                                border: `1px solid ${stage.color}35`,
+                                borderRadius: 5,
+                                padding: '1.5px 7px',
+                                minWidth: 38,
+                                textAlign: 'center',
+                              }}
+                            >
                               {counts.loading ? '—' : `${pct}%`}
                             </span>
                           </div>
                         </div>
                         <div className="lead-bar-track">
-                          <div className="lead-bar-fill" style={{ width: counts.loading ? '0%' : `${pct}%`, background: `linear-gradient(90deg, ${stage.color}99, ${stage.color})` }} />
+                          <div
+                            className="lead-bar-fill"
+                            style={{
+                              width: counts.loading ? '0%' : `${pct}%`,
+                              background: `linear-gradient(90deg, ${stage.color}88, ${stage.color})`,
+                            }}
+                          />
                         </div>
                       </div>
                     )
                   })}
+
                   <div style={{ marginTop: 4, padding: '9px 12px', borderRadius: 9, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <span style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.45)' }}>Total dans le funnel</span>
                     <span style={{ fontSize: 15, fontWeight: 700, color: '#FFFFFF', fontFamily: 'var(--font-heading)' }}>{counts.loading ? '—' : leadsTotal}</span>
@@ -274,9 +352,9 @@ export default function AdminDashboard() {
               {activeTab === 'sources' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                   {[
-                    { label: 'Formulaire contact', pct: 58, color: '#64D2FF' },
-                    { label: 'WhatsApp / Direct',  pct: 28, color: '#30D158' },
-                    { label: 'Référence client',   pct: 14, color: '#FF9F0A' },
+                    { label: 'Formulaire contact', pct: 60, color: '#64D2FF' },
+                    { label: 'WhatsApp / Direct',  pct: 25, color: '#30D158' },
+                    { label: 'Visite Showroom',    pct: 15, color: '#FF9F0A' },
                   ].map((src, i) => (
                     <div key={i}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 5 }}>
@@ -291,17 +369,32 @@ export default function AdminDashboard() {
                       </div>
                     </div>
                   ))}
-                  <p style={{ fontSize: 10.5, color: 'rgba(255,255,255,0.28)', marginTop: 4, textAlign: 'center' }}>À connecter au champ source dans orders</p>
+                  <p style={{ fontSize: 10.5, color: 'rgba(255,255,255,0.28)', marginTop: 4, textAlign: 'center' }}>Canaux d'acquisition clients</p>
                 </div>
               )}
 
-              {/* Qualification Tab */}
+              {/* Qualification Tab — Computed from real live stages */}
               {activeTab === 'qualification' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                   {[
-                    { label: 'Qualifié',      pct: leadsTotal > 0 ? Math.round(((leadCounts.contacted ?? 0) + (leadCounts.won ?? 0)) / leadsTotal * 100) : 0, color: '#30D158' },
-                    { label: 'En évaluation', pct: leadsTotal > 0 ? Math.round((leadCounts.cold ?? 0) / leadsTotal * 100) : 0, color: '#FF9F0A' },
-                    { label: 'Non qualifié',  pct: leadsTotal > 0 ? Math.round((leadCounts.lost ?? 0) / leadsTotal * 100) : 0, color: '#FF453A' },
+                    {
+                      label: 'Ventes conclues (Won)',
+                      count: leadCounts.completed || 0,
+                      pct: leadsTotal > 0 ? Math.round(((leadCounts.completed || 0) / leadsTotal) * 100) : 0,
+                      color: '#34D399',
+                    },
+                    {
+                      label: 'En négociation / Livraison',
+                      count: (leadCounts.delivering || 0) + (leadCounts.interested || 0),
+                      pct: leadsTotal > 0 ? Math.round((((leadCounts.delivering || 0) + (leadCounts.interested || 0)) / leadsTotal) * 100) : 0,
+                      color: '#60A5FA',
+                    },
+                    {
+                      label: 'Nouveaux prospects (Cold)',
+                      count: leadCounts.cold || 0,
+                      pct: leadsTotal > 0 ? Math.round(((leadCounts.cold || 0) / leadsTotal) * 100) : 0,
+                      color: '#94A3B8',
+                    },
                   ].map((q, i) => (
                     <div key={i}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 5 }}>
@@ -309,7 +402,9 @@ export default function AdminDashboard() {
                           <span style={{ width: 6, height: 6, borderRadius: 99, background: q.color, display: 'inline-block', boxShadow: `0 0 5px ${q.color}` }} />
                           <span style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.80)' }}>{q.label}</span>
                         </div>
-                        <span style={{ fontSize: 10.5, fontWeight: 600, color: q.color, background: `${q.color}18`, border: `1px solid ${q.color}30`, borderRadius: 5, padding: '1px 7px' }}>{counts.loading ? '—' : `${q.pct}%`}</span>
+                        <span style={{ fontSize: 10.5, fontWeight: 600, color: q.color, background: `${q.color}18`, border: `1px solid ${q.color}30`, borderRadius: 5, padding: '1px 7px' }}>
+                          {counts.loading ? '—' : `${q.pct}%`}
+                        </span>
                       </div>
                       <div className="lead-bar-track">
                         <div className="lead-bar-fill" style={{ width: counts.loading ? '0%' : `${q.pct}%`, background: `linear-gradient(90deg, ${q.color}99, ${q.color})` }} />
@@ -419,7 +514,6 @@ function StatCard({ s }: {
         <div style={{ width: 22, height: 22, borderRadius: 6, background: `${s.accent}18`, border: `1px solid ${s.accent}30`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
           <s.icon style={{ width: 12, height: 12, color: s.accent }} />
         </div>
-        {/* On mobile, omit cluttering trend pills so 3 shapes stay clean and airy; show on sm+ */}
         {s.trend && (
           <span className="hidden sm:inline-flex" style={{ background: s.trendUp ? 'rgba(48,209,88,0.12)' : 'rgba(255,59,48,0.12)', border: `1px solid ${s.trendUp ? 'rgba(48,209,88,0.25)' : 'rgba(255,59,48,0.25)'}`, color: s.trendUp ? '#30D158' : '#FF3B30', padding: '1px 5px', borderRadius: 4, fontSize: 9, fontWeight: 600, whiteSpace: 'nowrap' }}>
             {s.trend}
