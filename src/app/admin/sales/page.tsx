@@ -23,6 +23,8 @@ import {
   Sparkles,
   ArrowRight,
   GripVertical,
+  ChevronRight,
+  ChevronLeft,
 } from 'lucide-react'
 
 interface Lead {
@@ -87,9 +89,38 @@ export default function AdminSalesPage() {
   const [dragOverStage, setDragOverStage] = useState<string | null>(null)
   const [touchLeadId, setTouchLeadId] = useState<string | null>(null)
   const [touchOverStage, setTouchOverStage] = useState<string | null>(null)
-  const touchStartPos = useRef<{ x: number; y: number } | null>(null)
+  const [touchPos, setTouchPos] = useState<{ x: number; y: number } | null>(null)
+  const [justDroppedId, setJustDroppedId] = useState<string | null>(null)
+  const [justDroppedStage, setJustDroppedStage] = useState<string | null>(null)
+  const [autoScrollDir, setAutoScrollDir] = useState<'left' | 'right' | null>(null)
 
-  const moveToStage = async (leadId: string, targetStage: string) => {
+  const kanbanScrollRef = useRef<HTMLDivElement>(null)
+  const touchStartPos = useRef<{ x: number; y: number } | null>(null)
+  const touchPosRef = useRef<{ x: number; y: number } | null>(null)
+  const touchLeadRef = useRef<Lead | null>(null)
+  const touchOverStageRef = useRef<string | null>(null)
+  const autoScrollRafRef = useRef<number | null>(null)
+  const autoScrollSpeedRef = useRef<number>(0)
+  const autoScrollDirRef = useRef<'left' | 'right' | null>(null)
+
+  const fetchLeads = useCallback(async () => {
+    setLoading(true)
+    setError('')
+    try {
+      const res = await fetch('/api/admin/sales?t=' + Date.now(), { cache: 'no-store' })
+      if (!res.ok) throw new Error('Erreur réseau')
+      const data = await res.json()
+      setLeads(Array.isArray(data) ? data : [])
+    } catch {
+      setError('Impossible de charger le funnel. Vérifiez la configuration Supabase.')
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  useEffect(() => { fetchLeads() }, [fetchLeads])
+
+  const moveToStage = useCallback(async (leadId: string, targetStage: string) => {
     const lead = leads.find(l => l.id === leadId)
     if (!lead || lead.funnel_stage === targetStage) return
 
@@ -113,7 +144,142 @@ export default function AdminSalesPage() {
     } finally {
       setMovingId(null)
     }
-  }
+  }, [leads, fetchLeads])
+
+  // Stop edge auto-scroll loop
+  const stopAutoScroll = useCallback(() => {
+    if (autoScrollRafRef.current) {
+      cancelAnimationFrame(autoScrollRafRef.current)
+      autoScrollRafRef.current = null
+    }
+    autoScrollSpeedRef.current = 0
+    autoScrollDirRef.current = null
+    setAutoScrollDir(null)
+  }, [])
+
+  // Start smart edge auto-scroll loop
+  const startAutoScroll = useCallback((direction: 'left' | 'right', speed: number) => {
+    autoScrollSpeedRef.current = speed
+    autoScrollDirRef.current = direction
+    setAutoScrollDir(direction)
+
+    if (autoScrollRafRef.current) return // Already running
+
+    const tick = () => {
+      if (!kanbanScrollRef.current || autoScrollSpeedRef.current === 0 || !autoScrollDirRef.current) {
+        autoScrollRafRef.current = null
+        return
+      }
+
+      const delta = autoScrollDirRef.current === 'right'
+        ? autoScrollSpeedRef.current
+        : -autoScrollSpeedRef.current
+
+      kanbanScrollRef.current.scrollLeft += delta
+
+      // While scrolling, dynamically detect the stage currently under the finger
+      if (touchPosRef.current) {
+        const elem = document.elementFromPoint(touchPosRef.current.x, touchPosRef.current.y)
+        const stageElem = elem?.closest('[data-stage]')
+        const stageKey = stageElem?.getAttribute('data-stage')
+        if (stageKey && stageKey !== touchOverStageRef.current) {
+          touchOverStageRef.current = stageKey
+          setTouchOverStage(stageKey)
+          if (typeof navigator !== 'undefined' && navigator.vibrate) {
+            navigator.vibrate(15)
+          }
+        }
+      }
+
+      autoScrollRafRef.current = requestAnimationFrame(tick)
+    }
+
+    autoScrollRafRef.current = requestAnimationFrame(tick)
+  }, [])
+
+  // Global touch listeners when dragging a lead on mobile
+  useEffect(() => {
+    if (!touchLeadId) return
+
+    const handleGlobalTouchMove = (e: TouchEvent) => {
+      if (e.cancelable) e.preventDefault()
+      const touch = e.touches[0]
+      if (!touch) return
+      const pos = { x: touch.clientX, y: touch.clientY }
+      touchPosRef.current = pos
+      setTouchPos(pos)
+
+      // Edge proximity detection for smart horizontal auto-scroll
+      const screenWidth = window.innerWidth
+      const EDGE_ZONE = 75
+      if (touch.clientX > screenWidth - EDGE_ZONE) {
+        const intensity = Math.min(1, Math.max(0.2, (touch.clientX - (screenWidth - EDGE_ZONE)) / EDGE_ZONE))
+        const speed = Math.round(intensity * 14)
+        startAutoScroll('right', speed)
+      } else if (touch.clientX < EDGE_ZONE) {
+        const intensity = Math.min(1, Math.max(0.2, (EDGE_ZONE - touch.clientX) / EDGE_ZONE))
+        const speed = Math.round(intensity * 14)
+        startAutoScroll('left', speed)
+      } else {
+        stopAutoScroll()
+      }
+
+      // Dynamically detect which funnel stage is currently underneath finger
+      const elem = document.elementFromPoint(touch.clientX, touch.clientY)
+      const stageElem = elem?.closest('[data-stage]')
+      const stageKey = stageElem?.getAttribute('data-stage')
+      if (stageKey && stageKey !== touchOverStageRef.current) {
+        touchOverStageRef.current = stageKey
+        setTouchOverStage(stageKey)
+        if (typeof navigator !== 'undefined' && navigator.vibrate) {
+          navigator.vibrate(15)
+        }
+      }
+    }
+
+    const handleGlobalTouchEnd = () => {
+      stopAutoScroll()
+      const activeLead = touchLeadRef.current
+      const targetStage = touchOverStageRef.current
+
+      if (activeLead && targetStage && targetStage !== activeLead.funnel_stage) {
+        // Trigger celebratory drop effect
+        setJustDroppedId(activeLead.id)
+        setJustDroppedStage(targetStage)
+        setTimeout(() => {
+          setJustDroppedId(null)
+          setJustDroppedStage(null)
+        }, 1500)
+
+        if (typeof navigator !== 'undefined' && navigator.vibrate) {
+          navigator.vibrate([20, 60, 20])
+        }
+
+        moveToStage(activeLead.id, targetStage)
+      }
+
+      setTouchLeadId(null)
+      setTouchOverStage(null)
+      setTouchPos(null)
+      touchPosRef.current = null
+      touchLeadRef.current = null
+      touchOverStageRef.current = null
+    }
+
+    window.addEventListener('touchmove', handleGlobalTouchMove, { passive: false })
+    window.addEventListener('touchend', handleGlobalTouchEnd)
+    window.addEventListener('touchcancel', handleGlobalTouchEnd)
+
+    return () => {
+      window.removeEventListener('touchmove', handleGlobalTouchMove)
+      window.removeEventListener('touchend', handleGlobalTouchEnd)
+      window.removeEventListener('touchcancel', handleGlobalTouchEnd)
+      stopAutoScroll()
+    }
+  }, [touchLeadId, moveToStage, startAutoScroll, stopAutoScroll])
+
+  const touchLead = leads.find(l => l.id === touchLeadId) || null
+  touchLeadRef.current = touchLead
 
   // Modal to add direct/offline lead
   const [showAddModal, setShowAddModal] = useState(false)
@@ -122,23 +288,6 @@ export default function AdminSalesPage() {
   const [newLeadAmount, setNewLeadAmount] = useState('')
   const [newLeadNotes, setNewLeadNotes] = useState('')
   const [creatingLead, setCreatingLead] = useState(false)
-
-  const fetchLeads = useCallback(async () => {
-    setLoading(true)
-    setError('')
-    try {
-      const res = await fetch('/api/admin/sales?t=' + Date.now(), { cache: 'no-store' })
-      if (!res.ok) throw new Error('Erreur réseau')
-      const data = await res.json()
-      setLeads(Array.isArray(data) ? data : [])
-    } catch {
-      setError('Impossible de charger le funnel. Vérifiez la configuration Supabase.')
-    } finally {
-      setLoading(false)
-    }
-  }, [])
-
-  useEffect(() => { fetchLeads() }, [fetchLeads])
 
   const moveStage = async (lead: Lead, direction: 'next' | 'prev') => {
     const idx = STAGES.findIndex(s => s.key === lead.funnel_stage)
@@ -433,7 +582,18 @@ export default function AdminSalesPage() {
         ) : (
           <>
             {/* ── Kanban Scroll Wrapper (mobile: horizontal scroll) ── */}
-            <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', marginLeft: 'clamp(-16px,-3.5vw,-36px)', marginRight: 'clamp(-16px,-3.5vw,-36px)', paddingLeft: 'clamp(16px,3.5vw,36px)', paddingRight: 'clamp(16px,3.5vw,36px)' } as React.CSSProperties}>
+            <div
+              ref={kanbanScrollRef}
+              style={{
+                overflowX: 'auto',
+                WebkitOverflowScrolling: 'touch',
+                marginLeft: 'clamp(-16px,-3.5vw,-36px)',
+                marginRight: 'clamp(-16px,-3.5vw,-36px)',
+                paddingLeft: 'clamp(16px,3.5vw,36px)',
+                paddingRight: 'clamp(16px,3.5vw,36px)',
+                position: 'relative',
+              } as React.CSSProperties}
+            >
             {/* ── Visual Connecting Pipeline Lane with Stage Dots ── */}
             <div
               style={{
@@ -581,6 +741,12 @@ export default function AdminSalesPage() {
                       e.preventDefault()
                       const droppedLeadId = e.dataTransfer.getData('text/plain') || draggingLeadId
                       if (droppedLeadId) {
+                        setJustDroppedId(droppedLeadId)
+                        setJustDroppedStage(stage.key)
+                        setTimeout(() => {
+                          setJustDroppedId(null)
+                          setJustDroppedStage(null)
+                        }, 1500)
                         await moveToStage(droppedLeadId, stage.key)
                       }
                       setDraggingLeadId(null)
@@ -597,6 +763,7 @@ export default function AdminSalesPage() {
                         ? `0 0 24px ${stage.dot}30, 0 8px 30px rgba(0, 0, 0, 0.08)`
                         : '0 4px 20px -2px rgba(0, 0, 0, 0.03)',
                       transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+                      animation: justDroppedStage === stage.key ? 'kanbanStagePulse 0.9s ease-out' : undefined,
                       minHeight: 280,
                     }}
                   >
@@ -663,7 +830,12 @@ export default function AdminSalesPage() {
                         </div>
                       )}
 
-                      {stageLeads.map(lead => (
+                      {stageLeads.map(lead => {
+                        const isBeingTouchDragged = touchLeadId === lead.id
+                        const isBeingMouseDragged = draggingLeadId === lead.id
+                        const isJustDropped = justDroppedId === lead.id
+
+                        return (
                           <div
                             key={lead.id}
                             draggable={true}
@@ -677,54 +849,58 @@ export default function AdminSalesPage() {
                               setDragOverStage(null)
                             }}
                             onTouchStart={(e) => {
+                              const target = e.target as HTMLElement
+                              if (target.closest('button, a, input, textarea')) return
+
                               const touch = e.touches[0]
+                              if (!touch) return
                               touchStartPos.current = { x: touch.clientX, y: touch.clientY }
+                              touchPosRef.current = { x: touch.clientX, y: touch.clientY }
+                              touchLeadRef.current = lead
+                              touchOverStageRef.current = lead.funnel_stage
+                              setTouchPos({ x: touch.clientX, y: touch.clientY })
                               setTouchLeadId(lead.id)
-                            }}
-                            onTouchMove={(e) => {
-                              if (touchLeadId) {
-                                // Prevent screen from scrolling on its own while holding the lead!
-                                if (e.cancelable) e.preventDefault()
+                              setTouchOverStage(lead.funnel_stage)
+                              if (typeof navigator !== 'undefined' && navigator.vibrate) {
+                                navigator.vibrate(30)
                               }
-                              const touch = e.touches[0]
-                              const elem = document.elementFromPoint(touch.clientX, touch.clientY)
-                              const stageElem = elem?.closest('[data-stage]')
-                              const stageKey = stageElem?.getAttribute('data-stage')
-                              if (stageKey && stageKey !== touchOverStage) {
-                                setTouchOverStage(stageKey)
-                              }
-                            }}
-                            onTouchEnd={() => {
-                              if (touchLeadId && touchOverStage && touchOverStage !== lead.funnel_stage) {
-                                moveToStage(touchLeadId, touchOverStage)
-                              }
-                              setTouchLeadId(null)
-                              setTouchOverStage(null)
-                              touchStartPos.current = null
                             }}
                             style={{
-                              background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
+                              background: isBeingTouchDragged
+                                ? 'rgba(209, 170, 92, 0.05)'
+                                : 'rgba(255,255,255,0.07)',
+                              backdropFilter: 'blur(20px)',
+                              WebkitBackdropFilter: 'blur(20px)',
                               borderRadius: 10,
                               padding: '11px 12px',
-                              border: (draggingLeadId === lead.id || touchLeadId === lead.id)
+                              border: isBeingTouchDragged
+                                ? '1.5px dashed rgba(209, 170, 92, 0.6)'
+                                : isBeingMouseDragged
                                 ? '2px solid #d1aa5c'
                                 : '1px solid rgba(255,255,255,0.10)',
-                              boxShadow: (draggingLeadId === lead.id || touchLeadId === lead.id)
+                              boxShadow: isBeingMouseDragged
                                 ? '0 16px 36px rgba(0, 0, 0, 0.85), 0 0 24px rgba(209, 170, 92, 0.6)'
                                 : '0 4px 16px -2px rgba(0, 0, 0, 0.05)',
-                              opacity: 1,
-                              transform: (draggingLeadId === lead.id || touchLeadId === lead.id) ? 'scale(1.04) rotate(1.2deg)' : 'none',
+                              opacity: isBeingTouchDragged ? 0.35 : 1,
+                              transform: isBeingMouseDragged
+                                ? 'scale(1.04) rotate(1.2deg)'
+                                : isBeingTouchDragged
+                                ? 'scale(0.97)'
+                                : 'none',
+                              animation: isJustDropped
+                                ? 'kanbanDropCelebrate 0.85s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards'
+                                : undefined,
                               cursor: 'grab',
-                              transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                              transition: isBeingTouchDragged ? 'none' : 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
                               userSelect: 'none',
                               touchAction: 'none',
                               position: 'relative',
-                              zIndex: (draggingLeadId === lead.id || touchLeadId === lead.id) ? 50 : 1,
+                              zIndex: isBeingMouseDragged ? 50 : 1,
                             }}
                             className="hover:shadow-lg"
                           >
                             {/* Holding badge feedback */}
-                            {(draggingLeadId === lead.id || touchLeadId === lead.id) && (
+                            {isBeingMouseDragged && (
                               <div
                                 style={{
                                   position: 'absolute',
@@ -1131,7 +1307,8 @@ export default function AdminSalesPage() {
                             )}
                           </div>
                         </div>
-                      ))}
+                      )
+                    })}
                     </div>
                   </div>
                 )
@@ -1355,6 +1532,210 @@ export default function AdminSalesPage() {
           </div>
         </div>
       )}
+
+      {/* ── Mobile Touch Floating Ghost Card (Travels smoothly with user's finger) ── */}
+      {touchLead && touchPos && (
+        <div
+          style={{
+            position: 'fixed',
+            left: touchPos.x,
+            top: touchPos.y,
+            transform: 'translate(-50%, -50%) scale(0.86) rotate(1.5deg)',
+            width: 270,
+            pointerEvents: 'none',
+            zIndex: 99999,
+            boxShadow: '0 24px 48px rgba(0, 0, 0, 0.9), 0 0 25px rgba(209, 170, 92, 0.55)',
+            borderRadius: 12,
+            border: '2px solid #d1aa5c',
+            background: 'rgba(14, 16, 20, 0.96)',
+            backdropFilter: 'blur(25px)',
+            WebkitBackdropFilter: 'blur(25px)',
+            padding: '12px 14px',
+            color: '#FFFFFF',
+            transition: 'box-shadow 0.2s ease',
+          }}
+        >
+          {/* Floating Header indicator */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginBottom: 8,
+              paddingBottom: 6,
+              borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+            }}
+          >
+            <span
+              style={{
+                background: '#d1aa5c',
+                color: '#0A0B0C',
+                fontSize: 9.5,
+                fontWeight: 800,
+                padding: '2px 7px',
+                borderRadius: 4,
+                textTransform: 'uppercase',
+                letterSpacing: '0.04em',
+              }}
+            >
+              {touchOverStage
+                ? `Déposer → ${STAGES.find(s => s.key === touchOverStage)?.label || ''}`
+                : 'Glisser vers une étape'}
+            </span>
+            <span style={{ fontSize: 10, color: 'rgba(255, 255, 255, 0.4)' }}>
+              {formatDate(touchLead.created_at)}
+            </span>
+          </div>
+
+          {/* Lead Name & Initial */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+            <div
+              style={{
+                width: 30,
+                height: 30,
+                borderRadius: 8,
+                background: 'linear-gradient(135deg, #d1aa5c 0%, #b89347 100%)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: 13,
+                fontWeight: 800,
+                color: '#0A0B0C',
+                flexShrink: 0,
+              }}
+            >
+              {(touchLead.customer_name || '?')[0].toUpperCase()}
+            </div>
+            <div style={{ minWidth: 0, flex: 1 }}>
+              <p style={{ fontSize: 13.5, fontWeight: 700, color: '#FFFFFF', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', margin: 0 }}>
+                {touchLead.customer_name}
+              </p>
+              <p style={{ fontSize: 11, color: 'rgba(255, 255, 255, 0.6)', margin: 0 }}>
+                {touchLead.phone || 'Sans numéro'}
+              </p>
+            </div>
+          </div>
+
+          {/* Product requested (if any) */}
+          {touchLead.messages?.product && (
+            <div
+              style={{
+                fontSize: 10.5,
+                color: 'rgba(255,255,255,0.9)',
+                background: 'rgba(255,255,255,0.06)',
+                border: '1px solid rgba(255,255,255,0.1)',
+                padding: '3px 8px',
+                borderRadius: 6,
+                marginBottom: 8,
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+              }}
+            >
+              🛋️ {touchLead.messages.product}
+            </div>
+          )}
+
+          {/* Amount badge */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 4 }}>
+            <span style={{ fontSize: 10, color: 'rgba(255, 255, 255, 0.4)', textTransform: 'uppercase' }}>
+              Montant devis
+            </span>
+            <span style={{ fontSize: 12, fontWeight: 700, color: touchLead.amount ? '#34D399' : '#d1aa5c' }}>
+              {touchLead.amount ? `${touchLead.amount.toLocaleString('fr-DZ')} DA` : 'À fixer'}
+            </span>
+          </div>
+        </div>
+      )}
+
+      {/* ── Smart Edge Auto-Scroll Visual Hints ── */}
+      {autoScrollDir === 'right' && (
+        <div
+          style={{
+            position: 'fixed',
+            right: 0,
+            top: 0,
+            bottom: 0,
+            width: 54,
+            pointerEvents: 'none',
+            zIndex: 99998,
+            background: 'linear-gradient(to left, rgba(209, 170, 92, 0.4), transparent)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'flex-end',
+            paddingRight: 10,
+          }}
+        >
+          <div style={{ animation: 'edgeSwipePulse 0.7s infinite alternate', color: '#d1aa5c' }}>
+            <ChevronRight className="w-7 h-7" />
+          </div>
+        </div>
+      )}
+
+      {autoScrollDir === 'left' && (
+        <div
+          style={{
+            position: 'fixed',
+            left: 0,
+            top: 0,
+            bottom: 0,
+            width: 54,
+            pointerEvents: 'none',
+            zIndex: 99998,
+            background: 'linear-gradient(to right, rgba(209, 170, 92, 0.4), transparent)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+            paddingLeft: 10,
+          }}
+        >
+          <div style={{ animation: 'edgeSwipePulseLeft 0.7s infinite alternate', color: '#d1aa5c' }}>
+            <ChevronLeft className="w-7 h-7" />
+          </div>
+        </div>
+      )}
+
+      {/* ── Keyframe Animations for D&D Celebrations ── */}
+      <style>{`
+        @keyframes kanbanDropCelebrate {
+          0% {
+            transform: scale(0.85);
+            box-shadow: 0 0 0 rgba(209, 170, 92, 0);
+          }
+          40% {
+            transform: scale(1.06);
+            border-color: #d1aa5c !important;
+            box-shadow: 0 0 32px rgba(209, 170, 92, 0.85) !important;
+          }
+          70% {
+            transform: scale(0.98);
+          }
+          100% {
+            transform: scale(1);
+            box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.05);
+          }
+        }
+        @keyframes kanbanStagePulse {
+          0% {
+            border-color: #d1aa5c !important;
+            box-shadow: 0 0 30px rgba(209, 170, 92, 0.45) !important;
+          }
+          100% {
+            border-color: rgba(255, 255, 255, 0.10);
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.03);
+          }
+        }
+        @keyframes edgeSwipePulse {
+          0% { opacity: 0.35; transform: translateX(0); }
+          50% { opacity: 1; transform: translateX(5px); }
+          100% { opacity: 0.35; transform: translateX(0); }
+        }
+        @keyframes edgeSwipePulseLeft {
+          0% { opacity: 0.35; transform: translateX(0); }
+          50% { opacity: 1; transform: translateX(-5px); }
+          100% { opacity: 0.35; transform: translateX(0); }
+        }
+      `}</style>
     </div>
   )
 }
