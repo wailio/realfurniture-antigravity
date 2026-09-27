@@ -1,11 +1,24 @@
+import { getSupabaseConfig } from './supabase-config'
+
 export const AUTH_SALT = process.env.AUTH_SALT || 'chateau_art_tower_2026'
 export const SESSION_SECRET = process.env.SESSION_SECRET || 'chateau_art_secret_hmac_token_key_2026'
 export const SESSION_COOKIE_NAME = 'admin_session'
 
 export interface AdminUser {
+  id?: string
   username: string
   role: 'developer' | 'admin'
   displayName: string
+  email?: string
+  phone?: string
+  createdAt?: string
+  lastLogin?: string
+  status?: 'active' | 'inactive' | 'suspended'
+  permissions?: string[]
+}
+
+export interface DynamicUserRecord extends AdminUser {
+  passwordHash: string
 }
 
 export const KNOWN_USERS: Record<string, AdminUser & { passwordHash: string }> = {
@@ -73,7 +86,6 @@ export async function createSessionToken(user: AdminUser): Promise<string> {
 
 export async function verifySessionToken(token: string): Promise<SessionPayload | null> {
   try {
-    // Handle URL-encoded cookie values (Cloudflare encodes them)
     const raw = token.includes('%') ? decodeURIComponent(token) : token
     const parts = raw.split('.')
     if (parts.length !== 2) return null
@@ -100,3 +112,53 @@ export async function requireAdminSession(request: { cookies: { get: (name: stri
   return await verifySessionToken(token)
 }
 
+// ── Supabase Dynamic Users Storage ──────────────────────────────────────────
+export async function loadDynamicUsers(): Promise<DynamicUserRecord[]> {
+  try {
+    const { url } = getSupabaseConfig()
+    const fetchUrl = `${url}/storage/v1/object/public/products/admin-users.json?t=${Date.now()}`
+    const res = await fetch(fetchUrl, {
+      cache: 'no-store',
+      headers: { 'Cache-Control': 'no-cache' },
+    })
+    if (res.ok) {
+      const data = await res.json()
+      return Array.isArray(data.users) ? data.users : []
+    }
+  } catch (err) {
+    console.error('Failed to load dynamic admin users:', err)
+  }
+  return []
+}
+
+export async function saveDynamicUsers(users: DynamicUserRecord[]): Promise<boolean> {
+  try {
+    const { url, key } = getSupabaseConfig()
+    if (!key) return false
+    const uploadUrl = `${url}/storage/v1/object/products/admin-users.json`
+    const res = await fetch(uploadUrl, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${key}`,
+        apikey: key,
+        'x-upsert': 'true',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ users, updatedAt: new Date().toISOString() }, null, 2),
+    })
+    return res.ok
+  } catch (err) {
+    console.error('Failed to save dynamic admin users:', err)
+    return false
+  }
+}
+
+export async function findUser(username: string): Promise<(AdminUser & { passwordHash: string }) | null> {
+  const clean = username.toLowerCase().trim()
+  if (KNOWN_USERS[clean]) {
+    return KNOWN_USERS[clean]
+  }
+  const dynamicUsers = await loadDynamicUsers()
+  const found = dynamicUsers.find((u) => u.username.toLowerCase().trim() === clean)
+  return found || null
+}

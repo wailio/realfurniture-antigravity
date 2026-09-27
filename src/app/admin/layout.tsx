@@ -64,22 +64,41 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
 
   return (
     <div
-      className="flex flex-col md:flex-row h-screen overflow-hidden bg-[#0A0B0C] admin-area"
-      style={{ fontFamily: 'var(--font-body)' }}
+      className="flex flex-col md:flex-row h-[100dvh] overflow-hidden bg-[#0A0B0C] admin-area relative"
+      style={{
+        fontFamily: 'var(--font-body)',
+        height: '100dvh',
+      }}
     >
       <IosDialogContainer />
-      <AdminSidebar />
-      <main
-        className="flex-1 overflow-y-auto relative bg-[#07090E] w-full"
+
+      {/* Hardware-accelerated fixed background (NO background-attachment: fixed repaint lag) */}
+      <div
+        className="fixed inset-0 pointer-events-none z-0"
         style={{
-          backgroundImage: `linear-gradient(to bottom, rgba(7,9,14,0.30) 0%, rgba(5,7,12,0.50) 100%), url('/admin-bg.jpg')`,
+          backgroundImage: `linear-gradient(to bottom, rgba(7,9,14,0.40) 0%, rgba(5,7,12,0.65) 100%), url('/admin-bg.jpg')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center top',
-          backgroundAttachment: 'fixed',
           backgroundRepeat: 'no-repeat',
         }}
+        aria-hidden="true"
+      />
+
+      <AdminSidebar />
+
+      <main
+        className="flex-1 overflow-y-auto relative w-full z-10"
+        style={{
+          WebkitOverflowScrolling: 'touch',
+          overscrollBehaviorY: 'contain',
+          touchAction: 'pan-y',
+          scrollBehavior: 'smooth',
+          background: 'transparent',
+        }}
       >
-        {children}
+        <div className="pb-16 md:pb-8 min-h-full">
+          {children}
+        </div>
       </main>
     </div>
   )

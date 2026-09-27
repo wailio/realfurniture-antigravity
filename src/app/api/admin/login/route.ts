@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import {
-  KNOWN_USERS,
   AUTH_SALT,
   sha256,
   safeEqual,
   createSessionToken,
   SESSION_COOKIE_NAME,
+  findUser,
 } from '@/lib/admin-auth'
 
 export const runtime = 'edge'
@@ -20,12 +20,15 @@ export async function POST(request: NextRequest) {
     }
 
     const cleanUser = username.toLowerCase().trim()
-    const user = KNOWN_USERS[cleanUser]
+    const user = await findUser(cleanUser)
 
     if (!user) {
-      // Artificial delay to prevent timing attacks / user enumeration
       await delay(250)
       return NextResponse.json({ error: 'Identifiants incorrects' }, { status: 401 })
+    }
+
+    if (user.status === 'suspended') {
+      return NextResponse.json({ error: 'Ce compte utilisateur est suspendu' }, { status: 403 })
     }
 
     // Hash incoming password with salt

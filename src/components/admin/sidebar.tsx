@@ -42,7 +42,7 @@ const NAV = [
   {
     group: 'Accès',
     items: [
-      { label: 'Utilisateurs', href: '/admin/users', icon: Users2, devOnly: true },
+      { label: 'Utilisateurs', href: '/admin/users', icon: Users2, adminOnly: true },
     ],
   },
 ]
@@ -249,7 +249,7 @@ export default function AdminSidebar() {
                   {section.group}
                 </p>
               )}
-              {section.items.filter(item => !('devOnly' in item && item.devOnly) || currentUser.role === 'developer').map((item) => {
+              {section.items.filter(item => !('adminOnly' in item && item.adminOnly) || currentUser.role === 'admin' || currentUser.role === 'developer').map((item) => {
                 const active = isActive(item.href)
                 return (
                   <Link
@@ -394,7 +394,7 @@ export default function AdminSidebar() {
               {section.group && collapsed && (
                 <div style={{ height: 1, background: 'rgba(255,255,255,0.05)', margin: '12px 10px' }} />
               )}
-              {section.items.filter(item => !('devOnly' in item && item.devOnly) || currentUser.role === 'developer').map((item) => {
+              {section.items.filter(item => !('adminOnly' in item && item.adminOnly) || currentUser.role === 'admin' || currentUser.role === 'developer').map((item) => {
                 const active = isActive(item.href)
                 return (
                   <Link

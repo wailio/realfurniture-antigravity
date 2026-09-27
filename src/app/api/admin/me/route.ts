@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { verifySessionToken, SESSION_COOKIE_NAME, KNOWN_USERS } from '@/lib/admin-auth'
+import { verifySessionToken, SESSION_COOKIE_NAME, findUser } from '@/lib/admin-auth'
 
 export const runtime = 'edge'
 
@@ -26,12 +26,12 @@ export async function GET(request: NextRequest) {
     return res
   }
 
-  const user = KNOWN_USERS[payload.u]
+  const user = await findUser(payload.u)
   return NextResponse.json({
     authenticated: true,
     user: {
       username: payload.u,
-      role: payload.r,
+      role: user?.role || payload.r,
       displayName: user?.displayName || payload.u,
     },
   })
