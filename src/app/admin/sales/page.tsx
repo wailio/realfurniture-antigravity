@@ -269,69 +269,68 @@ export default function AdminSalesPage() {
 
   return (
     <div className="min-h-screen" style={{ background: 'transparent' }}>
-      {/* Header — Exact #0A0B0C matching dark sidebar */}
+      {/* Header — Thinner bar, compact text in a direct line */}
       <div
         style={{
           background: '#0A0B0C',
           borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
-          padding: 'clamp(16px, 2.5vw, 28px) clamp(16px, 4vw, 36px)',
+          padding: '10px 16px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          flexWrap: 'wrap',
-          gap: 16,
+          gap: 10,
         }}
       >
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <h1
-              style={{
-                fontFamily: 'var(--font-heading)',
-                fontSize: 26,
-                fontWeight: 300,
-                color: '#FFFFFF',
-                letterSpacing: '-0.02em',
-              }}
-            >
-              Pipeline &amp; Ventes CRM
-            </h1>
-            <span
-              style={{
-                background: 'rgba(209, 170, 92, 0.2)',
-                border: '1px solid rgba(209, 170, 92, 0.4)',
-                color: '#d1aa5c',
-                fontSize: 11,
-                fontWeight: 700,
-                padding: '3px 10px',
-                borderRadius: 5,
-              }}
-            >
-              {leads.length} lead{leads.length > 1 ? 's' : ''} actif{leads.length > 1 ? 's' : ''}
-            </span>
-          </div>
-          <p style={{ fontSize: 13, color: '#A1A1AA', marginTop: 4 }}>
-            Suivi des négociations, conversion et chiffre d&apos;affaires généré
-          </p>
+        <div style={{ minWidth: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
+          <h1
+            style={{
+              fontFamily: 'var(--font-heading)',
+              fontSize: 17,
+              fontWeight: 400,
+              color: '#FFFFFF',
+              letterSpacing: '-0.01em',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              margin: 0,
+            }}
+          >
+            Ventes CRM
+          </h1>
+          <span
+            style={{
+              background: 'rgba(209, 170, 92, 0.18)',
+              border: '1px solid rgba(209, 170, 92, 0.35)',
+              color: '#d1aa5c',
+              fontSize: 10,
+              fontWeight: 700,
+              padding: '2px 7px',
+              borderRadius: 4,
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {leads.length} lead{leads.length > 1 ? 's' : ''}
+          </span>
         </div>
 
-        {/* Right Action: Revenue KPIs & Add Lead */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+        {/* Right Action: Revenue KPIs & Add Lead in direct line */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
           {/* Revenue Pill */}
           <div
+            className="hidden sm:flex"
             style={{
-              display: 'flex',
               alignItems: 'center',
-              gap: 8,
+              gap: 6,
               background: 'rgba(255, 255, 255, 0.04)',
               border: '1px solid rgba(255, 255, 255, 0.08)',
-              padding: '8px 16px',
+              padding: '5px 10px',
               borderRadius: 6,
             }}
           >
-            <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.30)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-              Ventes conclues:
+            <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase' }}>
+              Conclu:
             </span>
-            <strong style={{ fontSize: 13.5, color: '#34D399', fontWeight: 700 }}>
+            <strong style={{ fontSize: 11.5, color: '#34D399', fontWeight: 700 }}>
               {completedValue.toLocaleString('fr-DZ')} DA
             </strong>
           </div>
@@ -343,21 +342,20 @@ export default function AdminSalesPage() {
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: 8,
+              gap: 5,
               background: 'linear-gradient(135deg, #d1aa5c 0%, #b89347 100%)',
               color: '#0A0B0C',
-              padding: '10px 18px',
+              padding: '6px 12px',
               borderRadius: 6,
-              fontSize: 13,
+              fontSize: 11.5,
               fontWeight: 600,
               border: 'none',
               cursor: 'pointer',
-              boxShadow: '0 4px 16px rgba(209, 170, 92, 0.25)',
-              transition: 'all 0.15s',
+              boxShadow: '0 2px 10px rgba(209, 170, 92, 0.25)',
+              whiteSpace: 'nowrap',
             }}
-            className="hover:opacity-95"
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="w-3.5 h-3.5" />
             <span>Nouveau Lead</span>
           </button>
         </div>
@@ -684,6 +682,10 @@ export default function AdminSalesPage() {
                               setTouchLeadId(lead.id)
                             }}
                             onTouchMove={(e) => {
+                              if (touchLeadId) {
+                                // Prevent screen from scrolling on its own while holding the lead!
+                                if (e.cancelable) e.preventDefault()
+                              }
                               const touch = e.touches[0]
                               const elem = document.elementFromPoint(touch.clientX, touch.clientY)
                               const stageElem = elem?.closest('[data-stage]')
@@ -702,61 +704,91 @@ export default function AdminSalesPage() {
                             }}
                             style={{
                               background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
-                              borderRadius: 8,
-                              padding: '16px',
-                              border: (draggingLeadId === lead.id || touchLeadId === lead.id) ? `2px solid ${stage.dot}` : '1px solid rgba(255,255,255,0.10)',
+                              borderRadius: 10,
+                              padding: '11px 12px',
+                              border: (draggingLeadId === lead.id || touchLeadId === lead.id)
+                                ? '2px solid #d1aa5c'
+                                : '1px solid rgba(255,255,255,0.10)',
                               boxShadow: (draggingLeadId === lead.id || touchLeadId === lead.id)
-                                ? '0 12px 28px rgba(0, 0, 0, 0.15)'
+                                ? '0 16px 36px rgba(0, 0, 0, 0.85), 0 0 24px rgba(209, 170, 92, 0.6)'
                                 : '0 4px 16px -2px rgba(0, 0, 0, 0.05)',
-                              opacity: (draggingLeadId === lead.id || touchLeadId === lead.id) ? 0.5 : 1,
-                              transform: (draggingLeadId === lead.id || touchLeadId === lead.id) ? 'scale(0.98)' : 'none',
+                              opacity: 1,
+                              transform: (draggingLeadId === lead.id || touchLeadId === lead.id) ? 'scale(1.04) rotate(1.2deg)' : 'none',
                               cursor: 'grab',
                               transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
                               userSelect: 'none',
+                              touchAction: 'none',
+                              position: 'relative',
+                              zIndex: (draggingLeadId === lead.id || touchLeadId === lead.id) ? 50 : 1,
                             }}
                             className="hover:shadow-lg"
                           >
+                            {/* Holding badge feedback */}
+                            {(draggingLeadId === lead.id || touchLeadId === lead.id) && (
+                              <div
+                                style={{
+                                  position: 'absolute',
+                                  top: -9,
+                                  right: 8,
+                                  background: 'linear-gradient(135deg, #d1aa5c 0%, #b89347 100%)',
+                                  color: '#0A0B0C',
+                                  fontSize: 9.5,
+                                  fontWeight: 700,
+                                  padding: '2px 8px',
+                                  borderRadius: 99,
+                                  boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
+                                  zIndex: 60,
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  gap: 3,
+                                }}
+                              >
+                                <span>✋ Déplacement...</span>
+                              </div>
+                            )}
+
                             {/* Card Top: Avatar, Name & Delete */}
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
-                              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 6 }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                                 <div
                                   style={{
-                                    width: 34,
-                                    height: 34,
+                                    width: 28,
+                                    height: 28,
                                     borderRadius: 6,
                                     background: stage.bg,
                                     border: `1px solid ${stage.color}30`,
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
-                                    fontSize: 13.5,
+                                    fontSize: 12,
                                     fontWeight: 700,
                                     color: stage.color,
+                                    flexShrink: 0,
                                   }}
                                 >
                                   {(lead.customer_name || '?')[0].toUpperCase()}
                                 </div>
                                 <div>
-                                  <p style={{ fontSize: 14, fontWeight: 600, color: '#FFFFFF', lineHeight: 1.2 }}>
+                                  <p style={{ fontSize: 13, fontWeight: 600, color: '#FFFFFF', lineHeight: 1.2 }}>
                                     {lead.customer_name}
                                   </p>
-                                  <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.30)' }}>{formatDate(lead.created_at)}</span>
+                                  <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.30)' }}>{formatDate(lead.created_at)}</span>
                                 </div>
                               </div>
 
-                              <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                                 <div
                                   title="Glisser-déposer vers une autre étape"
                                   style={{
                                     cursor: 'grab',
-                                    color: 'rgba(255,255,255,0.30)',
-                                    padding: '4px 2px',
+                                    color: 'rgba(255,255,255,0.35)',
+                                    padding: '2px',
                                     display: 'flex',
                                     alignItems: 'center',
                                   }}
-                                  className="hover:text-[#111827]"
+                                  className="hover:text-white"
                                 >
-                                  <GripVertical className="w-4 h-4" />
+                                  <GripVertical className="w-3.5 h-3.5" />
                                 </div>
 
                                 <button
@@ -764,8 +796,8 @@ export default function AdminSalesPage() {
                                   onClick={() => deleteLead(lead.id)}
                                   disabled={deletingId === lead.id}
                                   style={{
-                                    padding: 6,
-                                    borderRadius: 8,
+                                    padding: 4,
+                                    borderRadius: 6,
                                     border: 'none',
                                     background: 'transparent',
                                     cursor: 'pointer',
@@ -773,37 +805,37 @@ export default function AdminSalesPage() {
                                     display: 'flex',
                                     transition: 'all 0.15s ease',
                                   }}
-                                  className="hover:text-red-500 hover:bg-red-50"
+                                  className="hover:text-red-500 hover:bg-red-50/10"
                                   title="Supprimer ce lead"
                                 >
                                   {deletingId === lead.id ? (
-                                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                    <Loader2 className="w-3 h-3 animate-spin" />
                                   ) : (
-                                    <Trash2 className="w-3.5 h-3.5" />
+                                    <Trash2 className="w-3 h-3" />
                                   )}
                                 </button>
                               </div>
                             </div>
 
                           {/* Contact Channels: Phone & WhatsApp */}
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 8, margin: '8px 0 10px', flexWrap: 'wrap' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 6, margin: '6px 0 8px', flexWrap: 'wrap' }}>
                             {lead.phone && (
                               <a
                                 href={`tel:${lead.phone}`}
                                 style={{
-                                  fontSize: 12,
+                                  fontSize: 11,
                                   color: 'rgba(255,255,255,0.60)',
                                   display: 'inline-flex',
                                   alignItems: 'center',
-                                  gap: 4,
+                                  gap: 3,
                                   textDecoration: 'none',
                                   background: 'rgba(255,255,255,0.07)',
-                                  padding: '4px 9px',
-                                  borderRadius: 8,
+                                  padding: '3px 7px',
+                                  borderRadius: 6,
                                 }}
                                 className="hover:text-[#007AFF]"
                               >
-                                <Phone className="w-3 h-3 text-[#6B7280]" />
+                                <Phone className="w-2.5 h-2.5 text-[#6B7280]" />
                                 <span>{lead.phone}</span>
                               </a>
                             )}
@@ -815,21 +847,21 @@ export default function AdminSalesPage() {
                                 rel="noopener noreferrer"
                                 title="Contacter sur WhatsApp"
                                 style={{
-                                  fontSize: 11.5,
+                                  fontSize: 10.5,
                                   fontWeight: 600,
                                   color: '#16a34a',
                                   display: 'inline-flex',
                                   alignItems: 'center',
-                                  gap: 4,
+                                  gap: 3,
                                   textDecoration: 'none',
                                   background: 'rgba(37,211,102,0.12)',
                                   border: '1px solid rgba(37, 211, 102, 0.25)',
-                                  padding: '4px 9px',
-                                  borderRadius: 8,
+                                  padding: '3px 7px',
+                                  borderRadius: 6,
                                 }}
                                 className="hover:bg-[#25D366] hover:text-white"
                               >
-                                <MessageCircle className="w-3 h-3" />
+                                <MessageCircle className="w-2.5 h-2.5" />
                                 <span>WhatsApp</span>
                               </a>
                             )}
@@ -839,14 +871,14 @@ export default function AdminSalesPage() {
                           {lead.messages?.product && (
                             <p
                               style={{
-                                fontSize: 11.5,
+                                fontSize: 10.5,
                                 color: 'rgba(255,255,255,0.90)',
                                 background: 'rgba(255,255,255,0.05)',
                                 border: '1px solid rgba(255,255,255,0.08)',
-                                padding: '4px 10px',
-                                borderRadius: 8,
+                                padding: '2px 8px',
+                                borderRadius: 6,
                                 display: 'inline-block',
-                                marginBottom: 10,
+                                marginBottom: 6,
                                 maxWidth: '100%',
                                 overflow: 'hidden',
                                 textOverflow: 'ellipsis',
@@ -859,9 +891,9 @@ export default function AdminSalesPage() {
                           )}
 
                           {/* Deal Amount Editor */}
-                          <div style={{ margin: '8px 0 12px' }}>
+                          <div style={{ margin: '6px 0 8px' }}>
                             {editingAmount === lead.id ? (
-                              <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+                              <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
                                 <input
                                   type="number"
                                   placeholder="Montant en DA..."
@@ -869,10 +901,10 @@ export default function AdminSalesPage() {
                                   onChange={e => setAmountValue(e.target.value)}
                                   style={{
                                     flex: 1,
-                                    padding: '5px 8px',
-                                    borderRadius: 8,
+                                    padding: '4px 6px',
+                                    borderRadius: 6,
                                     border: '1px solid #d1aa5c',
-                                    fontSize: 12,
+                                    fontSize: 11,
                                     outline: 'none',
                                   }}
                                 />
@@ -880,13 +912,13 @@ export default function AdminSalesPage() {
                                   type="button"
                                   onClick={() => saveAmount(lead.id)}
                                   style={{
-                                    padding: '5px 10px',
-                                    borderRadius: 7,
+                                    padding: '4px 8px',
+                                    borderRadius: 6,
                                     border: 'none',
                                     background: '#d1aa5c',
                                     color: '#0A0B0C',
                                     fontWeight: 700,
-                                    fontSize: 11,
+                                    fontSize: 10.5,
                                     cursor: 'pointer',
                                   }}
                                 >
@@ -896,12 +928,12 @@ export default function AdminSalesPage() {
                                   type="button"
                                   onClick={() => setEditingAmount(null)}
                                   style={{
-                                    padding: '5px 8px',
-                                    borderRadius: 7,
+                                    padding: '4px 6px',
+                                    borderRadius: 6,
                                     border: '1px solid #E5E7EB',
                                     background: 'rgba(255,255,255,0.07)',
                                     color: 'rgba(255,255,255,0.60)',
-                                    fontSize: 11,
+                                    fontSize: 10.5,
                                     cursor: 'pointer',
                                   }}
                                 >
@@ -918,17 +950,17 @@ export default function AdminSalesPage() {
                                   display: 'flex',
                                   alignItems: 'center',
                                   justifyContent: 'space-between',
-                                  padding: '5px 10px',
-                                  borderRadius: 8,
-                                  background: lead.amount ? 'rgba(52, 211, 153, 0.12)' : 'rgba(255,255,255,0.05)',
-                                  border: lead.amount ? '1px solid rgba(52, 211, 153, 0.3)' : '1px dashed rgba(255,255,255,0.13)',
+                                  padding: '4px 8px',
+                                  borderRadius: 6,
+                                  background: lead.amount ? 'rgba(52, 211, 153, 0.12)' : 'rgba(255,255,255,0.04)',
+                                  border: lead.amount ? '1px solid rgba(52, 211, 153, 0.3)' : '1px dashed rgba(255,255,255,0.10)',
                                   cursor: 'pointer',
                                 }}
                                 title="Cliquer pour définir le montant"
                               >
-                                <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.42)', fontWeight: 500 }}>Valeur devis :</span>
-                                <span style={{ fontSize: 12, fontWeight: 700, color: lead.amount ? '#059669' : '#9CA3AF' }}>
-                                  {lead.amount ? `${lead.amount.toLocaleString('fr-DZ')} DA` : '+ Définir montant'}
+                                <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.42)', fontWeight: 500 }}>Devis :</span>
+                                <span style={{ fontSize: 11, fontWeight: 700, color: lead.amount ? '#34D399' : '#9CA3AF' }}>
+                                  {lead.amount ? `${lead.amount.toLocaleString('fr-DZ')} DA` : '+ Définir'}
                                 </span>
                               </div>
                             )}
@@ -995,50 +1027,50 @@ export default function AdminSalesPage() {
                                 setNotesValue(lead.notes || '')
                               }}
                               style={{
-                                padding: '8px 10px',
-                                borderRadius: 8,
-                                background: 'rgba(255,255,255,0.05)',
-                                border: '1px solid rgba(255,255,255,0.07)',
+                                padding: '6px 8px',
+                                borderRadius: 6,
+                                background: 'rgba(255,255,255,0.04)',
+                                border: '1px solid rgba(255,255,255,0.06)',
                                 cursor: 'pointer',
-                                marginBottom: 12,
-                                minHeight: 36,
+                                marginBottom: 8,
+                                minHeight: 28,
                               }}
                               title="Cliquer pour modifier les notes"
-                              className="hover:bg-gray-100"
+                              className="hover:bg-white/10"
                             >
                               {lead.notes ? (
-                                <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.75)', lineHeight: 1.5, whiteSpace: 'pre-line' }}>
+                                <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.75)', lineHeight: 1.4, whiteSpace: 'pre-line' }}>
                                   {lead.notes}
                                 </p>
                               ) : (
-                                <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.30)', display: 'flex', alignItems: 'center', gap: 4 }}>
-                                  <StickyNote className="w-3.5 h-3.5 text-[#007AFF]" />
-                                  Ajouter une note de suivi...
+                                <p style={{ fontSize: 10.5, color: 'rgba(255,255,255,0.30)', display: 'flex', alignItems: 'center', gap: 3 }}>
+                                  <StickyNote className="w-3 h-3 text-[#007AFF]" />
+                                  <span>Ajouter une note...</span>
                                 </p>
                               )}
                             </div>
                           )}
 
                           {/* Stage Transition Buttons */}
-                          <div style={{ display: 'flex', gap: 6 }}>
+                          <div style={{ display: 'flex', gap: 4 }}>
                             {si > 0 && (
                               <button
                                 type="button"
                                 onClick={() => moveStage(lead, 'prev')}
                                 disabled={movingId === lead.id}
                                 style={{
-                                  padding: '7px 10px',
-                                  borderRadius: 8,
+                                  padding: '5px 8px',
+                                  borderRadius: 6,
                                   border: '1px solid rgba(255,255,255,0.12)',
                                   background: 'rgba(255,255,255,0.07)',
                                   cursor: 'pointer',
-                                  fontSize: 11.5,
+                                  fontSize: 11,
                                   color: 'rgba(255,255,255,0.75)',
                                   display: 'flex',
                                   alignItems: 'center',
                                   justifyContent: 'center',
                                 }}
-                                className="hover:bg-gray-200"
+                                className="hover:bg-white/15"
                                 title="Reculer à l'étape précédente"
                               >
                                 ←
@@ -1051,29 +1083,29 @@ export default function AdminSalesPage() {
                                 disabled={movingId === lead.id}
                                 style={{
                                   flex: 1,
-                                  padding: '7px 0',
-                                  borderRadius: 8,
+                                  padding: '5px 0',
+                                  borderRadius: 6,
                                   border: 'none',
                                   background: '#111827',
-                                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+                                  boxShadow: '0 2px 6px rgba(0, 0, 0, 0.15)',
                                   cursor: 'pointer',
-                                  fontSize: 11.5,
+                                  fontSize: 11,
                                   color: '#FFFFFF',
                                   display: 'flex',
                                   alignItems: 'center',
                                   justifyContent: 'center',
-                                  gap: 5,
+                                  gap: 4,
                                   fontWeight: 600,
                                   transition: 'background 0.15s',
                                 }}
                                 className="hover:bg-[#d1aa5c] hover:text-[#0A0B0C]"
                               >
                                 {movingId === lead.id ? (
-                                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                  <Loader2 className="w-3 h-3 animate-spin" />
                                 ) : (
                                   <>
-                                    <span>Avancer étape</span>
-                                    <MoveRight className="w-3.5 h-3.5" />
+                                    <span>Avancer</span>
+                                    <MoveRight className="w-3 h-3" />
                                   </>
                                 )}
                               </button>

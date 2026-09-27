@@ -123,129 +123,127 @@ export default function AdminDashboard() {
         }
       `}</style>
 
-      {/* Page Header */}
+      {/* Page Header — Thinner, one-line title, clean text date & status */}
       <div
         style={{
-          background: 'rgba(10, 11, 12, 0.6)',
+          background: 'rgba(10, 11, 12, 0.75)',
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
           borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
-          padding: 'clamp(14px, 2.5vw, 24px) clamp(16px, 4vw, 36px)',
+          padding: '10px 16px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          gap: 16,
+          gap: 12,
           position: 'sticky',
           top: 0,
           zIndex: 40,
         }}
       >
-        <div>
+        <div style={{ minWidth: 0 }}>
           <h1
             style={{
               fontFamily: 'var(--font-heading)',
-              fontSize: 24,
-              fontWeight: 300,
+              fontSize: 17,
+              fontWeight: 400,
               color: '#FFFFFF',
-              letterSpacing: '-0.02em',
+              letterSpacing: '-0.01em',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              margin: 0,
             }}
           >
             Tableau de bord
           </h1>
-          <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.4)', marginTop: 3 }}>
+          <p className="hidden sm:block" style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', marginTop: 1 }}>
             Vue d&apos;ensemble et indicateurs clés
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
-          {/* Date badge */}
-          <div
-            className="badge-pill"
-            style={{
-              background: 'rgba(255,255,255,0.06)',
-              border: '1px solid rgba(255,255,255,0.10)',
-              color: 'rgba(255,255,255,0.75)',
-            }}
-          >
-            <Clock style={{ width: 13, height: 13, opacity: 0.6 }} />
-            <span>{dayName.charAt(0).toUpperCase() + dayName.slice(1)}</span>
-          </div>
-
-          {/* Site en ligne badge */}
-          <div
-            className="badge-pill"
-            style={{
-              background: 'rgba(48, 209, 88, 0.12)',
-              border: '1px solid rgba(48, 209, 88, 0.25)',
-              color: '#30D158',
-            }}
-          >
-            <span className="relative flex" style={{ width: 6, height: 6 }}>
-              <span className="animate-ping absolute inline-flex h-full w-full bg-emerald-400 opacity-75" style={{ borderRadius: 2 }} />
-              <span className="relative inline-flex h-full w-full bg-emerald-400" style={{ borderRadius: 2 }} />
-            </span>
+        {/* Right side: Date on top (pure text, no box), Site en ligne below in one line */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', flexShrink: 0, textAlign: 'right' }}>
+          <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.7)', fontWeight: 500, letterSpacing: '0.01em' }}>
+            {dayName.charAt(0).toUpperCase() + dayName.slice(1)}
+          </span>
+          <span style={{ fontSize: 10.5, color: '#30D158', fontWeight: 500, display: 'flex', alignItems: 'center', gap: 4, marginTop: 1 }}>
+            <span style={{ width: 5, height: 5, borderRadius: 99, background: '#30D158', display: 'inline-block', boxShadow: '0 0 6px #30D158' }} />
             Site en ligne
-          </div>
+          </span>
         </div>
       </div>
 
-      <div style={{ padding: 'clamp(16px, 3.5vw, 32px) clamp(14px, 4vw, 36px)' }}>
-        {/* Stats Grid */}
+      <div style={{ padding: 'clamp(12px, 2.5vw, 24px) clamp(12px, 3vw, 28px)' }}>
+        {/* Stats Grid — 2 in a line on mobile, compact sleek dimensions */}
         <div
+          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6"
           style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 220px), 1fr))',
-            gap: 14,
-            marginBottom: 28,
+            gap: 10,
+            marginBottom: 22,
           }}
         >
           {stats.map((s, i) => (
             <div
               key={i}
               className="glass-card"
-              style={{ borderRadius: 16, padding: '22px', position: 'relative', overflow: 'hidden' }}
+              style={{
+                borderRadius: 12,
+                padding: '12px 13px',
+                position: 'relative',
+                overflow: 'hidden',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+              }}
             >
               {/* Subtle tinted glow top-left */}
               <div style={{
-                position: 'absolute', top: -20, left: -20, width: 80, height: 80,
-                background: s.accent, opacity: 0.06, borderRadius: '50%', filter: 'blur(20px)', pointerEvents: 'none',
+                position: 'absolute', top: -15, left: -15, width: 60, height: 60,
+                background: s.accent, opacity: 0.08, borderRadius: '50%', filter: 'blur(16px)', pointerEvents: 'none',
               }} />
 
-              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 16 }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
                 <div
                   style={{
-                    width: 38, height: 38, borderRadius: 10,
+                    width: 28, height: 28, borderRadius: 7,
                     background: `${s.accent}18`,
                     border: `1px solid ${s.accent}30`,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    flexShrink: 0,
                   }}
                 >
-                  <s.icon style={{ width: 18, height: 18, color: s.accent }} />
+                  <s.icon style={{ width: 14, height: 14, color: s.accent }} />
                 </div>
                 <span
-                  className="badge-pill"
                   style={{
                     background: s.trendUp ? 'rgba(48,209,88,0.12)' : 'rgba(255,59,48,0.12)',
                     border: `1px solid ${s.trendUp ? 'rgba(48,209,88,0.25)' : 'rgba(255,59,48,0.25)'}`,
                     color: s.trendUp ? '#30D158' : '#FF3B30',
-                    padding: '3px 9px',
+                    padding: '2px 6px',
                     borderRadius: 4,
-                    fontSize: 10.5,
-                    gap: 3,
+                    fontSize: 9.5,
+                    fontWeight: 600,
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: 2,
                   }}
                 >
-                  {s.trendUp && <ArrowUpRight style={{ width: 11, height: 11 }} />}
+                  {s.trendUp && <ArrowUpRight style={{ width: 9, height: 9 }} />}
                   {s.trend}
                 </span>
               </div>
 
-              <p style={{ fontSize: 30, fontWeight: 700, color: '#FFFFFF', letterSpacing: '-0.03em', lineHeight: 1, fontFamily: 'var(--font-heading)' }}>
-                {s.value}
-              </p>
-              <p style={{ fontSize: 12.5, fontWeight: 500, color: 'rgba(255,255,255,0.75)', marginTop: 8 }}>
-                {s.label}
-              </p>
-              <p style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.35)', marginTop: 3 }}>{s.sub}</p>
+              <div>
+                <p style={{ fontSize: 20, fontWeight: 700, color: '#FFFFFF', letterSpacing: '-0.02em', lineHeight: 1, fontFamily: 'var(--font-heading)' }}>
+                  {s.value}
+                </p>
+                <p style={{ fontSize: 11, fontWeight: 500, color: 'rgba(255,255,255,0.85)', marginTop: 5, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {s.label}
+                </p>
+                <p style={{ fontSize: 9.5, color: 'rgba(255,255,255,0.35)', marginTop: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {s.sub}
+                </p>
+              </div>
             </div>
           ))}
         </div>

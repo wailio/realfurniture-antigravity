@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 export const runtime = 'edge'
 
@@ -220,10 +220,22 @@ export default function AdminWebsiteInfoPage() {
   const [savedSection, setSavedSection] = useState<string | null>(null)
   const [activePage, setActivePage] = useState('contact')
   const [activeSection, setActiveSection] = useState('coordonnees')
+  const [mobileNavOpen, setMobileNavOpen] = useState(false)
   const [contentKey, setContentKey] = useState(0)
   const [uploadingKey, setUploadingKey] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const uploadFieldRef = useRef<string | null>(null)
+
+  // Show left sidebar for 2 seconds on initial mobile visit, then auto-fades away so user knows where to change topic
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.innerWidth < 768) {
+      setMobileNavOpen(true)
+      const timer = setTimeout(() => {
+        setMobileNavOpen(false)
+      }, 2000)
+      return () => clearTimeout(timer)
+    }
+  }, [])
 
   // ─── Load config ─────────────────────────────────────────────────────────
   const loadConfig = useCallback(async () => {
@@ -312,6 +324,7 @@ export default function AdminWebsiteInfoPage() {
     setActivePage(pageKey)
     setActiveSection(sectionKey)
     setContentKey(k => k + 1)
+    setMobileNavOpen(false) // Auto closes on mobile to reveal editing form
   }
 
   const currentPage = SITE_PAGES.find(p => p.key === activePage)
@@ -323,11 +336,21 @@ export default function AdminWebsiteInfoPage() {
       className="flex h-full overflow-hidden"
       style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif' }}
     >
-      {/* ══════════ LEFT SIDEBAR ══════════ */}
+      {/* Mobile Drawer Backdrop */}
+      {mobileNavOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/75 backdrop-blur-sm md:hidden transition-opacity duration-300"
+          onClick={() => setMobileNavOpen(false)}
+        />
+      )}
+
+      {/* ══════════ LEFT SIDEBAR (Overlay on mobile, fixed column on desktop) ══════════ */}
       <div
-        className="flex flex-col shrink-0 overflow-hidden"
+        className={`flex flex-col shrink-0 overflow-hidden fixed inset-y-0 left-0 z-50 md:relative md:translate-x-0 transition-transform duration-300 ease-out shadow-2xl md:shadow-none ${
+          mobileNavOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
+        }`}
         style={{
-          width: 264,
+          width: 275,
           background: 'rgba(9, 10, 13, 0.98)',
           borderRight: '0.5px solid rgba(255,255,255,0.06)',
         }}
@@ -335,7 +358,7 @@ export default function AdminWebsiteInfoPage() {
         {/* Sidebar header */}
         <div
           className="shrink-0"
-          style={{ padding: '20px 16px 14px', borderBottom: '0.5px solid rgba(255,255,255,0.05)' }}
+          style={{ padding: '16px 16px 14px', borderBottom: '0.5px solid rgba(255,255,255,0.05)' }}
         >
           <div className="flex items-center justify-between mb-3">
             <div>
@@ -346,7 +369,7 @@ export default function AdminWebsiteInfoPage() {
                   fontWeight: 600,
                   letterSpacing: '0.1em',
                   textTransform: 'uppercase',
-                  marginBottom: 4,
+                  marginBottom: 2,
                 }}
               >
                 CMS du site
@@ -357,17 +380,27 @@ export default function AdminWebsiteInfoPage() {
                 Infos du site
               </h2>
             </div>
-            <button
-              onClick={loadConfig}
-              disabled={loading}
-              title="Actualiser depuis le serveur"
-              className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-white/5 transition-colors"
-            >
-              <RefreshCw
-                className={loading ? 'animate-spin' : ''}
-                style={{ width: 13, height: 13, color: '#4A4D55' }}
-              />
-            </button>
+            <div className="flex items-center gap-1">
+              <button
+                onClick={loadConfig}
+                disabled={loading}
+                title="Actualiser depuis le serveur"
+                className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-white/5 transition-colors"
+              >
+                <RefreshCw
+                  className={loading ? 'animate-spin' : ''}
+                  style={{ width: 13, height: 13, color: '#4A4D55' }}
+                />
+              </button>
+              <button
+                type="button"
+                onClick={() => setMobileNavOpen(false)}
+                className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-white/10 text-white/60 hover:text-white md:hidden transition-colors"
+                title="Fermer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
           </div>
 
           {/* Live badge */}
@@ -475,21 +508,44 @@ export default function AdminWebsiteInfoPage() {
       </div>
 
       {/* ══════════ RIGHT CONTENT ══════════ */}
-      <div className="flex-1 overflow-y-auto" style={{ background: 'transparent' }}>
+      <div className="flex-1 overflow-y-auto w-full" style={{ background: 'transparent' }}>
+        {/* Mobile Top Bar — Topic Switcher & Quick Save */}
+        <div className="md:hidden flex items-center justify-between p-3 border-b border-white/10 bg-[#0A0B0C]/85 backdrop-blur-md sticky top-0 z-30 gap-2">
+          <button
+            type="button"
+            onClick={() => setMobileNavOpen(true)}
+            className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-white/10 text-white text-xs font-medium border border-white/10 truncate min-w-0"
+          >
+            <LayoutTemplate className="w-3.5 h-3.5 text-[#d1aa5c] shrink-0" />
+            <span className="truncate">{currentPage?.label} · {currentSection?.label}</span>
+            <ChevronRight className="w-3.5 h-3.5 text-white/50 shrink-0" />
+          </button>
+
+          <button
+            type="button"
+            onClick={handleSave}
+            disabled={saving}
+            className="px-3 py-1.5 rounded-lg bg-[#d1aa5c] text-black text-xs font-semibold flex items-center gap-1.5 shrink-0 shadow-md"
+          >
+            {saving ? <Loader2 className="w-3 h-3 animate-spin" /> : <Save className="w-3 h-3" />}
+            <span>Sauvegarder</span>
+          </button>
+        </div>
+
         {loading ? (
-          <div className="flex flex-col items-center justify-center h-full gap-3">
+          <div className="flex flex-col items-center justify-center h-full gap-3 p-8">
             <Loader2 className="w-7 h-7 animate-spin" style={{ color: '#0A84FF' }} />
             <p style={{ fontSize: 13, color: '#4A4D55' }}>Chargement de la configuration...</p>
           </div>
         ) : !currentSection ? (
-          <div className="flex flex-col items-center justify-center h-full gap-3">
+          <div className="flex flex-col items-center justify-center h-full gap-3 p-8">
             <Sparkles style={{ width: 28, height: 28, color: '#2A2D35' }} />
             <p style={{ fontSize: 13, color: '#3A3D45' }}>Sélectionnez une section</p>
           </div>
         ) : (
           <div
             key={contentKey}
-            className="p-7 md:p-10"
+            className="p-3.5 sm:p-6 md:p-10"
             style={{ animation: 'wInfoFadeUp 0.3s cubic-bezier(0.32, 0.72, 0, 1) both' }}
           >
             {/* Breadcrumb */}
@@ -528,18 +584,13 @@ export default function AdminWebsiteInfoPage() {
               />
             </div>
 
-            {/* Split layout: fields LEFT, images RIGHT */}
+            {/* Split layout: fields LEFT, images RIGHT — stacked on mobile */}
             <div
-              className="grid gap-5"
-              style={{
-                gridTemplateColumns: (currentSection.imageFields?.length ?? 0) > 0
-                  ? '1fr 320px'
-                  : '1fr',
-              }}
+              className={`grid gap-5 ${(currentSection.imageFields?.length ?? 0) > 0 ? 'grid-cols-1 lg:grid-cols-[1fr_320px]' : 'grid-cols-1'}`}
             >
               {/* TEXT FIELDS */}
               <div
-                className="rounded-2xl p-6 space-y-5"
+                className="rounded-2xl p-4 sm:p-6 space-y-5"
                 style={{
                   background: 'rgba(14, 15, 18, 0.85)',
                   border: '0.5px solid rgba(255,255,255,0.07)',

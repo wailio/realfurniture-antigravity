@@ -825,10 +825,9 @@ export default function AdminProductsPage() {
           </div>
         ) : (
           <div
+            className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
             style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 260px), 1fr))',
-              gap: 20,
+              gap: 'clamp(8px, 2vw, 18px)',
             }}
           >
             {filteredProducts.map(product => (
@@ -846,7 +845,7 @@ export default function AdminProductsPage() {
                 className="hover:shadow-lg hover:-translate-y-1"
               >
                 {/* Product Image */}
-                <div style={{ position: 'relative', height: 200, background: 'rgba(255,255,255,0.07)', overflow: 'hidden' }}>
+                <div className="h-28 sm:h-36 md:h-48" style={{ position: 'relative', background: 'rgba(255,255,255,0.07)', overflow: 'hidden' }}>
                   {product.images?.[0] ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
@@ -862,7 +861,7 @@ export default function AdminProductsPage() {
                     />
                   ) : (
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
-                      <ImageIcon className="w-10 h-10" style={{ color: 'rgba(255,255,255,0.30)' }} />
+                      <ImageIcon className="w-7 h-7" style={{ color: 'rgba(255,255,255,0.30)' }} />
                     </div>
                   )}
 
@@ -870,19 +869,19 @@ export default function AdminProductsPage() {
                   <div
                     style={{
                       position: 'absolute',
-                      top: 12,
-                      left: 12,
+                      top: 6,
+                      left: 6,
                       background: product.in_stock ? 'rgba(16,185,129,0.92)' : 'rgba(239,68,68,0.92)',
                       backdropFilter: 'blur(4px)',
                       color: '#FFFFFF',
-                      fontSize: 10,
+                      fontSize: 8.5,
                       fontWeight: 700,
-                      padding: '3px 9px',
-                      borderRadius: 4,
-                      letterSpacing: '0.06em',
+                      padding: '2px 5px',
+                      borderRadius: 3,
+                      letterSpacing: '0.04em',
                     }}
                   >
-                    {product.in_stock ? 'EN STOCK' : 'RUPTURE'}
+                    {product.in_stock ? 'STOCK' : 'RUPTURE'}
                   </div>
 
                   {/* Multiple Images badge */}
@@ -890,90 +889,90 @@ export default function AdminProductsPage() {
                     <div
                       style={{
                         position: 'absolute',
-                        bottom: 10,
-                        right: 10,
-                        background: 'rgba(0,0,0,0.6)',
+                        bottom: 6,
+                        right: 6,
+                        background: 'rgba(0,0,0,0.65)',
                         color: '#fff',
-                        fontSize: 10.5,
-                        padding: '3px 8px',
-                        borderRadius: 4,
+                        fontSize: 8.5,
+                        padding: '1px 5px',
+                        borderRadius: 3,
                         backdropFilter: 'blur(4px)',
                         border: '1px solid rgba(255,255,255,0.1)',
                       }}
                     >
-                      +{product.images.length - 1} photos
+                      +{product.images.length - 1}
                     </div>
                   )}
                 </div>
 
                 {/* Product Info */}
-                <div style={{ padding: '18px 20px' }}>
-                  <div className="flex items-start justify-between gap-2 mb-2">
-                    <div>
-                      <p
-                        style={{
-                          fontSize: 14.5,
-                          fontWeight: 600,
-                          color: '#FFFFFF',
-                          lineHeight: 1.3,
-                        }}
-                      >
-                        {product.name}
-                      </p>
+                <div style={{ padding: 'clamp(8px, 1.5vw, 16px)' }}>
+                  <div className="flex flex-col gap-1 mb-2">
+                    <p
+                      style={{
+                        fontSize: 12.5,
+                        fontWeight: 600,
+                        color: '#FFFFFF',
+                        lineHeight: 1.25,
+                        display: '-webkit-box',
+                        WebkitLineClamp: 1,
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden',
+                      }}
+                      title={product.name}
+                    >
+                      {product.name}
+                    </p>
+
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 4, flexWrap: 'wrap' }}>
                       <span
                         style={{
-                          fontSize: 11,
+                          fontSize: 9.5,
                           color: 'rgba(255,255,255,0.60)',
                           background: 'rgba(255,255,255,0.07)',
                           border: '1px solid rgba(255,255,255,0.07)',
-                          padding: '2px 8px',
-                          borderRadius: 4,
-                          display: 'inline-block',
-                          marginTop: 6,
+                          padding: '1px 6px',
+                          borderRadius: 3,
                           fontWeight: 500,
                         }}
                       >
                         {CATEGORIES.find(c => c.value === product.category)?.label || product.category}
                       </span>
-                    </div>
 
-                    <div style={{ textAlign: 'right', flexShrink: 0 }}>
                       {product.sale_price ? (
-                        <>
-                          <p style={{ fontSize: 15, fontWeight: 700, color: '#f87171' }}>
+                        <div style={{ textAlign: 'right' }}>
+                          <span style={{ fontSize: 12, fontWeight: 700, color: '#f87171' }}>
                             {product.sale_price.toLocaleString('fr-DZ')} DA
-                          </p>
-                          <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.30)', textDecoration: 'line-through' }}>
-                            {product.price.toLocaleString('fr-DZ')}
-                          </p>
-                        </>
+                          </span>
+                        </div>
                       ) : (
-                        <p style={{ fontSize: 15, fontWeight: 700, color: '#FFFFFF' }}>
+                        <span style={{ fontSize: 12, fontWeight: 700, color: '#FFFFFF' }}>
                           {product.price.toLocaleString('fr-DZ')} DA
-                        </p>
+                        </span>
                       )}
                     </div>
                   </div>
 
                   {product.description && (
                     <p
+                      className="hidden sm:block"
                       style={{
-                        fontSize: 12,
+                        fontSize: 11,
                         color: 'rgba(255,255,255,0.42)',
-                        lineHeight: 1.5,
+                        lineHeight: 1.4,
                         display: '-webkit-box',
                         WebkitLineClamp: 2,
                         WebkitBoxOrient: 'vertical',
                         overflow: 'hidden',
-                        marginBottom: 14,
-                        marginTop: 6,
+                        marginBottom: 10,
+                        marginTop: 4,
                       }}
                     >
                       {product.description}
                     </p>
                   )}
 
-                  <div style={{ display: 'flex', gap: 8, marginTop: 14 }}>
+                  <div style={{ display: 'flex', gap: 6, marginTop: 'auto', paddingTop: 8 }}>
                     <button
                       type="button"
                       onClick={(e) => {
@@ -983,9 +982,9 @@ export default function AdminProductsPage() {
                       }}
                       style={{
                         flex: 1,
-                        padding: '9px 0',
+                        padding: '6px 0',
                         borderRadius: 6,
-                        fontSize: 12.5,
+                        fontSize: 11,
                         fontWeight: 500,
                         background: 'rgba(255,255,255,0.07)',
                         border: '1px solid rgba(255,255,255,0.10)',
@@ -993,13 +992,13 @@ export default function AdminProductsPage() {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        gap: 6,
+                        gap: 4,
                         color: '#FFFFFF',
                         transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
                       }}
                       className="hover:bg-[#007AFF] hover:text-white hover:border-[#007AFF]"
                     >
-                      <Pencil className="w-3.5 h-3.5 text-current" />
+                      <Pencil className="w-3 h-3 text-current" />
                       Modifier
                     </button>
 
@@ -1012,9 +1011,9 @@ export default function AdminProductsPage() {
                       }}
                       disabled={deletingId === product.id}
                       style={{
-                        padding: '9px 14px',
+                        padding: '6px 9px',
                         borderRadius: 6,
-                        fontSize: 12.5,
+                        fontSize: 11,
                         background: 'rgba(239,68,68,0.15)',
                         border: '1px solid rgba(239, 68, 68, 0.2)',
                         cursor: 'pointer',

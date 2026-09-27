@@ -76,6 +76,7 @@ export default function AdminOrdersPage() {
   const [error, setError] = useState('')
   const [activeMenu, setActiveMenu] = useState<string | null>(null)
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null)
+  const [detailModalOrder, setDetailModalOrder] = useState<Order | null>(null)
   const [filterStatus, setFilterStatus] = useState('all')
   const [search, setSearch] = useState('')
   const [addingToFunnel, setAddingToFunnel] = useState<string | null>(null)
@@ -198,68 +199,72 @@ export default function AdminOrdersPage() {
 
   return (
     <div className="min-h-screen" style={{ background: 'transparent' }}>
-      {/* Header — #0A0B0C matching dark sidebar */}
+      {/* Header — #0A0B0C matching dark sidebar, thinner bar, circular new badge */}
       <div
         style={{
           background: '#0A0B0C',
           borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
-          padding: 'clamp(16px, 2.5vw, 28px) clamp(16px, 4vw, 36px)',
+          padding: '10px 16px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          flexWrap: 'wrap',
-          gap: 16,
+          gap: 12,
         }}
       >
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <h1
+        <div style={{ minWidth: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
+          <h1
+            style={{
+              fontFamily: 'var(--font-heading)',
+              fontSize: 17,
+              fontWeight: 400,
+              color: '#FFFFFF',
+              letterSpacing: '-0.01em',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              margin: 0,
+            }}
+          >
+            Commandes &amp; Demandes
+          </h1>
+          {newCount > 0 && (
+            <span
               style={{
-                fontFamily: 'var(--font-heading)',
-                fontSize: 26,
-                fontWeight: 300,
+                width: 20,
+                height: 20,
+                borderRadius: 99,
+                background: '#EF4444',
                 color: '#FFFFFF',
-                letterSpacing: '-0.02em',
+                fontSize: 10.5,
+                fontWeight: 700,
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: '0 2px 8px rgba(239, 68, 68, 0.4)',
+                flexShrink: 0,
               }}
+              title={`${newCount} nouvelle(s) demande(s)`}
             >
-              Commandes &amp; Demandes
-            </h1>
-            {newCount > 0 && (
-              <span
-                style={{
-                  background: 'rgba(239, 68, 68, 0.2)',
-                  border: '1px solid rgba(239, 68, 68, 0.4)',
-                  color: '#f87171',
-                  fontSize: 11,
-                  fontWeight: 700,
-                  padding: '3px 9px',
-                  borderRadius: 5,
-                }}
-              >
-                {newCount} nouveau{newCount > 1 ? 'x' : ''}
-              </span>
-            )}
-          </div>
-          <p style={{ fontSize: 13, color: '#A1A1AA', marginTop: 4 }}>
-            Gestion centralisée des messages clients et conversion en opportunités de vente
-          </p>
+              {newCount}
+            </span>
+          )}
         </div>
 
-        {/* CRM Quick Stats */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+        {/* CRM Quick Stats — compact */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
           <div
+            className="hidden sm:flex"
             style={{
-              display: 'flex',
               alignItems: 'center',
-              gap: 8,
+              gap: 6,
               background: 'rgba(255, 255, 255, 0.04)',
               border: '1px solid rgba(255, 255, 255, 0.08)',
-              padding: '8px 14px',
+              padding: '6px 10px',
               borderRadius: 6,
             }}
           >
-            <Clock className="w-3.5 h-3.5 text-[#60a5fa]" />
-            <span style={{ fontSize: 12, color: '#D4D4D8' }}>
+            <Clock className="w-3 h-3 text-[#60a5fa]" />
+            <span style={{ fontSize: 11, color: '#D4D4D8' }}>
               En cours: <strong style={{ color: '#FFFFFF' }}>{processingCount}</strong>
             </span>
           </div>
@@ -269,30 +274,30 @@ export default function AdminOrdersPage() {
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: 8,
+              gap: 5,
               background: 'linear-gradient(135deg, #d1aa5c 0%, #b89347 100%)',
               color: '#0A0B0C',
-              padding: '9px 18px',
+              padding: '6px 12px',
               borderRadius: 6,
-              fontSize: 12.5,
+              fontSize: 11.5,
               fontWeight: 600,
               textDecoration: 'none',
-              boxShadow: '0 4px 16px rgba(209, 170, 92, 0.25)',
-              transition: 'all 0.15s',
+              boxShadow: '0 2px 10px rgba(209, 170, 92, 0.25)',
+              whiteSpace: 'nowrap',
             }}
           >
-            <TrendingUp className="w-4 h-4" />
-            <span>Pipeline Ventes ({funnelCount})</span>
-            <ArrowUpRight className="w-3.5 h-3.5" />
+            <TrendingUp className="w-3.5 h-3.5" />
+            <span>Ventes ({funnelCount})</span>
+            <ArrowUpRight className="w-3 h-3" />
           </a>
         </div>
       </div>
 
-      <div style={{ padding: 'clamp(16px, 3.5vw, 36px)' }}>
+      <div style={{ padding: 'clamp(12px, 2.5vw, 28px)' }}>
         {/* Search & Status Filter Bar */}
-        <div style={{ display: 'flex', gap: 12, marginBottom: 24, flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
-          {/* Status filter tabs — scrollable on mobile */}
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch', paddingBottom: 2 } as React.CSSProperties}>
+        <div style={{ display: 'flex', gap: 10, marginBottom: 18, flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
+          {/* Status filter tabs — smaller & uniform sleek size */}
+          <div style={{ display: 'flex', gap: 6, flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch', paddingBottom: 2 } as React.CSSProperties}>
             {[{ value: 'all', label: `Tous (${orders.length})` }, ...Object.entries(STATUS_LABELS).map(([k, v]) => ({
               value: k,
               label: `${v.label} (${orders.filter(o => o.status === k).length})`,
@@ -302,18 +307,20 @@ export default function AdminOrdersPage() {
                 key={tab.value}
                 onClick={() => setFilterStatus(tab.value)}
                 style={{
-                  padding: '8px 18px',
+                  padding: '5px 12px',
                   borderRadius: 99,
-                  fontSize: 12.5,
-                  fontWeight: 600,
+                  fontSize: 11,
+                  fontWeight: 500,
                   border: filterStatus === tab.value ? 'none' : '1px solid rgba(255,255,255,0.12)',
                   cursor: 'pointer',
-                  background: filterStatus === tab.value ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.05)',
+                  background: filterStatus === tab.value ? 'rgba(255,255,255,0.18)' : 'rgba(255,255,255,0.05)',
                   color: filterStatus === tab.value ? '#FFFFFF' : 'rgba(255,255,255,0.60)',
                   boxShadow: filterStatus === tab.value
-                    ? '0 4px 16px rgba(0,0,0,0.5)'
-                    : '0 2px 8px rgba(0,0,0,0.3)',
-                  transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                    ? '0 2px 10px rgba(0,0,0,0.4)'
+                    : 'none',
+                  whiteSpace: 'nowrap',
+                  flexShrink: 0,
+                  transition: 'all 0.15s ease',
                 }}
                 className={filterStatus !== tab.value ? 'hover:bg-white/10 hover:text-white' : ''}
               >
@@ -427,15 +434,149 @@ export default function AdminOrdersPage() {
             )}
           </div>
         ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-            {filtered.map(order => {
-              const st = STATUS_LABELS[order.status] || STATUS_LABELS.new
-              const isMenuOpen = activeMenu === order.id
-              const isInFunnel = order.status === 'funnel'
+          <>
+            {/* ── MOBILE LEADS GRID (2 per line, elongated rectangular cards) ── */}
+            <div className="grid grid-cols-2 gap-2.5 md:hidden mb-4">
+              {filtered.map(order => {
+                const st = STATUS_LABELS[order.status] || STATUS_LABELS.new
+                const isInFunnel = order.status === 'funnel'
 
-              return (
-                <div
-                  key={order.id}
+                return (
+                  <div
+                    key={order.id}
+                    onClick={() => setDetailModalOrder(order)}
+                    style={{
+                      background: 'rgba(255,255,255,0.07)',
+                      backdropFilter: 'blur(20px)',
+                      WebkitBackdropFilter: 'blur(20px)',
+                      borderRadius: 12,
+                      border: order.status === 'new' ? '1.5px solid rgba(0, 122, 255, 0.45)' : '1px solid rgba(255,255,255,0.10)',
+                      padding: '12px 10px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'space-between',
+                      minHeight: 155,
+                      boxShadow: '0 6px 20px rgba(0,0,0,0.3)',
+                      cursor: 'pointer',
+                      position: 'relative',
+                    }}
+                    className="active:scale-[0.98] transition-transform"
+                  >
+                    {/* Top Row: Initial Avatar + Status Dot */}
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+                      <div
+                        style={{
+                          width: 32,
+                          height: 32,
+                          borderRadius: 8,
+                          background: isInFunnel ? 'rgba(209, 170, 92, 0.2)' : 'rgba(255,255,255,0.08)',
+                          border: isInFunnel ? '1px solid rgba(209, 170, 92, 0.4)' : '1px solid rgba(255,255,255,0.12)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: 13,
+                          fontWeight: 700,
+                          color: isInFunnel ? '#d1aa5c' : '#FFFFFF',
+                        }}
+                      >
+                        {(order.name || '?')[0].toUpperCase()}
+                      </div>
+                      {order.status === 'new' ? (
+                        <span style={{ width: 8, height: 8, borderRadius: 99, background: '#007AFF', boxShadow: '0 0 8px #007AFF' }} />
+                      ) : (
+                        <span style={{ fontSize: 9.5, color: 'rgba(255,255,255,0.35)' }}>
+                          {formatDate(order.created_at).split(' ')[0]}
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Middle: Name & Phone */}
+                    <div style={{ marginBottom: 8 }}>
+                      <p style={{ fontSize: 13, fontWeight: 600, color: '#FFFFFF', lineHeight: 1.25, display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                        {order.name || 'Client sans nom'}
+                      </p>
+                      {order.phone && (
+                        <p style={{ fontSize: 10.5, color: 'rgba(255,255,255,0.6)', marginTop: 3, display: 'flex', alignItems: 'center', gap: 3 }}>
+                          <Phone className="w-2.5 h-2.5 text-[#6B7280] shrink-0" />
+                          <span className="truncate">{order.phone}</span>
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Bottom: 2 Funnel/Status Tags */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginTop: 'auto' }}>
+                      <span
+                        style={{
+                          fontSize: 9.5,
+                          fontWeight: 600,
+                          color: st.color,
+                          background: st.bg,
+                          border: `1px solid ${st.border}`,
+                          padding: '2px 6px',
+                          borderRadius: 4,
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: 3,
+                          width: 'fit-content',
+                        }}
+                      >
+                        <span style={{ width: 4, height: 4, borderRadius: 1, background: st.color }} />
+                        {st.label}
+                      </span>
+
+                      {isInFunnel ? (
+                        <span
+                          style={{
+                            fontSize: 9.5,
+                            fontWeight: 600,
+                            color: '#d1aa5c',
+                            background: 'rgba(209, 170, 92, 0.15)',
+                            border: '1px solid rgba(209, 170, 92, 0.3)',
+                            padding: '2px 6px',
+                            borderRadius: 4,
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: 3,
+                            width: 'fit-content',
+                          }}
+                        >
+                          <TrendingUp className="w-2.5 h-2.5" />
+                          <span>Dans ventes</span>
+                        </span>
+                      ) : (
+                        <span
+                          style={{
+                            fontSize: 9,
+                            color: 'rgba(255,255,255,0.4)',
+                            background: 'rgba(255,255,255,0.04)',
+                            padding: '2px 6px',
+                            borderRadius: 4,
+                            width: 'fit-content',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            maxWidth: '100%',
+                          }}
+                        >
+                          {order.product ? `Modèle: ${order.product}` : 'Demande générale'}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+
+            {/* ── DESKTOP ORDERS LIST (Visible on md and larger) ── */}
+            <div className="hidden md:flex flex-col gap-3.5">
+              {filtered.map(order => {
+                const st = STATUS_LABELS[order.status] || STATUS_LABELS.new
+                const isMenuOpen = activeMenu === order.id
+                const isInFunnel = order.status === 'funnel'
+
+                return (
+                  <div
+                    key={order.id}
                   style={{
                     background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
                     borderRadius: 8,
@@ -913,8 +1054,286 @@ export default function AdminOrdersPage() {
               )
             })}
           </div>
+          </>
         )}
       </div>
+
+      {/* ── FULL SCREEN iOS DETAIL MODAL ── */}
+      {detailModalOrder && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 100,
+            background: 'rgba(0,0,0,0.85)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '14px',
+          }}
+          onClick={() => setDetailModalOrder(null)}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              background: '#0D0E12',
+              border: '1px solid rgba(255, 255, 255, 0.15)',
+              borderRadius: 20,
+              width: '100%',
+              maxWidth: 480,
+              maxHeight: '90vh',
+              overflowY: 'auto',
+              boxShadow: '0 25px 60px -10px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.1)',
+              padding: '20px 18px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 14,
+            }}
+          >
+            {/* Modal Header */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: 12 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <div
+                  style={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: 10,
+                    background: detailModalOrder.status === 'funnel' ? 'rgba(209, 170, 92, 0.2)' : 'rgba(255,255,255,0.08)',
+                    border: '1px solid rgba(255,255,255,0.15)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: 16,
+                    fontWeight: 700,
+                    color: detailModalOrder.status === 'funnel' ? '#d1aa5c' : '#FFFFFF',
+                  }}
+                >
+                  {(detailModalOrder.name || '?')[0].toUpperCase()}
+                </div>
+                <div>
+                  <h3 style={{ fontSize: 16, fontWeight: 700, color: '#FFFFFF', margin: 0 }}>
+                    {detailModalOrder.name || 'Client sans nom'}
+                  </h3>
+                  <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', marginTop: 2 }}>
+                    Reçu le {formatDate(detailModalOrder.created_at)}
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setDetailModalOrder(null)}
+                style={{
+                  width: 32,
+                  height: 32,
+                  borderRadius: 99,
+                  background: 'rgba(255,255,255,0.08)',
+                  border: 'none',
+                  color: 'rgba(255,255,255,0.7)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                }}
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Quick Actions (Call & WhatsApp) */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+              {detailModalOrder.phone ? (
+                <a
+                  href={`tel:${detailModalOrder.phone}`}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 8,
+                    padding: '10px',
+                    borderRadius: 10,
+                    background: 'rgba(255,255,255,0.08)',
+                    border: '1px solid rgba(255,255,255,0.12)',
+                    color: '#FFFFFF',
+                    fontSize: 12.5,
+                    fontWeight: 600,
+                    textDecoration: 'none',
+                  }}
+                >
+                  <Phone className="w-4 h-4 text-[#60a5fa]" />
+                  <span>Appeler</span>
+                </a>
+              ) : null}
+
+              {detailModalOrder.phone ? (
+                <a
+                  href={getWhatsAppUrl(detailModalOrder.phone, detailModalOrder.name, detailModalOrder.product)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 8,
+                    padding: '10px',
+                    borderRadius: 10,
+                    background: 'rgba(37,211,102,0.18)',
+                    border: '1px solid rgba(37,211,102,0.35)',
+                    color: '#22c55e',
+                    fontSize: 12.5,
+                    fontWeight: 600,
+                    textDecoration: 'none',
+                  }}
+                >
+                  <MessageCircle className="w-4 h-4 text-[#22c55e]" />
+                  <span>WhatsApp</span>
+                </a>
+              ) : null}
+            </div>
+
+            {/* Contact Details */}
+            <div style={{ background: 'rgba(255,255,255,0.04)', borderRadius: 12, padding: '10px 12px', border: '1px solid rgba(255,255,255,0.06)' }}>
+              {detailModalOrder.phone && (
+                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '5px 0', borderBottom: '1px solid rgba(255,255,255,0.05)', fontSize: 12 }}>
+                  <span style={{ color: 'rgba(255,255,255,0.45)' }}>Téléphone</span>
+                  <span style={{ color: '#FFFFFF', fontWeight: 600 }}>{detailModalOrder.phone}</span>
+                </div>
+              )}
+              {detailModalOrder.email && (
+                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '5px 0', borderBottom: '1px solid rgba(255,255,255,0.05)', fontSize: 12 }}>
+                  <span style={{ color: 'rgba(255,255,255,0.45)' }}>Email</span>
+                  <a href={`mailto:${detailModalOrder.email}`} style={{ color: '#60a5fa', textDecoration: 'none' }}>{detailModalOrder.email}</a>
+                </div>
+              )}
+              {detailModalOrder.product && (
+                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '5px 0', fontSize: 12 }}>
+                  <span style={{ color: 'rgba(255,255,255,0.45)' }}>Modèle demandé</span>
+                  <span style={{ color: '#d1aa5c', fontWeight: 600 }}>{detailModalOrder.product}</span>
+                </div>
+              )}
+            </div>
+
+            {/* Full Message */}
+            {detailModalOrder.message && (
+              <div>
+                <label style={{ fontSize: 10.5, fontWeight: 600, color: 'rgba(255,255,255,0.45)', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'block', marginBottom: 5 }}>
+                  Message du client
+                </label>
+                <div style={{ background: 'rgba(255,255,255,0.04)', borderRadius: 10, padding: '10px 12px', border: '1px solid rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.85)', fontSize: 12.5, lineHeight: 1.5 }}>
+                  {detailModalOrder.message}
+                </div>
+              </div>
+            )}
+
+            {/* Change Status Pills */}
+            <div>
+              <label style={{ fontSize: 10.5, fontWeight: 600, color: 'rgba(255,255,255,0.45)', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'block', marginBottom: 6 }}>
+                Statut du dossier
+              </label>
+              <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
+                {Object.entries(STATUS_LABELS).map(([stKey, stVal]) => (
+                  <button
+                    key={stKey}
+                    type="button"
+                    onClick={() => {
+                      updateStatus(detailModalOrder.id, stKey)
+                      setDetailModalOrder(prev => prev ? { ...prev, status: stKey } : null)
+                    }}
+                    style={{
+                      padding: '4px 9px',
+                      borderRadius: 99,
+                      fontSize: 10.5,
+                      fontWeight: 500,
+                      cursor: 'pointer',
+                      border: detailModalOrder.status === stKey ? `1.5px solid ${stVal.color}` : '1px solid rgba(255,255,255,0.1)',
+                      background: detailModalOrder.status === stKey ? stVal.bg : 'rgba(255,255,255,0.03)',
+                      color: detailModalOrder.status === stKey ? stVal.color : 'rgba(255,255,255,0.6)',
+                    }}
+                  >
+                    {stVal.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Bottom Actions */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 4, paddingTop: 10, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+              {detailModalOrder.status === 'funnel' ? (
+                <a
+                  href="/admin/sales"
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 6,
+                    padding: '11px',
+                    borderRadius: 10,
+                    background: 'linear-gradient(135deg, #d1aa5c 0%, #b89347 100%)',
+                    color: '#0A0B0C',
+                    fontSize: 12.5,
+                    fontWeight: 700,
+                    textDecoration: 'none',
+                  }}
+                >
+                  <TrendingUp className="w-4 h-4" />
+                  <span>Ouvrir dans le CRM Ventes ↗</span>
+                </a>
+              ) : (
+                <button
+                  type="button"
+                  onClick={async () => {
+                    await addToFunnel(detailModalOrder, true)
+                    setDetailModalOrder(prev => prev ? { ...prev, status: 'funnel' } : null)
+                  }}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 6,
+                    padding: '11px',
+                    borderRadius: 10,
+                    background: 'linear-gradient(135deg, #d1aa5c 0%, #b89347 100%)',
+                    color: '#0A0B0C',
+                    border: 'none',
+                    fontSize: 12.5,
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                  }}
+                >
+                  <TrendingUp className="w-4 h-4" />
+                  <span>+ Ajouter au funnel de vente</span>
+                </button>
+              )}
+
+              <button
+                type="button"
+                onClick={() => {
+                  deleteOrder(detailModalOrder.id)
+                  setDetailModalOrder(null)
+                }}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 5,
+                  padding: '8px',
+                  borderRadius: 8,
+                  background: 'rgba(239, 68, 68, 0.1)',
+                  border: '1px solid rgba(239, 68, 68, 0.25)',
+                  color: '#f87171',
+                  fontSize: 11.5,
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                }}
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                <span>Supprimer cette demande</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Invisible Full-Screen Backdrop to smoothly dismiss open 3-dots menu */}
       {activeMenu && (
