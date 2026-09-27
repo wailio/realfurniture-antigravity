@@ -167,7 +167,7 @@ export default function AdminUsersPage() {
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
           borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
-          padding: '14px 20px',
+          padding: 'clamp(16px, 2vw, 22px) clamp(16px, 3vw, 28px)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -182,7 +182,7 @@ export default function AdminUsersPage() {
             <Users2 style={{ width: 15, height: 15, color: '#d1aa5c' }} />
           </div>
           <div>
-            <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: 19, fontWeight: 500, color: '#FFFFFF', letterSpacing: '-0.01em', margin: 0, lineHeight: 1.2 }}>
+            <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: 24, fontWeight: 400, color: '#FFFFFF', letterSpacing: '-0.01em', margin: 0, lineHeight: 1.2 }}>
               Utilisateurs
             </h1>
             <p style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.38)', marginTop: 1 }}>

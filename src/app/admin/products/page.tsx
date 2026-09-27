@@ -107,13 +107,6 @@ const COLLECTION_FILES = [
     image: '/products/accessoire/acc1.jpg',
     angle: 6,
   },
-  {
-    name: 'Luxe & Velours',
-    category: 'sofas',
-    tag: 'Signature',
-    image: '/products/salon/bb.jpg',
-    angle: 9,
-  },
 ]
 
 const STEPS = ['Infos', 'Catégorie', 'Images', 'Détails']

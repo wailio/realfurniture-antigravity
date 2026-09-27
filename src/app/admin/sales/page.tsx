@@ -418,23 +418,23 @@ export default function AdminSalesPage() {
 
   return (
     <div className="min-h-screen" style={{ background: 'transparent' }}>
-      {/* Header — Thinner bar, compact text in a direct line */}
+      {/* Header — big bar restored */}
       <div
         style={{
           background: '#0A0B0C',
           borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
-          padding: '10px 16px',
+          padding: 'clamp(16px, 2vw, 22px) clamp(16px, 3vw, 28px)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           gap: 10,
         }}
       >
-        <div style={{ minWidth: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
+        <div style={{ minWidth: 0, display: 'flex', alignItems: 'center', gap: 10 }}>
           <h1
             style={{
               fontFamily: 'var(--font-heading)',
-              fontSize: 17,
+              fontSize: 24,
               fontWeight: 400,
               color: '#FFFFFF',
               letterSpacing: '-0.01em',
