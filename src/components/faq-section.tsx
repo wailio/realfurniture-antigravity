@@ -45,6 +45,7 @@ export const FAQ_DATA: FaqItem[] = [
 export function FaqSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
   const leaveTimerRef = useRef<NodeJS.Timeout | null>(null)
+  const itemRefs = useRef<(HTMLDivElement | null)[]>([])
 
   // Toggle open state on click
   const handleToggle = (index: number) => {
@@ -55,29 +56,78 @@ export function FaqSection() {
     setOpenIndex((prev) => (prev === index ? null : index))
   }
 
-  // When mouse leaves the question, auto-close after a smooth debounce
-  const handleMouseLeave = (index: number) => {
-    if (openIndex === index) {
-      if (leaveTimerRef.current) clearTimeout(leaveTimerRef.current)
-      leaveTimerRef.current = setTimeout(() => {
-        setOpenIndex(null)
-      }, 450) // fast yet smooth close detection
-    }
-  }
-
-  // When mouse re-enters, cancel any pending auto-close
-  const handleMouseEnter = (index: number) => {
-    if (leaveTimerRef.current) {
-      clearTimeout(leaveTimerRef.current)
-      leaveTimerRef.current = null
-    }
-  }
-
+  // Active tracker: detect whenever mouse leaves the active item, moves far away, or exits to taskbar/off-screen
   useEffect(() => {
-    return () => {
-      if (leaveTimerRef.current) clearTimeout(leaveTimerRef.current)
+    if (openIndex === null) return
+
+    const currentEl = itemRefs.current[openIndex]
+
+    const triggerClose = (delay = 400) => {
+      if (!leaveTimerRef.current) {
+        leaveTimerRef.current = setTimeout(() => {
+          setOpenIndex(null)
+          leaveTimerRef.current = null
+        }, delay)
+      }
     }
-  }, [])
+
+    const cancelClose = () => {
+      if (leaveTimerRef.current) {
+        clearTimeout(leaveTimerRef.current)
+        leaveTimerRef.current = null
+      }
+    }
+
+    // 1. Global mousemove: check if cursor is anywhere outside the active question's bounding box
+    const handleGlobalMouseMove = (e: MouseEvent) => {
+      if (!currentEl) return
+      const rect = currentEl.getBoundingClientRect()
+      const buffer = 15 // smooth generous buffer around the card
+      const isInside =
+        e.clientX >= rect.left - buffer &&
+        e.clientX <= rect.right + buffer &&
+        e.clientY >= rect.top - buffer &&
+        e.clientY <= rect.bottom + buffer
+
+      if (!isInside) {
+        triggerClose(380)
+      } else {
+        cancelClose()
+      }
+    }
+
+    // 2. Cursor exits the browser window (e.g. moving quickly to Windows taskbar, URL bar, or another app)
+    const handleDocMouseOut = (e: MouseEvent) => {
+      if (!e.relatedTarget && !(e as any).toElement) {
+        triggerClose(220)
+      }
+    }
+
+    const handleDocMouseLeave = () => {
+      triggerClose(220)
+    }
+
+    // 3. Window blur: user clicks taskbar, alt-tabs, or switches focus
+    const handleWindowBlur = () => {
+      setOpenIndex(null)
+    }
+
+    window.addEventListener('mousemove', handleGlobalMouseMove, { passive: true })
+    document.addEventListener('mouseout', handleDocMouseOut)
+    document.addEventListener('mouseleave', handleDocMouseLeave)
+    window.addEventListener('blur', handleWindowBlur)
+
+    return () => {
+      window.removeEventListener('mousemove', handleGlobalMouseMove)
+      document.removeEventListener('mouseout', handleDocMouseOut)
+      document.removeEventListener('mouseleave', handleDocMouseLeave)
+      window.removeEventListener('blur', handleWindowBlur)
+      if (leaveTimerRef.current) {
+        clearTimeout(leaveTimerRef.current)
+        leaveTimerRef.current = null
+      }
+    }
+  }, [openIndex])
 
   // JSON-LD structured data for Google FAQ schema rich snippets
   const faqSchema = {
@@ -147,8 +197,9 @@ export function FaqSection() {
             return (
               <LuxuryReveal key={index} delay={index * 50 + 100} variant="up">
                 <div
-                  onMouseEnter={() => handleMouseEnter(index)}
-                  onMouseLeave={() => handleMouseLeave(index)}
+                  ref={(el) => {
+                    itemRefs.current[index] = el
+                  }}
                   className={`group transition-all duration-200 ease-out rounded-none py-3.5 px-3 sm:py-4 sm:px-4 my-0.5 cursor-pointer ${
                     isOpen
                       ? 'border border-[#d1aa5c]/35 shadow-[0_4px_24px_rgba(209,170,92,0.08)]'
