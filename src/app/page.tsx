@@ -120,10 +120,10 @@ export default function HomePage() {
             
             {/* ── Left Column: High-Conversion Headline, Copy & Google Reviews (Positioned slightly higher on PC) ── */}
             <div className="lg:col-span-6 xl:col-span-7 text-left flex flex-col items-start lg:-translate-y-3 xl:-translate-y-4">
-              {/* Eyebrow badge */}
+              {/* Eyebrow badge (Sharp-edged architectural design) */}
               <div className="mb-3.5 lg:mb-2.5 animate-fade-in-up" style={{ animationDelay: '0ms', animationFillMode: 'both' }}>
-                <span className="inline-flex items-center gap-2 border border-white/15 bg-black/40 backdrop-blur-md px-3.5 py-1.5 rounded-full text-[10px] md:text-xs font-sora text-[#E4E4E7] tracking-[2.5px] uppercase shadow-sm">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#d1aa5c] shadow-[0_0_8px_#d1aa5c]" />
+                <span className="inline-flex items-center gap-2 border border-white/15 bg-black/40 backdrop-blur-md px-3.5 py-1.5 rounded-none text-[10px] md:text-xs font-sora text-[#E4E4E7] tracking-[2.5px] uppercase shadow-sm">
+                  <span className="w-1.5 h-1.5 rounded-none bg-[#d1aa5c] shadow-[0_0_8px_#d1aa5c]" />
                   <span>{siteConfig.hero_eyebrow || "CHÂTEAU D'ART · MAISON DE DESIGN"}</span>
                 </span>
               </div>
