@@ -72,8 +72,6 @@ export function HeroQuoteWidget() {
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState('')
-
-  const [transitioningType, setTransitioningType] = useState<string | null>(null)
   const sliderTimerRef = React.useRef<NodeJS.Timeout | null>(null)
 
   const formatPrice = (val: number) => {
@@ -82,18 +80,14 @@ export function HeroQuoteWidget() {
 
   const handleSelectType = (id: string) => {
     setSelectedType(id)
-    setTransitioningType(id)
-    setTimeout(() => {
-      setStep(2)
-      setTransitioningType(null)
-    }, 160)
+    setStep(2)
   }
 
   const handleSliderRelease = () => {
     if (sliderTimerRef.current) clearTimeout(sliderTimerRef.current)
     sliderTimerRef.current = setTimeout(() => {
       setStep(3)
-    }, 240)
+    }, 70)
   }
 
   const handlePresetSelect = (presetVal: number) => {
@@ -101,12 +95,7 @@ export function HeroQuoteWidget() {
     if (sliderTimerRef.current) clearTimeout(sliderTimerRef.current)
     sliderTimerRef.current = setTimeout(() => {
       setStep(3)
-    }, 180)
-  }
-
-  const handleNextFromStep1 = () => {
-    if (!selectedType) return
-    setStep(2)
+    }, 60)
   }
 
   const handleNextFromStep2 = () => {
@@ -285,325 +274,275 @@ export function HeroQuoteWidget() {
               />
             </div>
 
-            {/* ── STEP 1: Select Furniture Type ── */}
-            {step === 1 && (
-              <div className="animate-fade-in-up">
-                <h3 className="font-fraunces text-xl md:text-[22px] lg:text-[18px] xl:text-[19px] font-normal text-white mb-1 leading-snug">
-                  Quel type de mobilier recherchez-vous ?
-                </h3>
-                <p className="text-white/60 text-xs md:text-[13px] lg:text-[11px] mb-4 lg:mb-3">
-                  Sélectionnez la catégorie qui correspond à votre projet.
-                </p>
+            {/* ── Sliding Track (Smooth iOS style step slide) ── */}
+            <div className="w-full overflow-hidden">
+              <div
+                className="flex w-full transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
+                style={{
+                  transform: `translateX(-${(step - 1) * 100}%)`,
+                }}
+              >
+                {/* ── STEP 1: Select Furniture Type ── */}
+                <div className="w-full shrink-0">
+                  <h3 className="font-fraunces text-xl md:text-[22px] lg:text-[18px] xl:text-[19px] font-normal text-white mb-1 leading-snug">
+                    Quel type de mobilier recherchez-vous ?
+                  </h3>
+                  <p className="text-white/60 text-xs md:text-[13px] lg:text-[11px] mb-4 lg:mb-3">
+                    Sélectionnez la catégorie qui correspond à votre projet.
+                  </p>
 
-                {/* 2-Column Grid of Option Cards */}
-                <div className="grid grid-cols-2 gap-2.5 lg:gap-2 mb-5 lg:mb-3.5">
-                  {FURNITURE_TYPES.map((item) => {
-                    const isSelected = selectedType === item.id
-                    const IconComponent = item.icon
-                    return (
+                  {/* 2-Column Grid of Option Cards (Direct 1-click choices, no selected state shown) */}
+                  <div className="grid grid-cols-2 gap-2.5 lg:gap-2">
+                    {FURNITURE_TYPES.map((item) => {
+                      const IconComponent = item.icon
+                      return (
+                        <button
+                          key={item.id}
+                          type="button"
+                          onClick={() => handleSelectType(item.id)}
+                          className="group relative text-left p-3 md:p-3.5 lg:p-2.5 xl:p-3 rounded-2xl border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] hover:border-[#d1aa5c]/45 active:scale-[0.97] transition-all duration-150 cursor-pointer"
+                          style={{ cursor: 'pointer' }}
+                        >
+                          {/* Creative Category Icon */}
+                          <div className="w-8 h-8 lg:w-7 lg:h-7 rounded-lg flex items-center justify-center mb-1.5 bg-white/10 text-[#d1aa5c] group-hover:bg-[#d1aa5c]/20 group-hover:scale-105 transition-all duration-150">
+                            <IconComponent className="w-4 h-4 stroke-[1.8]" />
+                          </div>
+
+                          {/* Text */}
+                          <div className="pr-1">
+                            <p className="text-xs md:text-[13px] lg:text-[11.5px] font-semibold text-white/95 group-hover:text-white leading-tight mb-0.5 transition-colors">
+                              {item.title}
+                            </p>
+                            <p className="text-[10px] md:text-[11px] lg:text-[9.5px] text-white/50 group-hover:text-white/70 leading-tight transition-colors">
+                              {item.desc}
+                            </p>
+                          </div>
+                        </button>
+                      )
+                    })}
+                  </div>
+                </div>
+
+                {/* ── STEP 2: Price Range Swipe Slider ── */}
+                <div className="w-full shrink-0">
+                  <h3 className="font-fraunces text-xl md:text-[22px] lg:text-[18px] xl:text-[19px] font-normal text-white mb-1 leading-snug">
+                    Quel est votre budget estimé ?
+                  </h3>
+                  <p className="text-white/60 text-xs md:text-[13px] lg:text-[11px] mb-4 lg:mb-3">
+                    Glissez le curseur pour ajuster votre fourchette de prix idéale.
+                  </p>
+
+                  {/* Big Formatted Price Display */}
+                  <div
+                    className="p-4 lg:p-3 rounded-2xl mb-4 lg:mb-3 text-center border relative overflow-hidden"
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.03)',
+                      borderColor: 'rgba(209, 170, 92, 0.25)',
+                      boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.06)',
+                    }}
+                  >
+                    <p className="text-[10px] uppercase tracking-wider text-white/50 mb-0.5 font-sora">
+                      Budget sélectionné
+                    </p>
+                    <p className="font-fraunces text-2xl md:text-3xl lg:text-[25px] xl:text-[27px] font-light text-[#d1aa5c] tracking-tight">
+                      {formatPrice(budget)}
+                    </p>
+                    <p className="text-[10px] text-white/40 mt-0.5">
+                      Pour : <span className="text-white/80">{categoryLabel}</span>
+                    </p>
+                  </div>
+
+                  {/* Thick Swipe Slider (20 000 DA to 180 000 DA) */}
+                  <div className="px-1 mb-4 lg:mb-3">
+                    <div className="relative flex items-center">
+                      <input
+                        type="range"
+                        min={MIN_PRICE}
+                        max={MAX_PRICE}
+                        step={PRICE_STEP}
+                        value={budget}
+                        onChange={(e) => setBudget(Number(e.target.value))}
+                        onPointerUp={handleSliderRelease}
+                        onMouseUp={handleSliderRelease}
+                        onTouchEnd={handleSliderRelease}
+                        onKeyUp={handleSliderRelease}
+                        className="w-full h-3 lg:h-2.5 appearance-none rounded-full cursor-pointer focus:outline-none"
+                        style={{
+                          cursor: 'pointer',
+                          background: `linear-gradient(to right, #d1aa5c 0%, #b68d40 ${
+                            ((budget - MIN_PRICE) / (MAX_PRICE - MIN_PRICE)) * 100
+                          }%, rgba(255, 255, 255, 0.12) ${
+                            ((budget - MIN_PRICE) / (MAX_PRICE - MIN_PRICE)) * 100
+                          }%, rgba(255, 255, 255, 0.12) 100%)`,
+                        }}
+                      />
+                    </div>
+
+                    {/* Range Boundaries & Auto-advance notice */}
+                    <div className="flex justify-between items-center text-[10px] font-mono text-white/40 mt-2">
+                      <span>{formatPrice(MIN_PRICE)}</span>
+                      <span className="text-[#d1aa5c]/90 text-[9.5px] uppercase font-sans font-semibold tracking-wider flex items-center gap-1">
+                        <span>Glissez &amp; relâchez pour valider</span>
+                      </span>
+                      <span>{formatPrice(MAX_PRICE)}</span>
+                    </div>
+                  </div>
+
+                  {/* Quick Preset DA Chips */}
+                  <div className="grid grid-cols-5 gap-1.5 mb-5 lg:mb-3.5">
+                    {[20000, 50000, 85000, 120000, 180000].map((preset) => (
                       <button
-                        key={item.id}
+                        key={preset}
                         type="button"
-                        onClick={() => handleSelectType(item.id)}
-                        className={`group relative text-left p-3 md:p-3.5 lg:p-2 xl:p-2.5 rounded-2xl border transition-all duration-200 active:scale-[0.96] cursor-pointer ${
-                          transitioningType === item.id
-                            ? 'bg-[#d1aa5c]/25 border-[#d1aa5c] scale-[1.02] shadow-[0_0_24px_rgba(209,170,92,0.45)]'
-                            : isSelected
-                            ? 'bg-[#d1aa5c]/15 border-[#d1aa5c] shadow-[0_4px_16px_rgba(209,170,92,0.22)]'
-                            : 'bg-white/[0.04] border-white/10 hover:bg-white/[0.08] hover:border-[#d1aa5c]/40'
+                        onClick={() => handlePresetSelect(preset)}
+                        className={`py-1.5 lg:py-1 px-1.5 rounded-xl text-[10px] font-medium transition-all active:scale-95 cursor-pointer ${
+                          budget === preset
+                            ? 'bg-[#d1aa5c] text-[#0E0F10] font-bold shadow-md'
+                            : 'bg-white/[0.05] text-white/70 hover:bg-white/10 hover:text-white border border-white/5'
                         }`}
                         style={{ cursor: 'pointer' }}
                       >
-                        {/* Checkmark Badge for Selected Card */}
-                        {(isSelected || transitioningType === item.id) && (
-                          <div
-                            className="absolute top-2 right-2 w-4 h-4 rounded-full flex items-center justify-center text-[#0E0F10] text-[10px] font-bold shadow-md animate-scale-in"
-                            style={{ background: '#d1aa5c' }}
-                          >
-                            <Check className="w-3 h-3 stroke-[3]" />
-                          </div>
-                        )}
-
-                        {/* Icon */}
-                        <div
-                          className={`w-8 h-8 lg:w-7 lg:h-7 rounded-lg flex items-center justify-center mb-1.5 transition-colors ${
-                            isSelected || transitioningType === item.id
-                              ? 'bg-[#d1aa5c] text-[#0E0F10]'
-                              : 'bg-white/10 text-[#d1aa5c] group-hover:bg-white/15'
-                          }`}
-                        >
-                          <IconComponent className="w-4 h-4 stroke-[1.8]" />
-                        </div>
-
-                        {/* Text */}
-                        <div className="pr-3">
-                          <p
-                            className={`text-xs md:text-[13px] lg:text-[11.5px] font-semibold leading-tight mb-0.5 ${
-                              isSelected ? 'text-white' : 'text-white/90'
-                            }`}
-                          >
-                            {item.title}
-                          </p>
-                          <p className="text-[10px] md:text-[11px] lg:text-[9.5px] text-white/50 leading-tight">
-                            {item.desc}
-                          </p>
-                        </div>
+                        {preset >= 1000 ? `${preset / 1000}k DA` : `${preset} DA`}
                       </button>
-                    )
-                  })}
-                </div>
-
-                {/* Continue button */}
-                <button
-                  type="button"
-                  onClick={handleNextFromStep1}
-                  disabled={!selectedType}
-                  className={`w-full py-3.5 lg:py-2.5 px-5 rounded-xl flex items-center justify-center gap-2 text-xs lg:text-[12px] font-bold tracking-wide uppercase transition-all duration-300 ${
-                    selectedType
-                      ? 'text-[#0E0F10] hover:scale-[1.02] active:scale-[0.98] cursor-pointer'
-                      : 'text-white/40 bg-white/5 border border-white/10 cursor-not-allowed'
-                  }`}
-                  style={{
-                    cursor: selectedType ? 'pointer' : 'default',
-                    background: selectedType
-                      ? 'linear-gradient(135deg, #d1aa5c 0%, #b68d40 100%)'
-                      : 'rgba(255, 255, 255, 0.05)',
-                    boxShadow: selectedType ? '0 6px 20px rgba(209, 170, 92, 0.35)' : 'none',
-                  }}
-                >
-                  <span>{selectedType ? 'Continuer' : 'Sélectionnez un type de mobilier'}</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            )}
-
-            {/* ── STEP 2: Price Range Swipe Slider ── */}
-            {step === 2 && (
-              <div className="animate-fade-in-up">
-                <h3 className="font-fraunces text-xl md:text-[22px] lg:text-[18px] xl:text-[19px] font-normal text-white mb-1 leading-snug">
-                  Quel est votre budget estimé ?
-                </h3>
-                <p className="text-white/60 text-xs md:text-[13px] lg:text-[11px] mb-4 lg:mb-3">
-                  Glissez le curseur pour ajuster votre fourchette de prix idéale.
-                </p>
-
-                {/* Big Formatted Price Display */}
-                <div
-                  className="p-4 lg:p-3 rounded-2xl mb-4 lg:mb-3 text-center border relative overflow-hidden"
-                  style={{
-                    background: 'rgba(255, 255, 255, 0.03)',
-                    borderColor: 'rgba(209, 170, 92, 0.25)',
-                    boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.06)',
-                  }}
-                >
-                  <p className="text-[10px] uppercase tracking-wider text-white/50 mb-0.5 font-sora">
-                    Budget sélectionné
-                  </p>
-                  <p className="font-fraunces text-2xl md:text-3xl lg:text-[25px] xl:text-[27px] font-light text-[#d1aa5c] tracking-tight">
-                    {formatPrice(budget)}
-                  </p>
-                  <p className="text-[10px] text-white/40 mt-0.5">
-                    Pour : <span className="text-white/80">{categoryLabel}</span>
-                  </p>
-                </div>
-
-                {/* Thick Swipe Slider (20 000 DA to 180 000 DA) */}
-                <div className="px-1 mb-4 lg:mb-3">
-                  <div className="relative flex items-center">
-                    <input
-                      type="range"
-                      min={MIN_PRICE}
-                      max={MAX_PRICE}
-                      step={PRICE_STEP}
-                      value={budget}
-                      onChange={(e) => {
-                        const val = Number(e.target.value)
-                        setBudget(val)
-                        if (sliderTimerRef.current) clearTimeout(sliderTimerRef.current)
-                        sliderTimerRef.current = setTimeout(() => {
-                          setStep(3)
-                        }, 550)
-                      }}
-                      onPointerUp={handleSliderRelease}
-                      onMouseUp={handleSliderRelease}
-                      onTouchEnd={handleSliderRelease}
-                      onKeyUp={handleSliderRelease}
-                      className="w-full h-3 lg:h-2.5 appearance-none rounded-full cursor-pointer focus:outline-none"
-                      style={{
-                        cursor: 'pointer',
-                        background: `linear-gradient(to right, #d1aa5c 0%, #b68d40 ${
-                          ((budget - MIN_PRICE) / (MAX_PRICE - MIN_PRICE)) * 100
-                        }%, rgba(255, 255, 255, 0.12) ${
-                          ((budget - MIN_PRICE) / (MAX_PRICE - MIN_PRICE)) * 100
-                        }%, rgba(255, 255, 255, 0.12) 100%)`,
-                      }}
-                    />
+                    ))}
                   </div>
 
-                  {/* Range Boundaries & Auto-advance notice */}
-                  <div className="flex justify-between items-center text-[10px] font-mono text-white/40 mt-2">
-                    <span>{formatPrice(MIN_PRICE)}</span>
-                    <span className="text-[#d1aa5c]/90 text-[9.5px] uppercase font-sans font-semibold tracking-wider flex items-center gap-1">
-                      <span>Glissez &amp; relâchez pour valider</span>
-                    </span>
-                    <span>{formatPrice(MAX_PRICE)}</span>
-                  </div>
-                </div>
-
-                {/* Quick Preset Buttons */}
-                <div className="grid grid-cols-4 gap-1.5 mb-5 lg:mb-3.5">
-                  {[30000, 75000, 120000, 180000].map((preset) => (
+                  {/* Navigation Buttons (Back + Next) */}
+                  <div className="flex items-center gap-2.5">
                     <button
-                      key={preset}
                       type="button"
-                      onClick={() => handlePresetSelect(preset)}
-                      className={`py-1.5 lg:py-1 px-1.5 rounded-xl text-[10px] font-medium transition-all active:scale-95 cursor-pointer ${
-                        budget === preset
-                          ? 'bg-[#d1aa5c] text-[#0E0F10] font-bold shadow-md'
-                          : 'bg-white/[0.05] text-white/70 hover:bg-white/10 hover:text-white border border-white/5'
-                      }`}
+                      onClick={() => setStep(1)}
+                      className="py-2.5 lg:py-2 px-3.5 rounded-xl flex items-center justify-center gap-1 text-xs lg:text-[11px] text-white/60 hover:text-white bg-white/[0.05] hover:bg-white/[0.08] border border-white/10 transition-colors cursor-pointer"
                       style={{ cursor: 'pointer' }}
                     >
-                      {preset >= 1000 ? `${preset / 1000}k DA` : `${preset} DA`}
+                      <ArrowLeft className="w-3.5 h-3.5" />
+                      <span>Retour</span>
                     </button>
-                  ))}
+
+                    <button
+                      type="button"
+                      onClick={handleNextFromStep2}
+                      className="flex-1 py-3 lg:py-2.5 px-5 rounded-xl flex items-center justify-center gap-2 text-xs lg:text-[12px] font-bold tracking-wide uppercase text-[#0E0F10] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+                      style={{
+                        cursor: 'pointer',
+                        background: 'linear-gradient(135deg, #d1aa5c 0%, #b68d40 100%)',
+                        boxShadow: '0 6px 20px rgba(209, 170, 92, 0.35)',
+                      }}
+                    >
+                      <span>Continuer</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
                 </div>
 
-                {/* Navigation Buttons (Back + Next) */}
-                <div className="flex items-center gap-2.5">
-                  <button
-                    type="button"
-                    onClick={() => setStep(1)}
-                    className="py-2.5 lg:py-2 px-3.5 rounded-xl flex items-center justify-center gap-1 text-xs lg:text-[11px] text-white/60 hover:text-white bg-white/[0.05] hover:bg-white/[0.08] border border-white/10 transition-colors cursor-pointer"
-                    style={{ cursor: 'pointer' }}
-                  >
-                    <ArrowLeft className="w-3.5 h-3.5" />
-                    <span>Retour</span>
-                  </button>
+                {/* ── STEP 3: Contact Info (Name + Phone) ── */}
+                <div className="w-full shrink-0">
+                  <form onSubmit={handleSubmit}>
+                    <h3 className="font-fraunces text-xl md:text-[22px] lg:text-[18px] xl:text-[19px] font-normal text-white mb-1 leading-snug">
+                      Nous pouvons commencer par ceux-ci.
+                    </h3>
+                    <p className="text-white/60 text-xs md:text-[13px] lg:text-[11px] mb-4 lg:mb-3">
+                      Renseignez vos coordonnées pour recevoir notre sélection et notre offre.
+                    </p>
 
-                  <button
-                    type="button"
-                    onClick={handleNextFromStep2}
-                    className="flex-1 py-3 lg:py-2.5 px-5 rounded-xl flex items-center justify-center gap-2 text-xs lg:text-[12px] font-bold tracking-wide uppercase text-[#0E0F10] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
-                    style={{
-                      cursor: 'pointer',
-                      background: 'linear-gradient(135deg, #d1aa5c 0%, #b68d40 100%)',
-                      boxShadow: '0 6px 20px rgba(209, 170, 92, 0.35)',
-                    }}
-                  >
-                    <span>Continuer</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
+                    {error && (
+                      <div className="mb-3 p-2 rounded-xl bg-red-500/15 border border-red-500/30 text-red-300 text-xs">
+                        {error}
+                      </div>
+                    )}
+
+                    {/* Summary Pill of previous choices */}
+                    <div className="flex items-center justify-between p-2.5 lg:p-2 rounded-xl bg-white/[0.03] border border-white/10 text-xs text-white/70 mb-3 lg:mb-2.5">
+                      <div>
+                        <span className="text-white/40 block text-[9.5px] uppercase">Votre projet</span>
+                        <strong className="text-white font-medium text-[11px] lg:text-[10.5px]">{categoryLabel}</strong>
+                      </div>
+                      <div className="text-right">
+                        <span className="text-white/40 block text-[9.5px] uppercase">Budget estimé</span>
+                        <span className="text-[#d1aa5c] font-semibold text-[11px] lg:text-[10.5px]">{formatPrice(budget)}</span>
+                      </div>
+                    </div>
+
+                    {/* Input 1: Name */}
+                    <div className="mb-2.5 lg:mb-2">
+                      <label className="block text-[11px] text-white/70 mb-1 font-medium">
+                        Nom complet
+                      </label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-white/35">
+                          <User className="w-3.5 h-3.5" />
+                        </div>
+                        <input
+                          type="text"
+                          required
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                          placeholder="Ex : Amina Benali"
+                          className="w-full pl-9 pr-3 py-2.5 lg:py-2 rounded-xl bg-white/[0.05] border border-white/10 text-xs lg:text-[12px] text-white placeholder-white/25 focus:outline-none focus:border-[#d1aa5c] focus:bg-white/[0.08] transition-colors"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Input 2: Phone */}
+                    <div className="mb-4 lg:mb-3">
+                      <label className="block text-[11px] text-white/70 mb-1 font-medium">
+                        Numéro de téléphone
+                      </label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-white/35">
+                          <Phone className="w-3.5 h-3.5" />
+                        </div>
+                        <input
+                          type="tel"
+                          required
+                          value={phone}
+                          onChange={(e) => setPhone(e.target.value)}
+                          placeholder="Ex : 0550 12 34 56 (WhatsApp)"
+                          className="w-full pl-9 pr-3 py-2.5 lg:py-2 rounded-xl bg-white/[0.05] border border-white/10 text-xs lg:text-[12px] text-white placeholder-white/25 focus:outline-none focus:border-[#d1aa5c] focus:bg-white/[0.08] transition-colors"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Navigation Buttons (Back + Submit) */}
+                    <div className="flex items-center gap-2.5">
+                      <button
+                        type="button"
+                        onClick={() => setStep(2)}
+                        disabled={submitting}
+                        className="py-2.5 lg:py-2 px-3.5 rounded-xl flex items-center justify-center gap-1 text-xs lg:text-[11px] text-white/60 hover:text-white bg-white/[0.05] hover:bg-white/[0.08] border border-white/10 transition-colors cursor-pointer"
+                        style={{ cursor: 'pointer' }}
+                      >
+                        <ArrowLeft className="w-3.5 h-3.5" />
+                        <span>Retour</span>
+                      </button>
+
+                      <button
+                        type="submit"
+                        disabled={submitting}
+                        className="flex-1 py-3 lg:py-2.5 px-5 rounded-xl flex items-center justify-center gap-2 text-xs lg:text-[12px] font-bold tracking-wide uppercase text-[#0E0F10] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 cursor-pointer"
+                        style={{
+                          cursor: submitting ? 'wait' : 'pointer',
+                          background: 'linear-gradient(135deg, #d1aa5c 0%, #b68d40 100%)',
+                          boxShadow: '0 6px 20px rgba(209, 170, 92, 0.35)',
+                        }}
+                      >
+                        {submitting ? (
+                          <>
+                            <Loader2 className="w-3.5 h-3.5 animate-spin text-[#0E0F10]" />
+                            <span>Transmission...</span>
+                          </>
+                        ) : (
+                          <>
+                            <span>Recevoir mon offre</span>
+                            <ArrowRight className="w-3.5 h-3.5" />
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </form>
                 </div>
               </div>
-            )}
-
-            {/* ── STEP 3: Contact Info (Name + Phone) ── */}
-            {step === 3 && (
-              <form onSubmit={handleSubmit} className="animate-fade-in-up">
-                <h3 className="font-fraunces text-xl md:text-[22px] lg:text-[18px] xl:text-[19px] font-normal text-white mb-1 leading-snug">
-                  Nous pouvons commencer par ceux-ci.
-                </h3>
-                <p className="text-white/60 text-xs md:text-[13px] lg:text-[11px] mb-4 lg:mb-3">
-                  Renseignez vos coordonnées pour recevoir notre sélection et notre offre.
-                </p>
-
-                {error && (
-                  <div className="mb-3 p-2 rounded-xl bg-red-500/15 border border-red-500/30 text-red-300 text-xs">
-                    {error}
-                  </div>
-                )}
-
-                {/* Summary Pill of previous choices */}
-                <div className="flex items-center justify-between p-2.5 lg:p-2 rounded-xl bg-white/[0.03] border border-white/10 text-xs text-white/70 mb-3 lg:mb-2.5">
-                  <div>
-                    <span className="text-white/40 block text-[9.5px] uppercase">Votre projet</span>
-                    <strong className="text-white font-medium text-[11px] lg:text-[10.5px]">{categoryLabel}</strong>
-                  </div>
-                  <div className="text-right">
-                    <span className="text-white/40 block text-[9.5px] uppercase">Budget estimé</span>
-                    <span className="text-[#d1aa5c] font-semibold text-[11px] lg:text-[10.5px]">{formatPrice(budget)}</span>
-                  </div>
-                </div>
-
-                {/* Input 1: Name */}
-                <div className="mb-2.5 lg:mb-2">
-                  <label className="block text-[11px] text-white/70 mb-1 font-medium">
-                    Nom complet
-                  </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-white/35">
-                      <User className="w-3.5 h-3.5" />
-                    </div>
-                    <input
-                      type="text"
-                      required
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      placeholder="Ex : Amina Benali"
-                      className="w-full pl-9 pr-3 py-2.5 lg:py-2 rounded-xl bg-white/[0.05] border border-white/10 text-xs lg:text-[12px] text-white placeholder-white/25 focus:outline-none focus:border-[#d1aa5c] focus:bg-white/[0.08] transition-colors"
-                    />
-                  </div>
-                </div>
-
-                {/* Input 2: Phone */}
-                <div className="mb-4 lg:mb-3">
-                  <label className="block text-[11px] text-white/70 mb-1 font-medium">
-                    Numéro de téléphone
-                  </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-white/35">
-                      <Phone className="w-3.5 h-3.5" />
-                    </div>
-                    <input
-                      type="tel"
-                      required
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      placeholder="Ex : 0550 12 34 56 (WhatsApp)"
-                      className="w-full pl-9 pr-3 py-2.5 lg:py-2 rounded-xl bg-white/[0.05] border border-white/10 text-xs lg:text-[12px] text-white placeholder-white/25 focus:outline-none focus:border-[#d1aa5c] focus:bg-white/[0.08] transition-colors"
-                    />
-                  </div>
-                </div>
-
-                {/* Navigation Buttons (Back + Submit) */}
-                <div className="flex items-center gap-2.5">
-                  <button
-                    type="button"
-                    onClick={() => setStep(2)}
-                    disabled={submitting}
-                    className="py-2.5 lg:py-2 px-3.5 rounded-xl flex items-center justify-center gap-1 text-xs lg:text-[11px] text-white/60 hover:text-white bg-white/[0.05] hover:bg-white/[0.08] border border-white/10 transition-colors cursor-pointer"
-                    style={{ cursor: 'pointer' }}
-                  >
-                    <ArrowLeft className="w-3.5 h-3.5" />
-                    <span>Retour</span>
-                  </button>
-
-                  <button
-                    type="submit"
-                    disabled={submitting}
-                    className="flex-1 py-3 lg:py-2.5 px-5 rounded-xl flex items-center justify-center gap-2 text-xs lg:text-[12px] font-bold tracking-wide uppercase text-[#0E0F10] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 cursor-pointer"
-                    style={{
-                      cursor: submitting ? 'wait' : 'pointer',
-                      background: 'linear-gradient(135deg, #d1aa5c 0%, #b68d40 100%)',
-                      boxShadow: '0 6px 20px rgba(209, 170, 92, 0.35)',
-                    }}
-                  >
-                    {submitting ? (
-                      <>
-                        <Loader2 className="w-3.5 h-3.5 animate-spin text-[#0E0F10]" />
-                        <span>Transmission...</span>
-                      </>
-                    ) : (
-                      <>
-                        <span>Recevoir mon offre</span>
-                        <ArrowRight className="w-3.5 h-3.5" />
-                      </>
-                    )}
-                  </button>
-                </div>
-              </form>
-            )}
+            </div>
           </div>
         )}
       </div>
