@@ -44,70 +44,45 @@ export const FAQ_DATA: FaqItem[] = [
 
 export function FaqSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
-  const leaveTimerRef = useRef<NodeJS.Timeout | null>(null)
   const itemRefs = useRef<(HTMLDivElement | null)[]>([])
 
   // Toggle open state on click
   const handleToggle = (index: number) => {
-    if (leaveTimerRef.current) {
-      clearTimeout(leaveTimerRef.current)
-      leaveTimerRef.current = null
-    }
     setOpenIndex((prev) => (prev === index ? null : index))
   }
 
-  // Active tracker: detect whenever mouse leaves the active item, moves far away, or exits to taskbar/off-screen
+  // Active tracker: close and reset immediately when mouse leaves that space of the question shape
   useEffect(() => {
     if (openIndex === null) return
 
     const currentEl = itemRefs.current[openIndex]
 
-    const triggerClose = (delay = 400) => {
-      if (!leaveTimerRef.current) {
-        leaveTimerRef.current = setTimeout(() => {
-          setOpenIndex(null)
-          leaveTimerRef.current = null
-        }, delay)
-      }
-    }
-
-    const cancelClose = () => {
-      if (leaveTimerRef.current) {
-        clearTimeout(leaveTimerRef.current)
-        leaveTimerRef.current = null
-      }
-    }
-
-    // 1. Global mousemove: check if cursor is anywhere outside the active question's bounding box
+    // Check if cursor is outside the question's bounding box
     const handleGlobalMouseMove = (e: MouseEvent) => {
       if (!currentEl) return
       const rect = currentEl.getBoundingClientRect()
-      const buffer = 15 // smooth generous buffer around the card
       const isInside =
-        e.clientX >= rect.left - buffer &&
-        e.clientX <= rect.right + buffer &&
-        e.clientY >= rect.top - buffer &&
-        e.clientY <= rect.bottom + buffer
+        e.clientX >= rect.left &&
+        e.clientX <= rect.right &&
+        e.clientY >= rect.top &&
+        e.clientY <= rect.bottom
 
       if (!isInside) {
-        triggerClose(380)
-      } else {
-        cancelClose()
+        setOpenIndex(null)
       }
     }
 
-    // 2. Cursor exits the browser window (e.g. moving quickly to Windows taskbar, URL bar, or another app)
+    // Cursor exits window / moves to taskbar / off-screen
     const handleDocMouseOut = (e: MouseEvent) => {
       if (!e.relatedTarget && !(e as any).toElement) {
-        triggerClose(220)
+        setOpenIndex(null)
       }
     }
 
     const handleDocMouseLeave = () => {
-      triggerClose(220)
+      setOpenIndex(null)
     }
 
-    // 3. Window blur: user clicks taskbar, alt-tabs, or switches focus
     const handleWindowBlur = () => {
       setOpenIndex(null)
     }
@@ -122,10 +97,6 @@ export function FaqSection() {
       document.removeEventListener('mouseout', handleDocMouseOut)
       document.removeEventListener('mouseleave', handleDocMouseLeave)
       window.removeEventListener('blur', handleWindowBlur)
-      if (leaveTimerRef.current) {
-        clearTimeout(leaveTimerRef.current)
-        leaveTimerRef.current = null
-      }
     }
   }, [openIndex])
 
@@ -199,6 +170,11 @@ export function FaqSection() {
                 <div
                   ref={(el) => {
                     itemRefs.current[index] = el
+                  }}
+                  onMouseLeave={() => {
+                    if (openIndex === index) {
+                      setOpenIndex(null)
+                    }
                   }}
                   className={`group transition-all duration-200 ease-out rounded-none py-3.5 px-3 sm:py-4 sm:px-4 my-0.5 cursor-pointer ${
                     isOpen
