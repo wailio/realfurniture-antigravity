@@ -10,7 +10,8 @@ import {
   ChevronRight, 
   Star,
   Sparkles,
-  ArrowRight
+  ArrowRight,
+  ArrowUpRight,
 } from 'lucide-react';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
@@ -19,6 +20,7 @@ import { ProductCard } from '@/components/product-card';
 import { CurvedProductShowcase } from '@/components/curved-product-showcase';
 import { DesignStories } from '@/components/design-stories';
 import { ReviewsSection } from '@/components/reviews-section';
+import { HeroQuoteWidget } from '@/components/hero-quote-widget';
 import { products, formatPrice } from '@/lib/products';
 import { useSiteConfig } from '@/lib/use-site-config';
 
@@ -88,8 +90,8 @@ export default function HomePage() {
     <main className="min-h-screen bg-[#0E0F10] font-sans">
       <Header theme="dark" />
 
-      {/* ── Section 1: Cinematic Hero with Video Background ── */}
-      <section className="relative w-full h-[600px] md:h-[750px] lg:h-[880px] overflow-hidden flex items-center justify-center">
+      {/* ── Section 1: Cinematic High-Converting Hero with Interactive Quote Widget ── */}
+      <section className="relative w-full min-h-[680px] lg:min-h-[820px] overflow-hidden flex items-center py-16 md:py-24">
         {/* Background Video or Custom Image */}
         {siteConfig.hero_image_1 ? (
           <img
@@ -109,83 +111,95 @@ export default function HomePage() {
           </video>
         )}
 
-        {/* Ambient Dark Overlay for Editorial Contrast */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0E0F10]/70 via-[#0E0F10]/50 to-[#0E0F10] z-10 pointer-events-none" />
-        
-        <div className="relative z-20 text-center px-4 max-w-4xl mx-auto flex flex-col items-center">
-          {/* Eyebrow badge */}
-          <div 
-            className="mb-5 animate-fade-in-up" 
-            style={{ animationDelay: '0ms', animationFillMode: 'both' }}
-          >
-            <span className="inline-flex items-center gap-2 border border-white/20 bg-black/40 backdrop-blur-md px-3 py-1 md:px-4 md:py-1.5 rounded-none text-[9px] md:text-[11px] font-sora text-[#E4E4E7] tracking-[3px] md:tracking-[4px] uppercase shadow-sm">
-              <span className="w-1 h-1 md:w-1.5 md:h-1.5 bg-[#b68d40]" />
-              <span>{siteConfig.hero_eyebrow || "CHÂTEAU D'ART · MAISON DE DESIGN"}</span>
-            </span>
-          </div>
-          
-          {/* Subheading */}
-          <div 
-            className="mb-2 animate-fade-in-up" 
-            style={{ animationDelay: '120ms', animationFillMode: 'both' }}
-          >
-            <span className="font-fraunces font-light text-xl md:text-3xl text-white/90">
-              {siteConfig.hero_subheading || "L'art du confort pour"}
-            </span>
-          </div>
+        {/* Ambient Dark Overlay tailored for two-column contrast */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0E0F10]/95 via-[#0E0F10]/85 to-[#0E0F10]/75 z-10 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0E0F10]/80 via-transparent to-[#0E0F10] z-10 pointer-events-none" />
 
-          {/* Focal title with underline hairline */}
-          <div 
-            className="relative mb-6 animate-fade-in-up" 
-            style={{ animationDelay: '200ms', animationFillMode: 'both' }}
-          >
-            <h1 className="font-fraunces font-light text-[clamp(2rem,8vw,5.8rem)] md:text-[clamp(2.8rem,9vw,5.8rem)] text-white leading-[1.08] tracking-tight">
-              {siteConfig.hero_heading || "espaces d'exception"}
-            </h1>
-            <svg 
-              viewBox="0 0 360 34" 
-              className="w-full max-w-[280px] md:max-w-[420px] mx-auto absolute -bottom-3 md:-bottom-5 left-1/2 -translate-x-1/2"
-            >
-              <path 
-                d="M20 17 L340 17" 
-                fill="none" 
-                stroke="#b68d40" 
-                strokeWidth="1.5" 
-                strokeLinecap="round"
-                className="heading-underline"
-                style={{ strokeDasharray: '320', strokeDashoffset: '0', animation: 'draw 1.5s cubic-bezier(0.22,1,0.36,1) forwards' }}
-              />
-            </svg>
-          </div>
+        <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+            
+            {/* ── Left Column: High-Conversion Headline, Copy & Google Reviews ── */}
+            <div className="lg:col-span-6 xl:col-span-7 text-left flex flex-col items-start">
+              {/* Eyebrow badge */}
+              <div className="mb-4 animate-fade-in-up" style={{ animationDelay: '0ms', animationFillMode: 'both' }}>
+                <span className="inline-flex items-center gap-2 border border-white/15 bg-black/40 backdrop-blur-md px-3.5 py-1.5 rounded-full text-[10px] md:text-xs font-sora text-[#E4E4E7] tracking-[2.5px] uppercase shadow-sm">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#d1aa5c] shadow-[0_0_8px_#d1aa5c]" />
+                  <span>{siteConfig.hero_eyebrow || "CHÂTEAU D'ART · MAISON DE DESIGN"}</span>
+                </span>
+              </div>
 
-          <div 
-            className="mb-10 max-w-xl animate-fade-in-up" 
-            style={{ animationDelay: '300ms', animationFillMode: 'both' }}
-          >
-            <p className="font-sora text-xs md:text-base text-white/80 leading-relaxed">
-              {siteConfig.hero_subtitle || "Matières nobles, proportions sculpturales et finitions artisanales pensées pour sublimer vos espaces de vie."}
-            </p>
-          </div>
+              {/* Main Headline: Thin first line, Thick second line (Matching reference image) */}
+              <div className="mb-5 animate-fade-in-up" style={{ animationDelay: '120ms', animationFillMode: 'both' }}>
+                <h1 className="font-sora text-3xl sm:text-4xl md:text-5xl lg:text-[46px] xl:text-[54px] text-white leading-[1.14] tracking-tight">
+                  <span className="font-light text-white/85 block">
+                    Meilleur magasin de Meubles,
+                  </span>
+                  <span className="font-extrabold text-white block mt-1 tracking-tight">
+                    à Birkhadem
+                  </span>
+                </h1>
+              </div>
 
-          {/* Call to action */}
-          <div 
-            className="flex flex-row items-center gap-2 md:gap-4 animate-fade-in-up" 
-            style={{ animationDelay: '400ms', animationFillMode: 'both' }}
-          >
-            <Link 
-              href="/all-products" 
-              className="inline-flex items-center justify-center gap-1.5 md:gap-2.5 bg-[#b68d40] hover:bg-[#a37c35] text-white px-4 py-2.5 md:px-8 md:py-4 uppercase tracking-[1.5px] md:tracking-[2.5px] text-[9px] md:text-xs font-bold transition-all duration-300 shadow-xl hover:scale-105"
-            >
-              <span>Explorer</span>
-              <ArrowRight size={11} className="md:hidden" />
-              <ArrowRight size={14} className="hidden md:block" />
-            </Link>
-            <Link 
-              href="/contact" 
-              className="inline-flex items-center justify-center gap-1.5 border border-white/20 hover:border-white/50 bg-black/30 backdrop-blur-xs text-white/90 hover:text-white px-4 py-2.5 md:px-8 md:py-4 uppercase tracking-[1.5px] md:tracking-[2.5px] text-[9px] md:text-xs font-medium transition-all duration-300"
-            >
-              <span>{siteConfig.hero_cta || "Rendez-vous"}</span>
-            </Link>
+              {/* Subtitle */}
+              <div className="mb-7 max-w-xl animate-fade-in-up" style={{ animationDelay: '220ms', animationFillMode: 'both' }}>
+                <p className="font-sora text-sm md:text-base text-white/75 leading-relaxed font-normal">
+                  {siteConfig.hero_subtitle || "Matières nobles, proportions sculpturales et finitions artisanales pensées pour sublimer vos espaces de vie."}
+                </p>
+              </div>
+
+              {/* Google Reviews 5-Star Social Proof Badge (Clickable to Google Maps) */}
+              <div className="mb-8 animate-fade-in-up" style={{ animationDelay: '320ms', animationFillMode: 'both' }}>
+                <a
+                  href="https://www.google.com/maps/place/Ch%C3%A2teau+D'Art+-+meubles/@36.7083703,3.0600586,17z/data=!4m8!3m7!1s0x128fad5fae229a89:0xa8afd38ca1b6e44f!8m2!3d36.7083703!4d3.0626335!9m1!1b1!16s%2Fg%2F11gsn14yk8"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group inline-flex flex-wrap items-center gap-3 px-4 py-2.5 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-[#d1aa5c]/40 transition-all duration-300 shadow-lg"
+                  title="Voir les avis sur Google Maps"
+                >
+                  {/* 5 Golden Stars */}
+                  <div className="flex items-center gap-1">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="w-4 h-4 fill-[#d1aa5c] text-[#d1aa5c]" />
+                    ))}
+                  </div>
+
+                  <span className="text-xs md:text-sm font-semibold text-white group-hover:text-[#d1aa5c] transition-colors">
+                    4.9 / 5 sur Google Maps
+                  </span>
+
+                  <span className="hidden sm:inline text-white/30">•</span>
+
+                  <span className="text-xs text-white/60 group-hover:text-white/80 transition-colors">
+                    Showroom Birkhadem • Devis gratuit
+                  </span>
+
+                  <ArrowUpRight className="w-3.5 h-3.5 text-white/40 group-hover:text-[#d1aa5c] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                </a>
+              </div>
+
+              {/* Direct Collection Quick Links */}
+              <div className="flex items-center gap-3 animate-fade-in-up" style={{ animationDelay: '400ms', animationFillMode: 'both' }}>
+                <Link
+                  href="/all-products"
+                  className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/15 text-white px-5 py-3 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all border border-white/10"
+                >
+                  <span>Explorer le catalogue</span>
+                  <ArrowRight className="w-3.5 h-3.5 text-[#d1aa5c]" />
+                </Link>
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center gap-2 text-white/70 hover:text-white px-4 py-3 text-xs font-medium transition-colors"
+                >
+                  <span>Nous trouver</span>
+                </Link>
+              </div>
+            </div>
+
+            {/* ── Right Column: Interactive One-Question-At-A-Time Funnel Widget ── */}
+            <div className="lg:col-span-6 xl:col-span-5 w-full flex justify-center lg:justify-end animate-fade-in-up" style={{ animationDelay: '200ms', animationFillMode: 'both' }}>
+              <HeroQuoteWidget />
+            </div>
+
           </div>
         </div>
       </section>
