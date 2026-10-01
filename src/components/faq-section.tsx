@@ -117,7 +117,7 @@ export function FaqSection() {
   return (
     <section
       id="faq"
-      className="relative w-full py-20 md:py-24 bg-[#0E0F10] text-[#B7BBC0] overflow-hidden border-t border-white/[0.06]"
+      className="relative w-full pt-28 md:pt-36 lg:pt-44 pb-24 md:pb-32 bg-[#0E0F10] text-[#B7BBC0] overflow-hidden border-t border-white/[0.06]"
       aria-labelledby="faq-heading"
     >
       {/* Structured SEO Schema */}
@@ -133,20 +133,21 @@ export function FaqSection() {
       />
 
       <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* ── Section Header (Matching Reference Image Style) ── */}
-        <div className="text-left mb-10 md:mb-14">
+        {/* ── Section Header (Generous spacing, Circular Std font, Bigger Title) ── */}
+        <div className="text-left mb-16 md:mb-24 lg:mb-28">
           <LuxuryReveal delay={0} variant="up">
-            <div className="inline-flex items-center gap-2 border border-[#d1aa5c]/25 bg-black/40 backdrop-blur-md px-3.5 py-1.5 rounded-none text-[10px] md:text-xs font-sora text-[#f3e3be] tracking-[2.5px] uppercase shadow-sm mb-3">
+            <div className="inline-flex items-center gap-2 border border-[#d1aa5c]/25 bg-black/40 backdrop-blur-md px-3.5 py-1.5 rounded-none text-[10px] md:text-xs font-circular text-[#f3e3be] tracking-[2.5px] uppercase shadow-sm mb-5 md:mb-6" style={{ fontFamily: "'Circular Std', 'Circular', -apple-system, BlinkMacSystemFont, sans-serif" }}>
               <span className="w-1.5 h-1.5 rounded-none bg-[#d1aa5c]" />
               <span>F.A.Q · FOIRE AUX QUESTIONS</span>
             </div>
           </LuxuryReveal>
 
-          {/* Title matching reference image font & lighter golden 'avant d'acheter.' */}
+          {/* Big commanding title with Circular Std font & light golden 'avant d'acheter.' */}
           <LuxuryReveal delay={100} variant="up">
             <h2
               id="faq-heading"
-              className="font-sans text-3xl sm:text-4xl md:text-5xl lg:text-[44px] text-white font-light tracking-tight leading-[1.18]"
+              className="font-circular text-4xl sm:text-5xl md:text-6xl lg:text-[56px] xl:text-[62px] text-white font-normal tracking-[-0.03em] leading-[1.12] max-w-4xl"
+              style={{ fontFamily: "'Circular Std', 'Circular', -apple-system, BlinkMacSystemFont, sans-serif" }}
             >
               <span>Questions que les gens se posent </span>
               <span className="text-[#f5e2b8] font-normal">avant d&apos;acheter.</span>
@@ -155,7 +156,10 @@ export function FaqSection() {
 
           {/* Subtitle: smaller, longer, normal font, delicate light platinum/champagne */}
           <LuxuryReveal delay={180} variant="up">
-            <p className="text-[12.5px] sm:text-[13px] text-[#e8dfcf]/75 font-normal tracking-normal mt-2.5 leading-relaxed max-w-3xl font-sans">
+            <p
+              className="text-[13px] sm:text-[14px] text-[#e8dfcf]/75 font-normal tracking-normal mt-4 md:mt-5 leading-relaxed max-w-3xl font-circular"
+              style={{ fontFamily: "'Circular Std', 'Circular', -apple-system, BlinkMacSystemFont, sans-serif" }}
+            >
               Tout ce que vous devez savoir sur la livraison, nos garanties et le showroom de Birkhadem.
             </p>
           </LuxuryReveal>
@@ -191,13 +195,14 @@ export function FaqSection() {
                 >
                   {/* Header Row: Question + Sharp Minimal Toggle Icon */}
                   <div className="flex items-center justify-between gap-4">
-                    {/* Simpler, luxurious, normal-looking font for question text */}
+                    {/* Simpler, luxurious, normal-looking font for question text in Circular Std */}
                     <h3
-                      className={`text-[15px] sm:text-[16.5px] font-sans font-normal tracking-[-0.01em] leading-snug transition-colors duration-200 select-none ${
+                      className={`text-[15.5px] sm:text-[17px] font-circular font-normal tracking-[-0.015em] leading-snug transition-colors duration-200 select-none ${
                         isOpen
                           ? 'text-[#f5e2b8] font-medium'
                           : 'text-white/90 group-hover:text-white'
                       }`}
+                      style={{ fontFamily: "'Circular Std', 'Circular', -apple-system, BlinkMacSystemFont, sans-serif" }}
                     >
                       {item.question}
                     </h3>

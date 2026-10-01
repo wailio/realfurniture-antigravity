@@ -49,6 +49,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr" className={`${fraunces.variable} ${sora.variable}`}>
+      <head>
+        <link rel="preconnect" href="https://fonts.cdnfonts.com" crossOrigin="anonymous" />
+        <link href="https://fonts.cdnfonts.com/css/circular-std" rel="stylesheet" />
+      </head>
       <body className="font-[family-name:var(--font-body)] antialiased bg-background">
         <VisitorTracker />
         {children}

@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+.font-circular {
+  font-family: 'Circular Std', 'Circular', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
 @theme {
   --color-background: #0E0F10;
   --color-surface: #18191B;
