@@ -21,6 +21,7 @@ import { CurvedProductShowcase } from '@/components/curved-product-showcase';
 import { DesignStories } from '@/components/design-stories';
 import { ReviewsSection } from '@/components/reviews-section';
 import { HeroQuoteWidget } from '@/components/hero-quote-widget';
+import { FaqSection } from '@/components/faq-section';
 import { products, formatPrice } from '@/lib/products';
 import { useSiteConfig } from '@/lib/use-site-config';
 
@@ -527,6 +528,9 @@ export default function HomePage() {
 
       {/* ── Section 7: Témoignages & Avis Clients Google (Livora Layout for Desktop, Mobile preserved) ── */}
       <ReviewsSection />
+
+      {/* ── Section 8: FAQ (SEO Structured Q&A, Golden Environment & MouseLeave Auto-Close) ── */}
+      <FaqSection />
 
       <Footer />
     </main>
