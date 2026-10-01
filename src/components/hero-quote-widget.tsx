@@ -2,12 +2,6 @@
 
 import React, { useState } from 'react'
 import {
-  Sofa,
-  Utensils,
-  BedDouble,
-  DoorClosed,
-  Palette,
-  Home,
   Check,
   ArrowRight,
   ArrowLeft,
@@ -23,38 +17,32 @@ const FURNITURE_TYPES = [
   {
     id: 'salon',
     title: 'Salons & Canapés',
-    desc: 'Modulables, velours & cuir',
-    icon: Sofa,
+    iconImage: '/quote-icons/salon.png',
   },
   {
     id: 'salle-a-manger',
     title: 'Salles à Manger',
-    desc: 'Tables, chaises & buffets',
-    icon: Utensils,
+    iconImage: '/quote-icons/salle-a-manger.png',
   },
   {
     id: 'chambre',
     title: 'Chambres à Coucher',
-    desc: 'Lits, chevets & dressings',
-    icon: BedDouble,
+    iconImage: '/quote-icons/chambre.png',
   },
   {
     id: 'armoire',
     title: 'Dressings & Armoires',
-    desc: 'Sur-mesure & rangements',
-    icon: DoorClosed,
+    iconImage: '/quote-icons/armoire.png',
   },
   {
     id: 'deco',
     title: 'Décoration & Art',
-    desc: 'Miroirs, consoles & luminaires',
-    icon: Palette,
+    iconImage: '/quote-icons/deco.png',
   },
   {
     id: 'complet',
     title: 'Aménagement Complet',
-    desc: 'Villa, appartement ou bureau',
-    icon: Home,
+    iconImage: '/quote-icons/complet.png',
   },
 ]
 
@@ -294,27 +282,27 @@ export function HeroQuoteWidget() {
                   {/* 2-Column Grid of Option Cards (Direct 1-click choices, no selected state shown) */}
                   <div className="grid grid-cols-2 gap-2.5 lg:gap-2">
                     {FURNITURE_TYPES.map((item) => {
-                      const IconComponent = item.icon
                       return (
                         <button
                           key={item.id}
                           type="button"
                           onClick={() => handleSelectType(item.id)}
-                          className="group relative text-left p-3 md:p-3.5 lg:p-2.5 xl:p-3 rounded-2xl border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] hover:border-[#d1aa5c]/45 active:scale-[0.97] transition-all duration-150 cursor-pointer"
+                          className="group relative flex flex-col items-center justify-between text-center p-2.5 lg:p-2 xl:p-2.5 rounded-2xl border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] hover:border-[#d1aa5c]/45 active:scale-[0.97] transition-all duration-150 cursor-pointer overflow-hidden min-h-[92px] lg:min-h-[86px] xl:min-h-[90px]"
                           style={{ cursor: 'pointer' }}
                         >
-                          {/* Creative Category Icon */}
-                          <div className="w-8 h-8 lg:w-7 lg:h-7 rounded-lg flex items-center justify-center mb-1.5 bg-white/10 text-[#d1aa5c] group-hover:bg-[#d1aa5c]/20 group-hover:scale-105 transition-all duration-150">
-                            <IconComponent className="w-4 h-4 stroke-[1.8]" />
+                          {/* Big 3D Gold Category Icon */}
+                          <div className="w-full flex-1 flex items-center justify-center py-1">
+                            <img
+                              src={item.iconImage}
+                              alt={item.title}
+                              className="w-auto h-11 sm:h-12 md:h-13 lg:h-10 xl:h-11 object-contain transition-transform duration-200 group-hover:scale-105"
+                            />
                           </div>
 
-                          {/* Text */}
-                          <div className="pr-1">
-                            <p className="text-xs md:text-[13px] lg:text-[11.5px] font-semibold text-white/95 group-hover:text-white leading-tight mb-0.5 transition-colors">
+                          {/* Extra Small Text under Icon */}
+                          <div className="w-full pb-0.5">
+                            <p className="text-[10.5px] sm:text-[11px] lg:text-[9.5px] xl:text-[10px] font-semibold text-white/90 group-hover:text-white leading-tight tracking-tight transition-colors">
                               {item.title}
-                            </p>
-                            <p className="text-[10px] md:text-[11px] lg:text-[9.5px] text-white/50 group-hover:text-white/70 leading-tight transition-colors">
-                              {item.desc}
                             </p>
                           </div>
                         </button>
