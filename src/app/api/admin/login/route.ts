@@ -42,12 +42,19 @@ export async function POST(request: NextRequest) {
     // Create HMAC-signed session token
     const token = await createSessionToken(user)
 
+    const permissions = Array.isArray(user.permissions)
+      ? user.permissions
+      : user.role === 'developer' || user.username === 'toweradmin'
+      ? ['dashboard', 'products', 'orders', 'sales', 'website-info', 'users']
+      : ['products', 'orders', 'sales', 'website-info']
+
     const response = NextResponse.json({
       success: true,
       user: {
         username: user.username,
         role: user.role,
         displayName: user.displayName,
+        permissions,
       },
     })
 

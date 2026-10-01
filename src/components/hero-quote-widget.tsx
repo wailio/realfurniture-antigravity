@@ -73,12 +73,35 @@ export function HeroQuoteWidget() {
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState('')
 
+  const [transitioningType, setTransitioningType] = useState<string | null>(null)
+  const sliderTimerRef = React.useRef<NodeJS.Timeout | null>(null)
+
   const formatPrice = (val: number) => {
     return new Intl.NumberFormat('fr-DZ').format(val) + ' DA'
   }
 
   const handleSelectType = (id: string) => {
     setSelectedType(id)
+    setTransitioningType(id)
+    setTimeout(() => {
+      setStep(2)
+      setTransitioningType(null)
+    }, 220)
+  }
+
+  const handleSliderRelease = () => {
+    if (sliderTimerRef.current) clearTimeout(sliderTimerRef.current)
+    sliderTimerRef.current = setTimeout(() => {
+      setStep(3)
+    }, 450)
+  }
+
+  const handlePresetSelect = (presetVal: number) => {
+    setBudget(presetVal)
+    if (sliderTimerRef.current) clearTimeout(sliderTimerRef.current)
+    sliderTimerRef.current = setTimeout(() => {
+      setStep(3)
+    }, 280)
   }
 
   const handleNextFromStep1 = () => {
@@ -87,6 +110,7 @@ export function HeroQuoteWidget() {
   }
 
   const handleNextFromStep2 = () => {
+    if (sliderTimerRef.current) clearTimeout(sliderTimerRef.current)
     setStep(3)
   }
 
@@ -104,32 +128,33 @@ export function HeroQuoteWidget() {
     const categoryLabel = selectedCategoryObj?.title || selectedType
 
     try {
-      // Send to sales CRM funnel as a new lead
-      const res = await fetch('/api/admin/sales', {
+      // 1. Post to dedicated Cold Leads API
+      const coldLeadPromise = fetch('/api/admin/cold-leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          customer_name: name.trim(),
+          phone: phone.trim(),
+          furniture_type: selectedType,
+          furniture_title: categoryLabel,
+          budget: budget,
+          formatted_budget: formatPrice(budget),
+        }),
+      }).catch(() => {})
+
+      // 2. Post to sales CRM funnel as well
+      const salesPromise = fetch('/api/admin/sales', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           customer_name: name.trim(),
           phone: phone.trim(),
           amount: budget,
-          notes: `Demande Devis Hero: ${categoryLabel} | Budget: ${formatPrice(budget)}`,
+          notes: `[Cold Lead Widget] ${categoryLabel} | Budget: ${formatPrice(budget)}`,
         }),
-      })
+      }).catch(() => {})
 
-      if (!res.ok) {
-        // Fallback to contact endpoint if sales route differs
-        await fetch('/api/contact', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name: name.trim(),
-            phone: phone.trim(),
-            subject: `Demande de prix - ${categoryLabel}`,
-            message: `Type recherché : ${categoryLabel}\nBudget estimé : ${formatPrice(budget)}`,
-          }),
-        }).catch(() => {})
-      }
-
+      await Promise.allSettled([coldLeadPromise, salesPromise])
       setSubmitted(true)
     } catch (err) {
       console.error('Failed to submit quote request:', err)
@@ -277,16 +302,18 @@ export function HeroQuoteWidget() {
                         key={item.id}
                         type="button"
                         onClick={() => handleSelectType(item.id)}
-                        className={`group relative text-left p-3 md:p-3.5 lg:p-2 xl:p-2.5 rounded-2xl border transition-all duration-200 active:scale-[0.98] ${
-                          isSelected
+                        className={`group relative text-left p-3 md:p-3.5 lg:p-2 xl:p-2.5 rounded-2xl border transition-all duration-200 active:scale-[0.96] ${
+                          transitioningType === item.id
+                            ? 'bg-[#d1aa5c]/25 border-[#d1aa5c] scale-[1.02] shadow-[0_0_24px_rgba(209,170,92,0.45)]'
+                            : isSelected
                             ? 'bg-[#d1aa5c]/15 border-[#d1aa5c] shadow-[0_4px_16px_rgba(209,170,92,0.22)]'
                             : 'bg-white/[0.04] border-white/10 hover:bg-white/[0.07] hover:border-white/20'
                         }`}
                       >
                         {/* Checkmark Badge for Selected Card */}
-                        {isSelected && (
+                        {(isSelected || transitioningType === item.id) && (
                           <div
-                            className="absolute top-2 right-2 w-4 h-4 rounded-full flex items-center justify-center text-[#0E0F10] text-[10px] font-bold shadow-md"
+                            className="absolute top-2 right-2 w-4 h-4 rounded-full flex items-center justify-center text-[#0E0F10] text-[10px] font-bold shadow-md animate-scale-in"
                             style={{ background: '#d1aa5c' }}
                           >
                             <Check className="w-3 h-3 stroke-[3]" />
@@ -296,7 +323,7 @@ export function HeroQuoteWidget() {
                         {/* Icon */}
                         <div
                           className={`w-8 h-8 lg:w-7 lg:h-7 rounded-lg flex items-center justify-center mb-1.5 transition-colors ${
-                            isSelected
+                            isSelected || transitioningType === item.id
                               ? 'bg-[#d1aa5c] text-[#0E0F10]'
                               : 'bg-white/10 text-[#d1aa5c] group-hover:bg-white/15'
                           }`}
@@ -378,6 +405,9 @@ export function HeroQuoteWidget() {
                       step={PRICE_STEP}
                       value={budget}
                       onChange={(e) => setBudget(Number(e.target.value))}
+                      onMouseUp={handleSliderRelease}
+                      onTouchEnd={handleSliderRelease}
+                      onKeyUp={handleSliderRelease}
                       className="w-full h-3 lg:h-2.5 appearance-none rounded-full cursor-pointer focus:outline-none"
                       style={{
                         background: `linear-gradient(to right, #d1aa5c 0%, #b68d40 ${
@@ -389,11 +419,11 @@ export function HeroQuoteWidget() {
                     />
                   </div>
 
-                  {/* Range Boundaries */}
+                  {/* Range Boundaries & Auto-advance notice */}
                   <div className="flex justify-between items-center text-[10px] font-mono text-white/40 mt-2">
                     <span>{formatPrice(MIN_PRICE)}</span>
-                    <span className="text-[#d1aa5c]/70 text-[9px] uppercase font-sans">
-                      Glisser pour ajuster
+                    <span className="text-[#d1aa5c]/80 text-[9px] uppercase font-sans font-semibold tracking-wider flex items-center gap-1">
+                      <span>Glissez &amp; relâchez pour valider</span>
                     </span>
                     <span>{formatPrice(MAX_PRICE)}</span>
                   </div>
@@ -405,8 +435,8 @@ export function HeroQuoteWidget() {
                     <button
                       key={preset}
                       type="button"
-                      onClick={() => setBudget(preset)}
-                      className={`py-1.5 lg:py-1 px-1.5 rounded-xl text-[10px] font-medium transition-all ${
+                      onClick={() => handlePresetSelect(preset)}
+                      className={`py-1.5 lg:py-1 px-1.5 rounded-xl text-[10px] font-medium transition-all active:scale-95 ${
                         budget === preset
                           ? 'bg-[#d1aa5c] text-[#0E0F10] font-bold shadow-md'
                           : 'bg-white/[0.05] text-white/70 hover:bg-white/10 hover:text-white border border-white/5'

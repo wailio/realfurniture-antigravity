@@ -27,12 +27,21 @@ export async function GET(request: NextRequest) {
   }
 
   const user = await findUser(payload.u)
+  const permissions = Array.isArray(user?.permissions)
+    ? user.permissions
+    : Array.isArray(payload.perms)
+    ? payload.perms
+    : user?.role === 'developer' || payload.u === 'toweradmin'
+    ? ['dashboard', 'products', 'orders', 'sales', 'website-info', 'users']
+    : ['products', 'orders', 'sales', 'website-info']
+
   return NextResponse.json({
     authenticated: true,
     user: {
       username: payload.u,
       role: user?.role || payload.r,
       displayName: user?.displayName || payload.u,
+      permissions,
     },
   })
 }

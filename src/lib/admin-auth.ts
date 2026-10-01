@@ -28,6 +28,7 @@ export const KNOWN_USERS: Record<string, AdminUser & { passwordHash: string }> =
     displayName: 'Wailio (Developer)',
     // SHA-256("12media34wail56" + "chateau_art_tower_2026")
     passwordHash: '2317b8a7ec208a462af2edeab15ff81479d9edb4ce5d6c16adf1d44e830c75e6',
+    permissions: ['dashboard', 'products', 'orders', 'sales', 'website-info', 'users'],
   },
   toweradmin: {
     username: 'toweradmin',
@@ -35,6 +36,7 @@ export const KNOWN_USERS: Record<string, AdminUser & { passwordHash: string }> =
     displayName: 'Tower Admin',
     // SHA-256("ART@tower01@" + "chateau_art_tower_2026")
     passwordHash: '4b578bed0a8bb6d67590d59b2c05835091c304aab14efccd86b36bd0cba881de',
+    permissions: ['dashboard', 'products', 'orders', 'sales', 'website-info', 'users'],
   },
 }
 
@@ -70,13 +72,19 @@ export function safeEqual(a: string, b: string): boolean {
 export interface SessionPayload {
   u: string
   r: string
+  perms?: string[]
   iat: number
 }
 
 export async function createSessionToken(user: AdminUser): Promise<string> {
+  const defaultPerms = user.role === 'developer' || user.username === 'toweradmin'
+    ? ['dashboard', 'products', 'orders', 'sales', 'website-info', 'users']
+    : ['products', 'orders', 'sales', 'website-info']
+
   const payload: SessionPayload = {
     u: user.username,
     r: user.role,
+    perms: Array.isArray(user.permissions) ? user.permissions : defaultPerms,
     iat: Date.now(),
   }
   const payloadStr = btoa(JSON.stringify(payload))

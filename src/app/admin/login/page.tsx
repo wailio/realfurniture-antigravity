@@ -27,7 +27,18 @@ export default function AdminLoginPage() {
         if (res.ok) {
           const data = await res.json()
           if (data.authenticated) {
-            router.replace('/admin/dashboard')
+            const perms: string[] = data.user?.permissions || []
+            const isSuper = data.user?.role === 'developer' || data.user?.username === 'toweradmin'
+
+            if (!isSuper && perms.length > 0 && !perms.includes('dashboard')) {
+              if (perms.includes('orders')) router.replace('/admin/orders')
+              else if (perms.includes('sales')) router.replace('/admin/sales')
+              else if (perms.includes('products')) router.replace('/admin/products')
+              else if (perms.includes('website-info')) router.replace('/admin/website-info')
+              else router.replace('/admin/dashboard')
+            } else {
+              router.replace('/admin/dashboard')
+            }
             return
           }
         }
@@ -61,7 +72,24 @@ export default function AdminLoginPage() {
           sessionStorage.setItem('admin_auth', '1')
           sessionStorage.setItem('admin_user', JSON.stringify(data.user))
         }
-        router.replace('/admin/dashboard')
+        const perms: string[] = data.user?.permissions || []
+        const isSuper = data.user?.role === 'developer' || data.user?.username === 'toweradmin'
+
+        if (!isSuper && perms.length > 0 && !perms.includes('dashboard')) {
+          if (perms.includes('orders')) {
+            router.replace('/admin/orders')
+          } else if (perms.includes('sales')) {
+            router.replace('/admin/sales')
+          } else if (perms.includes('products')) {
+            router.replace('/admin/products')
+          } else if (perms.includes('website-info')) {
+            router.replace('/admin/website-info')
+          } else {
+            router.replace('/admin/dashboard')
+          }
+        } else {
+          router.replace('/admin/dashboard')
+        }
       } else {
         setError(data.error || 'Identifiant ou mot de passe incorrect')
         setShake(true)

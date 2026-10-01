@@ -16,33 +16,43 @@ import {
   Menu,
   X,
   Users2,
+  Sliders,
 } from 'lucide-react'
 
-const NAV = [
+interface NavItem {
+  label: string
+  href: string
+  icon: any
+  permKey?: 'dashboard' | 'products' | 'website-info' | 'orders' | 'sales' | 'users'
+  adminOnly?: boolean
+}
+
+const NAV: { group: string | null; items: NavItem[] }[] = [
   {
     group: null,
     items: [
-      { label: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
+      { label: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard, permKey: 'dashboard' },
     ],
   },
   {
     group: 'Structure',
     items: [
-      { label: 'Produits', href: '/admin/products', icon: Package },
-      { label: 'Infos site', href: '/admin/website-info', icon: Globe },
+      { label: 'Produits', href: '/admin/products', icon: Package, permKey: 'products' },
+      { label: 'Infos site', href: '/admin/website-info', icon: Globe, permKey: 'website-info' },
     ],
   },
   {
     group: 'Suivi',
     items: [
-      { label: 'Commandes', href: '/admin/orders', icon: ShoppingBag },
-      { label: 'Ventes', href: '/admin/sales', icon: TrendingUp },
+      { label: 'Commandes', href: '/admin/orders', icon: ShoppingBag, permKey: 'orders' },
+      { label: 'Ventes', href: '/admin/sales', icon: TrendingUp, permKey: 'sales' },
+      { label: 'Cold Lead choices', href: '/admin/cold-leads', icon: Sliders, permKey: 'sales' },
     ],
   },
   {
     group: 'Accès',
     items: [
-      { label: 'Utilisateurs', href: '/admin/users', icon: Users2, adminOnly: true },
+      { label: 'Utilisateurs', href: '/admin/users', icon: Users2, permKey: 'users', adminOnly: true },
     ],
   },
 ]
@@ -69,10 +79,16 @@ export default function AdminSidebar() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [loggingOut, setLoggingOut] = useState(false)
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
-  const [currentUser, setCurrentUser] = useState<{ username: string; role: string; displayName: string }>({
+  const [currentUser, setCurrentUser] = useState<{
+    username: string
+    role: string
+    displayName: string
+    permissions?: string[]
+  }>({
     username: 'admin',
     role: 'admin',
     displayName: 'Admin',
+    permissions: ['dashboard', 'products', 'orders', 'sales', 'website-info', 'users'],
   })
 
   // Close mobile drawer whenever route changes
@@ -148,6 +164,20 @@ export default function AdminSidebar() {
     el.style.background = REST_STYLE.background
     el.style.color = REST_STYLE.color
     el.style.boxShadow = REST_STYLE.boxShadow
+  }
+
+  function hasItemAccess(item: NavItem) {
+    if (currentUser.role === 'developer' || currentUser.username === 'wailio' || currentUser.username === 'toweradmin') {
+      return true
+    }
+    const perms = Array.isArray(currentUser.permissions) ? currentUser.permissions : []
+    if (item.adminOnly || item.permKey === 'users') {
+      return perms.includes('users')
+    }
+    if (item.permKey) {
+      return perms.includes(item.permKey)
+    }
+    return true
   }
 
   return (
@@ -242,55 +272,61 @@ export default function AdminSidebar() {
 
         {/* Drawer Nav links (auto-closes on click) */}
         <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
-          {NAV.map((section, si) => (
-            <div key={si} className="mb-3">
-              {section.group && (
-                <p className="text-[10px] font-semibold tracking-wider text-[#4A4D55] uppercase px-3 py-2">
-                  {section.group}
-                </p>
-              )}
-              {section.items.filter(item => !('adminOnly' in item && item.adminOnly) || currentUser.role === 'admin' || currentUser.role === 'developer').map((item) => {
-                const active = isActive(item.href)
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    onClick={() => setMobileOpen(false)}
-                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all mb-1"
-                    style={{
-                      background: active
-                        ? 'linear-gradient(145deg, rgba(255,255,255,0.09) 0%, rgba(255,255,255,0.04) 100%)'
-                        : 'transparent',
-                      color: active ? '#FFFFFF' : '#8E929B',
-                      border: active ? '1px solid rgba(255,255,255,0.18)' : '1px solid transparent',
-                      boxShadow: active ? 'inset 0 1px 0 rgba(255,255,255,0.12), 0 4px 12px rgba(0,0,0,0.4)' : 'none',
-                    }}
-                  >
-                    <item.icon className="w-4 h-4 shrink-0" style={{ color: active ? '#d1aa5c' : '#8E929B' }} />
-                    <span>{item.label}</span>
-                    {active && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-[#d1aa5c]" />}
-                  </Link>
-                )
-              })}
-            </div>
-          ))}
+          {NAV.map((section, si) => {
+            const visibleItems = section.items.filter(hasItemAccess)
+            if (visibleItems.length === 0) return null
+            return (
+              <div key={si} className="mb-3">
+                {section.group && (
+                  <p className="text-[10px] font-semibold tracking-wider text-[#4A4D55] uppercase px-3 py-2">
+                    {section.group}
+                  </p>
+                )}
+                {visibleItems.map((item) => {
+                  const active = isActive(item.href)
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={() => setMobileOpen(false)}
+                      className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all mb-1"
+                      style={{
+                        background: active
+                          ? 'linear-gradient(145deg, rgba(255,255,255,0.09) 0%, rgba(255,255,255,0.04) 100%)'
+                          : 'transparent',
+                        color: active ? '#FFFFFF' : '#8E929B',
+                        border: active ? '1px solid rgba(255,255,255,0.18)' : '1px solid transparent',
+                        boxShadow: active ? 'inset 0 1px 0 rgba(255,255,255,0.12), 0 4px 12px rgba(0,0,0,0.4)' : 'none',
+                      }}
+                    >
+                      <item.icon className="w-4 h-4 shrink-0" style={{ color: active ? '#d1aa5c' : '#8E929B' }} />
+                      <span>{item.label}</span>
+                      {active && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-[#d1aa5c]" />}
+                    </Link>
+                  )
+                })}
+              </div>
+            )
+          })}
         </nav>
 
         {/* Drawer Bottom */}
         <div className="border-t border-white/5 p-3 space-y-2">
-          <Link
-            href="/admin/settings"
-            onClick={() => setMobileOpen(false)}
-            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all"
-            style={{
-              background: isSettingsActive ? 'rgba(255,255,255,0.08)' : 'transparent',
-              color: isSettingsActive ? '#FFFFFF' : '#8E929B',
-              border: isSettingsActive ? '1px solid rgba(255,255,255,0.15)' : '1px solid transparent',
-            }}
-          >
-            <Settings className="w-4 h-4 shrink-0" />
-            <span>Paramètres</span>
-          </Link>
+          {(currentUser.role === 'developer' || currentUser.username === 'wailio' || currentUser.username === 'toweradmin') && (
+            <Link
+              href="/admin/settings"
+              onClick={() => setMobileOpen(false)}
+              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all"
+              style={{
+                background: isSettingsActive ? 'rgba(255,255,255,0.08)' : 'transparent',
+                color: isSettingsActive ? '#FFFFFF' : '#8E929B',
+                border: isSettingsActive ? '1px solid rgba(255,255,255,0.15)' : '1px solid transparent',
+              }}
+            >
+              <Settings className="w-4 h-4 shrink-0" />
+              <span>Paramètres</span>
+            </Link>
+          )}
 
           <div
             onClick={confirmLogout}
@@ -375,111 +411,117 @@ export default function AdminSidebar() {
 
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto space-y-1" style={{ padding: '16px 0' }}>
-          {NAV.map((section, si) => (
-            <div key={si}>
-              {section.group && !collapsed && (
-                <p
-                  style={{
-                    fontSize: 10,
-                    fontWeight: 600,
-                    letterSpacing: '0.12em',
-                    color: '#4A4D55',
-                    textTransform: 'uppercase',
-                    padding: '16px 20px 6px',
-                  }}
-                >
-                  {section.group}
-                </p>
-              )}
-              {section.group && collapsed && (
-                <div style={{ height: 1, background: 'rgba(255,255,255,0.05)', margin: '12px 10px' }} />
-              )}
-              {section.items.filter(item => !('adminOnly' in item && item.adminOnly) || currentUser.role === 'admin' || currentUser.role === 'developer').map((item) => {
-                const active = isActive(item.href)
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    title={collapsed ? item.label : undefined}
-                    className="flex items-center gap-3 transition-all duration-200 group"
+          {NAV.map((section, si) => {
+            const visibleItems = section.items.filter(hasItemAccess)
+            if (visibleItems.length === 0) return null
+            return (
+              <div key={si}>
+                {section.group && !collapsed && (
+                  <p
                     style={{
-                      padding: collapsed ? '9px 0' : '9px 16px',
-                      justifyContent: collapsed ? 'center' : 'flex-start',
-                      margin: '2px 10px',
-                      borderRadius: 10,
-                      border: active ? '1px solid rgba(255,255,255,0.18)' : '1px solid transparent',
-                      background: active
-                        ? 'linear-gradient(145deg, rgba(255,255,255,0.09) 0%, rgba(255,255,255,0.04) 100%)'
-                        : 'transparent',
-                      color: active ? '#FFFFFF' : '#8E929B',
-                      boxShadow: active
-                        ? 'inset 0 1px 0 0 rgba(255,255,255,0.12), 0 4px 12px rgba(0,0,0,0.4)'
-                        : 'none',
-                      textDecoration: 'none',
-                    }}
-                    onMouseEnter={(e) => {
-                      if (!active) applyHover(e.currentTarget as HTMLElement)
-                    }}
-                    onMouseLeave={(e) => {
-                      if (!active) removeHover(e.currentTarget as HTMLElement, false)
+                      fontSize: 10,
+                      fontWeight: 600,
+                      letterSpacing: '0.12em',
+                      color: '#4A4D55',
+                      textTransform: 'uppercase',
+                      padding: '16px 20px 6px',
                     }}
                   >
-                    <item.icon
-                      className="shrink-0 transition-colors"
-                      style={{ width: 17, height: 17, color: active ? '#FFFFFF' : '#8E929B' }}
-                    />
-                    {!collapsed && (
-                      <span
-                        style={{
-                          fontSize: 13.5,
-                          fontWeight: active ? 500 : 400,
-                          letterSpacing: '0.01em',
-                          transition: 'color 0.15s',
-                        }}
-                      >
-                        {item.label}
-                      </span>
-                    )}
-                    {!collapsed && (
-                      <div
-                        className={`ml-auto transition-opacity duration-200 ${active ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
-                        style={{ width: 4, height: 4, borderRadius: 99, background: '#FFFFFF' }}
+                    {section.group}
+                  </p>
+                )}
+                {section.group && collapsed && (
+                  <div style={{ height: 1, background: 'rgba(255,255,255,0.05)', margin: '12px 10px' }} />
+                )}
+                {visibleItems.map((item) => {
+                  const active = isActive(item.href)
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      title={collapsed ? item.label : undefined}
+                      className="flex items-center gap-3 transition-all duration-200 group"
+                      style={{
+                        padding: collapsed ? '9px 0' : '9px 16px',
+                        justifyContent: collapsed ? 'center' : 'flex-start',
+                        margin: '2px 10px',
+                        borderRadius: 10,
+                        border: active ? '1px solid rgba(255,255,255,0.18)' : '1px solid transparent',
+                        background: active
+                          ? 'linear-gradient(145deg, rgba(255,255,255,0.09) 0%, rgba(255,255,255,0.04) 100%)'
+                          : 'transparent',
+                        color: active ? '#FFFFFF' : '#8E929B',
+                        boxShadow: active
+                          ? 'inset 0 1px 0 0 rgba(255,255,255,0.12), 0 4px 12px rgba(0,0,0,0.4)'
+                          : 'none',
+                        textDecoration: 'none',
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!active) applyHover(e.currentTarget as HTMLElement)
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!active) removeHover(e.currentTarget as HTMLElement, false)
+                      }}
+                    >
+                      <item.icon
+                        className="shrink-0 transition-colors"
+                        style={{ width: 17, height: 17, color: active ? '#FFFFFF' : '#8E929B' }}
                       />
-                    )}
-                  </Link>
-                )
-              })}
-            </div>
-          ))}
+                      {!collapsed && (
+                        <span
+                          style={{
+                            fontSize: 13.5,
+                            fontWeight: active ? 500 : 400,
+                            letterSpacing: '0.01em',
+                            transition: 'color 0.15s',
+                          }}
+                        >
+                          {item.label}
+                        </span>
+                      )}
+                      {!collapsed && (
+                        <div
+                          className={`ml-auto transition-opacity duration-200 ${active ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
+                          style={{ width: 4, height: 4, borderRadius: 99, background: '#FFFFFF' }}
+                        />
+                      )}
+                    </Link>
+                  )
+                })}
+              </div>
+            )
+          })}
         </nav>
 
         {/* Bottom Block */}
         <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', padding: '12px 10px' }}>
           {/* Settings */}
-          <Link
-            href="/admin/settings"
-            title={collapsed ? 'Paramètres' : undefined}
-            className="flex items-center gap-3"
-            style={{
-              padding: collapsed ? '9px 0' : '9px 16px',
-              justifyContent: collapsed ? 'center' : 'flex-start',
-              borderRadius: 10,
-              border: isSettingsActive ? '1px solid rgba(255,255,255,0.18)' : '1px solid transparent',
-              background: isSettingsActive
-                ? 'linear-gradient(145deg, rgba(255,255,255,0.09) 0%, rgba(255,255,255,0.04) 100%)'
-                : 'transparent',
-              color: isSettingsActive ? '#FFFFFF' : '#8E929B',
-              boxShadow: isSettingsActive ? 'inset 0 1px 0 0 rgba(255,255,255,0.12), 0 4px 12px rgba(0,0,0,0.4)' : 'none',
-              transition: 'all 0.2s cubic-bezier(0.32,0.72,0,1)',
-              textDecoration: 'none',
-              margin: '2px 0',
-            }}
-            onMouseEnter={(e) => { if (!isSettingsActive) applyHover(e.currentTarget as HTMLElement) }}
-            onMouseLeave={(e) => { if (!isSettingsActive) removeHover(e.currentTarget as HTMLElement, false) }}
-          >
-            <Settings style={{ width: 17, height: 17, flexShrink: 0 }} />
-            {!collapsed && <span style={{ fontSize: 13.5, fontWeight: isSettingsActive ? 500 : 400, letterSpacing: '0.01em' }}>Paramètres</span>}
-          </Link>
+          {(currentUser.role === 'developer' || currentUser.username === 'wailio' || currentUser.username === 'toweradmin') && (
+            <Link
+              href="/admin/settings"
+              title={collapsed ? 'Paramètres' : undefined}
+              className="flex items-center gap-3"
+              style={{
+                padding: collapsed ? '9px 0' : '9px 16px',
+                justifyContent: collapsed ? 'center' : 'flex-start',
+                borderRadius: 10,
+                border: isSettingsActive ? '1px solid rgba(255,255,255,0.18)' : '1px solid transparent',
+                background: isSettingsActive
+                  ? 'linear-gradient(145deg, rgba(255,255,255,0.09) 0%, rgba(255,255,255,0.04) 100%)'
+                  : 'transparent',
+                color: isSettingsActive ? '#FFFFFF' : '#8E929B',
+                boxShadow: isSettingsActive ? 'inset 0 1px 0 0 rgba(255,255,255,0.12), 0 4px 12px rgba(0,0,0,0.4)' : 'none',
+                transition: 'all 0.2s cubic-bezier(0.32,0.72,0,1)',
+                textDecoration: 'none',
+                margin: '2px 0',
+              }}
+              onMouseEnter={(e) => { if (!isSettingsActive) applyHover(e.currentTarget as HTMLElement) }}
+              onMouseLeave={(e) => { if (!isSettingsActive) removeHover(e.currentTarget as HTMLElement, false) }}
+            >
+              <Settings style={{ width: 17, height: 17, flexShrink: 0 }} />
+              {!collapsed && <span style={{ fontSize: 13.5, fontWeight: isSettingsActive ? 500 : 400, letterSpacing: '0.01em' }}>Paramètres</span>}
+            </Link>
+          )}
 
           {/* Account row */}
           <div

@@ -28,6 +28,46 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       .then((data) => {
         if (isMounted) {
           if (data?.authenticated) {
+            const user = data.user
+            const isDev = user?.role === 'developer' || user?.username === 'wailio'
+            const isSuperAdmin = user?.username === 'toweradmin'
+
+            if (!isDev && !isSuperAdmin) {
+              const perms: string[] = Array.isArray(user?.permissions) ? user.permissions : []
+              const routePermMap: Record<string, string> = {
+                '/admin/dashboard': 'dashboard',
+                '/admin/products': 'products',
+                '/admin/orders': 'orders',
+                '/admin/sales': 'sales',
+                '/admin/cold-leads': 'sales',
+                '/admin/website-info': 'website-info',
+                '/admin/users': 'users',
+              }
+
+              for (const [route, perm] of Object.entries(routePermMap)) {
+                if (pathname === route || pathname.startsWith(route + '/')) {
+                  if (!perms.includes(perm)) {
+                    const firstAllowed = perms.includes('orders')
+                      ? '/admin/orders'
+                      : perms.includes('sales')
+                      ? '/admin/sales'
+                      : perms.includes('products')
+                      ? '/admin/products'
+                      : perms.includes('website-info')
+                      ? '/admin/website-info'
+                      : perms.includes('dashboard')
+                      ? '/admin/dashboard'
+                      : '/admin/login'
+
+                    if (pathname !== firstAllowed) {
+                      window.location.href = firstAllowed
+                      return
+                    }
+                  }
+                }
+              }
+            }
+
             setAuthorized(true)
             setChecking(false)
           } else {

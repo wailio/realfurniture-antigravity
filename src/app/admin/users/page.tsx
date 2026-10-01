@@ -56,6 +56,7 @@ const STATUS_META = {
 }
 
 const AVAILABLE_PERMISSIONS = [
+  { key: 'dashboard',    label: 'Dashboard',   desc: 'Vue globale et métriques' },
   { key: 'products',     label: 'Produits',    desc: 'Catalogue et stocks' },
   { key: 'orders',       label: 'Commandes',   desc: 'Messages et demandes clients' },
   { key: 'sales',        label: 'Ventes CRM',  desc: 'Funnel et leads commerciaux' },
@@ -595,7 +596,7 @@ export default function AdminUsersPage() {
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
                       {(selectedUser.permissions || []).map(p => (
                         <span key={p} className="perm-pill" style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.8)' }}>
-                          {p === 'products' ? 'Produits' : p === 'orders' ? 'Commandes' : p === 'sales' ? 'Ventes' : p === 'website-info' ? 'Infos site' : p}
+                          {p === 'dashboard' ? 'Dashboard' : p === 'products' ? 'Produits' : p === 'orders' ? 'Commandes' : p === 'sales' ? 'Ventes' : p === 'website-info' ? 'Infos site' : p === 'users' ? 'Utilisateurs' : p}
                         </span>
                       ))}
                     </div>
