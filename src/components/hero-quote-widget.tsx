@@ -133,7 +133,6 @@ export function HeroQuoteWidget() {
       setSubmitted(true)
     } catch (err) {
       console.error('Failed to submit quote request:', err)
-      // Even if network glitches, display confirmation to visitor
       setSubmitted(true)
     } finally {
       setSubmitting(false)
@@ -150,10 +149,10 @@ export function HeroQuoteWidget() {
   const whatsappUrl = `https://wa.me/213561719100?text=${waMessage}`
 
   return (
-    <div className="relative w-full max-w-[540px] mx-auto lg:mx-0">
-      {/* iOS Frosted Glass Container */}
+    <div className="relative w-full max-w-[540px] lg:max-w-[430px] xl:max-w-[460px] mx-auto lg:mx-0">
+      {/* iOS Frosted Glass Container (compact on PC, untouched on mobile) */}
       <div
-        className="relative overflow-hidden rounded-[28px] md:rounded-[32px] p-6 md:p-8 backdrop-blur-2xl transition-all duration-300"
+        className="relative overflow-hidden rounded-[28px] md:rounded-[32px] p-6 md:p-8 lg:p-5 xl:p-6 backdrop-blur-2xl transition-all duration-300"
         style={{
           background: 'rgba(20, 21, 24, 0.78)',
           border: '1px solid rgba(255, 255, 255, 0.12)',
@@ -169,17 +168,17 @@ export function HeroQuoteWidget() {
 
         {/* ── SUCCESS STATE (Done Effect) ── */}
         {submitted ? (
-          <div className="py-6 text-center flex flex-col items-center animate-fade-in-up">
+          <div className="py-5 lg:py-4 text-center flex flex-col items-center animate-fade-in-up">
             {/* Glowing Golden Done Icon */}
-            <div className="relative mb-5">
+            <div className="relative mb-4 lg:mb-3">
               <div
-                className="w-20 h-20 rounded-full flex items-center justify-center relative z-10"
+                className="w-16 h-16 lg:w-14 lg:h-14 rounded-full flex items-center justify-center relative z-10"
                 style={{
                   background: 'linear-gradient(135deg, #d1aa5c 0%, #b68d40 100%)',
-                  boxShadow: '0 0 35px rgba(209, 170, 92, 0.55), inset 0 1px 1px rgba(255,255,255,0.4)',
+                  boxShadow: '0 0 30px rgba(209, 170, 92, 0.55), inset 0 1px 1px rgba(255,255,255,0.4)',
                 }}
               >
-                <Check className="w-10 h-10 text-[#0E0F10] stroke-[2.8]" />
+                <Check className="w-8 h-8 lg:w-7 lg:h-7 text-[#0E0F10] stroke-[2.8]" />
               </div>
               <div
                 className="absolute inset-0 rounded-full animate-ping opacity-25 pointer-events-none"
@@ -187,30 +186,30 @@ export function HeroQuoteWidget() {
               />
             </div>
 
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold tracking-wider text-[#d1aa5c] bg-[#d1aa5c]/10 border border-[#d1aa5c]/25 uppercase mb-2">
-              <Sparkles className="w-3.5 h-3.5" />
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10.5px] lg:text-[10px] font-semibold tracking-wider text-[#d1aa5c] bg-[#d1aa5c]/10 border border-[#d1aa5c]/25 uppercase mb-2">
+              <Sparkles className="w-3 h-3" />
               <span>Demande transmise avec succès</span>
             </span>
 
-            <h3 className="font-fraunces text-2xl md:text-3xl font-light text-white mb-2">
+            <h3 className="font-fraunces text-2xl lg:text-xl font-light text-white mb-1.5">
               Merci, {name} !
             </h3>
-            <p className="text-white/70 text-xs md:text-sm max-w-sm mb-6 leading-relaxed">
+            <p className="text-white/70 text-xs lg:text-[12px] max-w-sm mb-5 lg:mb-4 leading-relaxed">
               Votre sélection <strong className="text-white">{categoryLabel}</strong> (Budget :{' '}
               <span className="text-[#d1aa5c]">{formatPrice(budget)}</span>) a été envoyée directement à nos conseillers au
               Showroom de Birkhadem.
             </p>
 
             {/* Direct WhatsApp Call to Action */}
-            <div className="w-full flex flex-col gap-2.5">
+            <div className="w-full flex flex-col gap-2">
               <a
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full py-3.5 px-5 rounded-2xl flex items-center justify-center gap-2 text-sm font-semibold text-[#0E0F10] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+                className="w-full py-3 lg:py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 text-xs lg:text-[12.5px] font-semibold text-[#0E0F10] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
                 style={{
                   background: 'linear-gradient(135deg, #d1aa5c 0%, #b68d40 100%)',
-                  boxShadow: '0 10px 25px rgba(209, 170, 92, 0.35)',
+                  boxShadow: '0 8px 20px rgba(209, 170, 92, 0.35)',
                 }}
               >
                 <MessageCircle className="w-4 h-4 fill-black/20" />
@@ -225,7 +224,7 @@ export function HeroQuoteWidget() {
                   setName('')
                   setPhone('')
                 }}
-                className="text-xs text-white/40 hover:text-white/80 py-2 transition-colors"
+                className="text-[11px] text-white/40 hover:text-white/80 py-1.5 transition-colors"
               >
                 Faire une autre demande
               </button>
@@ -234,20 +233,20 @@ export function HeroQuoteWidget() {
         ) : (
           <div>
             {/* ── Top Bar: Step Counter & Progress Indicator ── */}
-            <div className="flex items-center justify-between mb-2.5">
+            <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-[#d1aa5c] shadow-[0_0_8px_#d1aa5c]" />
-                <span className="text-[11px] font-semibold tracking-wider text-[#d1aa5c] uppercase font-sora">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#d1aa5c] shadow-[0_0_8px_#d1aa5c]" />
+                <span className="text-[11px] lg:text-[10px] font-semibold tracking-wider text-[#d1aa5c] uppercase font-sora">
                   Devis Rapide &amp; Gratuit
                 </span>
               </div>
-              <span className="text-xs text-white/50 font-mono font-medium">
+              <span className="text-xs lg:text-[11px] text-white/50 font-mono font-medium">
                 {step} sur 3
               </span>
             </div>
 
             {/* Progress Bar (3 steps) */}
-            <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden mb-6">
+            <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden mb-5 lg:mb-3.5">
               <div
                 className="h-full rounded-full transition-all duration-500 ease-out"
                 style={{
@@ -261,15 +260,15 @@ export function HeroQuoteWidget() {
             {/* ── STEP 1: Select Furniture Type ── */}
             {step === 1 && (
               <div className="animate-fade-in-up">
-                <h3 className="font-fraunces text-xl md:text-[22px] font-normal text-white mb-1.5 leading-snug">
+                <h3 className="font-fraunces text-xl md:text-[22px] lg:text-[18px] xl:text-[19px] font-normal text-white mb-1 leading-snug">
                   Quel type de mobilier recherchez-vous ?
                 </h3>
-                <p className="text-white/60 text-xs md:text-[13px] mb-5">
+                <p className="text-white/60 text-xs md:text-[13px] lg:text-[11px] mb-4 lg:mb-3">
                   Sélectionnez la catégorie qui correspond à votre projet.
                 </p>
 
                 {/* 2-Column Grid of Option Cards */}
-                <div className="grid grid-cols-2 gap-2.5 mb-6">
+                <div className="grid grid-cols-2 gap-2.5 lg:gap-2 mb-5 lg:mb-3.5">
                   {FURNITURE_TYPES.map((item) => {
                     const isSelected = selectedType === item.id
                     const IconComponent = item.icon
@@ -278,43 +277,43 @@ export function HeroQuoteWidget() {
                         key={item.id}
                         type="button"
                         onClick={() => handleSelectType(item.id)}
-                        className={`group relative text-left p-3 md:p-3.5 rounded-2xl border transition-all duration-200 active:scale-[0.98] ${
+                        className={`group relative text-left p-3 md:p-3.5 lg:p-2 xl:p-2.5 rounded-2xl border transition-all duration-200 active:scale-[0.98] ${
                           isSelected
-                            ? 'bg-[#d1aa5c]/15 border-[#d1aa5c] shadow-[0_4px_20px_rgba(209,170,92,0.22)]'
+                            ? 'bg-[#d1aa5c]/15 border-[#d1aa5c] shadow-[0_4px_16px_rgba(209,170,92,0.22)]'
                             : 'bg-white/[0.04] border-white/10 hover:bg-white/[0.07] hover:border-white/20'
                         }`}
                       >
-                        {/* Checkmark Badge for Selected Card (Ref Image 3) */}
+                        {/* Checkmark Badge for Selected Card */}
                         {isSelected && (
                           <div
-                            className="absolute top-2.5 right-2.5 w-5 h-5 rounded-full flex items-center justify-center text-[#0E0F10] text-[11px] font-bold shadow-md"
+                            className="absolute top-2 right-2 w-4 h-4 rounded-full flex items-center justify-center text-[#0E0F10] text-[10px] font-bold shadow-md"
                             style={{ background: '#d1aa5c' }}
                           >
-                            <Check className="w-3.5 h-3.5 stroke-[3]" />
+                            <Check className="w-3 h-3 stroke-[3]" />
                           </div>
                         )}
 
                         {/* Icon */}
                         <div
-                          className={`w-9 h-9 rounded-xl flex items-center justify-center mb-2 transition-colors ${
+                          className={`w-8 h-8 lg:w-7 lg:h-7 rounded-lg flex items-center justify-center mb-1.5 transition-colors ${
                             isSelected
                               ? 'bg-[#d1aa5c] text-[#0E0F10]'
                               : 'bg-white/10 text-[#d1aa5c] group-hover:bg-white/15'
                           }`}
                         >
-                          <IconComponent className="w-5 h-5 stroke-[1.8]" />
+                          <IconComponent className="w-4 h-4 stroke-[1.8]" />
                         </div>
 
                         {/* Text */}
-                        <div className="pr-4">
+                        <div className="pr-3">
                           <p
-                            className={`text-xs md:text-[13px] font-semibold leading-tight mb-0.5 ${
+                            className={`text-xs md:text-[13px] lg:text-[11.5px] font-semibold leading-tight mb-0.5 ${
                               isSelected ? 'text-white' : 'text-white/90'
                             }`}
                           >
                             {item.title}
                           </p>
-                          <p className="text-[10px] md:text-[11px] text-white/50 leading-tight">
+                          <p className="text-[10px] md:text-[11px] lg:text-[9.5px] text-white/50 leading-tight">
                             {item.desc}
                           </p>
                         </div>
@@ -327,14 +326,14 @@ export function HeroQuoteWidget() {
                 <button
                   type="button"
                   onClick={handleNextFromStep1}
-                  className="w-full py-3.5 px-6 rounded-2xl flex items-center justify-center gap-2 text-xs md:text-sm font-bold tracking-wide uppercase text-[#0E0F10] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+                  className="w-full py-3.5 lg:py-2.5 px-5 rounded-xl flex items-center justify-center gap-2 text-xs lg:text-[12px] font-bold tracking-wide uppercase text-[#0E0F10] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
                   style={{
                     background: 'linear-gradient(135deg, #d1aa5c 0%, #b68d40 100%)',
-                    boxShadow: '0 8px 25px rgba(209, 170, 92, 0.35)',
+                    boxShadow: '0 6px 20px rgba(209, 170, 92, 0.35)',
                   }}
                 >
                   <span>Continuer</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               </div>
             )}
@@ -342,35 +341,35 @@ export function HeroQuoteWidget() {
             {/* ── STEP 2: Price Range Swipe Slider ── */}
             {step === 2 && (
               <div className="animate-fade-in-up">
-                <h3 className="font-fraunces text-xl md:text-[22px] font-normal text-white mb-1.5 leading-snug">
+                <h3 className="font-fraunces text-xl md:text-[22px] lg:text-[18px] xl:text-[19px] font-normal text-white mb-1 leading-snug">
                   Quel est votre budget estimé ?
                 </h3>
-                <p className="text-white/60 text-xs md:text-[13px] mb-6">
+                <p className="text-white/60 text-xs md:text-[13px] lg:text-[11px] mb-4 lg:mb-3">
                   Glissez le curseur pour ajuster votre fourchette de prix idéale.
                 </p>
 
                 {/* Big Formatted Price Display */}
                 <div
-                  className="p-5 rounded-2xl mb-6 text-center border relative overflow-hidden"
+                  className="p-4 lg:p-3 rounded-2xl mb-4 lg:mb-3 text-center border relative overflow-hidden"
                   style={{
                     background: 'rgba(255, 255, 255, 0.03)',
                     borderColor: 'rgba(209, 170, 92, 0.25)',
                     boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.06)',
                   }}
                 >
-                  <p className="text-[11px] uppercase tracking-wider text-white/50 mb-1 font-sora">
+                  <p className="text-[10px] uppercase tracking-wider text-white/50 mb-0.5 font-sora">
                     Budget sélectionné
                   </p>
-                  <p className="font-fraunces text-3xl md:text-4xl font-light text-[#d1aa5c] tracking-tight">
+                  <p className="font-fraunces text-2xl md:text-3xl lg:text-[25px] xl:text-[27px] font-light text-[#d1aa5c] tracking-tight">
                     {formatPrice(budget)}
                   </p>
-                  <p className="text-[11px] text-white/40 mt-1">
+                  <p className="text-[10px] text-white/40 mt-0.5">
                     Pour : <span className="text-white/80">{categoryLabel}</span>
                   </p>
                 </div>
 
                 {/* Thick Swipe Slider (20 000 DA to 180 000 DA) */}
-                <div className="px-1 mb-6">
+                <div className="px-1 mb-4 lg:mb-3">
                   <div className="relative flex items-center">
                     <input
                       type="range"
@@ -379,7 +378,7 @@ export function HeroQuoteWidget() {
                       step={PRICE_STEP}
                       value={budget}
                       onChange={(e) => setBudget(Number(e.target.value))}
-                      className="w-full h-3 md:h-3.5 appearance-none rounded-full cursor-pointer focus:outline-none"
+                      className="w-full h-3 lg:h-2.5 appearance-none rounded-full cursor-pointer focus:outline-none"
                       style={{
                         background: `linear-gradient(to right, #d1aa5c 0%, #b68d40 ${
                           ((budget - MIN_PRICE) / (MAX_PRICE - MIN_PRICE)) * 100
@@ -391,9 +390,9 @@ export function HeroQuoteWidget() {
                   </div>
 
                   {/* Range Boundaries */}
-                  <div className="flex justify-between items-center text-[11px] font-mono text-white/40 mt-3">
+                  <div className="flex justify-between items-center text-[10px] font-mono text-white/40 mt-2">
                     <span>{formatPrice(MIN_PRICE)}</span>
-                    <span className="text-[#d1aa5c]/70 text-[10px] uppercase font-sans">
+                    <span className="text-[#d1aa5c]/70 text-[9px] uppercase font-sans">
                       Glisser pour ajuster
                     </span>
                     <span>{formatPrice(MAX_PRICE)}</span>
@@ -401,13 +400,13 @@ export function HeroQuoteWidget() {
                 </div>
 
                 {/* Quick Preset Buttons */}
-                <div className="grid grid-cols-4 gap-1.5 mb-7">
+                <div className="grid grid-cols-4 gap-1.5 mb-5 lg:mb-3.5">
                   {[30000, 75000, 120000, 180000].map((preset) => (
                     <button
                       key={preset}
                       type="button"
                       onClick={() => setBudget(preset)}
-                      className={`py-1.5 px-2 rounded-xl text-[10px] md:text-[11px] font-medium transition-all ${
+                      className={`py-1.5 lg:py-1 px-1.5 rounded-xl text-[10px] font-medium transition-all ${
                         budget === preset
                           ? 'bg-[#d1aa5c] text-[#0E0F10] font-bold shadow-md'
                           : 'bg-white/[0.05] text-white/70 hover:bg-white/10 hover:text-white border border-white/5'
@@ -419,27 +418,27 @@ export function HeroQuoteWidget() {
                 </div>
 
                 {/* Navigation Buttons (Back + Next) */}
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2.5">
                   <button
                     type="button"
                     onClick={() => setStep(1)}
-                    className="py-3 px-4 rounded-2xl flex items-center justify-center gap-1.5 text-xs text-white/60 hover:text-white bg-white/[0.05] hover:bg-white/[0.08] border border-white/10 transition-colors"
+                    className="py-2.5 lg:py-2 px-3.5 rounded-xl flex items-center justify-center gap-1 text-xs lg:text-[11px] text-white/60 hover:text-white bg-white/[0.05] hover:bg-white/[0.08] border border-white/10 transition-colors"
                   >
-                    <ArrowLeft className="w-4 h-4" />
+                    <ArrowLeft className="w-3.5 h-3.5" />
                     <span>Retour</span>
                   </button>
 
                   <button
                     type="button"
                     onClick={handleNextFromStep2}
-                    className="flex-1 py-3.5 px-6 rounded-2xl flex items-center justify-center gap-2 text-xs md:text-sm font-bold tracking-wide uppercase text-[#0E0F10] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+                    className="flex-1 py-3 lg:py-2.5 px-5 rounded-xl flex items-center justify-center gap-2 text-xs lg:text-[12px] font-bold tracking-wide uppercase text-[#0E0F10] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
                     style={{
                       background: 'linear-gradient(135deg, #d1aa5c 0%, #b68d40 100%)',
-                      boxShadow: '0 8px 25px rgba(209, 170, 92, 0.35)',
+                      boxShadow: '0 6px 20px rgba(209, 170, 92, 0.35)',
                     }}
                   >
                     <span>Continuer</span>
-                    <ArrowRight className="w-4 h-4" />
+                    <ArrowRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
               </div>
@@ -448,39 +447,39 @@ export function HeroQuoteWidget() {
             {/* ── STEP 3: Contact Info (Name + Phone) ── */}
             {step === 3 && (
               <form onSubmit={handleSubmit} className="animate-fade-in-up">
-                <h3 className="font-fraunces text-xl md:text-[22px] font-normal text-white mb-1.5 leading-snug">
+                <h3 className="font-fraunces text-xl md:text-[22px] lg:text-[18px] xl:text-[19px] font-normal text-white mb-1 leading-snug">
                   Nous pouvons commencer par ceux-ci.
                 </h3>
-                <p className="text-white/60 text-xs md:text-[13px] mb-5">
-                  Renseignez vos coordonnées pour recevoir notre catalogue détaillé et notre proposition.
+                <p className="text-white/60 text-xs md:text-[13px] lg:text-[11px] mb-4 lg:mb-3">
+                  Renseignez vos coordonnées pour recevoir notre sélection et notre offre.
                 </p>
 
                 {error && (
-                  <div className="mb-4 p-2.5 rounded-xl bg-red-500/15 border border-red-500/30 text-red-300 text-xs">
+                  <div className="mb-3 p-2 rounded-xl bg-red-500/15 border border-red-500/30 text-red-300 text-xs">
                     {error}
                   </div>
                 )}
 
                 {/* Summary Pill of previous choices */}
-                <div className="flex items-center justify-between p-3 rounded-xl bg-white/[0.03] border border-white/10 text-xs text-white/70 mb-4">
+                <div className="flex items-center justify-between p-2.5 lg:p-2 rounded-xl bg-white/[0.03] border border-white/10 text-xs text-white/70 mb-3 lg:mb-2.5">
                   <div>
-                    <span className="text-white/40 block text-[10px] uppercase">Votre projet</span>
-                    <strong className="text-white font-medium">{categoryLabel}</strong>
+                    <span className="text-white/40 block text-[9.5px] uppercase">Votre projet</span>
+                    <strong className="text-white font-medium text-[11px] lg:text-[10.5px]">{categoryLabel}</strong>
                   </div>
                   <div className="text-right">
-                    <span className="text-white/40 block text-[10px] uppercase">Budget estimé</span>
-                    <span className="text-[#d1aa5c] font-semibold">{formatPrice(budget)}</span>
+                    <span className="text-white/40 block text-[9.5px] uppercase">Budget estimé</span>
+                    <span className="text-[#d1aa5c] font-semibold text-[11px] lg:text-[10.5px]">{formatPrice(budget)}</span>
                   </div>
                 </div>
 
                 {/* Input 1: Name */}
-                <div className="mb-3.5">
-                  <label className="block text-xs text-white/70 mb-1.5 font-medium">
+                <div className="mb-2.5 lg:mb-2">
+                  <label className="block text-[11px] text-white/70 mb-1 font-medium">
                     Nom complet
                   </label>
                   <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-white/35">
-                      <User className="w-4 h-4" />
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-white/35">
+                      <User className="w-3.5 h-3.5" />
                     </div>
                     <input
                       type="text"
@@ -488,19 +487,19 @@ export function HeroQuoteWidget() {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder="Ex : Amina Benali"
-                      className="w-full pl-10 pr-4 py-3 rounded-2xl bg-white/[0.05] border border-white/10 text-sm text-white placeholder-white/25 focus:outline-none focus:border-[#d1aa5c] focus:bg-white/[0.08] transition-colors"
+                      className="w-full pl-9 pr-3 py-2.5 lg:py-2 rounded-xl bg-white/[0.05] border border-white/10 text-xs lg:text-[12px] text-white placeholder-white/25 focus:outline-none focus:border-[#d1aa5c] focus:bg-white/[0.08] transition-colors"
                     />
                   </div>
                 </div>
 
                 {/* Input 2: Phone */}
-                <div className="mb-6">
-                  <label className="block text-xs text-white/70 mb-1.5 font-medium">
+                <div className="mb-4 lg:mb-3">
+                  <label className="block text-[11px] text-white/70 mb-1 font-medium">
                     Numéro de téléphone
                   </label>
                   <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-white/35">
-                      <Phone className="w-4 h-4" />
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-white/35">
+                      <Phone className="w-3.5 h-3.5" />
                     </div>
                     <input
                       type="tel"
@@ -508,41 +507,41 @@ export function HeroQuoteWidget() {
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                       placeholder="Ex : 0550 12 34 56 (WhatsApp)"
-                      className="w-full pl-10 pr-4 py-3 rounded-2xl bg-white/[0.05] border border-white/10 text-sm text-white placeholder-white/25 focus:outline-none focus:border-[#d1aa5c] focus:bg-white/[0.08] transition-colors"
+                      className="w-full pl-9 pr-3 py-2.5 lg:py-2 rounded-xl bg-white/[0.05] border border-white/10 text-xs lg:text-[12px] text-white placeholder-white/25 focus:outline-none focus:border-[#d1aa5c] focus:bg-white/[0.08] transition-colors"
                     />
                   </div>
                 </div>
 
                 {/* Navigation Buttons (Back + Submit) */}
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2.5">
                   <button
                     type="button"
                     onClick={() => setStep(2)}
                     disabled={submitting}
-                    className="py-3 px-4 rounded-2xl flex items-center justify-center gap-1.5 text-xs text-white/60 hover:text-white bg-white/[0.05] hover:bg-white/[0.08] border border-white/10 transition-colors"
+                    className="py-2.5 lg:py-2 px-3.5 rounded-xl flex items-center justify-center gap-1 text-xs lg:text-[11px] text-white/60 hover:text-white bg-white/[0.05] hover:bg-white/[0.08] border border-white/10 transition-colors"
                   >
-                    <ArrowLeft className="w-4 h-4" />
+                    <ArrowLeft className="w-3.5 h-3.5" />
                     <span>Retour</span>
                   </button>
 
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="flex-1 py-3.5 px-6 rounded-2xl flex items-center justify-center gap-2 text-xs md:text-sm font-bold tracking-wide uppercase text-[#0E0F10] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60"
+                    className="flex-1 py-3 lg:py-2.5 px-5 rounded-xl flex items-center justify-center gap-2 text-xs lg:text-[12px] font-bold tracking-wide uppercase text-[#0E0F10] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60"
                     style={{
                       background: 'linear-gradient(135deg, #d1aa5c 0%, #b68d40 100%)',
-                      boxShadow: '0 8px 25px rgba(209, 170, 92, 0.35)',
+                      boxShadow: '0 6px 20px rgba(209, 170, 92, 0.35)',
                     }}
                   >
                     {submitting ? (
                       <>
-                        <Loader2 className="w-4 h-4 animate-spin text-[#0E0F10]" />
+                        <Loader2 className="w-3.5 h-3.5 animate-spin text-[#0E0F10]" />
                         <span>Transmission...</span>
                       </>
                     ) : (
                       <>
                         <span>Recevoir mon offre</span>
-                        <ArrowRight className="w-4 h-4" />
+                        <ArrowRight className="w-3.5 h-3.5" />
                       </>
                     )}
                   </button>

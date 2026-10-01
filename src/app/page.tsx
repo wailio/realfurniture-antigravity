@@ -91,7 +91,7 @@ export default function HomePage() {
       <Header theme="dark" />
 
       {/* ── Section 1: Cinematic High-Converting Hero with Interactive Quote Widget ── */}
-      <section className="relative w-full min-h-[680px] lg:min-h-[820px] overflow-hidden flex items-center py-16 md:py-24">
+      <section className="relative w-full min-h-[680px] lg:min-h-[660px] xl:min-h-[700px] overflow-hidden flex items-center py-16 md:py-20 lg:py-10 xl:py-14">
         {/* Background Video or Custom Image */}
         {siteConfig.hero_image_1 ? (
           <img
@@ -116,12 +116,12 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-b from-[#0E0F10]/80 via-transparent to-[#0E0F10] z-10 pointer-events-none" />
 
         <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 xl:gap-12 items-center">
             
-            {/* ── Left Column: High-Conversion Headline, Copy & Google Reviews ── */}
-            <div className="lg:col-span-6 xl:col-span-7 text-left flex flex-col items-start">
+            {/* ── Left Column: High-Conversion Headline, Copy & Google Reviews (Positioned slightly higher on PC) ── */}
+            <div className="lg:col-span-6 xl:col-span-7 text-left flex flex-col items-start lg:-translate-y-3 xl:-translate-y-4">
               {/* Eyebrow badge */}
-              <div className="mb-4 animate-fade-in-up" style={{ animationDelay: '0ms', animationFillMode: 'both' }}>
+              <div className="mb-3.5 lg:mb-2.5 animate-fade-in-up" style={{ animationDelay: '0ms', animationFillMode: 'both' }}>
                 <span className="inline-flex items-center gap-2 border border-white/15 bg-black/40 backdrop-blur-md px-3.5 py-1.5 rounded-full text-[10px] md:text-xs font-sora text-[#E4E4E7] tracking-[2.5px] uppercase shadow-sm">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#d1aa5c] shadow-[0_0_8px_#d1aa5c]" />
                   <span>{siteConfig.hero_eyebrow || "CHÂTEAU D'ART · MAISON DE DESIGN"}</span>
@@ -129,8 +129,8 @@ export default function HomePage() {
               </div>
 
               {/* Main Headline: Thin first line, Thick second line (Matching reference image) */}
-              <div className="mb-5 animate-fade-in-up" style={{ animationDelay: '120ms', animationFillMode: 'both' }}>
-                <h1 className="font-sora text-3xl sm:text-4xl md:text-5xl lg:text-[46px] xl:text-[54px] text-white leading-[1.14] tracking-tight">
+              <div className="mb-4 lg:mb-3 animate-fade-in-up" style={{ animationDelay: '120ms', animationFillMode: 'both' }}>
+                <h1 className="font-sora text-3xl sm:text-4xl md:text-5xl lg:text-[40px] xl:text-[48px] text-white leading-[1.14] tracking-tight">
                   <span className="font-light text-white/85 block">
                     Meilleur magasin de Meubles,
                   </span>
@@ -141,19 +141,19 @@ export default function HomePage() {
               </div>
 
               {/* Subtitle */}
-              <div className="mb-7 max-w-xl animate-fade-in-up" style={{ animationDelay: '220ms', animationFillMode: 'both' }}>
-                <p className="font-sora text-sm md:text-base text-white/75 leading-relaxed font-normal">
+              <div className="mb-6 lg:mb-4 max-w-xl animate-fade-in-up" style={{ animationDelay: '220ms', animationFillMode: 'both' }}>
+                <p className="font-sora text-sm md:text-base lg:text-[14px] xl:text-[15px] text-white/75 leading-relaxed font-normal">
                   {siteConfig.hero_subtitle || "Matières nobles, proportions sculpturales et finitions artisanales pensées pour sublimer vos espaces de vie."}
                 </p>
               </div>
 
               {/* Google Reviews 5-Star Social Proof Badge (Clickable to Google Maps) */}
-              <div className="mb-8 animate-fade-in-up" style={{ animationDelay: '320ms', animationFillMode: 'both' }}>
+              <div className="mb-6 lg:mb-4.5 animate-fade-in-up" style={{ animationDelay: '320ms', animationFillMode: 'both' }}>
                 <a
                   href="https://www.google.com/maps/place/Ch%C3%A2teau+D'Art+-+meubles/@36.7083703,3.0600586,17z/data=!4m8!3m7!1s0x128fad5fae229a89:0xa8afd38ca1b6e44f!8m2!3d36.7083703!4d3.0626335!9m1!1b1!16s%2Fg%2F11gsn14yk8"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group inline-flex flex-wrap items-center gap-3 px-4 py-2.5 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-[#d1aa5c]/40 transition-all duration-300 shadow-lg"
+                  className="group inline-flex flex-wrap items-center gap-3 px-4 py-2.5 lg:py-2 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-[#d1aa5c]/40 transition-all duration-300 shadow-lg"
                   title="Voir les avis sur Google Maps"
                 >
                   {/* 5 Golden Stars */}
@@ -181,14 +181,14 @@ export default function HomePage() {
               <div className="flex items-center gap-3 animate-fade-in-up" style={{ animationDelay: '400ms', animationFillMode: 'both' }}>
                 <Link
                   href="/all-products"
-                  className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/15 text-white px-5 py-3 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all border border-white/10"
+                  className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/15 text-white px-5 py-3 lg:py-2.5 lg:px-4 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all border border-white/10"
                 >
                   <span>Explorer le catalogue</span>
                   <ArrowRight className="w-3.5 h-3.5 text-[#d1aa5c]" />
                 </Link>
                 <Link
                   href="/contact"
-                  className="inline-flex items-center gap-2 text-white/70 hover:text-white px-4 py-3 text-xs font-medium transition-colors"
+                  className="inline-flex items-center gap-2 text-white/70 hover:text-white px-4 py-3 lg:py-2.5 text-xs font-medium transition-colors"
                 >
                   <span>Nous trouver</span>
                 </Link>
@@ -204,24 +204,52 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Section 2: Luxury Animated Delivery & Assembly Ticker ── */}
+      {/* ── Section 2: Luxury Animated Delivery & Craftsmanship Ticker ── */}
       <section className="relative overflow-hidden bg-gradient-to-r from-[#1E1912] via-[#2c2418] to-[#8b7344] text-white border-y border-white/10 md:px-6 before:pointer-events-none before:absolute before:inset-0 before:bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.12),transparent_55%)] before:opacity-60">
-        {/* Desktop Ticker (Moving to the right, single continuous line) */}
-        <div className="relative hidden overflow-hidden py-4 md:block">
-          <div className="delivery-marquee delivery-marquee-right flex w-max items-center gap-10 whitespace-nowrap">
-            {[...Array(4)].map((_, i) => (
-              <span
-                key={i}
-                className="flex items-center gap-4 text-sm font-semibold uppercase tracking-[0.16em] text-[#f8f3e8] md:text-base"
-              >
-                <Check className="h-5 w-5 text-[#d1aa5c]" />
-                <span>Livraison + montage dans les 58 wilayas</span>
-                <span className="text-[#d1aa5c]">✦</span>
-                <Truck className="h-5 w-5 text-[#d1aa5c]" />
-                <span>Gratuit sur Alger, Blida, Boumerdès, Médéa &amp; Tipaza</span>
-                <span className="text-[#d1aa5c]">◆</span>
-              </span>
-            ))}
+        {/* Desktop Tickers (Two opposite lines: Right and Left) */}
+        <div className="relative hidden overflow-hidden md:block">
+          {/* Top Line: Moving to the Right */}
+          <div className="border-b border-white/10 py-3.5">
+            <div className="delivery-marquee delivery-marquee-right flex w-max items-center gap-10 whitespace-nowrap">
+              {[...Array(4)].map((_, i) => (
+                <span
+                  key={i}
+                  className="flex items-center gap-4 text-xs font-semibold uppercase tracking-[0.16em] text-[#f8f3e8] lg:text-sm"
+                >
+                  <Check className="h-4 w-4 text-[#d1aa5c]" />
+                  <span>Livraison + montage dans les 58 wilayas</span>
+                  <span className="text-[#d1aa5c]">✦</span>
+                  <Truck className="h-4 w-4 text-[#d1aa5c]" />
+                  <span>Gratuit sur Alger, Blida, Boumerdès, Médéa &amp; Tipaza</span>
+                  <span className="text-[#d1aa5c]">◆</span>
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Bottom Line: Moving to the Left (Useful furniture guarantees & custom craftmanship) */}
+          <div className="bg-[#17130e]/40 py-3.5">
+            <div className="delivery-marquee delivery-marquee-left flex w-max items-center gap-10 whitespace-nowrap">
+              {[...Array(4)].map((_, i) => (
+                <span
+                  key={i}
+                  className="flex items-center gap-4 text-xs font-semibold uppercase tracking-[0.16em] text-[#f8f3e8] lg:text-sm"
+                >
+                  <Sparkles className="h-4 w-4 text-[#d1aa5c]" />
+                  <span>Fabrication artisanale en bois noble séché</span>
+                  <span className="text-[#d1aa5c]">✦</span>
+                  <ShieldCheck className="h-4 w-4 text-[#d1aa5c]" />
+                  <span>Personnalisation sur-mesure des dimensions &amp; tissus</span>
+                  <span className="text-[#d1aa5c]">✦</span>
+                  <Check className="h-4 w-4 text-[#d1aa5c]" />
+                  <span>Showroom d&apos;exception à Birkhadem · Plans 3D offerts</span>
+                  <span className="text-[#d1aa5c]">✦</span>
+                  <ShieldCheck className="h-4 w-4 text-[#d1aa5c]" />
+                  <span>Paiement sécurisé à la livraison après inspection</span>
+                  <span className="text-[#d1aa5c]">◆</span>
+                </span>
+              ))}
+            </div>
           </div>
         </div>
 
