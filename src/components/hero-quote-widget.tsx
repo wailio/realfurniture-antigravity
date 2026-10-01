@@ -65,7 +65,7 @@ const PRICE_STEP = 5000
 
 export function HeroQuoteWidget() {
   const [step, setStep] = useState<1 | 2 | 3>(1)
-  const [selectedType, setSelectedType] = useState<string>('salon')
+  const [selectedType, setSelectedType] = useState<string | null>(null)
   const [budget, setBudget] = useState<number>(85000)
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
@@ -86,14 +86,14 @@ export function HeroQuoteWidget() {
     setTimeout(() => {
       setStep(2)
       setTransitioningType(null)
-    }, 220)
+    }, 160)
   }
 
   const handleSliderRelease = () => {
     if (sliderTimerRef.current) clearTimeout(sliderTimerRef.current)
     sliderTimerRef.current = setTimeout(() => {
       setStep(3)
-    }, 450)
+    }, 240)
   }
 
   const handlePresetSelect = (presetVal: number) => {
@@ -101,7 +101,7 @@ export function HeroQuoteWidget() {
     if (sliderTimerRef.current) clearTimeout(sliderTimerRef.current)
     sliderTimerRef.current = setTimeout(() => {
       setStep(3)
-    }, 280)
+    }, 180)
   }
 
   const handleNextFromStep1 = () => {
@@ -164,7 +164,7 @@ export function HeroQuoteWidget() {
     }
   }
 
-  const selectedCategoryObj = FURNITURE_TYPES.find((f) => f.id === selectedType)
+  const selectedCategoryObj = selectedType ? FURNITURE_TYPES.find((f) => f.id === selectedType) : null
   const categoryLabel = selectedCategoryObj?.title || 'Mobilier de prestige'
 
   // WhatsApp link for direct instant consultation
@@ -231,8 +231,9 @@ export function HeroQuoteWidget() {
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full py-3 lg:py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 text-xs lg:text-[12.5px] font-semibold text-[#0E0F10] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+                className="w-full py-3 lg:py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 text-xs lg:text-[12.5px] font-semibold text-[#0E0F10] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
                 style={{
+                  cursor: 'pointer',
                   background: 'linear-gradient(135deg, #d1aa5c 0%, #b68d40 100%)',
                   boxShadow: '0 8px 20px rgba(209, 170, 92, 0.35)',
                 }}
@@ -248,8 +249,10 @@ export function HeroQuoteWidget() {
                   setStep(1)
                   setName('')
                   setPhone('')
+                  setSelectedType(null)
                 }}
-                className="text-[11px] text-white/40 hover:text-white/80 py-1.5 transition-colors"
+                className="text-[11px] text-white/40 hover:text-white/80 py-1.5 transition-colors cursor-pointer"
+                style={{ cursor: 'pointer' }}
               >
                 Faire une autre demande
               </button>
@@ -302,13 +305,14 @@ export function HeroQuoteWidget() {
                         key={item.id}
                         type="button"
                         onClick={() => handleSelectType(item.id)}
-                        className={`group relative text-left p-3 md:p-3.5 lg:p-2 xl:p-2.5 rounded-2xl border transition-all duration-200 active:scale-[0.96] ${
+                        className={`group relative text-left p-3 md:p-3.5 lg:p-2 xl:p-2.5 rounded-2xl border transition-all duration-200 active:scale-[0.96] cursor-pointer ${
                           transitioningType === item.id
                             ? 'bg-[#d1aa5c]/25 border-[#d1aa5c] scale-[1.02] shadow-[0_0_24px_rgba(209,170,92,0.45)]'
                             : isSelected
                             ? 'bg-[#d1aa5c]/15 border-[#d1aa5c] shadow-[0_4px_16px_rgba(209,170,92,0.22)]'
-                            : 'bg-white/[0.04] border-white/10 hover:bg-white/[0.07] hover:border-white/20'
+                            : 'bg-white/[0.04] border-white/10 hover:bg-white/[0.08] hover:border-[#d1aa5c]/40'
                         }`}
+                        style={{ cursor: 'pointer' }}
                       >
                         {/* Checkmark Badge for Selected Card */}
                         {(isSelected || transitioningType === item.id) && (
@@ -353,13 +357,21 @@ export function HeroQuoteWidget() {
                 <button
                   type="button"
                   onClick={handleNextFromStep1}
-                  className="w-full py-3.5 lg:py-2.5 px-5 rounded-xl flex items-center justify-center gap-2 text-xs lg:text-[12px] font-bold tracking-wide uppercase text-[#0E0F10] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+                  disabled={!selectedType}
+                  className={`w-full py-3.5 lg:py-2.5 px-5 rounded-xl flex items-center justify-center gap-2 text-xs lg:text-[12px] font-bold tracking-wide uppercase transition-all duration-300 ${
+                    selectedType
+                      ? 'text-[#0E0F10] hover:scale-[1.02] active:scale-[0.98] cursor-pointer'
+                      : 'text-white/40 bg-white/5 border border-white/10 cursor-not-allowed'
+                  }`}
                   style={{
-                    background: 'linear-gradient(135deg, #d1aa5c 0%, #b68d40 100%)',
-                    boxShadow: '0 6px 20px rgba(209, 170, 92, 0.35)',
+                    cursor: selectedType ? 'pointer' : 'default',
+                    background: selectedType
+                      ? 'linear-gradient(135deg, #d1aa5c 0%, #b68d40 100%)'
+                      : 'rgba(255, 255, 255, 0.05)',
+                    boxShadow: selectedType ? '0 6px 20px rgba(209, 170, 92, 0.35)' : 'none',
                   }}
                 >
-                  <span>Continuer</span>
+                  <span>{selectedType ? 'Continuer' : 'Sélectionnez un type de mobilier'}</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               </div>
@@ -404,12 +416,21 @@ export function HeroQuoteWidget() {
                       max={MAX_PRICE}
                       step={PRICE_STEP}
                       value={budget}
-                      onChange={(e) => setBudget(Number(e.target.value))}
+                      onChange={(e) => {
+                        const val = Number(e.target.value)
+                        setBudget(val)
+                        if (sliderTimerRef.current) clearTimeout(sliderTimerRef.current)
+                        sliderTimerRef.current = setTimeout(() => {
+                          setStep(3)
+                        }, 550)
+                      }}
+                      onPointerUp={handleSliderRelease}
                       onMouseUp={handleSliderRelease}
                       onTouchEnd={handleSliderRelease}
                       onKeyUp={handleSliderRelease}
                       className="w-full h-3 lg:h-2.5 appearance-none rounded-full cursor-pointer focus:outline-none"
                       style={{
+                        cursor: 'pointer',
                         background: `linear-gradient(to right, #d1aa5c 0%, #b68d40 ${
                           ((budget - MIN_PRICE) / (MAX_PRICE - MIN_PRICE)) * 100
                         }%, rgba(255, 255, 255, 0.12) ${
@@ -422,7 +443,7 @@ export function HeroQuoteWidget() {
                   {/* Range Boundaries & Auto-advance notice */}
                   <div className="flex justify-between items-center text-[10px] font-mono text-white/40 mt-2">
                     <span>{formatPrice(MIN_PRICE)}</span>
-                    <span className="text-[#d1aa5c]/80 text-[9px] uppercase font-sans font-semibold tracking-wider flex items-center gap-1">
+                    <span className="text-[#d1aa5c]/90 text-[9.5px] uppercase font-sans font-semibold tracking-wider flex items-center gap-1">
                       <span>Glissez &amp; relâchez pour valider</span>
                     </span>
                     <span>{formatPrice(MAX_PRICE)}</span>
@@ -436,11 +457,12 @@ export function HeroQuoteWidget() {
                       key={preset}
                       type="button"
                       onClick={() => handlePresetSelect(preset)}
-                      className={`py-1.5 lg:py-1 px-1.5 rounded-xl text-[10px] font-medium transition-all active:scale-95 ${
+                      className={`py-1.5 lg:py-1 px-1.5 rounded-xl text-[10px] font-medium transition-all active:scale-95 cursor-pointer ${
                         budget === preset
                           ? 'bg-[#d1aa5c] text-[#0E0F10] font-bold shadow-md'
                           : 'bg-white/[0.05] text-white/70 hover:bg-white/10 hover:text-white border border-white/5'
                       }`}
+                      style={{ cursor: 'pointer' }}
                     >
                       {preset >= 1000 ? `${preset / 1000}k DA` : `${preset} DA`}
                     </button>
@@ -452,7 +474,8 @@ export function HeroQuoteWidget() {
                   <button
                     type="button"
                     onClick={() => setStep(1)}
-                    className="py-2.5 lg:py-2 px-3.5 rounded-xl flex items-center justify-center gap-1 text-xs lg:text-[11px] text-white/60 hover:text-white bg-white/[0.05] hover:bg-white/[0.08] border border-white/10 transition-colors"
+                    className="py-2.5 lg:py-2 px-3.5 rounded-xl flex items-center justify-center gap-1 text-xs lg:text-[11px] text-white/60 hover:text-white bg-white/[0.05] hover:bg-white/[0.08] border border-white/10 transition-colors cursor-pointer"
+                    style={{ cursor: 'pointer' }}
                   >
                     <ArrowLeft className="w-3.5 h-3.5" />
                     <span>Retour</span>
@@ -461,8 +484,9 @@ export function HeroQuoteWidget() {
                   <button
                     type="button"
                     onClick={handleNextFromStep2}
-                    className="flex-1 py-3 lg:py-2.5 px-5 rounded-xl flex items-center justify-center gap-2 text-xs lg:text-[12px] font-bold tracking-wide uppercase text-[#0E0F10] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+                    className="flex-1 py-3 lg:py-2.5 px-5 rounded-xl flex items-center justify-center gap-2 text-xs lg:text-[12px] font-bold tracking-wide uppercase text-[#0E0F10] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
                     style={{
+                      cursor: 'pointer',
                       background: 'linear-gradient(135deg, #d1aa5c 0%, #b68d40 100%)',
                       boxShadow: '0 6px 20px rgba(209, 170, 92, 0.35)',
                     }}
@@ -548,7 +572,8 @@ export function HeroQuoteWidget() {
                     type="button"
                     onClick={() => setStep(2)}
                     disabled={submitting}
-                    className="py-2.5 lg:py-2 px-3.5 rounded-xl flex items-center justify-center gap-1 text-xs lg:text-[11px] text-white/60 hover:text-white bg-white/[0.05] hover:bg-white/[0.08] border border-white/10 transition-colors"
+                    className="py-2.5 lg:py-2 px-3.5 rounded-xl flex items-center justify-center gap-1 text-xs lg:text-[11px] text-white/60 hover:text-white bg-white/[0.05] hover:bg-white/[0.08] border border-white/10 transition-colors cursor-pointer"
+                    style={{ cursor: 'pointer' }}
                   >
                     <ArrowLeft className="w-3.5 h-3.5" />
                     <span>Retour</span>
@@ -557,8 +582,9 @@ export function HeroQuoteWidget() {
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="flex-1 py-3 lg:py-2.5 px-5 rounded-xl flex items-center justify-center gap-2 text-xs lg:text-[12px] font-bold tracking-wide uppercase text-[#0E0F10] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60"
+                    className="flex-1 py-3 lg:py-2.5 px-5 rounded-xl flex items-center justify-center gap-2 text-xs lg:text-[12px] font-bold tracking-wide uppercase text-[#0E0F10] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 cursor-pointer"
                     style={{
+                      cursor: submitting ? 'wait' : 'pointer',
                       background: 'linear-gradient(135deg, #d1aa5c 0%, #b68d40 100%)',
                       boxShadow: '0 6px 20px rgba(209, 170, 92, 0.35)',
                     }}

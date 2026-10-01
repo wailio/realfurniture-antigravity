@@ -275,7 +275,8 @@ export default function ColdLeadsPage() {
             type="button"
             onClick={() => loadData(true)}
             disabled={refreshing}
-            className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-medium text-white/80 bg-white/[0.05] hover:bg-white/10 border border-white/10 active:scale-95 transition-all"
+            className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-medium text-white/80 bg-white/[0.05] hover:bg-white/10 border border-white/10 active:scale-95 transition-all cursor-pointer"
+            style={{ cursor: refreshing ? 'wait' : 'pointer' }}
           >
             <RefreshCw className={`w-3.5 h-3.5 text-[#d1aa5c] ${refreshing ? 'animate-spin' : ''}`} />
             <span>Actualiser</span>
@@ -388,12 +389,13 @@ export default function ColdLeadsPage() {
                   key={catKey}
                   type="button"
                   onClick={() => setSelectedCategory(isSelected ? 'all' : catKey)}
-                  className={`text-left p-3.5 rounded-2xl border transition-all duration-200 active:scale-95 relative overflow-hidden ${
+                  className={`text-left p-3.5 rounded-2xl border transition-all duration-200 active:scale-95 relative overflow-hidden cursor-pointer ${
                     isSelected
                       ? 'border-[#d1aa5c] shadow-[0_0_20px_rgba(209,170,92,0.25)]'
                       : 'border-white/10 hover:border-white/20 bg-white/[0.03] hover:bg-white/[0.06]'
                   }`}
                   style={{
+                    cursor: 'pointer',
                     background: isSelected ? 'rgba(209, 170, 92, 0.15)' : undefined,
                   }}
                 >
@@ -433,7 +435,8 @@ export default function ColdLeadsPage() {
               <button
                 type="button"
                 onClick={() => setSearch('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white text-xs"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white text-xs cursor-pointer"
+                style={{ cursor: 'pointer' }}
               >
                 ×
               </button>
@@ -454,11 +457,12 @@ export default function ColdLeadsPage() {
                   key={statusKey}
                   type="button"
                   onClick={() => setSelectedStatus(statusKey)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${
+                  className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all cursor-pointer ${
                     isSelected
                       ? 'bg-[#d1aa5c] text-[#0E0F10] font-bold shadow-md'
                       : 'bg-white/[0.04] text-white/70 hover:bg-white/[0.08] hover:text-white border border-white/5'
                   }`}
+                  style={{ cursor: 'pointer' }}
                 >
                   {label}
                 </button>
@@ -554,7 +558,8 @@ export default function ColdLeadsPage() {
                       </p>
                       <a
                         href={`tel:${lead.phone}`}
-                        className="text-xs text-[#d1aa5c] hover:underline flex items-center gap-1.5 mt-0.5 font-mono"
+                        className="text-xs text-[#d1aa5c] hover:underline flex items-center gap-1.5 mt-0.5 font-mono cursor-pointer"
+                        style={{ cursor: 'pointer' }}
                       >
                         <Phone className="w-3 h-3" />
                         <span>{lead.phone}</span>
@@ -596,6 +601,7 @@ export default function ColdLeadsPage() {
                       onChange={(e) => handleStatusChange(lead.id, e.target.value)}
                       className="text-xs font-semibold px-2.5 py-1.5 rounded-lg border focus:outline-none cursor-pointer"
                       style={{
+                        cursor: 'pointer',
                         background: statusMeta.bg,
                         color: statusMeta.color,
                         borderColor: statusMeta.border,
@@ -624,7 +630,8 @@ export default function ColdLeadsPage() {
                         href={whatsappLink}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="p-2 rounded-lg bg-[#25D366]/15 hover:bg-[#25D366]/25 border border-[#25D366]/30 text-[#25D366] transition-all"
+                        className="p-2 rounded-lg bg-[#25D366]/15 hover:bg-[#25D366]/25 border border-[#25D366]/30 text-[#25D366] transition-all cursor-pointer"
+                        style={{ cursor: 'pointer' }}
                         title="Contacter sur WhatsApp"
                       >
                         <MessageCircle className="w-4 h-4" />
@@ -632,7 +639,8 @@ export default function ColdLeadsPage() {
 
                       <a
                         href={`tel:${lead.phone}`}
-                        className="p-2 rounded-lg bg-white/[0.05] hover:bg-white/10 border border-white/10 text-white/80 transition-all"
+                        className="p-2 rounded-lg bg-white/[0.05] hover:bg-white/10 border border-white/10 text-white/80 transition-all cursor-pointer"
+                        style={{ cursor: 'pointer' }}
                         title="Appeler directement"
                       >
                         <Phone className="w-4 h-4" />
@@ -641,7 +649,8 @@ export default function ColdLeadsPage() {
                       <button
                         type="button"
                         onClick={() => handleDelete(lead)}
-                        className="p-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 text-red-400 transition-all"
+                        className="p-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 text-red-400 transition-all cursor-pointer"
+                        style={{ cursor: 'pointer' }}
                         title="Supprimer"
                       >
                         <Trash2 className="w-4 h-4" />
