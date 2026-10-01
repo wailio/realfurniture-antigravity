@@ -122,15 +122,15 @@ export default function HomePage() {
             {/* ── Left Column: High-Conversion Headline, Copy & Google Reviews (Positioned slightly higher on PC) ── */}
             <div className="lg:col-span-6 xl:col-span-7 text-left flex flex-col items-start lg:-translate-y-3 xl:-translate-y-4">
               {/* Eyebrow badge (Sharp-edged architectural design) */}
-              <div className="mb-3.5 lg:mb-2.5 animate-fade-in-up" style={{ animationDelay: '0ms', animationFillMode: 'both' }}>
+              <LuxuryReveal variant="up" delay={50} className="mb-3.5 lg:mb-2.5">
                 <span className="inline-flex items-center gap-2 border border-white/15 bg-black/40 backdrop-blur-md px-3.5 py-1.5 rounded-none text-[10px] md:text-xs font-sora text-[#E4E4E7] tracking-[2.5px] uppercase shadow-sm">
                   <span className="w-1.5 h-1.5 rounded-none bg-[#d1aa5c] shadow-[0_0_8px_#d1aa5c]" />
                   <span>{siteConfig.hero_eyebrow || "CHÂTEAU D'ART · MAISON DE DESIGN"}</span>
                 </span>
-              </div>
+              </LuxuryReveal>
 
               {/* Main Headline: Thin first line, Thick second line (Matching reference image) */}
-              <div className="mb-4 lg:mb-3 animate-fade-in-up" style={{ animationDelay: '120ms', animationFillMode: 'both' }}>
+              <LuxuryReveal variant="up" delay={150} className="mb-4 lg:mb-3">
                 <h1 className="font-sora text-3xl sm:text-4xl md:text-5xl lg:text-[40px] xl:text-[48px] text-white leading-[1.14] tracking-tight">
                   <span className="font-light text-white/85 block">
                     Meilleur magasin de Meubles,
@@ -139,17 +139,17 @@ export default function HomePage() {
                     à Birkhadem
                   </span>
                 </h1>
-              </div>
+              </LuxuryReveal>
 
               {/* Subtitle */}
-              <div className="mb-6 lg:mb-4 max-w-xl animate-fade-in-up" style={{ animationDelay: '220ms', animationFillMode: 'both' }}>
+              <LuxuryReveal variant="up" delay={250} className="mb-6 lg:mb-4 max-w-xl">
                 <p className="font-sora text-sm md:text-base lg:text-[14px] xl:text-[15px] text-white/75 leading-relaxed font-normal">
                   {siteConfig.hero_subtitle || "Matières nobles, proportions sculpturales et finitions artisanales pensées pour sublimer vos espaces de vie."}
                 </p>
-              </div>
+              </LuxuryReveal>
 
               {/* Google Reviews 5-Star Social Proof Badge (Clickable to Google Maps) */}
-              <div className="mb-6 lg:mb-4.5 animate-fade-in-up" style={{ animationDelay: '320ms', animationFillMode: 'both' }}>
+              <LuxuryReveal variant="up" delay={340} className="mb-6 lg:mb-4.5">
                 <a
                   href="https://www.google.com/maps/place/Ch%C3%A2teau+D'Art+-+meubles/@36.7083703,3.0600586,17z/data=!4m8!3m7!1s0x128fad5fae229a89:0xa8afd38ca1b6e44f!8m2!3d36.7083703!4d3.0626335!9m1!1b1!16s%2Fg%2F11gsn14yk8"
                   target="_blank"
@@ -176,10 +176,10 @@ export default function HomePage() {
 
                   <ArrowUpRight className="w-3.5 h-3.5 text-white/40 group-hover:text-[#d1aa5c] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                 </a>
-              </div>
+              </LuxuryReveal>
 
               {/* Direct Collection Quick Links */}
-              <div className="flex items-center gap-3 animate-fade-in-up" style={{ animationDelay: '400ms', animationFillMode: 'both' }}>
+              <LuxuryReveal variant="up" delay={420} className="flex items-center gap-3">
                 <Link
                   href="/all-products"
                   className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/15 text-white px-5 py-3 lg:py-2.5 lg:px-4 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all border border-white/10"
@@ -193,12 +193,14 @@ export default function HomePage() {
                 >
                   <span>Nous trouver</span>
                 </Link>
-              </div>
+              </LuxuryReveal>
             </div>
 
             {/* ── Right Column: Interactive One-Question-At-A-Time Funnel Widget ── */}
-            <div className="lg:col-span-6 xl:col-span-5 w-full flex justify-center lg:justify-end animate-fade-in-up" style={{ animationDelay: '200ms', animationFillMode: 'both' }}>
-              <HeroQuoteWidget />
+            <div className="lg:col-span-6 xl:col-span-5 w-full flex justify-center lg:justify-end">
+              <LuxuryReveal variant="right" delay={200} className="w-full flex justify-center lg:justify-end">
+                <HeroQuoteWidget />
+              </LuxuryReveal>
             </div>
 
           </div>
