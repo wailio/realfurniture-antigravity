@@ -92,7 +92,7 @@ export default function HomePage() {
       <Header theme="dark" />
 
       {/* ── Section 1: Cinematic High-Converting Hero with Interactive Quote Widget ── */}
-      <section className="relative w-full min-h-[680px] lg:min-h-[660px] xl:min-h-[700px] overflow-hidden flex items-start lg:items-center pt-10 pb-6 md:py-20 lg:py-10 xl:py-14">
+      <section className="relative w-full min-h-[680px] lg:min-h-[660px] xl:min-h-[700px] overflow-hidden flex items-start lg:items-center pt-10 pb-14 md:py-20 lg:py-10 xl:py-14">
         {/* Background Video or Custom Image */}
         {siteConfig.hero_image_1 ? (
           <img
