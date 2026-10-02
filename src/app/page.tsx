@@ -92,7 +92,7 @@ export default function HomePage() {
       <Header theme="dark" />
 
       {/* ── Section 1: Cinematic High-Converting Hero with Interactive Quote Widget ── */}
-      <section className="relative w-full min-h-[680px] lg:min-h-[660px] xl:min-h-[700px] overflow-hidden flex items-center py-16 md:py-20 lg:py-10 xl:py-14">
+      <section className="relative w-full min-h-[680px] lg:min-h-[660px] xl:min-h-[700px] overflow-hidden flex items-start lg:items-center pt-10 pb-6 md:py-20 lg:py-10 xl:py-14">
         {/* Background Video or Custom Image */}
         {siteConfig.hero_image_1 ? (
           <img
@@ -117,103 +117,117 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-b from-[#0E0F10]/80 via-transparent to-[#0E0F10] z-10 pointer-events-none" />
 
         <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 xl:gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 lg:gap-10 xl:gap-12 items-center">
             
-            {/* ── Left Column: High-Conversion Headline, Copy & Google Reviews (Positioned slightly higher on PC) ── */}
+            {/* ── Left Column: High-Conversion Headline, Copy & Google Reviews ── */}
             <div className="lg:col-span-6 xl:col-span-7 text-left flex flex-col items-start lg:-translate-y-3 xl:-translate-y-4">
-              {/* Eyebrow badge (Sharp-edged architectural design) */}
-              <LuxuryReveal variant="up" delay={50} className="mb-3.5 lg:mb-2.5">
+              {/* Eyebrow badge */}
+              <LuxuryReveal variant="up" delay={50} className="mb-2 lg:mb-2.5">
                 <span className="inline-flex items-center gap-1.5 border border-white/15 bg-black/40 backdrop-blur-md px-2.5 py-1 md:px-3.5 md:py-1.5 rounded-none text-[8px] md:text-xs font-sora text-[#E4E4E7] tracking-[1.5px] md:tracking-[2.5px] uppercase shadow-sm">
                   <span className="w-1 h-1 md:w-1.5 md:h-1.5 rounded-none bg-[#d1aa5c] shadow-[0_0_8px_#d1aa5c]" />
                   <span>{siteConfig.hero_eyebrow || "CHÂTEAU D'ART · MAISON DE DESIGN"}</span>
                 </span>
               </LuxuryReveal>
 
-              {/* Main Headline: Thin first line, Thick second line (Matching reference image) */}
-              <LuxuryReveal variant="up" delay={150} className="mb-4 lg:mb-3">
+              {/* Main Headline */}
+              <LuxuryReveal variant="up" delay={150} className="mb-2 lg:mb-3">
                 <h1 className="font-sora text-3xl sm:text-4xl md:text-5xl lg:text-[40px] xl:text-[48px] text-white leading-[1.14] tracking-tight">
                   <span className="font-light text-white/85 block">
                     Meilleur magasin de Meubles,
                   </span>
-                  <span className="font-extrabold text-white block mt-1 tracking-tight text-4xl sm:text-4xl md:text-5xl lg:text-[40px] xl:text-[48px]">
+                  <span className="font-extrabold text-white block mt-0.5 tracking-tight text-4xl sm:text-4xl md:text-5xl lg:text-[40px] xl:text-[48px]">
                     à Birkhadem
                   </span>
                 </h1>
               </LuxuryReveal>
 
-              {/* Subtitle */}
-              <LuxuryReveal variant="up" delay={250} className="mb-6 lg:mb-4 max-w-xl">
-                <p className="font-sora text-[11px] md:text-base lg:text-[14px] xl:text-[15px] text-white/75 leading-relaxed font-normal">
+              {/* Subtitle — slightly hidden on mobile to save vertical space */}
+              <LuxuryReveal variant="up" delay={250} className="mb-3 lg:mb-4 max-w-xl">
+                <p className="font-sora text-[10px] md:text-base lg:text-[14px] xl:text-[15px] text-white/70 leading-relaxed font-normal">
                   {siteConfig.hero_subtitle || "Matières nobles, proportions sculpturales et finitions artisanales pensées pour sublimer vos espaces de vie."}
                 </p>
               </LuxuryReveal>
 
-              {/* Google Reviews 5-Star Social Proof Badge (Clickable to Google Maps) */}
-              <LuxuryReveal variant="up" delay={340} className="mb-6 lg:mb-4.5">
+              {/* Google Reviews — DESKTOP ONLY (on mobile it shows below the widget) */}
+              <LuxuryReveal variant="up" delay={340} className="hidden lg:block mb-4.5">
                 <a
                   href="https://www.google.com/maps/place/Ch%C3%A2teau+D'Art+-+meubles/@36.7083703,3.0600586,17z/data=!4m8!3m7!1s0x128fad5fae229a89:0xa8afd38ca1b6e44f!8m2!3d36.7083703!4d3.0626335!9m1!1b1!16s%2Fg%2F11gsn14yk8"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group inline-flex flex-wrap items-center gap-2 md:gap-3 px-3 py-2 md:px-4 md:py-2.5 lg:py-2 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-[#d1aa5c]/40 transition-all duration-300 shadow-lg"
+                  className="group inline-flex flex-wrap items-center gap-3 px-4 py-2 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-[#d1aa5c]/40 transition-all duration-300 shadow-lg"
                   title="Voir les avis sur Google Maps"
                 >
-                  {/* 5 Golden Stars */}
-                  <div className="flex items-center gap-0.5 md:gap-1">
+                  <div className="flex items-center gap-1">
                     {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-3 h-3 md:w-4 md:h-4 fill-[#d1aa5c] text-[#d1aa5c]" />
+                      <Star key={i} className="w-4 h-4 fill-[#d1aa5c] text-[#d1aa5c]" />
                     ))}
                   </div>
-
-                  <span className="text-[10px] md:text-sm font-semibold text-white group-hover:text-[#d1aa5c] transition-colors">
+                  <span className="text-sm font-semibold text-white group-hover:text-[#d1aa5c] transition-colors">
                     4.9 / 5 sur Google Maps
                   </span>
-
-                  <span className="hidden sm:inline text-white/30">•</span>
-
-                  <span className="hidden sm:inline text-xs text-white/60 group-hover:text-white/80 transition-colors">
+                  <span className="text-white/30">•</span>
+                  <span className="text-xs text-white/60 group-hover:text-white/80 transition-colors">
                     Showroom Birkhadem • Devis gratuit
                   </span>
-
-                  <ArrowUpRight className="w-3 h-3 md:w-3.5 md:h-3.5 text-white/40 group-hover:text-[#d1aa5c] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                  <ArrowUpRight className="w-3.5 h-3.5 text-white/40 group-hover:text-[#d1aa5c] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                 </a>
               </LuxuryReveal>
 
-              {/* Direct Collection Quick Links — hidden on mobile (moved below widget), shown on desktop */}
+              {/* CTA Buttons — DESKTOP ONLY */}
               <LuxuryReveal variant="up" delay={420} className="hidden lg:flex items-center gap-3">
                 <Link
                   href="/all-products"
-                  className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/15 text-white px-5 py-3 lg:py-2.5 lg:px-4 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all border border-white/10"
+                  className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/15 text-white px-5 py-2.5 lg:px-4 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all border border-white/10"
                 >
                   <span>Explorer le catalogue</span>
                   <ArrowRight className="w-3.5 h-3.5 text-[#d1aa5c]" />
                 </Link>
                 <Link
                   href="/contact"
-                  className="inline-flex items-center gap-2 text-white/70 hover:text-white px-4 py-3 lg:py-2.5 text-xs font-medium transition-colors"
+                  className="inline-flex items-center gap-2 text-white/70 hover:text-white px-4 py-2.5 text-xs font-medium transition-colors"
                 >
                   <span>Nous trouver</span>
                 </Link>
               </LuxuryReveal>
             </div>
 
-            {/* ── Right Column: Interactive One-Question-At-A-Time Funnel Widget ── */}
+            {/* ── Right Column: Widget + (mobile) Reviews + (mobile) Buttons ── */}
             <div className="lg:col-span-6 xl:col-span-5 w-full flex flex-col items-center lg:items-end lg:justify-end">
               <LuxuryReveal variant="right" delay={200} className="w-full flex justify-center lg:justify-end">
                 <HeroQuoteWidget />
               </LuxuryReveal>
 
-              {/* Buttons below widget on mobile only */}
-              <LuxuryReveal variant="up" delay={500} className="flex lg:hidden items-center gap-3 mt-5 w-full justify-center">
+              {/* Google Reviews — MOBILE ONLY, below widget */}
+              <LuxuryReveal variant="up" delay={400} className="flex lg:hidden mt-3 w-full justify-center">
+                <a
+                  href="https://www.google.com/maps/place/Ch%C3%A2teau+D'Art+-+meubles/@36.7083703,3.0600586,17z/data=!4m8!3m7!1s0x128fad5fae229a89:0xa8afd38ca1b6e44f!8m2!3d36.7083703!4d3.0626335!9m1!1b1!16s%2Fg%2F11gsn14yk8"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/[0.05] border border-white/10 hover:border-[#d1aa5c]/40 transition-all"
+                  title="Voir les avis sur Google Maps"
+                >
+                  <div className="flex items-center gap-0.5">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="w-2.5 h-2.5 fill-[#d1aa5c] text-[#d1aa5c]" />
+                    ))}
+                  </div>
+                  <span className="text-[9px] font-semibold text-white/80">4.9 / 5 · Google Maps</span>
+                  <ArrowUpRight className="w-2.5 h-2.5 text-white/40" />
+                </a>
+              </LuxuryReveal>
+
+              {/* CTA Buttons — MOBILE ONLY, below reviews */}
+              <LuxuryReveal variant="up" delay={500} className="flex lg:hidden items-center gap-2 mt-2.5 w-full justify-center">
                 <Link
                   href="/all-products"
-                  className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/15 text-white px-5 py-3 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all border border-white/10"
+                  className="inline-flex items-center gap-1.5 bg-white/10 hover:bg-white/15 text-white px-3.5 py-2 rounded-lg text-[10px] font-semibold uppercase tracking-wider transition-all border border-white/10"
                 >
-                  <span>Explorer le catalogue</span>
-                  <ArrowRight className="w-3.5 h-3.5 text-[#d1aa5c]" />
+                  <span>Explorer</span>
+                  <ArrowRight className="w-3 h-3 text-[#d1aa5c]" />
                 </Link>
                 <Link
                   href="/contact"
-                  className="inline-flex items-center gap-2 text-white/70 hover:text-white px-4 py-3 text-xs font-medium transition-colors"
+                  className="inline-flex items-center gap-1 text-white/60 hover:text-white px-3 py-2 text-[10px] font-medium transition-colors border border-white/10 rounded-lg"
                 >
                   <span>Nous trouver</span>
                 </Link>
@@ -223,6 +237,7 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
 
       {/* ── Section 2: Luxury Animated Delivery & Craftsmanship Ticker ── */}
       <section className="relative overflow-hidden bg-gradient-to-r from-[#1E1912] via-[#2c2418] to-[#8b7344] text-white border-y border-white/10 md:px-6 before:pointer-events-none before:absolute before:inset-0 before:bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.12),transparent_55%)] before:opacity-60">
