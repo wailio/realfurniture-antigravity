@@ -505,7 +505,7 @@ export default function AdminSalesPage() {
               display: 'flex',
               alignItems: 'center',
               gap: 5,
-              background: 'linear-gradient(135deg, #d1aa5c 0%, #b89347 100%)',
+              background: '#d1aa5c',
               color: '#0A0B0C',
               padding: '6px 12px',
               borderRadius: 6,
@@ -513,9 +513,11 @@ export default function AdminSalesPage() {
               fontWeight: 600,
               border: 'none',
               cursor: 'pointer',
-              boxShadow: '0 2px 10px rgba(209, 170, 92, 0.25)',
               whiteSpace: 'nowrap',
+              transition: 'opacity 0.15s ease',
             }}
+            onMouseEnter={e => (e.currentTarget.style.opacity = '0.9')}
+            onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Nouveau Lead</span>
@@ -616,18 +618,16 @@ export default function AdminSalesPage() {
                 minWidth: 720,
               }}
             >
-              {/* Continuous Gradient Track */}
+              {/* Clean Hairline Pipeline Connector Track */}
               <div
                 style={{
                   position: 'absolute',
-                  top: 22,
+                  top: 23,
                   left: '12.5%',
                   right: '12.5%',
-                  height: 3,
-                  background: 'linear-gradient(to right, #94A3B8 0%, #F59E0B 35%, #3B82F6 70%, #10B981 100%)',
-                  borderRadius: 99,
+                  height: 1,
+                  background: 'rgba(255, 255, 255, 0.12)',
                   zIndex: 0,
-                  opacity: 0.5,
                 }}
               />
 
@@ -919,13 +919,12 @@ export default function AdminSalesPage() {
                                   position: 'absolute',
                                   top: -9,
                                   right: 8,
-                                  background: 'linear-gradient(135deg, #d1aa5c 0%, #b89347 100%)',
+                                  background: '#d1aa5c',
                                   color: '#0A0B0C',
                                   fontSize: 9.5,
-                                  fontWeight: 700,
+                                  fontWeight: 600,
                                   padding: '2px 8px',
-                                  borderRadius: 99,
-                                  boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
+                                  borderRadius: 4,
                                   zIndex: 60,
                                   display: 'flex',
                                   alignItems: 'center',
@@ -1606,14 +1605,15 @@ export default function AdminSalesPage() {
               style={{
                 width: 30,
                 height: 30,
-                borderRadius: 8,
-                background: 'linear-gradient(135deg, #d1aa5c 0%, #b89347 100%)',
+                borderRadius: 6,
+                background: 'rgba(255,255,255,0.08)',
+                border: '1px solid rgba(255,255,255,0.12)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: 13,
-                fontWeight: 800,
-                color: '#0A0B0C',
+                fontSize: 12,
+                fontWeight: 600,
+                color: '#FFFFFF',
                 flexShrink: 0,
               }}
             >

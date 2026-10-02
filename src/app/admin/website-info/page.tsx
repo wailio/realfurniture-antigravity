@@ -525,7 +525,7 @@ export default function AdminWebsiteInfoPage() {
             type="button"
             onClick={handleSave}
             disabled={saving}
-            className="px-3 py-1.5 rounded-lg bg-[#d1aa5c] text-black text-xs font-semibold flex items-center gap-1.5 shrink-0 shadow-md"
+            className="px-3 py-1.5 rounded-md bg-[#d1aa5c] text-black text-xs font-semibold flex items-center gap-1.5 shrink-0"
           >
             {saving ? <Loader2 className="w-3 h-3 animate-spin" /> : <Save className="w-3 h-3" />}
             <span>Sauvegarder</span>
@@ -986,14 +986,14 @@ function SaveButton({
       disabled={saving}
       className="ios-save-btn flex items-center gap-2 rounded-[6px] font-semibold shrink-0 cursor-pointer"
       style={{
-        padding: compact ? '8px 18px' : '10px 24px',
-        fontSize: compact ? 12 : 13.5,
-        background: saved ? '#30D158' : saving ? 'rgba(10,132,255,0.6)' : '#0A84FF',
-        color: '#ffffff',
-        boxShadow: saved
-          ? '0 4px 16px rgba(48,209,88,0.4)'
-          : '0 4px 18px rgba(10,132,255,0.4)',
+        padding: compact ? '7px 16px' : '9px 20px',
+        fontSize: compact ? 12 : 13,
+        background: saved ? '#34D399' : '#d1aa5c',
+        color: '#0A0B0C',
+        border: 'none',
+        opacity: saving ? 0.7 : 1,
         letterSpacing: '-0.01em',
+        transition: 'opacity 0.15s ease',
       }}
     >
       {saving ? (

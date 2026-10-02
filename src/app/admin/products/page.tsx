@@ -407,20 +407,19 @@ export default function AdminProductsPage() {
               display: 'flex',
               alignItems: 'center',
               gap: 8,
-              background: 'linear-gradient(135deg, #d1aa5c 0%, #b89347 100%)',
+              background: '#d1aa5c',
               color: '#0A0B0C',
-              padding: '11px 22px',
+              padding: '9px 18px',
               borderRadius: 6,
-              fontSize: 13,
+              fontSize: 12.5,
               fontWeight: 600,
-              letterSpacing: '0.02em',
+              letterSpacing: '0.01em',
               border: 'none',
               cursor: 'pointer',
-              boxShadow: '0 4px 16px rgba(209, 170, 92, 0.3)',
-              transition: 'all 0.15s',
+              transition: 'opacity 0.15s ease',
             }}
-            onMouseEnter={e => (e.currentTarget.style.filter = 'brightness(1.08)')}
-            onMouseLeave={e => (e.currentTarget.style.filter = 'none')}
+            onMouseEnter={e => (e.currentTarget.style.opacity = '0.9')}
+            onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
           >
             <Plus className="w-4 h-4" />
             Nouveau produit
@@ -763,19 +762,21 @@ export default function AdminProductsPage() {
                   onClick={handleSeed}
                   disabled={seeding}
                   style={{
-                    padding: '11px 22px',
-                    background: 'linear-gradient(135deg, #d1aa5c 0%, #b89347 100%)',
+                    padding: '9px 18px',
+                    background: '#d1aa5c',
                     color: '#0A0B0C',
                     borderRadius: 6,
-                    fontSize: 13,
+                    fontSize: 12.5,
                     fontWeight: 600,
                     border: 'none',
                     cursor: seeding ? 'wait' : 'pointer',
                     display: 'flex',
                     alignItems: 'center',
                     gap: 8,
-                    boxShadow: '0 4px 14px rgba(209, 170, 92, 0.25)',
+                    transition: 'opacity 0.15s ease',
                   }}
+                  onMouseEnter={e => (e.currentTarget.style.opacity = '0.9')}
+                  onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
                 >
                   {seeding ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
                   {seeding ? 'Importation...' : '✨ Importer les modèles du catalogue'}

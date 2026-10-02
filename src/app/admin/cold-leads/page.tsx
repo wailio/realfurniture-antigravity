@@ -285,86 +285,61 @@ export default function ColdLeadsPage() {
       </div>
 
       <div className="px-4 md:px-8 py-6 space-y-6 max-w-7xl mx-auto">
-        {/* ── Key Metrics Cards ── */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
-          <div
-            className="p-4 rounded-2xl border"
-            style={{
-              background: 'rgba(255, 255, 255, 0.03)',
-              borderColor: 'rgba(255, 255, 255, 0.08)',
-              boxShadow: '0 8px 30px rgba(0, 0, 0, 0.3)',
-            }}
-          >
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-[11px] uppercase tracking-wider text-white/50 font-semibold">
-                Total Choix
-              </span>
-              <Layers className="w-4 h-4 text-[#d1aa5c]" />
+        {/* ── Key Metrics: Clear Visual Hierarchy (Primary Hero + 3 Secondary) ── */}
+        <div
+          className="rounded-xl border p-5 md:p-6"
+          style={{
+            background: 'rgba(255, 255, 255, 0.04)',
+            borderColor: 'rgba(255, 255, 255, 0.08)',
+          }}
+        >
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+            {/* Primary Hero Metric */}
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-white/40 mb-1">
+                Nouveaux choix à traiter
+              </p>
+              <div className="flex items-baseline gap-3">
+                <p className="text-4xl md:text-5xl font-bold text-white tracking-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>
+                  {leads.filter((l) => l.status === 'nouveau').length}
+                </p>
+                <span className="text-xs text-[#d1aa5c] font-medium">
+                  {leads.filter((l) => l.status === 'nouveau').length > 0 ? 'En attente de premier contact' : 'Toutes les demandes traitées'}
+                </span>
+              </div>
+              <p className="text-xs text-white/40 mt-1">
+                Prospects qualifiés via le configurateur hero
+              </p>
             </div>
-            <p className="text-2xl md:text-3xl font-light text-white font-fraunces">
-              {leads.length}
-            </p>
-            <p className="text-[10px] text-white/40 mt-1">Visiteurs ayant validé le widget</p>
-          </div>
 
-          <div
-            className="p-4 rounded-2xl border"
-            style={{
-              background: 'rgba(255, 255, 255, 0.03)',
-              borderColor: 'rgba(255, 255, 255, 0.08)',
-              boxShadow: '0 8px 30px rgba(0, 0, 0, 0.3)',
-            }}
-          >
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-[11px] uppercase tracking-wider text-white/50 font-semibold">
-                Budget Moyen
-              </span>
-              <Sliders className="w-4 h-4 text-[#60A5FA]" />
-            </div>
-            <p className="text-2xl md:text-3xl font-light text-[#d1aa5c] font-fraunces">
-              {formatPrice(avgBudget)}
-            </p>
-            <p className="text-[10px] text-white/40 mt-1">Fourchette moyenne glissée</p>
-          </div>
+            {/* 3 Secondary Metrics with subtle hairline dividers */}
+            <div className="grid grid-cols-3 gap-4 pt-4 md:pt-0 border-t md:border-t-0 md:border-l border-white/10 md:pl-8">
+              <div>
+                <p className="text-xl md:text-2xl font-bold text-white tracking-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>
+                  {leads.length}
+                </p>
+                <p className="text-[11px] text-white/50 font-medium mt-0.5">Total demandes</p>
+                <p className="text-[10px] text-white/30 mt-0.5">Depuis l&apos;ouverture</p>
+              </div>
 
-          <div
-            className="p-4 rounded-2xl border"
-            style={{
-              background: 'rgba(255, 255, 255, 0.03)',
-              borderColor: 'rgba(255, 255, 255, 0.08)',
-              boxShadow: '0 8px 30px rgba(0, 0, 0, 0.3)',
-            }}
-          >
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-[11px] uppercase tracking-wider text-white/50 font-semibold">
-                Nouveaux Choix
-              </span>
-              <Sparkles className="w-4 h-4 text-[#34D399]" />
-            </div>
-            <p className="text-2xl md:text-3xl font-light text-white font-fraunces">
-              {leads.filter((l) => l.status === 'nouveau').length}
-            </p>
-            <p className="text-[10px] text-[#d1aa5c] mt-1 font-medium">À contacter rapidement</p>
-          </div>
+              <div>
+                <p className="text-xl md:text-2xl font-bold text-[#d1aa5c] tracking-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>
+                  {formatPrice(avgBudget)}
+                </p>
+                <p className="text-[11px] text-white/50 font-medium mt-0.5">Budget moyen</p>
+                <p className="text-[10px] text-white/30 mt-0.5">Par sélection</p>
+              </div>
 
-          <div
-            className="p-4 rounded-2xl border"
-            style={{
-              background: 'rgba(255, 255, 255, 0.03)',
-              borderColor: 'rgba(255, 255, 255, 0.08)',
-              boxShadow: '0 8px 30px rgba(0, 0, 0, 0.3)',
-            }}
-          >
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-[11px] uppercase tracking-wider text-white/50 font-semibold">
-                Conversions
-              </span>
-              <TrendingUp className="w-4 h-4 text-[#F472B6]" />
+              <div>
+                <p className="text-xl md:text-2xl font-bold text-[#34D399] tracking-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>
+                  {leads.filter((l) => l.status === 'converted').length}
+                </p>
+                <p className="text-[11px] text-white/50 font-medium mt-0.5">Ventes conclues</p>
+                <p className="text-[10px] text-white/30 mt-0.5">
+                  {leads.length > 0 ? `${Math.round((leads.filter((l) => l.status === 'converted').length / leads.length) * 100)}% taux` : '—'}
+                </p>
+              </div>
             </div>
-            <p className="text-2xl md:text-3xl font-light text-white font-fraunces">
-              {leads.filter((l) => l.status === 'converted').length}
-            </p>
-            <p className="text-[10px] text-white/40 mt-1">Ventes et devis signés</p>
           </div>
         </div>
 

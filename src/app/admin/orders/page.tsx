@@ -230,17 +230,16 @@ export default function AdminOrdersPage() {
           {newCount > 0 && (
             <span
               style={{
-                width: 20,
-                height: 20,
+                width: 18,
+                height: 18,
                 borderRadius: 99,
                 background: '#EF4444',
                 color: '#FFFFFF',
-                fontSize: 10.5,
+                fontSize: 10,
                 fontWeight: 700,
                 display: 'inline-flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                boxShadow: '0 2px 8px rgba(239, 68, 68, 0.4)',
                 flexShrink: 0,
               }}
               title={`${newCount} nouvelle(s) demande(s)`}
@@ -259,7 +258,7 @@ export default function AdminOrdersPage() {
               gap: 6,
               background: 'rgba(255, 255, 255, 0.04)',
               border: '1px solid rgba(255, 255, 255, 0.08)',
-              padding: '6px 10px',
+              padding: '5px 10px',
               borderRadius: 6,
             }}
           >
@@ -275,16 +274,18 @@ export default function AdminOrdersPage() {
               display: 'flex',
               alignItems: 'center',
               gap: 5,
-              background: 'linear-gradient(135deg, #d1aa5c 0%, #b89347 100%)',
+              background: '#d1aa5c',
               color: '#0A0B0C',
               padding: '6px 12px',
               borderRadius: 6,
               fontSize: 11.5,
               fontWeight: 600,
               textDecoration: 'none',
-              boxShadow: '0 2px 10px rgba(209, 170, 92, 0.25)',
               whiteSpace: 'nowrap',
+              transition: 'opacity 0.15s ease',
             }}
+            onMouseEnter={e => (e.currentTarget.style.opacity = '0.9')}
+            onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
           >
             <TrendingUp className="w-3.5 h-3.5" />
             <span>Ventes ({funnelCount})</span>
@@ -1267,14 +1268,17 @@ export default function AdminOrdersPage() {
                     alignItems: 'center',
                     justifyContent: 'center',
                     gap: 6,
-                    padding: '11px',
-                    borderRadius: 10,
-                    background: 'linear-gradient(135deg, #d1aa5c 0%, #b89347 100%)',
+                    padding: '10px 14px',
+                    borderRadius: 8,
+                    background: '#d1aa5c',
                     color: '#0A0B0C',
                     fontSize: 12.5,
-                    fontWeight: 700,
+                    fontWeight: 600,
                     textDecoration: 'none',
+                    transition: 'opacity 0.15s ease',
                   }}
+                  onMouseEnter={e => (e.currentTarget.style.opacity = '0.9')}
+                  onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
                 >
                   <TrendingUp className="w-4 h-4" />
                   <span>Ouvrir dans le CRM Ventes ↗</span>
@@ -1291,15 +1295,18 @@ export default function AdminOrdersPage() {
                     alignItems: 'center',
                     justifyContent: 'center',
                     gap: 6,
-                    padding: '11px',
-                    borderRadius: 10,
-                    background: 'linear-gradient(135deg, #d1aa5c 0%, #b89347 100%)',
+                    padding: '10px 14px',
+                    borderRadius: 8,
+                    background: '#d1aa5c',
                     color: '#0A0B0C',
                     border: 'none',
                     fontSize: 12.5,
-                    fontWeight: 700,
+                    fontWeight: 600,
                     cursor: 'pointer',
+                    transition: 'opacity 0.15s ease',
                   }}
+                  onMouseEnter={e => (e.currentTarget.style.opacity = '0.9')}
+                  onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
                 >
                   <TrendingUp className="w-4 h-4" />
                   <span>+ Ajouter au funnel de vente</span>

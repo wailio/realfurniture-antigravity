@@ -209,13 +209,12 @@ export default function AdminSettingsPage() {
         {/* ── Supabase Storage & Space Cleaner Card ── */}
         <div
           style={{
-            background: 'rgba(255,255,255,0.06)',
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
-            borderRadius: 20,
-            padding: '24px 28px',
-            border: '1px solid rgba(255,255,255,0.10)',
-            boxShadow: '0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.10)',
+            background: 'rgba(255,255,255,0.055)',
+            backdropFilter: 'blur(16px)',
+            WebkitBackdropFilter: 'blur(16px)',
+            borderRadius: 12,
+            padding: '22px 24px',
+            border: '1px solid rgba(255,255,255,0.08)',
           }}
         >
           <div className="flex items-start justify-between gap-4 mb-5">
@@ -382,13 +381,12 @@ export default function AdminSettingsPage() {
         {/* ── Supabase PostgreSQL Database Records Card ── */}
         <div
           style={{
-            background: 'rgba(255,255,255,0.06)',
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
-            borderRadius: 20,
-            padding: '24px 28px',
-            border: '1px solid rgba(255,255,255,0.10)',
-            boxShadow: '0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.10)',
+            background: 'rgba(255,255,255,0.055)',
+            backdropFilter: 'blur(16px)',
+            WebkitBackdropFilter: 'blur(16px)',
+            borderRadius: 12,
+            padding: '22px 24px',
+            border: '1px solid rgba(255,255,255,0.08)',
           }}
         >
           <div className="flex items-center gap-3 mb-5">
