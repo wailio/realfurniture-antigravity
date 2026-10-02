@@ -657,14 +657,14 @@ export default function AdminSalesPage() {
                         cursor: 'default',
                       }}
                     >
-                      {/* Numbered Step Shape (Sharp Edged) */}
+                      {/* Numbered Circular Dot */}
                       <div
                         style={{
                           width: 44,
                           height: 44,
-                          borderRadius: 0,
+                          borderRadius: 99,
                           background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
-                          border: `2px solid ${stage.dot}`,
+                          border: `2.5px solid ${stage.dot}`,
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
@@ -769,7 +769,7 @@ export default function AdminSalesPage() {
                       flex: 1,
                       background: isDropTarget ? 'rgba(255,255,255,0.13)' : 'rgba(255,255,255,0.06)',
                       backdropFilter: 'blur(16px)',
-                      borderRadius: 0,
+                      borderRadius: 10,
                       border: isDropTarget ? `2px dashed ${stage.dot}` : '1px solid rgba(255,255,255,0.10)',
                       padding: '16px',
                       boxShadow: isDropTarget
@@ -794,9 +794,9 @@ export default function AdminSalesPage() {
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                         <span
                           style={{
-                            width: 8,
-                            height: 8,
-                            borderRadius: 0,
+                            width: 10,
+                            height: 10,
+                            borderRadius: 99,
                             background: stage.dot,
                             boxShadow: `0 0 10px ${stage.dot}80`,
                           }}
