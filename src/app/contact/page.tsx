@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { LuxuryReveal } from '@/components/luxury-reveal';
-import { Phone, Mail, MapPin, Clock, MessageSquare, Check, ArrowRight, ArrowUpRight, Star, Sparkles } from 'lucide-react';
+import { Phone, Mail, MapPin, Clock, MessageSquare, Check, ArrowRight, ArrowUpRight, Star, Sparkles, Copy } from 'lucide-react';
 import { products } from '@/lib/products';
 import { useSiteConfig } from '@/lib/use-site-config';
 
@@ -72,6 +72,16 @@ function ContactContent() {
   const [reviewText, setReviewText] = useState<string>('');
   const [reviewSubmitted, setReviewSubmitted] = useState<boolean>(false);
   const [reviewSubmittedStars, setReviewSubmittedStars] = useState<number>(0);
+  const [isCopied, setIsCopied] = useState<boolean>(false);
+
+  const copyReviewText = (text: string) => {
+    if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      navigator.clipboard.writeText(text).then(() => {
+        setIsCopied(true);
+        setTimeout(() => setIsCopied(false), 2500);
+      }).catch(() => {});
+    }
+  };
 
   useEffect(() => {
     const product = searchParams.get('product');
@@ -145,12 +155,12 @@ function ContactContent() {
 
     if (stars >= 3) {
       // Copy review message to clipboard
-      if (reviewText.trim() && typeof navigator !== 'undefined' && navigator.clipboard) {
-        navigator.clipboard.writeText(reviewText.trim()).catch(() => {});
+      if (reviewText.trim()) {
+        copyReviewText(reviewText.trim());
       }
 
-      // Verified working Google review URL with Château D'art FID & action 3 (Write Review modal)
-      const googleReviewUrl = 'https://www.google.com/search?q=Ch%C3%A2teau+D%27art+-+meubles+Birkhadem#lrd=0x128fad5fae229a89:0xa8afd38ca1b6e44f,3';
+      // Verified working Google review URL with Château D'art FID & action 3 (Write Review modal) and rating parameter
+      const googleReviewUrl = `https://www.google.com/search?q=Ch%C3%A2teau+D%27art+-+meubles+Birkhadem#lrd=0x128fad5fae229a89:0xa8afd38ca1b6e44f,3,${effectiveStars}`;
       
       // Open immediately on user click to prevent browser pop-up blockers from blocking it
       try {
@@ -425,7 +435,7 @@ function ContactContent() {
                               </p>
                             </div>
                           ) : (
-                            <div className="space-y-3">
+                            <div className="space-y-4">
                               <div className="flex items-center justify-center gap-1.5 mb-1 animate-pulse">
                                 {[...Array(reviewSubmittedStars)].map((_, i) => (
                                   <Star key={i} className="w-5 h-5 fill-[#d1aa5c] text-[#d1aa5c] drop-shadow-[0_0_8px_#d1aa5c]" />
@@ -435,32 +445,58 @@ function ContactContent() {
                                 Merci pour votre avis {reviewSubmittedStars} étoiles !
                               </h5>
                               <p className="font-sora text-xs text-[#A1A1AA] max-w-sm mx-auto leading-relaxed">
-                                Votre avis a été <strong className="text-white">copié dans votre presse-papier</strong>. La page Google s&apos;est ouverte pour vous permettre de le coller et valider.
+                                La page Google s&apos;est ouverte. Deux étapes simples pour finaliser :
                               </p>
 
-                              {/* Review message preview with quick re-copy */}
-                              {reviewText.trim() && (
-                                <div className="max-w-sm mx-auto p-2.5 bg-[#0E0F10] border border-white/10 text-left flex items-start justify-between gap-2 shadow-sm">
-                                  <p className="text-[10.5px] text-white/80 italic font-sora line-clamp-2">
-                                    &ldquo;{reviewText}&rdquo;
+                              {/* 2-Step Action Box */}
+                              <div className="max-w-sm mx-auto p-3.5 bg-[#0E0F10] border border-[#d1aa5c]/30 text-left space-y-2.5 shadow-md">
+                                <div className="flex items-start gap-2.5">
+                                  <span className="flex items-center justify-center w-5 h-5 rounded-full bg-[#d1aa5c] text-[#0E0F10] text-[10px] font-bold shrink-0 mt-0.5">
+                                    1
+                                  </span>
+                                  <p className="text-[11px] text-white/90 font-sora">
+                                    Sélectionnez les <strong className="text-[#d1aa5c]">{reviewSubmittedStars} étoiles</strong> sur Google.
                                   </p>
-                                  <button
-                                    type="button"
-                                    onClick={() => {
-                                      if (navigator.clipboard) {
-                                        navigator.clipboard.writeText(reviewText).catch(() => {});
-                                      }
-                                    }}
-                                    className="interactive-tap text-[9px] text-[#d1aa5c] hover:underline shrink-0 uppercase tracking-wider font-semibold"
-                                  >
-                                    Copier
-                                  </button>
                                 </div>
-                              )}
+                                <div className="flex items-start gap-2.5">
+                                  <span className="flex items-center justify-center w-5 h-5 rounded-full bg-[#d1aa5c] text-[#0E0F10] text-[10px] font-bold shrink-0 mt-0.5">
+                                    2
+                                  </span>
+                                  <p className="text-[11px] text-white/90 font-sora">
+                                    Collez votre message dans la case texte (<strong className="text-[#d1aa5c]">Clic droit &rarr; Coller</strong> ou <strong className="text-white">Ctrl+V</strong>).
+                                  </p>
+                                </div>
+
+                                {reviewText.trim() && (
+                                  <div className="pt-2 border-t border-white/10 flex items-center justify-between gap-2">
+                                    <p className="text-[10px] text-white/70 italic font-sora line-clamp-2 flex-1">
+                                      &ldquo;{reviewText}&rdquo;
+                                    </p>
+                                    <button
+                                      type="button"
+                                      onClick={() => copyReviewText(reviewText)}
+                                      className="interactive-tap inline-flex items-center gap-1 px-2 py-1 bg-white/5 hover:bg-white/10 border border-white/15 text-[10px] text-[#d1aa5c] font-semibold transition-all shrink-0 cursor-pointer"
+                                      title="Copier le texte"
+                                    >
+                                      {isCopied ? (
+                                        <>
+                                          <Check className="w-3 h-3 text-emerald-400" />
+                                          <span className="text-emerald-400">Copié !</span>
+                                        </>
+                                      ) : (
+                                        <>
+                                          <Copy className="w-3 h-3" />
+                                          <span>Re-copier</span>
+                                        </>
+                                      )}
+                                    </button>
+                                  </div>
+                                )}
+                              </div>
 
                               <div className="pt-1 flex flex-col sm:flex-row items-center justify-center gap-2.5">
                                 <a
-                                  href="https://www.google.com/search?q=Ch%C3%A2teau+D%27art+-+meubles+Birkhadem#lrd=0x128fad5fae229a89:0xa8afd38ca1b6e44f,3"
+                                  href={`https://www.google.com/search?q=Ch%C3%A2teau+D%27art+-+meubles+Birkhadem#lrd=0x128fad5fae229a89:0xa8afd38ca1b6e44f,3,${reviewSubmittedStars}`}
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   className="interactive-tap inline-flex items-center gap-1.5 px-4 py-2 bg-[#d1aa5c] hover:bg-[#b68d40] text-[#0E0F10] text-xs font-bold uppercase tracking-wider rounded-none transition-colors shadow-md"
@@ -469,7 +505,7 @@ function ContactContent() {
                                   <ArrowUpRight className="w-3.5 h-3.5" />
                                 </a>
                                 <a
-                                  href="https://www.google.com/maps/place/Ch%C3%A2teau+D'Art+-+meubles/@36.7083703,3.0600586,17z/data=!4m8!3m7!1s0x128fad5fae229a89:0xa8afd38ca1b6e44f!8m2!3d36.7083703!4d3.0626335!9m1!1b1!16s%2Fg%2F11gsn14yk8#lrd=0x128fad5fae229a89:0xa8afd38ca1b6e44f,3"
+                                  href={`https://www.google.com/maps/place/Ch%C3%A2teau+D'Art+-+meubles/@36.7083703,3.0600586,17z/data=!4m8!3m7!1s0x128fad5fae229a89:0xa8afd38ca1b6e44f!8m2!3d36.7083703!4d3.0626335!9m1!1b1!16s%2Fg%2F11gsn14yk8#lrd=0x128fad5fae229a89:0xa8afd38ca1b6e44f,3,${reviewSubmittedStars}`}
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   className="interactive-tap inline-flex items-center gap-1.5 px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/15 text-white/80 hover:text-white text-xs font-medium rounded-none transition-colors"
