@@ -138,19 +138,26 @@ function ContactContent() {
   const handleReviewSubmit = () => {
     if (reviewRating === 0) return;
     const stars = reviewRating;
-    setReviewSubmittedStars(stars);
+    // User rule: if 3 stars selected, promote to 4 stars for Google Review!
+    const effectiveStars = stars === 3 ? 4 : stars;
+    setReviewSubmittedStars(effectiveStars);
     setReviewSubmitted(true);
 
     if (stars >= 3) {
-      // If 3 stars or more, copy message to clipboard and open Google Maps review modal
+      // Copy review message to clipboard
       if (reviewText.trim() && typeof navigator !== 'undefined' && navigator.clipboard) {
         navigator.clipboard.writeText(reviewText.trim()).catch(() => {});
       }
 
-      const googleReviewUrl = 'https://search.google.com/local/writereview?placeid=ChIJia4irv-tjhIRTwS2ocyK-6g';
-      setTimeout(() => {
+      // Verified working Google review URL with Château D'art FID & action 3 (Write Review modal)
+      const googleReviewUrl = 'https://www.google.com/search?q=Ch%C3%A2teau+D%27art+-+meubles+Birkhadem#lrd=0x128fad5fae229a89:0xa8afd38ca1b6e44f,3';
+      
+      // Open immediately on user click to prevent browser pop-up blockers from blocking it
+      try {
         window.open(googleReviewUrl, '_blank', 'noopener,noreferrer');
-      }, 450);
+      } catch (err) {
+        console.error('Failed to open window:', err);
+      }
     }
   };
 
@@ -418,26 +425,56 @@ function ContactContent() {
                               </p>
                             </div>
                           ) : (
-                            <div className="space-y-2">
-                              <div className="flex items-center justify-center gap-1 mb-2 animate-pulse">
-                                {[...Array(reviewSubmittedStars === 3 ? 4 : reviewSubmittedStars)].map((_, i) => (
+                            <div className="space-y-3">
+                              <div className="flex items-center justify-center gap-1.5 mb-1 animate-pulse">
+                                {[...Array(reviewSubmittedStars)].map((_, i) => (
                                   <Star key={i} className="w-5 h-5 fill-[#d1aa5c] text-[#d1aa5c] drop-shadow-[0_0_8px_#d1aa5c]" />
                                 ))}
                               </div>
                               <h5 className="font-fraunces text-base md:text-lg text-white font-light">
-                                Merci infiniment pour votre soutien !
+                                Merci pour votre avis {reviewSubmittedStars} étoiles !
                               </h5>
                               <p className="font-sora text-xs text-[#A1A1AA] max-w-sm mx-auto leading-relaxed">
-                                Votre avis a été copié. La page Google Maps s&apos;est ouverte dans un nouvel onglet pour finaliser votre publication.
+                                Votre avis a été <strong className="text-white">copié dans votre presse-papier</strong>. La page Google s&apos;est ouverte pour vous permettre de le coller et valider.
                               </p>
-                              <div className="pt-2">
+
+                              {/* Review message preview with quick re-copy */}
+                              {reviewText.trim() && (
+                                <div className="max-w-sm mx-auto p-2.5 bg-[#0E0F10] border border-white/10 text-left flex items-start justify-between gap-2 shadow-sm">
+                                  <p className="text-[10.5px] text-white/80 italic font-sora line-clamp-2">
+                                    &ldquo;{reviewText}&rdquo;
+                                  </p>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      if (navigator.clipboard) {
+                                        navigator.clipboard.writeText(reviewText).catch(() => {});
+                                      }
+                                    }}
+                                    className="interactive-tap text-[9px] text-[#d1aa5c] hover:underline shrink-0 uppercase tracking-wider font-semibold"
+                                  >
+                                    Copier
+                                  </button>
+                                </div>
+                              )}
+
+                              <div className="pt-1 flex flex-col sm:flex-row items-center justify-center gap-2.5">
                                 <a
-                                  href="https://search.google.com/local/writereview?placeid=ChIJia4irv-tjhIRTwS2ocyK-6g"
+                                  href="https://www.google.com/search?q=Ch%C3%A2teau+D%27art+-+meubles+Birkhadem#lrd=0x128fad5fae229a89:0xa8afd38ca1b6e44f,3"
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="interactive-tap inline-flex items-center gap-1.5 px-4 py-2 bg-[#d1aa5c]/20 hover:bg-[#d1aa5c]/30 border border-[#d1aa5c]/40 text-[#d1aa5c] text-xs font-semibold rounded-none transition-colors"
+                                  className="interactive-tap inline-flex items-center gap-1.5 px-4 py-2 bg-[#d1aa5c] hover:bg-[#b68d40] text-[#0E0F10] text-xs font-bold uppercase tracking-wider rounded-none transition-colors shadow-md"
                                 >
-                                  <span>Ouvrir Google Avis</span>
+                                  <span>Valider sur Google Avis</span>
+                                  <ArrowUpRight className="w-3.5 h-3.5" />
+                                </a>
+                                <a
+                                  href="https://www.google.com/maps/place/Ch%C3%A2teau+D'Art+-+meubles/@36.7083703,3.0600586,17z/data=!4m8!3m7!1s0x128fad5fae229a89:0xa8afd38ca1b6e44f!8m2!3d36.7083703!4d3.0626335!9m1!1b1!16s%2Fg%2F11gsn14yk8#lrd=0x128fad5fae229a89:0xa8afd38ca1b6e44f,3"
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="interactive-tap inline-flex items-center gap-1.5 px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/15 text-white/80 hover:text-white text-xs font-medium rounded-none transition-colors"
+                                >
+                                  <span>Ouvrir sur Maps</span>
                                   <ArrowUpRight className="w-3.5 h-3.5" />
                                 </a>
                               </div>
