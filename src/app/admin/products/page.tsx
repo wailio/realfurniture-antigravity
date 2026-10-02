@@ -304,11 +304,20 @@ export default function AdminProductsPage() {
 
     setDeletingId(id)
     try {
-      await fetch(`/api/admin/products?id=${id}`, { method: 'DELETE' })
+      const res = await fetch(`/api/admin/products?id=${id}`, { method: 'DELETE' })
+      if (!res.ok) {
+        const d = await res.json().catch(() => ({}))
+        throw new Error(d.error || 'Erreur lors de la suppression')
+      }
+      const data = await res.json().catch(() => ({}))
       await fetchProducts()
-      showIosToast('Produit supprimé du catalogue ✓', 'info')
-    } catch {
-      showIosToast('Erreur lors de la suppression', 'error')
+      if (data.freedStorageFiles && data.freedStorageFiles > 0) {
+        showIosToast(`Produit et ${data.freedStorageFiles} photo(s) supprimés définitivement de Supabase ✓`, 'info')
+      } else {
+        showIosToast('Produit supprimé définitivement de la base Supabase ✓', 'info')
+      }
+    } catch (err: any) {
+      showIosToast(err.message || 'Erreur lors de la suppression', 'error')
     } finally {
       setDeletingId(null)
     }

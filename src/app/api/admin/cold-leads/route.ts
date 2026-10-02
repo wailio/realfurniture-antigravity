@@ -317,7 +317,17 @@ export async function DELETE(request: NextRequest) {
     const updated = currentLeads.filter((l) => l.id !== id)
     await saveStorageColdLeads(updated)
 
-    return NextResponse.json({ success: true, message: 'Lead supprimé' })
+    // If the lead originated from the Supabase database table `orders`
+    if (id.startsWith('db_')) {
+      const dbId = id.replace('db_', '')
+      const { url, key } = getSupabaseConfig()
+      await fetch(`${url}/rest/v1/orders?id=eq.${dbId}`, {
+        method: 'DELETE',
+        headers: supabaseHeaders(key),
+      }).catch(() => {})
+    }
+
+    return NextResponse.json({ success: true, message: 'Lead supprimé définitivement de la base et du stockage' })
   } catch (err: any) {
     console.error('DELETE /api/admin/cold-leads error:', err)
     return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })

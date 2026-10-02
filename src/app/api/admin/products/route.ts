@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseConfig, supabaseHeaders } from '@/lib/supabase-config'
 import { products as staticCatalog } from '@/lib/products'
+import { extractSupabaseStorageKey, deleteSupabaseStorageFiles } from '@/lib/supabase-storage'
 
 export const runtime = 'edge'
 
@@ -36,21 +37,12 @@ export async function GET(request: NextRequest) {
     }
 
     const data = await res.json()
-    if (Array.isArray(data) && data.length > 0) {
+    // When Supabase query succeeds, return whatever data is in the database (even if empty [])
+    if (Array.isArray(data)) {
       return NextResponse.json(data)
     }
 
-    return NextResponse.json(staticCatalog.map(p => ({
-      id: String(p.id),
-      name: p.name,
-      slug: p.name.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
-      description: p.description,
-      price: p.price,
-      sale_price: p.originalPrice || null,
-      category: p.category,
-      images: p.images || [p.image],
-      in_stock: true,
-    })))
+    return NextResponse.json([])
   } catch (err: any) {
     console.error('GET /api/admin/products error:', err)
     return NextResponse.json(staticCatalog.map(p => ({
@@ -150,6 +142,31 @@ export async function PUT(request: NextRequest) {
       updates.slug = updates.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
     }
 
+    // ── Check if images were removed during update to clean Supabase Storage ──
+    if (Array.isArray(updates.images)) {
+      try {
+        const getRes = await fetch(`${url}/rest/v1/products?id=eq.${id}&select=images`, {
+          headers: supabaseHeaders(key),
+        })
+        if (getRes.ok) {
+          const rows = await getRes.json()
+          const existingImages: string[] = rows?.[0]?.images || []
+          const newImagesSet = new Set(updates.images)
+          const removedImages = existingImages.filter(img => !newImagesSet.has(img))
+          
+          const storageKeysToDelete = removedImages
+            .map(img => extractSupabaseStorageKey(img))
+            .filter((k): k is string => Boolean(k))
+
+          if (storageKeysToDelete.length > 0) {
+            await deleteSupabaseStorageFiles(storageKeysToDelete, 'products')
+          }
+        }
+      } catch (cleanErr) {
+        console.warn('Storage cleanup on update warning:', cleanErr)
+      }
+    }
+
     const res = await fetch(`${url}/rest/v1/products?id=eq.${id}`, {
       method: 'PATCH',
       headers: supabaseHeaders(key),
@@ -177,6 +194,41 @@ export async function DELETE(request: NextRequest) {
 
     if (!id) return NextResponse.json({ error: 'id is required' }, { status: 400 })
 
+    // ── 1. Fetch product row to find all uploaded images in Supabase Storage ──
+    let deletedStorageFilesCount = 0
+    try {
+      const getRes = await fetch(`${url}/rest/v1/products?id=eq.${id}&select=*`, {
+        headers: supabaseHeaders(key),
+      })
+      if (getRes.ok) {
+        const rows = await getRes.json()
+        const prod = Array.isArray(rows) ? rows[0] : rows
+        if (prod) {
+          const allImages: string[] = []
+          if (Array.isArray(prod.images)) allImages.push(...prod.images)
+          if (typeof prod.image === 'string') allImages.push(prod.image)
+
+          const storageKeys = allImages
+            .map(img => extractSupabaseStorageKey(img))
+            .filter((k): k is string => Boolean(k))
+
+          if (storageKeys.length > 0) {
+            deletedStorageFilesCount = await deleteSupabaseStorageFiles(storageKeys, 'products')
+          }
+        }
+      }
+    } catch (storageErr) {
+      console.warn('Could not inspect storage files for product:', storageErr)
+    }
+
+    // ── 2. Disconnect foreign key references in orders table ──
+    await fetch(`${url}/rest/v1/orders?product_id=eq.${id}`, {
+      method: 'PATCH',
+      headers: supabaseHeaders(key),
+      body: JSON.stringify({ product_id: null }),
+    }).catch(() => {})
+
+    // ── 3. Delete product row permanently from Supabase PostgreSQL database ──
     const res = await fetch(`${url}/rest/v1/products?id=eq.${id}`, {
       method: 'DELETE',
       headers: supabaseHeaders(key),
@@ -187,7 +239,11 @@ export async function DELETE(request: NextRequest) {
       throw new Error(`Supabase error (${res.status}): ${errText}`)
     }
 
-    return NextResponse.json({ success: true })
+    return NextResponse.json({
+      success: true,
+      message: 'Produit et fichiers de stockage supprimés définitivement',
+      freedStorageFiles: deletedStorageFilesCount,
+    })
   } catch (err: any) {
     console.error('DELETE /api/admin/products error:', err)
     return NextResponse.json({ error: err.message || 'Failed to delete product' }, { status: 500 })
