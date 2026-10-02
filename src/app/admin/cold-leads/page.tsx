@@ -364,7 +364,7 @@ export default function ColdLeadsPage() {
                   key={catKey}
                   type="button"
                   onClick={() => setSelectedCategory(isSelected ? 'all' : catKey)}
-                  className={`text-left p-3.5 rounded-2xl border transition-all duration-200 active:scale-95 relative overflow-hidden cursor-pointer ${
+                  className={`text-left p-3.5 rounded-none border transition-all duration-200 active:scale-95 relative overflow-hidden cursor-pointer ${
                     isSelected
                       ? 'border-[#d1aa5c] shadow-[0_0_20px_rgba(209,170,92,0.25)]'
                       : 'border-white/10 hover:border-white/20 bg-white/[0.03] hover:bg-white/[0.06]'
@@ -375,7 +375,7 @@ export default function ColdLeadsPage() {
                   }}
                 >
                   <div
-                    className="w-9 h-9 rounded-xl flex items-center justify-center mb-2.5"
+                    className="w-9 h-9 rounded-none flex items-center justify-center mb-2.5"
                     style={{ background: cat.bg, color: cat.color, border: `1px solid ${cat.border}` }}
                   >
                     <IconComp className="w-4 h-4" />
@@ -503,7 +503,7 @@ export default function ColdLeadsPage() {
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-2">
                         <div
-                          className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0"
+                          className="w-8 h-8 rounded-none flex items-center justify-center shrink-0"
                           style={{
                             background: catMeta.bg,
                             color: catMeta.color,
@@ -605,7 +605,7 @@ export default function ColdLeadsPage() {
                         href={whatsappLink}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="p-2 rounded-lg bg-[#25D366]/15 hover:bg-[#25D366]/25 border border-[#25D366]/30 text-[#25D366] transition-all cursor-pointer"
+                        className="p-2 rounded-none bg-[#25D366]/15 hover:bg-[#25D366]/25 border border-[#25D366]/30 text-[#25D366] transition-all cursor-pointer"
                         style={{ cursor: 'pointer' }}
                         title="Contacter sur WhatsApp"
                       >
@@ -614,7 +614,7 @@ export default function ColdLeadsPage() {
 
                       <a
                         href={`tel:${lead.phone}`}
-                        className="p-2 rounded-lg bg-white/[0.05] hover:bg-white/10 border border-white/10 text-white/80 transition-all cursor-pointer"
+                        className="p-2 rounded-none bg-white/[0.05] hover:bg-white/10 border border-white/10 text-white/80 transition-all cursor-pointer"
                         style={{ cursor: 'pointer' }}
                         title="Appeler directement"
                       >
@@ -624,7 +624,7 @@ export default function ColdLeadsPage() {
                       <button
                         type="button"
                         onClick={() => handleDelete(lead)}
-                        className="p-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 text-red-400 transition-all cursor-pointer"
+                        className="p-2 rounded-none bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 text-red-400 transition-all cursor-pointer"
                         style={{ cursor: 'pointer' }}
                         title="Supprimer"
                       >
