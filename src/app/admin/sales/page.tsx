@@ -1,6 +1,7 @@
 'use client'
 
 export const runtime = 'edge'
+// Build version: 2026-10-03-restored-smooth
 
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { showIosToast, showIosConfirm } from '@/components/ui/ios-dialog'
