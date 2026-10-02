@@ -145,6 +145,24 @@ export default function AdminSettingsPage() {
     }
   }
 
+  const totalSizeBytes = audit?.totalSizeBytes || 0
+  const FREE_TIER_BYTES = 1024 * 1024 * 1024 // 1 Go (Supabase free tier quota)
+  const usedPercentage = Math.min(100, (totalSizeBytes / FREE_TIER_BYTES) * 100)
+
+  let formattedPercent = '0%'
+  if (usedPercentage > 0 && usedPercentage < 0.1) {
+    formattedPercent = '<0.1%'
+  } else if (usedPercentage >= 0.1) {
+    formattedPercent = `${usedPercentage.toFixed(1)}%`
+  }
+
+  const ringRadius = 30
+  const ringCircumference = 2 * Math.PI * ringRadius // ~188.5
+  const visualProgress = totalSizeBytes > 0 ? Math.max(3, usedPercentage) : 0
+  const strokeDashoffset = ringCircumference - (visualProgress / 100) * ringCircumference
+  const ringColor =
+    usedPercentage > 85 ? '#EF4444' : usedPercentage > 65 ? '#F59E0B' : '#10B981'
+
   return (
     <div className="min-h-screen pb-16" style={{ background: 'transparent' }}>
       {/* Header */}
@@ -218,28 +236,78 @@ export default function AdminSettingsPage() {
 
           {/* Metrics Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-5">
-            <div className="p-3.5 bg-black/30 border border-white/5 rounded-xl">
-              <p className="text-[11px] text-white/50 uppercase tracking-wider font-medium">Espace total utilisé</p>
-              <p className="text-xl font-bold text-white mt-1">
-                {loadingAudit ? '...' : audit?.totalSizeFormatted || '0 Mo'}
-              </p>
-              <p className="text-[10px] text-white/40 mt-0.5">{audit?.totalFiles || 0} fichiers enregistrés</p>
+            {/* Box 1: Espace total utilisé with thick empty from inside circular shape */}
+            <div className="p-3.5 bg-black/30 border border-white/5 rounded-xl flex items-center justify-between gap-3">
+              <div>
+                <p className="text-[11px] text-white/50 uppercase tracking-wider font-medium">Espace total utilisé</p>
+                <p className="text-xl font-bold text-white mt-1">
+                  {loadingAudit ? '...' : audit?.totalSizeFormatted || '0 Mo'}
+                </p>
+                <p className="text-[10px] text-white/40 mt-1">
+                  {audit?.totalFiles || 0} fichiers &bull; Quota 1 Go
+                </p>
+              </div>
+
+              {/* Thick Empty From Inside Circular Shape */}
+              <div
+                className="relative flex items-center justify-center shrink-0 w-[72px] h-[72px]"
+                title={`Utilisation du stockage : ${formattedPercent} de 1 Go`}
+              >
+                <svg className="w-full h-full -rotate-90" viewBox="0 0 76 76">
+                  {/* Thick Background Track (hollow / empty inside) */}
+                  <circle
+                    cx="38"
+                    cy="38"
+                    r={ringRadius}
+                    fill="none"
+                    stroke="rgba(255, 255, 255, 0.08)"
+                    strokeWidth="8"
+                  />
+                  {/* Thick Foreground Progress Arc */}
+                  <circle
+                    cx="38"
+                    cy="38"
+                    r={ringRadius}
+                    fill="none"
+                    stroke={ringColor}
+                    strokeWidth="8"
+                    strokeLinecap="round"
+                    strokeDasharray={ringCircumference}
+                    strokeDashoffset={strokeDashoffset}
+                    className="transition-all duration-700 ease-out"
+                  />
+                </svg>
+
+                {/* Hollow Center Text */}
+                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none select-none">
+                  <span className="text-[11px] font-bold text-white font-mono leading-none tracking-tight">
+                    {loadingAudit ? '...' : formattedPercent}
+                  </span>
+                  <span className="text-[8px] text-white/45 uppercase tracking-wider font-medium mt-0.5">
+                    1 Go
+                  </span>
+                </div>
+              </div>
             </div>
 
-            <div className="p-3.5 bg-black/30 border border-white/5 rounded-xl">
-              <p className="text-[11px] text-white/50 uppercase tracking-wider font-medium">Fichiers actifs / En ligne</p>
-              <p className="text-xl font-bold text-emerald-400 mt-1">
-                {loadingAudit ? '...' : audit?.activeCount || 0}
-              </p>
-              <p className="text-[10px] text-white/40 mt-0.5">Attachés au catalogue &amp; config</p>
+            <div className="p-3.5 bg-black/30 border border-white/5 rounded-xl flex flex-col justify-between">
+              <div>
+                <p className="text-[11px] text-white/50 uppercase tracking-wider font-medium">Fichiers actifs / En ligne</p>
+                <p className="text-xl font-bold text-emerald-400 mt-1">
+                  {loadingAudit ? '...' : audit?.activeCount || 0}
+                </p>
+              </div>
+              <p className="text-[10px] text-white/40 mt-2">Attachés au catalogue &amp; config</p>
             </div>
 
-            <div className="p-3.5 bg-black/30 border border-white/5 rounded-xl">
-              <p className="text-[11px] text-white/50 uppercase tracking-wider font-medium">Fichiers orphelins</p>
-              <p className={`text-xl font-bold mt-1 ${audit && audit.orphanCount > 0 ? 'text-amber-400' : 'text-emerald-400'}`}>
-                {loadingAudit ? '...' : audit?.orphanCount || 0}
-              </p>
-              <p className="text-[10px] text-white/40 mt-0.5">
+            <div className="p-3.5 bg-black/30 border border-white/5 rounded-xl flex flex-col justify-between">
+              <div>
+                <p className="text-[11px] text-white/50 uppercase tracking-wider font-medium">Fichiers orphelins</p>
+                <p className={`text-xl font-bold mt-1 ${audit && audit.orphanCount > 0 ? 'text-amber-400' : 'text-emerald-400'}`}>
+                  {loadingAudit ? '...' : audit?.orphanCount || 0}
+                </p>
+              </div>
+              <p className="text-[10px] text-white/40 mt-2">
                 {audit && audit.orphanCount > 0 ? `${audit.orphanSizeFormatted} récupérables` : 'Aucun espace gaspillé'}
               </p>
             </div>
