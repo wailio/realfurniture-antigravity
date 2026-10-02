@@ -151,10 +151,10 @@ export function HeroQuoteWidget() {
   const whatsappUrl = `https://wa.me/213561719100?text=${waMessage}`
 
   return (
-    <div className="relative w-full max-w-[540px] lg:max-w-[430px] xl:max-w-[460px] mx-auto lg:mx-0">
-      {/* iOS Frosted Glass Container (compact on PC, untouched on mobile) */}
+    <div className="relative w-full max-w-[320px] md:max-w-[480px] lg:max-w-[430px] xl:max-w-[460px] mx-auto lg:mx-0">
+      {/* iOS Frosted Glass Container (compact on PC, smaller on mobile) */}
       <div
-        className="relative overflow-hidden rounded-[28px] md:rounded-[32px] p-6 md:p-8 lg:p-5 xl:p-6 backdrop-blur-2xl transition-all duration-300"
+        className="relative overflow-hidden rounded-[20px] md:rounded-[32px] p-4 md:p-8 lg:p-5 xl:p-6 backdrop-blur-2xl transition-all duration-300"
         style={{
           background: 'rgba(20, 21, 24, 0.78)',
           border: '1px solid rgba(255, 255, 255, 0.12)',
@@ -251,7 +251,7 @@ export function HeroQuoteWidget() {
             </div>
 
             {/* Progress Bar (3 steps) */}
-            <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden mb-5 lg:mb-3.5">
+            <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden mb-3 lg:mb-3.5">
               <div
                 className="h-full rounded-full transition-all duration-500 ease-out"
                 style={{
@@ -272,10 +272,10 @@ export function HeroQuoteWidget() {
               >
                 {/* ── STEP 1: Select Furniture Type ── */}
                 <div className="w-full shrink-0">
-                  <h3 className="font-fraunces text-xl md:text-[22px] lg:text-[18px] xl:text-[19px] font-normal text-white mb-1 leading-snug">
+                  <h3 className="font-fraunces text-base md:text-[22px] lg:text-[18px] xl:text-[19px] font-normal text-white mb-1 leading-snug">
                     Quel type de mobilier recherchez-vous ?
                   </h3>
-                  <p className="text-white/60 text-xs md:text-[13px] lg:text-[11px] mb-4 lg:mb-3">
+                  <p className="text-white/60 text-[10px] md:text-[13px] lg:text-[11px] mb-3 lg:mb-3">
                     Sélectionnez la catégorie qui correspond à votre projet.
                   </p>
 
@@ -287,7 +287,7 @@ export function HeroQuoteWidget() {
                           key={item.id}
                           type="button"
                           onClick={() => handleSelectType(item.id)}
-                          className="group relative flex flex-col items-center justify-between text-center p-2.5 lg:p-2 xl:p-2.5 rounded-2xl border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] hover:border-[#d1aa5c]/45 active:scale-[0.97] transition-all duration-150 cursor-pointer overflow-hidden min-h-[92px] lg:min-h-[86px] xl:min-h-[90px]"
+                          className="group relative flex flex-col items-center justify-between text-center p-2 lg:p-2 xl:p-2.5 rounded-2xl border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] hover:border-[#d1aa5c]/45 active:scale-[0.97] transition-all duration-150 cursor-pointer overflow-hidden min-h-[76px] md:min-h-[92px] lg:min-h-[86px] xl:min-h-[90px]"
                           style={{ cursor: 'pointer' }}
                         >
                           {/* Big 3D Gold Category Icon */}

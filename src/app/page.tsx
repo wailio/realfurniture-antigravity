@@ -123,8 +123,8 @@ export default function HomePage() {
             <div className="lg:col-span-6 xl:col-span-7 text-left flex flex-col items-start lg:-translate-y-3 xl:-translate-y-4">
               {/* Eyebrow badge (Sharp-edged architectural design) */}
               <LuxuryReveal variant="up" delay={50} className="mb-3.5 lg:mb-2.5">
-                <span className="inline-flex items-center gap-2 border border-white/15 bg-black/40 backdrop-blur-md px-3.5 py-1.5 rounded-none text-[10px] md:text-xs font-sora text-[#E4E4E7] tracking-[2.5px] uppercase shadow-sm">
-                  <span className="w-1.5 h-1.5 rounded-none bg-[#d1aa5c] shadow-[0_0_8px_#d1aa5c]" />
+                <span className="inline-flex items-center gap-1.5 border border-white/15 bg-black/40 backdrop-blur-md px-2.5 py-1 md:px-3.5 md:py-1.5 rounded-none text-[8px] md:text-xs font-sora text-[#E4E4E7] tracking-[1.5px] md:tracking-[2.5px] uppercase shadow-sm">
+                  <span className="w-1 h-1 md:w-1.5 md:h-1.5 rounded-none bg-[#d1aa5c] shadow-[0_0_8px_#d1aa5c]" />
                   <span>{siteConfig.hero_eyebrow || "CHÂTEAU D'ART · MAISON DE DESIGN"}</span>
                 </span>
               </LuxuryReveal>
@@ -135,7 +135,7 @@ export default function HomePage() {
                   <span className="font-light text-white/85 block">
                     Meilleur magasin de Meubles,
                   </span>
-                  <span className="font-extrabold text-white block mt-1 tracking-tight">
+                  <span className="font-extrabold text-white block mt-1 tracking-tight text-4xl sm:text-4xl md:text-5xl lg:text-[40px] xl:text-[48px]">
                     à Birkhadem
                   </span>
                 </h1>
@@ -143,7 +143,7 @@ export default function HomePage() {
 
               {/* Subtitle */}
               <LuxuryReveal variant="up" delay={250} className="mb-6 lg:mb-4 max-w-xl">
-                <p className="font-sora text-sm md:text-base lg:text-[14px] xl:text-[15px] text-white/75 leading-relaxed font-normal">
+                <p className="font-sora text-[11px] md:text-base lg:text-[14px] xl:text-[15px] text-white/75 leading-relaxed font-normal">
                   {siteConfig.hero_subtitle || "Matières nobles, proportions sculpturales et finitions artisanales pensées pour sublimer vos espaces de vie."}
                 </p>
               </LuxuryReveal>
@@ -154,32 +154,32 @@ export default function HomePage() {
                   href="https://www.google.com/maps/place/Ch%C3%A2teau+D'Art+-+meubles/@36.7083703,3.0600586,17z/data=!4m8!3m7!1s0x128fad5fae229a89:0xa8afd38ca1b6e44f!8m2!3d36.7083703!4d3.0626335!9m1!1b1!16s%2Fg%2F11gsn14yk8"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group inline-flex flex-wrap items-center gap-3 px-4 py-2.5 lg:py-2 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-[#d1aa5c]/40 transition-all duration-300 shadow-lg"
+                  className="group inline-flex flex-wrap items-center gap-2 md:gap-3 px-3 py-2 md:px-4 md:py-2.5 lg:py-2 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-[#d1aa5c]/40 transition-all duration-300 shadow-lg"
                   title="Voir les avis sur Google Maps"
                 >
                   {/* 5 Golden Stars */}
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-0.5 md:gap-1">
                     {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 fill-[#d1aa5c] text-[#d1aa5c]" />
+                      <Star key={i} className="w-3 h-3 md:w-4 md:h-4 fill-[#d1aa5c] text-[#d1aa5c]" />
                     ))}
                   </div>
 
-                  <span className="text-xs md:text-sm font-semibold text-white group-hover:text-[#d1aa5c] transition-colors">
+                  <span className="text-[10px] md:text-sm font-semibold text-white group-hover:text-[#d1aa5c] transition-colors">
                     4.9 / 5 sur Google Maps
                   </span>
 
                   <span className="hidden sm:inline text-white/30">•</span>
 
-                  <span className="text-xs text-white/60 group-hover:text-white/80 transition-colors">
+                  <span className="hidden sm:inline text-xs text-white/60 group-hover:text-white/80 transition-colors">
                     Showroom Birkhadem • Devis gratuit
                   </span>
 
-                  <ArrowUpRight className="w-3.5 h-3.5 text-white/40 group-hover:text-[#d1aa5c] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                  <ArrowUpRight className="w-3 h-3 md:w-3.5 md:h-3.5 text-white/40 group-hover:text-[#d1aa5c] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                 </a>
               </LuxuryReveal>
 
-              {/* Direct Collection Quick Links */}
-              <LuxuryReveal variant="up" delay={420} className="flex items-center gap-3">
+              {/* Direct Collection Quick Links — hidden on mobile (moved below widget), shown on desktop */}
+              <LuxuryReveal variant="up" delay={420} className="hidden lg:flex items-center gap-3">
                 <Link
                   href="/all-products"
                   className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/15 text-white px-5 py-3 lg:py-2.5 lg:px-4 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all border border-white/10"
@@ -197,9 +197,26 @@ export default function HomePage() {
             </div>
 
             {/* ── Right Column: Interactive One-Question-At-A-Time Funnel Widget ── */}
-            <div className="lg:col-span-6 xl:col-span-5 w-full flex justify-center lg:justify-end">
+            <div className="lg:col-span-6 xl:col-span-5 w-full flex flex-col items-center lg:items-end lg:justify-end">
               <LuxuryReveal variant="right" delay={200} className="w-full flex justify-center lg:justify-end">
                 <HeroQuoteWidget />
+              </LuxuryReveal>
+
+              {/* Buttons below widget on mobile only */}
+              <LuxuryReveal variant="up" delay={500} className="flex lg:hidden items-center gap-3 mt-5 w-full justify-center">
+                <Link
+                  href="/all-products"
+                  className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/15 text-white px-5 py-3 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all border border-white/10"
+                >
+                  <span>Explorer le catalogue</span>
+                  <ArrowRight className="w-3.5 h-3.5 text-[#d1aa5c]" />
+                </Link>
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center gap-2 text-white/70 hover:text-white px-4 py-3 text-xs font-medium transition-colors"
+                >
+                  <span>Nous trouver</span>
+                </Link>
               </LuxuryReveal>
             </div>
 
