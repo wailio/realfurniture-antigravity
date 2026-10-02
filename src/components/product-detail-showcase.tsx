@@ -118,7 +118,7 @@ export function ProductDetailShowcase({ product }: ProductDetailShowcaseProps) {
 
   const orderSubject = `Commande: ${product.name} (${selectedFinish})`;
   const orderMessage = `Bonjour Château d'art, je souhaite commander : ${product.name}\n- Finition : ${selectedFinish}\n- Quantité : ${quantity}\n- Prix : ${formatPrice(product.price * quantity)}`;
-  const contactUrl = `/contact?product=${encodeURIComponent(product.name)}&subject=${encodeURIComponent(orderSubject)}&message=${encodeURIComponent(orderMessage)}#contact-form`;
+  const contactUrl = `/contact?product=${encodeURIComponent(product.name)}&image=${encodeURIComponent(product.image)}&id=${encodeURIComponent(String(product.id))}&subject=${encodeURIComponent(orderSubject)}&message=${encodeURIComponent(orderMessage)}#contact-form`;
   const whatsappUrl = `https://wa.me/213561719100?text=${encodeURIComponent(orderMessage)}`;
 
   // Corner paths matching Mobenia reference

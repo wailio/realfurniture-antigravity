@@ -5,7 +5,8 @@ import { useSearchParams } from 'next/navigation';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { LuxuryReveal } from '@/components/luxury-reveal';
-import { Phone, Mail, MapPin, Clock, MessageSquare, Check, ArrowRight, ArrowUpRight } from 'lucide-react';
+import { Phone, Mail, MapPin, Clock, MessageSquare, Check, ArrowRight, ArrowUpRight, Star, Sparkles } from 'lucide-react';
+import { products } from '@/lib/products';
 import { useSiteConfig } from '@/lib/use-site-config';
 
 function ShowroomMap() {
@@ -61,16 +62,34 @@ function ContactContent() {
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [prefilledProduct, setPrefilledProduct] = useState<string | null>(null);
+  const [productThumbnail, setProductThumbnail] = useState<string | null>(null);
+  const [productDisplayName, setProductDisplayName] = useState<string | null>(null);
   const [hasSpotlight, setHasSpotlight] = useState(false);
+
+  // Review states
+  const [reviewRating, setReviewRating] = useState<number>(0);
+  const [hoverRating, setHoverRating] = useState<number>(0);
+  const [reviewText, setReviewText] = useState<string>('');
+  const [reviewSubmitted, setReviewSubmitted] = useState<boolean>(false);
+  const [reviewSubmittedStars, setReviewSubmittedStars] = useState<number>(0);
 
   useEffect(() => {
     const product = searchParams.get('product');
+    const image = searchParams.get('image');
     const subject = searchParams.get('subject');
     const message = searchParams.get('message');
 
     if (product || subject || message) {
       if (product) {
         setPrefilledProduct(product);
+        const matched = products.find(
+          (p) =>
+            p.name.toLowerCase() === product.toLowerCase() ||
+            product.toLowerCase().includes(p.name.toLowerCase()) ||
+            p.name.toLowerCase().includes(product.toLowerCase())
+        );
+        setProductThumbnail(image || matched?.image || '/products/salon/aa.jpg');
+        setProductDisplayName(matched?.name || product);
       }
       setFormData((prev) => ({
         ...prev,
@@ -113,6 +132,25 @@ function ContactContent() {
       setSubmitted(true);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleReviewSubmit = () => {
+    if (reviewRating === 0) return;
+    const stars = reviewRating;
+    setReviewSubmittedStars(stars);
+    setReviewSubmitted(true);
+
+    if (stars >= 3) {
+      // If 3 stars or more, copy message to clipboard and open Google Maps review modal
+      if (reviewText.trim() && typeof navigator !== 'undefined' && navigator.clipboard) {
+        navigator.clipboard.writeText(reviewText.trim()).catch(() => {});
+      }
+
+      const googleReviewUrl = 'https://search.google.com/local/writereview?placeid=ChIJia4irv-tjhIRTwS2ocyK-6g';
+      setTimeout(() => {
+        window.open(googleReviewUrl, '_blank', 'noopener,noreferrer');
+      }, 450);
     }
   };
 
@@ -262,19 +300,169 @@ function ContactContent() {
                   <p className="font-sora text-xs text-[#A1A1AA]">Remplissez ce formulaire et notre équipe vous recontactera dans les plus brefs délais.</p>
                 </div>
 
-                {prefilledProduct && (
-                  <div className="p-3 bg-[#b68d40]/15 border border-[#b68d40]/30 rounded-sm text-xs text-white flex items-center justify-between">
-                    <span>Demande liée à : <strong>{prefilledProduct}</strong></span>
-                    <button type="button" onClick={() => setPrefilledProduct(null)} className="interactive-tap text-[#b68d40] hover:text-white font-bold ml-2">✕</button>
-                  </div>
-                )}
-
                 {submitted ? (
-                  <div className="py-10 text-center space-y-3">
-                    <div className="w-11 h-11 rounded-full bg-[#b68d40]/20 border border-[#b68d40] mx-auto flex items-center justify-center text-[#b68d40]"><Check size={22} /></div>
-                    <h4 className="font-fraunces text-lg md:text-xl text-white">Message Reçu avec Succès</h4>
-                    <p className="font-sora text-xs text-[#A1A1AA] max-w-md mx-auto">Merci. Un conseiller Château d&apos;art vous contactera très bientôt.</p>
-                    <button type="button" onClick={() => setSubmitted(false)} className="interactive-tap text-xs uppercase tracking-wider text-[#b68d40] hover:underline pt-2 inline-block font-semibold">Envoyer un autre message</button>
+                  <div className="py-8 text-center space-y-4">
+                    <div className="w-12 h-12 rounded-full bg-[#b68d40]/20 border border-[#b68d40] mx-auto flex items-center justify-center text-[#b68d40] shadow-[0_0_20px_rgba(182,141,64,0.35)]">
+                      <Check size={24} />
+                    </div>
+                    
+                    <div>
+                      <h4 className="font-fraunces text-xl md:text-2xl text-white font-light mb-1">
+                        Message Reçu avec Succès
+                      </h4>
+                      <p className="font-sora text-xs md:text-sm text-[#A1A1AA] max-w-md mx-auto leading-relaxed">
+                        Merci. Un conseiller Château d&apos;art vous contactera très bientôt.
+                      </p>
+                    </div>
+
+                    {/* ── Interactive Service Review Pop-out Section ── */}
+                    <div className="mt-6 pt-6 border-t border-white/10 w-full max-w-md mx-auto">
+                      {!reviewSubmitted ? (
+                        <div className="flex flex-col items-center text-center">
+                          {/* Title */}
+                          <div className="flex items-center gap-1.5 mb-2">
+                            <Sparkles className="w-3.5 h-3.5 text-[#d1aa5c]" />
+                            <p className="font-sora text-xs md:text-sm font-semibold text-white/95 tracking-wide">
+                              Laissez-nous un avis sur le service.
+                            </p>
+                          </div>
+                          <p className="text-[11px] text-white/50 mb-3.5">
+                            Votre retour nous aide à perfectionner notre accueil.
+                          </p>
+
+                          {/* 5 Stars: black/dark turning gold on hover and click */}
+                          <div className="flex items-center justify-center gap-2 mb-3">
+                            {[1, 2, 3, 4, 5].map((starIndex) => {
+                              const isGold = (hoverRating || reviewRating) >= starIndex;
+                              return (
+                                <button
+                                  key={starIndex}
+                                  type="button"
+                                  onMouseEnter={() => setHoverRating(starIndex)}
+                                  onMouseLeave={() => setHoverRating(0)}
+                                  onClick={() => setReviewRating(starIndex)}
+                                  className="p-1 transition-transform duration-200 hover:scale-125 cursor-pointer focus:outline-none"
+                                  aria-label={`${starIndex} étoile${starIndex > 1 ? 's' : ''}`}
+                                >
+                                  <Star
+                                    className={`w-7 h-7 sm:w-8 sm:h-8 transition-all duration-200 ${
+                                      isGold
+                                        ? 'fill-[#d1aa5c] text-[#d1aa5c] scale-110 drop-shadow-[0_0_10px_rgba(209,170,92,0.7)]'
+                                        : 'fill-[#0E0F10] text-zinc-700 stroke-zinc-600'
+                                    }`}
+                                  />
+                                </button>
+                              );
+                            })}
+                          </div>
+
+                          {/* Smooth pop-out writing space */}
+                          <div
+                            className={`w-full transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] overflow-hidden ${
+                              reviewRating > 0
+                                ? 'max-h-96 opacity-100 translate-y-0 mt-2'
+                                : 'max-h-0 opacity-0 -translate-y-2 pointer-events-none'
+                            }`}
+                          >
+                            <div className="p-3.5 sm:p-4 bg-[#0E0F10] border border-white/15 text-left mb-2 shadow-lg">
+                              <label className="block text-[10.5px] font-sora text-[#A1A1AA] uppercase tracking-wider mb-2 font-medium">
+                                Votre avis :
+                              </label>
+                              <textarea
+                                rows={3}
+                                value={reviewText}
+                                onChange={(e) => setReviewText(e.target.value)}
+                                placeholder={
+                                  reviewRating <= 2
+                                    ? "Expliquez-nous ce qui n'a pas convenu, nous ferons tout pour nous améliorer..."
+                                    : "Partagez votre expérience avec la Maison Château d'art..."
+                                }
+                                className="w-full bg-[#141518] border border-white/10 p-2.5 text-xs md:text-sm text-white placeholder:text-[#52525B] focus:outline-none focus:border-[#d1aa5c] transition-colors resize-none rounded-none"
+                              />
+
+                              <div className="flex items-center justify-between mt-3 pt-2 border-t border-white/5">
+                                <span className="text-[10px] text-white/50 font-sora">
+                                  Note : <strong className="text-[#d1aa5c]">{reviewRating}/5</strong>
+                                </span>
+
+                                <button
+                                  type="button"
+                                  onClick={handleReviewSubmit}
+                                  className="interactive-tap px-4 py-2 bg-[#d1aa5c] hover:bg-[#b68d40] text-[#0E0F10] text-xs font-bold uppercase tracking-wider transition-all duration-200 shadow-md cursor-pointer flex items-center gap-1.5"
+                                >
+                                  <span>Envoyer mon avis</span>
+                                  <ArrowRight size={12} />
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        /* Review Result Confirmation */
+                        <div className="py-4 px-2 text-center flex flex-col items-center animate-fade-in-up">
+                          {reviewSubmittedStars <= 2 ? (
+                            <div className="space-y-2">
+                              <div className="flex items-center justify-center gap-1 mb-2">
+                                {[...Array(reviewSubmittedStars)].map((_, i) => (
+                                  <Star key={i} className="w-5 h-5 fill-[#d1aa5c]/80 text-[#d1aa5c]/80" />
+                                ))}
+                                {[...Array(5 - reviewSubmittedStars)].map((_, i) => (
+                                  <Star key={i} className="w-5 h-5 fill-transparent text-white/20" />
+                                ))}
+                              </div>
+                              <h5 className="font-fraunces text-base md:text-lg text-white font-light">
+                                Nous allons tout améliorer grâce à cet avis.
+                              </h5>
+                              <p className="font-sora text-xs text-[#A1A1AA] max-w-sm mx-auto leading-relaxed">
+                                Votre retour est précieux et a été transmis directement à notre direction.
+                              </p>
+                            </div>
+                          ) : (
+                            <div className="space-y-2">
+                              <div className="flex items-center justify-center gap-1 mb-2 animate-pulse">
+                                {[...Array(reviewSubmittedStars === 3 ? 4 : reviewSubmittedStars)].map((_, i) => (
+                                  <Star key={i} className="w-5 h-5 fill-[#d1aa5c] text-[#d1aa5c] drop-shadow-[0_0_8px_#d1aa5c]" />
+                                ))}
+                              </div>
+                              <h5 className="font-fraunces text-base md:text-lg text-white font-light">
+                                Merci infiniment pour votre soutien !
+                              </h5>
+                              <p className="font-sora text-xs text-[#A1A1AA] max-w-sm mx-auto leading-relaxed">
+                                Votre avis a été copié. La page Google Maps s&apos;est ouverte dans un nouvel onglet pour finaliser votre publication.
+                              </p>
+                              <div className="pt-2">
+                                <a
+                                  href="https://search.google.com/local/writereview?placeid=ChIJia4irv-tjhIRTwS2ocyK-6g"
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="interactive-tap inline-flex items-center gap-1.5 px-4 py-2 bg-[#d1aa5c]/20 hover:bg-[#d1aa5c]/30 border border-[#d1aa5c]/40 text-[#d1aa5c] text-xs font-semibold rounded-none transition-colors"
+                                >
+                                  <span>Ouvrir Google Avis</span>
+                                  <ArrowUpRight className="w-3.5 h-3.5" />
+                                </a>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Reset Button */}
+                    <div className="pt-3">
+                      <button 
+                        type="button" 
+                        onClick={() => {
+                          setSubmitted(false);
+                          setReviewRating(0);
+                          setHoverRating(0);
+                          setReviewText('');
+                          setReviewSubmitted(false);
+                        }} 
+                        className="interactive-tap text-xs uppercase tracking-wider text-[#b68d40] hover:underline font-semibold cursor-pointer"
+                      >
+                        Envoyer un autre message
+                      </button>
+                    </div>
                   </div>
                 ) : (
                   <>
@@ -294,10 +482,64 @@ function ContactContent() {
                       <input type="email" name="email" required value={formData.email} onChange={handleChange} placeholder="nom@exemple.com" className="w-full bg-[#0E0F10] border border-white/15 px-3.5 py-2.5 md:py-3 text-base md:text-sm text-white placeholder:text-[#52525B] focus:outline-none focus:border-[#b68d40] transition-colors rounded-none" />
                     </div>
 
-                    <div>
-                      <label className="block font-sora text-[10px] md:text-xs uppercase tracking-wider text-[#A1A1AA] mb-1.5 font-medium">Sujet</label>
-                      <input type="text" name="subject" value={formData.subject} onChange={handleChange} placeholder="Objet de votre demande" className="w-full bg-[#0E0F10] border border-white/15 px-3.5 py-2.5 md:py-3 text-base md:text-sm text-white placeholder:text-[#52525B] focus:outline-none focus:border-[#b68d40] transition-colors rounded-none" />
-                    </div>
+                    {/* ── Sujet line with conditional right-side Product Preview ── */}
+                    {prefilledProduct && productThumbnail ? (
+                      <div className="flex flex-row items-end gap-3 sm:gap-4">
+                        <div className="flex-1 min-w-0">
+                          <label className="block font-sora text-[10px] md:text-xs uppercase tracking-wider text-[#A1A1AA] mb-1.5 font-medium">
+                            Sujet
+                          </label>
+                          <input
+                            type="text"
+                            name="subject"
+                            value={formData.subject}
+                            onChange={handleChange}
+                            placeholder="Objet de votre demande"
+                            className="w-full bg-[#0E0F10] border border-white/15 px-3.5 py-2.5 md:py-3 text-base md:text-sm text-white placeholder:text-[#52525B] focus:outline-none focus:border-[#b68d40] transition-colors rounded-none"
+                          />
+                        </div>
+
+                        {/* Extra-small selected product preview on right side */}
+                        <div className="shrink-0 flex flex-col items-center justify-center p-1.5 sm:p-2 bg-[#0E0F10] border border-[#b68d40]/40 shadow-[0_0_12px_rgba(182,141,64,0.18)] max-w-[90px] sm:max-w-[110px] text-center relative group">
+                          {/* Close / Deselect button */}
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setPrefilledProduct(null);
+                              setProductThumbnail(null);
+                              setProductDisplayName(null);
+                              setFormData((prev) => ({ ...prev, subject: '' }));
+                            }}
+                            className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-[#18191B] border border-white/20 text-white/60 hover:text-white flex items-center justify-center text-[9px] transition-colors cursor-pointer z-10"
+                            title="Retirer ce produit"
+                          >
+                            ✕
+                          </button>
+
+                          {/* Very small product thumbnail */}
+                          <div className="relative w-11 h-11 sm:w-13 sm:h-13 overflow-hidden bg-black/50 border border-white/10 mb-1">
+                            <img
+                              src={productThumbnail}
+                              alt={productDisplayName || 'Produit'}
+                              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                            />
+                          </div>
+
+                          {/* Product name extra small under it with light golden effect */}
+                          <p className="text-[9px] sm:text-[9.5px] font-semibold text-white/95 leading-tight truncate w-full px-0.5">
+                            {productDisplayName}
+                          </p>
+                          <span className="inline-block text-[7.5px] sm:text-[8px] text-[#d1aa5c] font-medium tracking-wider uppercase mt-0.5 shadow-[0_0_6px_rgba(209,170,92,0.45)]">
+                            Sélectionné
+                          </span>
+                        </div>
+                      </div>
+                    ) : (
+                      <div>
+                        <label className="block font-sora text-[10px] md:text-xs uppercase tracking-wider text-[#A1A1AA] mb-1.5 font-medium">Sujet</label>
+                        <input type="text" name="subject" value={formData.subject} onChange={handleChange} placeholder="Objet de votre demande" className="w-full bg-[#0E0F10] border border-white/15 px-3.5 py-2.5 md:py-3 text-base md:text-sm text-white placeholder:text-[#52525B] focus:outline-none focus:border-[#b68d40] transition-colors rounded-none" />
+                      </div>
+                    )}
 
                     <div>
                       <label className="block font-sora text-[10px] md:text-xs uppercase tracking-wider text-[#A1A1AA] mb-1.5 font-medium">Votre Message *</label>

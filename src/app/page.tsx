@@ -499,7 +499,7 @@ export default function HomePage() {
                           Détails
                         </Link>
                         <Link
-                          href={`/contact?product=${encodeURIComponent(product.name)}&subject=${encodeURIComponent(`Commande rapide: ${product.name}`)}#contact-form`}
+                          href={`/contact?product=${encodeURIComponent(product.name)}&image=${encodeURIComponent(product.image)}&id=${encodeURIComponent(String(product.id))}&subject=${encodeURIComponent(`Commande rapide: ${product.name}`)}#contact-form`}
                           className="interactive-tap px-4 sm:px-5 py-2 bg-[#b68d40] hover:bg-[#c99b4d] text-black text-xs font-bold tracking-wider uppercase transition-all shadow-md hover:scale-105"
                         >
                           Commander
