@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseConfig, supabaseHeaders } from "@/lib/supabase-config";
+import { sendTelegramAlert } from "@/lib/telegram";
 
 export const runtime = 'edge';
 
@@ -43,6 +44,15 @@ export async function POST(request: NextRequest) {
       });
       if (!insertRes.ok) {
         console.error("Supabase insert error:", insertRes.status, await insertRes.text());
+      } else {
+        // ── Telegram admin ping (fire-and-forget, never blocks response) ──
+        sendTelegramAlert({
+          type: 'order',
+          name: name,
+          phone: phone || 'Non fourni',
+          subject: subject || (product ? `Commande: ${product}` : 'Demande générale'),
+          product: product || undefined,
+        }).catch(() => {})
       }
     } catch (dbErr) {
       console.error("Supabase message save error:", dbErr);

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseConfig, supabaseHeaders } from '@/lib/supabase-config'
 import { requireAdminSession } from '@/lib/admin-auth'
+import { sendTelegramAlert } from '@/lib/telegram'
 
 export const runtime = 'edge'
 
@@ -230,6 +231,15 @@ export async function POST(request: NextRequest) {
     const currentLeads = await loadStorageColdLeads()
     const updated = [newRecord, ...currentLeads]
     await saveStorageColdLeads(updated)
+
+    // ── Telegram admin ping (fire-and-forget) ──
+    sendTelegramAlert({
+      type: 'cold_lead',
+      name: newRecord.customer_name,
+      phone: newRecord.phone,
+      category: newRecord.furniture_title,
+      budget: newRecord.formatted_budget,
+    }).catch(() => {})
 
     return NextResponse.json({ success: true, lead: newRecord }, { status: 201 })
   } catch (err: any) {

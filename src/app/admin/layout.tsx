@@ -4,6 +4,7 @@ import { useState, useEffect, type ReactNode } from 'react'
 import { usePathname } from 'next/navigation'
 import AdminSidebar from '@/components/admin/sidebar'
 import IosDialogContainer from '@/components/ui/ios-dialog'
+import AdminNotifications from '@/components/admin/notifications'
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname()
@@ -111,6 +112,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       }}
     >
       <IosDialogContainer />
+      <AdminNotifications />
 
       {/* Hardware-accelerated fixed background (NO background-attachment: fixed repaint lag) */}
       <div
