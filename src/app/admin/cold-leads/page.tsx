@@ -5,12 +5,6 @@ export const runtime = 'edge'
 
 import { useState, useEffect, useMemo } from 'react'
 import {
-  Sofa,
-  Utensils,
-  BedDouble,
-  DoorClosed,
-  Palette,
-  Home,
   MessageCircle,
   Phone,
   Search,
@@ -28,7 +22,86 @@ import {
 } from 'lucide-react'
 import { showIosToast, showIosConfirm } from '@/components/ui/ios-dialog'
 
-// Category metadata with icons & colors
+// Handcrafted bespoke furniture icons (anti-AI slop, architectural line art)
+function SalonIcon({ className = "w-7 h-7", ...props }: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>
+      <path d="M4 11V8a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v3" />
+      <path d="M2 13a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-4z" />
+      <path d="M4 15h16" />
+      <path d="M5 19v2" />
+      <path d="M19 19v2" />
+      <path d="M8 11V8" />
+      <path d="M16 11V8" />
+    </svg>
+  )
+}
+
+function DiningTableIcon({ className = "w-7 h-7", ...props }: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>
+      <path d="M3 10h18" />
+      <path d="M6 10v9" />
+      <path d="M18 10v9" />
+      <path d="M4 10V6a2 2 0 0 1 2-2h1" />
+      <path d="M20 10V6a2 2 0 0 0-2-2h-1" />
+      <circle cx="12" cy="7" r="1.2" fill="currentColor" />
+    </svg>
+  )
+}
+
+function BedroomIcon({ className = "w-7 h-7", ...props }: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>
+      <path d="M3 5v14" />
+      <path d="M21 5v14" />
+      <path d="M3 9h18" />
+      <rect x="5.5" y="7" width="5" height="3" rx="1" />
+      <rect x="13.5" y="7" width="5" height="3" rx="1" />
+      <path d="M3 14h18" />
+      <path d="M3 17h18" />
+    </svg>
+  )
+}
+
+function WardrobeIcon({ className = "w-7 h-7", ...props }: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>
+      <rect x="4" y="3" width="16" height="18" rx="1.5" />
+      <path d="M12 3v18" />
+      <circle cx="10" cy="12" r="0.75" fill="currentColor" />
+      <circle cx="14" cy="12" r="0.75" fill="currentColor" />
+      <path d="M4 17h16" />
+    </svg>
+  )
+}
+
+function DecorIcon({ className = "w-7 h-7", ...props }: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>
+      <path d="M12 2v6" />
+      <path d="M7 12l2.5-4h5L17 12z" />
+      <path d="M9.5 12a2.5 2.5 0 0 0 5 0" />
+      <path d="M4 19h16" />
+      <circle cx="12" cy="19" r="1.5" />
+      <path d="M19 7l1 1-1 1-1-1z" fill="currentColor" />
+    </svg>
+  )
+}
+
+function FullProjectIcon({ className = "w-7 h-7", ...props }: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>
+      <rect x="3" y="3" width="18" height="18" rx="1.5" />
+      <path d="M3 11h8v10" />
+      <path d="M15 3v6h6" />
+      <path d="M15 9h-4" />
+      <circle cx="7" cy="7" r="1" fill="currentColor" />
+    </svg>
+  )
+}
+
+// Category metadata with bespoke icons (no background tiles, pure icons)
 const CATEGORIES: Record<
   string,
   { title: string; subtitle: string; icon: any; color: string; bg: string; border: string }
@@ -36,50 +109,50 @@ const CATEGORIES: Record<
   salon: {
     title: 'Salons & Canapés',
     subtitle: 'Modulables, velours & cuir',
-    icon: Sofa,
+    icon: SalonIcon,
     color: '#d1aa5c',
-    bg: 'rgba(209, 170, 92, 0.12)',
-    border: 'rgba(209, 170, 92, 0.3)',
+    bg: 'transparent',
+    border: 'transparent',
   },
   'salle-a-manger': {
     title: 'Salles à Manger',
     subtitle: 'Tables, chaises & buffets',
-    icon: Utensils,
+    icon: DiningTableIcon,
     color: '#60A5FA',
-    bg: 'rgba(96, 165, 250, 0.12)',
-    border: 'rgba(96, 165, 250, 0.3)',
+    bg: 'transparent',
+    border: 'transparent',
   },
   chambre: {
     title: 'Chambres à Coucher',
     subtitle: 'Lits, chevets & dressings',
-    icon: BedDouble,
+    icon: BedroomIcon,
     color: '#C084FC',
-    bg: 'rgba(192, 132, 252, 0.12)',
-    border: 'rgba(192, 132, 252, 0.3)',
+    bg: 'transparent',
+    border: 'transparent',
   },
   armoire: {
     title: 'Dressings & Armoires',
     subtitle: 'Sur-mesure & rangements',
-    icon: DoorClosed,
+    icon: WardrobeIcon,
     color: '#34D399',
-    bg: 'rgba(52, 211, 153, 0.12)',
-    border: 'rgba(52, 211, 153, 0.3)',
+    bg: 'transparent',
+    border: 'transparent',
   },
   deco: {
     title: 'Décoration & Art',
     subtitle: 'Miroirs, consoles & luminaires',
-    icon: Palette,
+    icon: DecorIcon,
     color: '#F472B6',
-    bg: 'rgba(244, 114, 182, 0.12)',
-    border: 'rgba(244, 114, 182, 0.3)',
+    bg: 'transparent',
+    border: 'transparent',
   },
   complet: {
     title: 'Aménagement Complet',
     subtitle: 'Villa, appartement ou bureau',
-    icon: Home,
+    icon: FullProjectIcon,
     color: '#FBBF24',
-    bg: 'rgba(251, 191, 36, 0.12)',
-    border: 'rgba(251, 191, 36, 0.3)',
+    bg: 'transparent',
+    border: 'transparent',
   },
 }
 
@@ -375,11 +448,8 @@ export default function ColdLeadsPage() {
                     background: isSelected ? 'rgba(209, 170, 92, 0.15)' : undefined,
                   }}
                 >
-                  <div
-                    className="w-9 h-9 rounded-xl flex items-center justify-center mb-2.5"
-                    style={{ background: cat.bg, color: cat.color, border: `1px solid ${cat.border}` }}
-                  >
-                    <IconComp className="w-4 h-4" />
+                  <div className="mb-3 flex items-center" style={{ color: cat.color }}>
+                    <IconComp className="w-7 h-7" />
                   </div>
 
                   <p className="text-xs font-bold text-white truncate leading-tight">{cat.title}</p>
@@ -503,15 +573,8 @@ export default function ColdLeadsPage() {
                     {/* Top row: Category badge + Time ago */}
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-2">
-                        <div
-                          className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0"
-                          style={{
-                            background: catMeta.bg,
-                            color: catMeta.color,
-                            border: `1px solid ${catMeta.border}`,
-                          }}
-                        >
-                          <IconComp className="w-4 h-4" />
+                        <div className="flex items-center justify-center shrink-0" style={{ color: catMeta.color }}>
+                          <IconComp className="w-5 h-5" />
                         </div>
                         <div>
                           <p className="text-xs font-bold text-white leading-tight">

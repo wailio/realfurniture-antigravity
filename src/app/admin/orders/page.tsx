@@ -8,7 +8,6 @@ import {
   MessageSquare,
   Phone,
   Mail,
-  Package,
   Calendar,
   MoreVertical,
   TrendingUp,
@@ -451,7 +450,7 @@ export default function AdminOrdersPage() {
                       backdropFilter: 'blur(20px)',
                       WebkitBackdropFilter: 'blur(20px)',
                       borderRadius: 12,
-                      border: order.status === 'new' ? '1.5px solid rgba(0, 122, 255, 0.45)' : '1px solid rgba(255,255,255,0.10)',
+                      border: '1px solid rgba(255,255,255,0.10)',
                       padding: '12px 10px',
                       display: 'flex',
                       flexDirection: 'column',
@@ -506,24 +505,42 @@ export default function AdminOrdersPage() {
 
                     {/* Bottom: 2 Funnel/Status Tags */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginTop: 'auto' }}>
-                      <span
-                        style={{
-                          fontSize: 9.5,
-                          fontWeight: 600,
-                          color: st.color,
-                          background: st.bg,
-                          border: `1px solid ${st.border}`,
-                          padding: '2px 6px',
-                          borderRadius: 4,
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: 3,
-                          width: 'fit-content',
-                        }}
-                      >
-                        <span style={{ width: 4, height: 4, borderRadius: 1, background: st.color }} />
-                        {st.label}
-                      </span>
+                      {st.label === 'Nouveau' ? (
+                        <span
+                          style={{
+                            fontSize: 10,
+                            fontWeight: 600,
+                            color: '#fbbf24',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: 4,
+                            width: 'fit-content',
+                            padding: '1px 0',
+                          }}
+                        >
+                          <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#fbbf24' }} />
+                          {st.label}
+                        </span>
+                      ) : (
+                        <span
+                          style={{
+                            fontSize: 9.5,
+                            fontWeight: 600,
+                            color: st.color,
+                            background: st.bg,
+                            border: `1px solid ${st.border}`,
+                            padding: '2px 6px',
+                            borderRadius: 4,
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: 3,
+                            width: 'fit-content',
+                          }}
+                        >
+                          <span style={{ width: 4, height: 4, borderRadius: 1, background: st.color }} />
+                          {st.label}
+                        </span>
+                      )}
 
                       {isInFunnel ? (
                         <span
@@ -545,22 +562,33 @@ export default function AdminOrdersPage() {
                           <span>Dans ventes</span>
                         </span>
                       ) : (
-                        <span
-                          style={{
-                            fontSize: 9,
-                            color: 'rgba(255,255,255,0.4)',
-                            background: 'rgba(255,255,255,0.04)',
-                            padding: '2px 6px',
-                            borderRadius: 4,
-                            width: 'fit-content',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            whiteSpace: 'nowrap',
-                            maxWidth: '100%',
-                          }}
-                        >
-                          {order.product ? `Modèle: ${order.product}` : 'Demande générale'}
-                        </span>
+                        order.product ? (
+                          <span
+                            style={{
+                              fontSize: 9.5,
+                              color: 'rgba(255,255,255,0.85)',
+                              paddingTop: 3,
+                              borderTop: '1px solid rgba(245, 158, 11, 0.85)',
+                              width: 'fit-content',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              whiteSpace: 'nowrap',
+                              maxWidth: '100%',
+                            }}
+                          >
+                            Modèle : <strong style={{ color: '#FFFFFF', background: 'linear-gradient(180deg, transparent 48%, rgba(245, 158, 11, 0.35) 48%)', padding: '0 2px' }}>{order.product}</strong>
+                          </span>
+                        ) : (
+                          <span
+                            style={{
+                              fontSize: 9,
+                              color: 'rgba(255,255,255,0.4)',
+                              width: 'fit-content',
+                            }}
+                          >
+                            Demande générale
+                          </span>
+                        )
                       )}
                     </div>
                   </div>
@@ -581,7 +609,7 @@ export default function AdminOrdersPage() {
                   style={{
                     background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
                     borderRadius: 8,
-                    border: order.status === 'new' ? '1.5px solid rgba(0, 122, 255, 0.4)' : '1px solid rgba(255,255,255,0.10)',
+                    border: '1px solid rgba(255,255,255,0.10)',
                     boxShadow: isMenuOpen
                       ? '0 16px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.12)'
                       : '0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.10)',
@@ -662,23 +690,40 @@ export default function AdminOrdersPage() {
                       {/* Right: Quick Action Controls */}
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
                         {/* Status Badge */}
-                        <span
-                          style={{
-                            fontSize: 11.5,
-                            fontWeight: 600,
-                            color: st.color,
-                            background: st.bg,
-                            border: `1px solid ${st.border}`,
-                            padding: '4px 11px',
-                            borderRadius: 5,
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: 5,
-                          }}
-                        >
-                          <span style={{ width: 5, height: 5, borderRadius: 2, background: st.color }} />
-                          {st.label}
-                        </span>
+                        {st.label === 'Nouveau' ? (
+                          <span
+                            style={{
+                              fontSize: 12,
+                              fontWeight: 600,
+                              color: '#fbbf24',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: 5,
+                              padding: '4px 2px',
+                            }}
+                          >
+                            <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#fbbf24', boxShadow: '0 0 6px rgba(251,191,36,0.7)' }} />
+                            Nouveau
+                          </span>
+                        ) : (
+                          <span
+                            style={{
+                              fontSize: 11.5,
+                              fontWeight: 600,
+                              color: st.color,
+                              background: st.bg,
+                              border: `1px solid ${st.border}`,
+                              padding: '4px 11px',
+                              borderRadius: 5,
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: 5,
+                            }}
+                          >
+                            <span style={{ width: 5, height: 5, borderRadius: 2, background: st.color }} />
+                            {st.label}
+                          </span>
+                        )}
 
                         {/* Quick WhatsApp CRM Button */}
                         {order.phone && (
@@ -980,26 +1025,29 @@ export default function AdminOrdersPage() {
                       </div>
                     </div>
 
-                    {/* Product requested tag */}
+                    {/* Product requested note — yellow highlighter, no shape */}
                     {order.product && (
-                      <div
+                      <p
                         style={{
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: 6,
-                          background: 'rgba(255,255,255,0.07)',
-                          border: '1px solid rgba(255,255,255,0.10)',
-                          borderRadius: 99,
-                          padding: '4px 12px',
-                          fontSize: 12,
-                          color: 'rgba(255,255,255,0.90)',
+                          fontSize: 12.5,
+                          color: 'rgba(255,255,255,0.55)',
                           marginTop: 10,
-                          fontWeight: 500,
+                          fontWeight: 400,
+                          lineHeight: 1.4,
                         }}
                       >
-                        <Package className="w-3.5 h-3.5 text-[#d1aa5c]" />
-                        <span>Modèle demandé : <strong>{order.product}</strong></span>
-                      </div>
+                        Modèle demandé :{' '}
+                        <strong
+                          style={{
+                            color: '#FFFFFF',
+                            fontWeight: 600,
+                            background: 'linear-gradient(180deg, transparent 45%, rgba(245, 158, 11, 0.38) 45%)',
+                            padding: '0 3px',
+                          }}
+                        >
+                          {order.product}
+                        </strong>
+                      </p>
                     )}
 
                     {/* Message content box */}
