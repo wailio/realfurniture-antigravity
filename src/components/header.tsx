@@ -146,16 +146,8 @@ export function Header({ theme = 'dark' }: HeaderProps) {
             </Link>
           </div>
 
-          {/* RIGHT: CTA Button + Language Switcher (NO search, wishlist, account, or cart icons) */}
+          {/* RIGHT: Language Switcher (NO search, wishlist, account, or cart icons) */}
           <div className="flex-1 flex items-center justify-end gap-2.5 md:gap-3.5">
-            {/* CTA Button — desktop only */}
-            <Link
-              href="/all-products"
-              className="hidden md:inline-flex items-center justify-center w-24 md:w-28 h-8 md:h-9 rounded-none bg-[#b68d40] hover:bg-[#a37c35] text-white font-bold text-[11px] md:text-xs uppercase tracking-wider shadow-sm transition-all duration-200"
-            >
-              Découvrir
-            </Link>
-
             {/* Language Switcher with User's Uploaded Flag Images */}
             <div className="hidden md:block relative" ref={langDropdownRef}>
               <button

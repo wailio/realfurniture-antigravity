@@ -160,28 +160,27 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
             </div>
           </div>
         )}
-
-        {/* ── Bottom Category Exploration Chips (matching Mobenia reference with Reveal delay 150ms) ── */}
-        <div className="pt-8 md:pt-12 border-t border-white/10">
-          <LuxuryReveal delay={150}>
-            <div className="flex flex-wrap gap-2 md:gap-3 p-4 md:p-6 bg-[#141518] rounded-xl border border-white/10 shadow-sm justify-center">
-              {[
-                { label: 'Tous les Produits', href: '/all-products' },
-                { label: 'Salle à manger', href: '/all-products?category=salle-a-manger' },
-                { label: 'Canapés', href: '/all-products?category=sofas' },
-                { label: 'Chambres', href: '/all-products?category=chambres' },
-                { label: 'Armoire', href: '/all-products?category=armoire' },
-                { label: 'Accessoires', href: '/all-products?category=accessories' },
-              ].map((cat) => (
-                <Link key={cat.label} href={cat.href} className="px-3 md:px-5 py-1.5 md:py-2 rounded-lg font-sora font-medium transition-all duration-300 text-xs md:text-sm bg-[#0E0F10] text-[#f4d79a] hover:bg-[#b68d40] hover:text-black border border-white/15 hover:border-[#b68d40] whitespace-nowrap shadow-sm inline-block">
-                  {cat.label}
-                </Link>
-              ))}
-            </div>
-          </LuxuryReveal>
-        </div>
-
       </section>
+
+      {/* ── Bottom Category Exploration Bar (Extending infinitely left-to-right) ── */}
+      <div className="w-full bg-[#141518] border-y border-white/10 py-4 md:py-6">
+        <LuxuryReveal delay={150}>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap gap-2 md:gap-3 justify-center">
+            {[
+              { label: 'Tous les Produits', href: '/all-products' },
+              { label: 'Salle à manger', href: '/all-products?category=salle-a-manger' },
+              { label: 'Canapés', href: '/all-products?category=sofas' },
+              { label: 'Chambres', href: '/all-products?category=chambres' },
+              { label: 'Armoire', href: '/all-products?category=armoire' },
+              { label: 'Accessoires', href: '/all-products?category=accessories' },
+            ].map((cat) => (
+              <Link key={cat.label} href={cat.href} className="px-3 md:px-5 py-1.5 md:py-2 rounded-lg font-sora font-medium transition-all duration-300 text-xs md:text-sm bg-[#0E0F10] text-[#f4d79a] hover:bg-[#b68d40] hover:text-black border border-white/15 hover:border-[#b68d40] whitespace-nowrap shadow-sm inline-block">
+                {cat.label}
+              </Link>
+            ))}
+          </div>
+        </LuxuryReveal>
+      </div>
 
       <Footer />
     </main>
