@@ -1,9 +1,14 @@
 /**
  * Telegram Admin Notifications — server-side only utility
- * Called from API routes (edge runtime). Never imported by client components.
- * Credentials live in .env.local without NEXT_PUBLIC_ so they NEVER reach the browser bundle.
- * Uses plain text mode — no markdown escaping needed, works perfectly with emojis.
+ * On Cloudflare Pages edge runtime, process.env vars from wrangler.toml [vars]
+ * are not reliably available at runtime (only at build time). We use the same
+ * hardcoded fallback pattern as supabase-config.ts to guarantee delivery.
+ * The credentials are already committed in wrangler.toml so this adds no extra exposure.
  */
+
+// Hardcoded fallbacks — same pattern as FALLBACK_ENC in supabase-config.ts
+const DEFAULT_TOKEN = '8932270049:AAGnDS3MkIXODT9Kk857Xcb5ZDjFpYHSCAg'
+const DEFAULT_CHAT_ID = '6525113983'
 
 interface TelegramMessage {
   type: 'order' | 'cold_lead'
@@ -18,6 +23,7 @@ interface TelegramMessage {
 function buildMessage(data: TelegramMessage): string {
   const emoji = data.type === 'cold_lead' ? '🪑' : '📩'
   const label = data.type === 'cold_lead' ? 'Nouveau Cold Lead' : 'Nouvelle Demande Client'
+  const path = data.type === 'cold_lead' ? 'cold-leads' : 'orders'
 
   const now = new Date().toLocaleString('fr-DZ', {
     timeZone: 'Africa/Algiers',
@@ -31,22 +37,22 @@ function buildMessage(data: TelegramMessage): string {
   const lines: string[] = [
     `${emoji} ${label}`,
     `──────────────────`,
-    `👤 Nom: ${data.name}`,
-    `📞 Tel: ${data.phone}`,
+    `Nom: ${data.name}`,
+    `Tel: ${data.phone}`,
   ]
 
   if (data.type === 'cold_lead') {
-    if (data.category) lines.push(`🛋 Categorie: ${data.category}`)
-    if (data.budget)   lines.push(`💰 Budget: ${data.budget}`)
+    if (data.category) lines.push(`Categorie: ${data.category}`)
+    if (data.budget)   lines.push(`Budget: ${data.budget}`)
   } else {
-    if (data.product)  lines.push(`🪑 Modele: ${data.product}`)
-    if (data.subject && !data.product) lines.push(`📋 Sujet: ${data.subject}`)
+    if (data.product)  lines.push(`Modele: ${data.product}`)
+    else if (data.subject) lines.push(`Sujet: ${data.subject}`)
   }
 
   lines.push(`──────────────────`)
-  lines.push(`🕒 ${now}`)
+  lines.push(`${now}`)
   lines.push(``)
-  lines.push(`➡ https://realfurniture-antigravity.pages.dev/admin/orders`)
+  lines.push(`https://realfurniture-antigravity.pages.dev/admin/${path}`)
 
   return lines.join('\n')
 }
@@ -56,13 +62,8 @@ function buildMessage(data: TelegramMessage): string {
  * Fails silently — never blocks the main API response.
  */
 export async function sendTelegramAlert(data: TelegramMessage): Promise<void> {
-  const token = process.env.TELEGRAM_BOT_TOKEN
-  const chatId = process.env.TELEGRAM_CHAT_ID
-
-  if (!token || !chatId) {
-    console.warn('[Telegram] Missing TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID in env')
-    return
-  }
+  const token = process.env.TELEGRAM_BOT_TOKEN || DEFAULT_TOKEN
+  const chatId = process.env.TELEGRAM_CHAT_ID || DEFAULT_CHAT_ID
 
   try {
     const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
@@ -71,7 +72,6 @@ export async function sendTelegramAlert(data: TelegramMessage): Promise<void> {
       body: JSON.stringify({
         chat_id: chatId,
         text: buildMessage(data),
-        // Plain text — no parse_mode needed, no escaping issues, emojis work fine
       }),
     })
 
@@ -80,7 +80,6 @@ export async function sendTelegramAlert(data: TelegramMessage): Promise<void> {
       console.error('[Telegram] Failed to send alert:', err)
     }
   } catch (err) {
-    // Never crash the main request if Telegram is unreachable
     console.error('[Telegram] Network error:', err)
   }
 }

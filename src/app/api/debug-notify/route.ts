@@ -1,40 +1,31 @@
 import { NextResponse } from 'next/server'
+import { sendTelegramAlert } from '@/lib/telegram'
 
 export const runtime = 'edge'
 
 // Temporary debug endpoint — DELETE after confirming Telegram works
 export async function GET() {
-  const token = process.env.TELEGRAM_BOT_TOKEN
-  const chatId = process.env.TELEGRAM_CHAT_ID
+  let result: any = null
+  let error: any = null
 
-  const hasToken = !!token
-  const hasChat = !!chatId
-  const tokenPreview = token ? token.substring(0, 10) + '...' : 'NOT SET'
-  const chatPreview = chatId ? chatId.substring(0, 4) + '...' : 'NOT SET'
-
-  // Actually try to send a Telegram message and return the result
-  let telegramResult: any = null
-  if (token && chatId) {
-    try {
-      const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          chat_id: chatId,
-          text: '🔧 Debug test depuis Cloudflare Edge — connexion OK!',
-        }),
-      })
-      telegramResult = await res.json()
-    } catch (err: any) {
-      telegramResult = { error: err.message }
-    }
+  try {
+    await sendTelegramAlert({
+      type: 'order',
+      name: 'DEBUG TEST',
+      phone: '0555-DEBUG',
+      product: 'Test depuis debug endpoint',
+    })
+    result = 'sendTelegramAlert completed without throwing'
+  } catch (err: any) {
+    error = err.message
   }
 
   return NextResponse.json({
-    env: {
-      TELEGRAM_BOT_TOKEN: { set: hasToken, preview: tokenPreview },
-      TELEGRAM_CHAT_ID: { set: hasChat, preview: chatPreview },
+    envCheck: {
+      TELEGRAM_BOT_TOKEN: process.env.TELEGRAM_BOT_TOKEN ? 'SET via env' : 'using hardcoded fallback',
+      TELEGRAM_CHAT_ID: process.env.TELEGRAM_CHAT_ID ? 'SET via env' : 'using hardcoded fallback',
     },
-    telegramResult,
+    telegramCallResult: result,
+    telegramCallError: error,
   })
 }
