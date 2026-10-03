@@ -2,6 +2,7 @@
  * Telegram Admin Notifications — server-side only utility
  * Called from API routes (edge runtime). Never imported by client components.
  * Credentials live in .env.local without NEXT_PUBLIC_ so they NEVER reach the browser bundle.
+ * Uses plain text mode — no markdown escaping needed, works perfectly with emojis.
  */
 
 interface TelegramMessage {
@@ -17,35 +18,37 @@ interface TelegramMessage {
 function buildMessage(data: TelegramMessage): string {
   const emoji = data.type === 'cold_lead' ? '🪑' : '📩'
   const label = data.type === 'cold_lead' ? 'Nouveau Cold Lead' : 'Nouvelle Demande Client'
+
   const now = new Date().toLocaleString('fr-DZ', {
     timeZone: 'Africa/Algiers',
     day: '2-digit',
-    month: 'short',
+    month: '2-digit',
+    year: 'numeric',
     hour: '2-digit',
     minute: '2-digit',
   })
 
-  let msg = `${emoji} *${label}*\n`
-  msg += `┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄\n`
-  msg += `👤 *Nom:* ${escapeMarkdown(data.name)}\n`
-  msg += `📞 *Tél:* ${escapeMarkdown(data.phone)}\n`
+  const lines: string[] = [
+    `${emoji} ${label}`,
+    `──────────────────`,
+    `👤 Nom: ${data.name}`,
+    `📞 Tel: ${data.phone}`,
+  ]
 
   if (data.type === 'cold_lead') {
-    if (data.category) msg += `🛋 *Catégorie:* ${escapeMarkdown(data.category)}\n`
-    if (data.budget)   msg += `💰 *Budget:* ${escapeMarkdown(data.budget)}\n`
+    if (data.category) lines.push(`🛋 Categorie: ${data.category}`)
+    if (data.budget)   lines.push(`💰 Budget: ${data.budget}`)
   } else {
-    if (data.subject)  msg += `📋 *Sujet:* ${escapeMarkdown(data.subject)}\n`
-    if (data.product)  msg += `🪑 *Modèle:* ${escapeMarkdown(data.product)}\n`
+    if (data.product)  lines.push(`🪑 Modele: ${data.product}`)
+    if (data.subject && !data.product) lines.push(`📋 Sujet: ${data.subject}`)
   }
 
-  msg += `┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄\n`
-  msg += `🕒 ${now}`
-  return msg
-}
+  lines.push(`──────────────────`)
+  lines.push(`🕒 ${now}`)
+  lines.push(``)
+  lines.push(`➡ https://chateau-art.pages.dev/admin/orders`)
 
-/** Escape special chars for Telegram MarkdownV2 */
-function escapeMarkdown(text: string): string {
-  return text.replace(/[_*[\]()~`>#+\-=|{}.!]/g, '\\$&')
+  return lines.join('\n')
 }
 
 /**
@@ -68,7 +71,7 @@ export async function sendTelegramAlert(data: TelegramMessage): Promise<void> {
       body: JSON.stringify({
         chat_id: chatId,
         text: buildMessage(data),
-        parse_mode: 'MarkdownV2',
+        // Plain text — no parse_mode needed, no escaping issues, emojis work fine
       }),
     })
 
