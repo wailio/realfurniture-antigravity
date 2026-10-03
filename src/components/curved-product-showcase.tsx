@@ -162,7 +162,7 @@ export function CurvedProductShowcase() {
   };
 
   return (
-    <section className="relative w-full py-16 md:py-24 lg:py-28 overflow-hidden bg-gradient-to-b from-[#0E0F10] via-[#121316] to-[#0E0F10] flex items-center justify-center">
+    <section className="relative w-full py-10 md:py-14 lg:py-16 overflow-hidden bg-gradient-to-b from-[#0E0F10] via-[#121316] to-[#0E0F10] flex items-center justify-center">
       {/* Brand Emblem Watermark — massive bg ghost */}
       <div
         aria-hidden="true"
@@ -199,7 +199,7 @@ export function CurvedProductShowcase() {
             }
           }
         }}
-        className="relative w-full max-w-[1280px] xl:max-w-[1440px] h-[480px] md:h-[620px] lg:h-[680px] xl:h-[720px] flex items-center justify-center [perspective:1200px] scale-[0.78] sm:scale-[0.88] md:scale-115 lg:scale-125 xl:scale-130 transition-transform duration-300"
+        className="relative w-full max-w-[1280px] xl:max-w-[1380px] h-[450px] md:h-[500px] lg:h-[530px] flex items-center justify-center [perspective:1200px] scale-[0.78] sm:scale-[0.88] md:scale-[0.98] lg:scale-[1.06] xl:scale-[1.10] transition-transform duration-300"
       >
         {CATEGORY_SLOTS.map((cat, slotIdx) => {
           const pool = categoryProductsMap.current[cat.slug] || [];
@@ -213,24 +213,46 @@ export function CurvedProductShowcase() {
               key={cat.slug}
               href={`/all-products?category=${cat.slug}`}
               scroll={false}
-              style={cardStyle}
+              style={{
+                ...cardStyle,
+                borderRadius: 24,
+                clipPath: 'inset(0 round 24px)',
+                WebkitClipPath: 'inset(0 round 24px)',
+                WebkitMaskImage: '-webkit-radial-gradient(white, black)',
+              }}
               onMouseEnter={() => setHoveredSlot(slotIdx)}
               onMouseLeave={() => setHoveredSlot(null)}
-              className={`absolute top-1/2 left-1/2 -mt-[210px] -ml-[130px] w-[260px] h-[390px] rounded-[24px] overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] select-none bg-[#1A1C1E] border cursor-pointer group block ${
+              className={`absolute top-1/2 left-1/2 -mt-[195px] -ml-[130px] w-[260px] h-[390px] rounded-[24px] overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] select-none bg-[#1A1C1E] border cursor-pointer group block ${
                 isHovered ? 'border-[#b68d40]/70' : 'border-white/15'
               }`}
             >
               {/* Product Background Image with light zoom on hover */}
-              <div className="relative w-full h-full overflow-hidden">
+              <div 
+                className="relative w-full h-full overflow-hidden rounded-[24px]"
+                style={{
+                  borderRadius: 24,
+                  clipPath: 'inset(0 round 24px)',
+                  WebkitClipPath: 'inset(0 round 24px)',
+                  WebkitMaskImage: '-webkit-radial-gradient(white, black)',
+                }}
+              >
                 <img
                   src={product.image}
                   alt={product.name}
-                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-106"
+                  className="w-full h-full object-cover rounded-[24px] transition-transform duration-700 ease-out group-hover:scale-106"
                   draggable={false}
+                  style={{
+                    borderRadius: 24,
+                    clipPath: 'inset(0 round 24px)',
+                    WebkitClipPath: 'inset(0 round 24px)',
+                  }}
                 />
 
                 {/* Subtle dark bottom gradient so white text is crystal clear */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent pointer-events-none" />
+                <div 
+                  className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent pointer-events-none rounded-[24px]"
+                  style={{ borderRadius: 24 }}
+                />
 
                 {/* Top Category Badge */}
                 <div className="absolute top-4 left-4 z-20">
