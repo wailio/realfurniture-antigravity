@@ -46,7 +46,7 @@ function buildMessage(data: TelegramMessage): string {
   lines.push(`──────────────────`)
   lines.push(`🕒 ${now}`)
   lines.push(``)
-  lines.push(`➡ https://chateau-art.pages.dev/admin/orders`)
+  lines.push(`➡ https://realfurniture-antigravity.pages.dev/admin/orders`)
 
   return lines.join('\n')
 }
