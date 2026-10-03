@@ -69,12 +69,12 @@ export function CurvedProductShowcase() {
     });
   }, []);
 
-  // Automatic spinning loop: stays still for 4.5s, then advances unless mouse is hovering
+  // Automatic spinning loop: stays still for 3s, then advances unless mouse is hovering
   useEffect(() => {
     if (isStageHovered) return;
     const timer = setTimeout(() => {
       advanceSpin();
-    }, 4500);
+    }, 3000);
 
     return () => clearTimeout(timer);
   }, [centerSlot, advanceSpin, isStageHovered]);
@@ -162,7 +162,7 @@ export function CurvedProductShowcase() {
   };
 
   return (
-    <section className="relative w-full py-16 md:py-24 overflow-hidden bg-gradient-to-b from-[#0E0F10] via-[#121316] to-[#0E0F10] flex items-center justify-center">
+    <section className="relative w-full py-16 md:py-24 lg:py-28 overflow-hidden bg-gradient-to-b from-[#0E0F10] via-[#121316] to-[#0E0F10] flex items-center justify-center">
       {/* Brand Emblem Watermark — massive bg ghost */}
       <div
         aria-hidden="true"
@@ -199,7 +199,7 @@ export function CurvedProductShowcase() {
             }
           }
         }}
-        className="relative w-full max-w-[1280px] h-[480px] md:h-[540px] flex items-center justify-center [perspective:1200px] scale-[0.78] sm:scale-[0.88] md:scale-100 transition-transform duration-300"
+        className="relative w-full max-w-[1280px] xl:max-w-[1440px] h-[480px] md:h-[620px] lg:h-[680px] xl:h-[720px] flex items-center justify-center [perspective:1200px] scale-[0.78] sm:scale-[0.88] md:scale-115 lg:scale-125 xl:scale-130 transition-transform duration-300"
       >
         {CATEGORY_SLOTS.map((cat, slotIdx) => {
           const pool = categoryProductsMap.current[cat.slug] || [];
