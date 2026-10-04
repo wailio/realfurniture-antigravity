@@ -72,25 +72,24 @@ export async function POST(request: NextRequest) {
     const today = getTodayAlgiers()
     const { url, key } = getSupabaseConfig()
 
-    // Upsert with conflict resolution — guarantees exactly 1 row per (visitor_id, visit_date)
-    // ON CONFLICT DO NOTHING = silent deduplication, no error thrown
-    const res = await fetch(`${url}/rest/v1/visitor_sessions`, {
-      method: 'POST',
-      headers: {
-        ...supabaseHeaders(key),
-        'Prefer': 'resolution=ignore-duplicates,return=minimal',
-      },
-      body: JSON.stringify({
-        visitor_id: visitorId,
-        visit_date: today,
-      }),
-    })
-
-    if (!res.ok) {
-      // 409 = unique constraint violation = this visitor already counted today = OK
-      if (res.status === 409) {
-        return NextResponse.json({ success: true, alreadyCounted: true })
+    // Upsert with ?on_conflict — PostgREST requires this to know which constraint to use
+    // ON CONFLICT (visitor_id, visit_date) DO NOTHING = exact 1 row per device per day
+    const res = await fetch(
+      `${url}/rest/v1/visitor_sessions?on_conflict=visitor_id,visit_date`,
+      {
+        method: 'POST',
+        headers: {
+          ...supabaseHeaders(key),
+          'Prefer': 'resolution=ignore-duplicates,return=minimal',
+        },
+        body: JSON.stringify({
+          visitor_id: visitorId,
+          visit_date: today,
+        }),
       }
+    )
+
+    if (!res.ok && res.status !== 204) {
       const errText = await res.text()
       console.error('[visitors] Supabase insert error:', res.status, errText)
       return NextResponse.json({ success: false, error: 'DB error' }, { status: 500 })
