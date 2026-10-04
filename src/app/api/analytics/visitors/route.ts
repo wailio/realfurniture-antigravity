@@ -87,6 +87,10 @@ export async function POST(request: NextRequest) {
     })
 
     if (!res.ok) {
+      // 409 = unique constraint violation = this visitor already counted today = OK
+      if (res.status === 409) {
+        return NextResponse.json({ success: true, alreadyCounted: true })
+      }
       const errText = await res.text()
       console.error('[visitors] Supabase insert error:', res.status, errText)
       return NextResponse.json({ success: false, error: 'DB error' }, { status: 500 })
