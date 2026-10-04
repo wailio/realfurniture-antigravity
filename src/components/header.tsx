@@ -58,7 +58,7 @@ export function Header({ theme = 'dark' }: HeaderProps) {
       <div className="bg-[#0A0B0C] text-[#F2F1EF] text-xs py-1.5 px-4 sm:px-6 md:px-10 lg:px-12 border-b border-white/5">
         <div className="max-w-[1440px] mx-auto flex items-center justify-between">
           {/* LEFT: Social Icons — all screens, tiny on mobile */}
-          <div className="flex items-center gap-1.5 md:gap-3">
+          <div className="flex items-center gap-1.5 md:gap-3 shrink-0">
             <a href={siteConfig.instagram_url || "https://www.instagram.com/chateau_dart_meubles/"} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-[#B7BBC0] hover:text-[#b68d40] transition-colors p-0.5">
               <Instagram className="w-2.5 h-2.5 md:w-3.5 md:h-3.5" />
             </a>
@@ -74,9 +74,13 @@ export function Header({ theme = 'dark' }: HeaderProps) {
           </div>
 
           {/* RIGHT: Promo text — right on mobile, center on desktop */}
-          <div className="flex-1 md:text-center text-right font-medium tracking-wider">
-            <span className="md:hidden text-[9px] text-[#B7BBC0] truncate block max-w-[200px]">{siteConfig.promo_bar || 'Sale Up To 50% Off'}</span>
-            <span className="hidden md:inline text-[11px]">{siteConfig.promo_bar || 'Exclusive Furniture Sale Up To 50% Off'}</span>
+          <div className="flex-1 flex justify-end md:justify-center md:text-center font-medium tracking-wider min-w-0 pl-3 md:pl-0">
+            <span className="md:hidden text-[9px] text-[#B7BBC0] truncate text-right block max-w-[240px] sm:max-w-[320px] ml-auto">
+              {siteConfig.promo_bar || 'Livraison + montage dans les 58 wilayas · Gratuit sur Alger – Blida – Boumerdès – Médéa – Tipaza'}
+            </span>
+            <span className="hidden md:inline text-[11px]">
+              {siteConfig.promo_bar || 'Livraison + montage dans les 58 wilayas · Gratuit sur Alger – Blida – Boumerdès – Médéa – Tipaza'}
+            </span>
           </div>
 
           {/* RIGHT: desktop only */}

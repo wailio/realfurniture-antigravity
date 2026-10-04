@@ -85,7 +85,9 @@ export function DesignStories() {
                 <LuxuryReveal 
                   key={story.id} 
                   delay={idx * 100}
-                  className="shrink-0 snap-center w-[250px] sm:w-[285px] lg:w-auto"
+                  className={`shrink-0 snap-center w-[250px] sm:w-[285px] lg:w-auto ${
+                    idx >= 2 ? 'story-reveal-no-mobile-anim' : ''
+                  }`}
                 >
                   <a
                     href={story.link}

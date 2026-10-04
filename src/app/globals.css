@@ -116,6 +116,15 @@ input[type="range"]::-moz-range-thumb {
   }
 }
 
+/* In mobile, keep the 3rd & 4th inspiration videos visible immediately so users see them when swiping without popout delay */
+@media (max-width: 1023px) {
+  .story-reveal-no-mobile-anim {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
 .luxury-reveal-visible {
   opacity: 1 !important;
   transform: translateY(0) translateX(0) scale(1) !important;
