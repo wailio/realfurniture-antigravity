@@ -83,31 +83,31 @@ function AllProductsContent() {
       <Header theme="dark" />
       
       {/* ── Page Hero ── */}
-      <section className="pt-28 pb-14 md:pt-40 md:pb-20 bg-gradient-to-b from-[#141518] to-[#0E0F10] text-center px-4">
+      <section className="pt-8 pb-6 md:pt-14 md:pb-10 bg-gradient-to-b from-[#141518] to-[#0E0F10] text-center px-4">
         <LuxuryReveal>
-          <span className="inline-flex items-center gap-2 border border-white/15 px-4 py-1.5 rounded-none text-xs uppercase tracking-[3px] text-[#b68d40] mb-4 font-sora font-semibold">
-            <Sparkles className="w-3.5 h-3.5" />
+          <span className="inline-flex items-center gap-1.5 md:gap-2 border border-white/15 px-3 py-1 md:px-4 md:py-1.5 rounded-none text-[10px] md:text-xs uppercase tracking-[2px] md:tracking-[3px] text-[#b68d40] mb-2.5 md:mb-4 font-sora font-semibold">
+            <Sparkles className="w-3 md:w-3.5 h-3 md:h-3.5" />
             <span>Catalogue Officiel</span>
           </span>
-          <h1 className="font-fraunces font-light text-4xl md:text-6xl text-white tracking-wide mb-4">
+          <h1 className="font-fraunces font-light text-2xl sm:text-3xl md:text-6xl text-white tracking-wide mb-2 md:mb-4">
             Toutes Nos Créations
           </h1>
-          <div className="flex justify-center w-full mb-4">
+          <div className="flex justify-center w-full mb-2.5 md:mb-4">
             <svg width="120" height="2" viewBox="0 0 120 2" fill="none" xmlns="http://www.w3.org/2000/svg" className="heading-underline">
               <path d="M0 1H120" stroke="#b68d40" strokeWidth="2" />
             </svg>
           </div>
-          <p className="text-[#A1A1AA] font-sora text-sm md:text-base max-w-xl mx-auto">
+          <p className="text-[#A1A1AA] font-sora text-xs sm:text-sm md:text-base max-w-xl mx-auto leading-relaxed">
             Explorez l&apos;ensemble de nos gammes, façonnées avec les matières les plus nobles pour vos espaces d&apos;exception.
           </p>
         </LuxuryReveal>
       </section>
 
       {/* ── Filter Tabs & Count ── */}
-      <section id="products-filter-section" className="w-full px-4 mb-8 scroll-mt-28">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 border-b border-white/10 pb-6">
-          {/* Tabs */}
-          <div className="flex overflow-x-auto gap-2 md:gap-3 max-w-full pb-2 scrollbar-hide">
+      <section id="products-filter-section" className="w-full px-4 mb-6 md:mb-8 scroll-mt-24">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3 md:gap-4 border-b border-white/10 pb-4 md:pb-6">
+          {/* Tabs: 2 per line non-swipeable grid on mobile, horizontal flex on desktop */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:flex md:overflow-x-auto gap-2 md:gap-3 w-full md:w-auto md:max-w-full pb-1 md:pb-2">
             {CATEGORIES_CONFIG.map((cat) => {
               const isActive = activeCategory === cat.slug;
               return (
@@ -121,7 +121,7 @@ function AllProductsContent() {
                       window.history.replaceState(null, '', cat.slug === 'all' ? '/all-products' : `/all-products?category=${cat.slug}`);
                     } catch {}
                   }}
-                  className={`interactive-tap px-5 py-2.5 rounded-sm font-sora text-xs uppercase tracking-wider transition-all duration-200 whitespace-nowrap cursor-pointer ${
+                  className={`interactive-tap w-full md:w-auto text-center px-3 py-2.5 md:px-5 md:py-2.5 rounded-sm font-sora text-[11px] md:text-xs uppercase tracking-wider transition-all duration-200 whitespace-normal md:whitespace-nowrap cursor-pointer flex items-center justify-center min-h-[42px] ${
                     isActive
                       ? 'bg-[#b68d40] text-white font-bold shadow-md'
                       : 'bg-[#121316] text-[#A1A1AA] hover:text-white border border-white/10 hover:border-white/20'

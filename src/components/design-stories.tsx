@@ -138,7 +138,7 @@ export function DesignStories() {
                         </p>
                       </div>
 
-                      <div className="w-9 h-9 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white transition-all duration-300 group-hover:bg-[#b68d40] group-hover:border-[#b68d40] group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+                      <div className="hidden lg:flex w-9 h-9 rounded-full bg-white/10 border border-white/20 items-center justify-center text-white transition-all duration-300 group-hover:bg-[#b68d40] group-hover:border-[#b68d40] group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
                         <ArrowUpRight className="w-4 h-4" />
                       </div>
                     </div>
