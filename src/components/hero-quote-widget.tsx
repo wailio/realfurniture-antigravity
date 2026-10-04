@@ -629,6 +629,9 @@ export function HeroQuoteWidget() {
                           className="w-full pl-9 pr-3 py-2.5 lg:py-2 rounded-xl bg-white/[0.05] border border-white/10 text-xs lg:text-[12px] text-white placeholder-white/25 focus:outline-none focus:border-[#d1aa5c] focus:bg-white/[0.08] transition-colors"
                         />
                       </div>
+                      <p className="text-[9.5px] text-white/45 mt-1 leading-tight">
+                        En validant, vous consentez à être contacté par nos conseillers au sujet de votre projet. Données strictement protégées.
+                      </p>
                     </div>
 
                     {/* Navigation Buttons (Back + Submit) */}

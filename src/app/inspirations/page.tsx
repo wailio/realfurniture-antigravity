@@ -30,7 +30,7 @@ const inspirations = [
 
 export default function InspirationsPage() {
   return (
-    <main className="min-h-screen bg-[#0E0F10]">
+    <main id="main-content" className="min-h-screen bg-[#0E0F10]">
       <Header />
 
       {/* Hero */}

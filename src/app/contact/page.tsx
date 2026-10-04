@@ -172,7 +172,7 @@ function ContactContent() {
   };
 
   return (
-    <main className="min-h-screen bg-[#0E0F10]">
+    <main id="main-content" className="min-h-screen bg-[#0E0F10]">
       <Header theme="dark" />
       
       {/* ���� Page Hero with Luxury Fading Backdrop Image ���� */}
@@ -637,6 +637,9 @@ function ContactContent() {
                         </>
                       )}
                     </button>
+                    <p className="text-[10px] text-[#A1A1AA] text-center mt-2 leading-relaxed">
+                      En transmettant ce formulaire, vous consentez à être contacté par nos conseillers pour répondre à votre demande. Données confidentielles &amp; sécurisées.
+                    </p>
                   </>
                 )}
               </form>

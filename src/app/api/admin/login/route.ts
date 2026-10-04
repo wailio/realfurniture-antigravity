@@ -7,11 +7,25 @@ import {
   SESSION_COOKIE_NAME,
   findUser,
 } from '@/lib/admin-auth'
+import { checkRateLimit } from '@/lib/rate-limit'
 
 export const runtime = 'edge'
 
 export async function POST(request: NextRequest) {
   try {
+    // Brute-force protection: max 5 login attempts per 15 minutes per IP
+    const rl = checkRateLimit(request, {
+      endpointName: 'admin-login',
+      maxRequests: 5,
+      windowMs: 15 * 60 * 1000,
+    })
+    if (!rl.allowed) {
+      return NextResponse.json(
+        { error: 'Trop de tentatives. Réessayez dans 15 minutes.' },
+        { status: 429 }
+      )
+    }
+
     const body = await request.json()
     const { username, password } = body as { username?: string; password?: string }
 

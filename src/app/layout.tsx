@@ -54,6 +54,13 @@ export default function RootLayout({
         <link href="https://fonts.cdnfonts.com/css/circular-std" rel="stylesheet" />
       </head>
       <body className="font-[family-name:var(--font-body)] antialiased bg-background">
+        {/* WCAG 2.1 AA Bypass Blocks: Skip to content for keyboard users */}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[9999] focus:px-4 focus:py-2.5 focus:bg-[#b68d40] focus:text-white focus:text-xs focus:font-bold focus:uppercase focus:tracking-wider focus:shadow-2xl focus:outline-none"
+        >
+          Aller au contenu principal
+        </a>
         <VisitorTracker />
         {children}
         <WhatsAppButton />

@@ -88,7 +88,7 @@ export default function HomePage() {
   const gridProducts = productList.slice(6, 12);
 
   return (
-    <main className="min-h-screen bg-[#0E0F10] font-sans">
+    <main id="main-content" className="min-h-screen bg-[#0E0F10] font-sans">
       <Header theme="dark" />
 
       {/* ── Section 1: Cinematic High-Converting Hero with Interactive Quote Widget ── */}

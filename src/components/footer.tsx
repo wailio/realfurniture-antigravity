@@ -32,9 +32,12 @@ export function Footer() {
           {subscribed ? (
             <div className='p-3 bg-[#b68d40]/15 border border-[#b68d40]/30 text-white text-[11px] flex items-center gap-2'><Check className='w-4 h-4 text-[#b68d40] flex-shrink-0' /><span>Merci. Vous recevrez nos invitations.</span></div>
           ) : (
-            <form onSubmit={handleSubscribe} className='flex gap-0'>
-              <input type='email' value={email} onChange={(e) => setEmail(e.target.value)} required placeholder='Votre email' className='flex-1 bg-[#121316] border border-white/15 border-r-0 px-3 py-2.5 text-[11px] text-white placeholder:text-[#71717A] focus:outline-none focus:border-[#b68d40] transition-colors' />
-              <button type='submit' className='bg-[#b68d40] hover:bg-[#a37c35] text-white px-4 py-2.5 flex-shrink-0 transition-colors'><ArrowRight size={13} /></button>
+            <form onSubmit={handleSubscribe} className='flex flex-col gap-1.5'>
+              <div className='flex gap-0'>
+                <input type='email' aria-label='Votre adresse email' value={email} onChange={(e) => setEmail(e.target.value)} required placeholder='Votre email' className='flex-1 bg-[#121316] border border-white/15 border-r-0 px-3 py-2.5 text-[11px] text-white placeholder:text-[#71717A] focus:outline-none focus:border-[#b68d40] transition-colors' />
+                <button type='submit' aria-label="S'inscrire aux arrivages" className='bg-[#b68d40] hover:bg-[#a37c35] text-white px-4 py-2.5 flex-shrink-0 transition-colors cursor-pointer'><ArrowRight size={13} /></button>
+              </div>
+              <p className='text-[9px] text-[#71717A] leading-tight'>En vous inscrivant, vous acceptez nos invitations. Désinscription libre en 1 clic.</p>
             </form>
           )}
         </div>
@@ -100,8 +103,9 @@ export function Footer() {
                 <div className='p-4 rounded-md bg-[#b68d40]/15 border border-[#b68d40]/30 text-white text-xs flex items-center gap-2'><Check className='w-4 h-4 text-[#b68d40]' /><span>Merci. Vous recevrez nos invitations exclusives.</span></div>
               ) : (
                 <form onSubmit={handleSubscribe} className='flex flex-col gap-3'>
-                  <input type='email' value={email} onChange={(e) => setEmail(e.target.value)} required placeholder='Votre adresse email' className='w-full bg-[#0A0B0C] border border-white/15 px-4 py-3 text-xs text-white placeholder:text-[#71717A] focus:outline-none focus:border-[#b68d40] transition-colors' />
-                  <button type='submit' className='w-full bg-[#b68d40] hover:bg-[#a37c35] text-white px-5 py-3 text-xs font-bold uppercase tracking-wider transition-all duration-200 flex items-center justify-center gap-2 group shadow-sm'><span>S&apos;inscrire</span><ArrowRight size={13} className='transition-transform duration-200 group-hover:translate-x-1' /></button>
+                  <input type='email' aria-label='Votre adresse email' value={email} onChange={(e) => setEmail(e.target.value)} required placeholder='Votre adresse email' className='w-full bg-[#0A0B0C] border border-white/15 px-4 py-3 text-xs text-white placeholder:text-[#71717A] focus:outline-none focus:border-[#b68d40] transition-colors' />
+                  <button type='submit' className='w-full bg-[#b68d40] hover:bg-[#a37c35] text-white px-5 py-3 text-xs font-bold uppercase tracking-wider transition-all duration-200 flex items-center justify-center gap-2 group shadow-sm cursor-pointer'><span>S&apos;inscrire</span><ArrowRight size={13} className='transition-transform duration-200 group-hover:translate-x-1' /></button>
+                  <p className='text-[10px] text-[#71717A] leading-tight text-center'>En vous inscrivant, vous acceptez de recevoir nos invitations exclusives. Désabonnement en 1 clic.</p>
                 </form>
               )}
             </div>

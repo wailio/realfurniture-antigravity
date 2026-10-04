@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseConfig, supabaseHeaders } from '@/lib/supabase-config'
 import { requireAdminSession } from '@/lib/admin-auth'
 import { sendTelegramAlert } from '@/lib/telegram'
+import { checkRateLimit, isBotHoneypotTriggered } from '@/lib/rate-limit'
 
 export const runtime = 'edge'
 
@@ -18,62 +19,20 @@ export interface ColdLeadRecord {
   notes?: string
 }
 
-// Default storage file for cold leads in Supabase
-const STORAGE_FILE = 'products/cold-leads.json'
-
-async function loadStorageColdLeads(): Promise<ColdLeadRecord[]> {
-  try {
-    const { url, key } = getSupabaseConfig()
-    if (!url || !key) return []
-    const fetchUrl = `${url}/storage/v1/object/authenticated/${STORAGE_FILE}?t=${Date.now()}`
-    const res = await fetch(fetchUrl, {
-      headers: {
-        apikey: key,
-        Authorization: `Bearer ${key}`,
-      },
-    })
-    if (res.ok) {
-      const data = await res.json()
-      return Array.isArray(data.leads) ? data.leads : []
-    }
-
-    const publicUrl = `${url}/storage/v1/object/${STORAGE_FILE}?t=${Date.now()}`
-    const resPub = await fetch(publicUrl, {
-      headers: {
-        apikey: key,
-        Authorization: `Bearer ${key}`,
-      },
-    })
-    if (resPub.ok) {
-      const data = await resPub.json()
-      return Array.isArray(data.leads) ? data.leads : []
-    }
-  } catch (err) {
-    console.error('Failed to load storage cold leads:', err)
+function parseFurnitureType(notes: string): { type: string; title: string } {
+  const lower = (notes || '').toLowerCase()
+  if (lower.includes('salle') || lower.includes('manger')) {
+    return { type: 'salle-a-manger', title: 'Salles à Manger' }
+  } else if (lower.includes('chambre')) {
+    return { type: 'chambre', title: 'Chambres à Coucher' }
+  } else if (lower.includes('armoire') || lower.includes('dressing')) {
+    return { type: 'armoire', title: 'Dressings & Armoires' }
+  } else if (lower.includes('deco') || lower.includes('art')) {
+    return { type: 'deco', title: 'Décoration & Art' }
+  } else if (lower.includes('complet') || lower.includes('aménagement')) {
+    return { type: 'complet', title: 'Aménagement Complet' }
   }
-  return []
-}
-
-async function saveStorageColdLeads(leads: ColdLeadRecord[]): Promise<boolean> {
-  try {
-    const { url, key } = getSupabaseConfig()
-    if (!url || !key) return false
-    const uploadUrl = `${url}/storage/v1/object/${STORAGE_FILE}`
-    const res = await fetch(uploadUrl, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${key}`,
-        apikey: key,
-        'x-upsert': 'true',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ leads, updatedAt: new Date().toISOString() }, null, 2),
-    })
-    return res.ok
-  } catch (err) {
-    console.error('Failed to save storage cold leads:', err)
-    return false
-  }
+  return { type: 'salon', title: 'Salons & Canapés' }
 }
 
 export async function GET(request: NextRequest) {
@@ -84,12 +43,8 @@ export async function GET(request: NextRequest) {
     }
 
     const { url, key } = getSupabaseConfig()
+    let allLeads: ColdLeadRecord[] = []
 
-    // 1. Load from dedicated storage
-    const storageLeads = await loadStorageColdLeads()
-
-    // 2. Also query Supabase orders table for leads matching cold widget
-    let dbLeads: ColdLeadRecord[] = []
     try {
       const dbRes = await fetch(`${url}/rest/v1/orders?select=*&order=created_at.desc`, {
         headers: supabaseHeaders(key),
@@ -97,44 +52,26 @@ export async function GET(request: NextRequest) {
       if (dbRes.ok) {
         const rows = await dbRes.json()
         if (Array.isArray(rows)) {
-          dbLeads = rows
-            .filter((r) => r.notes && (r.notes.includes('Hero') || r.notes.includes('Cold Lead') || r.notes.includes('Devis')))
+          allLeads = rows
+            .filter((r) => r.notes && (r.notes.includes('Hero') || r.notes.includes('Cold Lead') || r.notes.includes('Devis') || r.funnel_stage === 'cold'))
             .map((r) => {
-              // Parse category from notes if possible
-              let furnitureType = 'salon'
-              let furnitureTitle = 'Salons & Canapés'
-              const lower = (r.notes || '').toLowerCase()
-              if (lower.includes('salle') || lower.includes('manger')) {
-                furnitureType = 'salle-a-manger'
-                furnitureTitle = 'Salles à Manger'
-              } else if (lower.includes('chambre')) {
-                furnitureType = 'chambre'
-                furnitureTitle = 'Chambres à Coucher'
-              } else if (lower.includes('armoire') || lower.includes('dressing')) {
-                furnitureType = 'armoire'
-                furnitureTitle = 'Dressings & Armoires'
-              } else if (lower.includes('deco') || lower.includes('art')) {
-                furnitureType = 'deco'
-                furnitureTitle = 'Décoration & Art'
-              } else if (lower.includes('complet') || lower.includes('aménagement')) {
-                furnitureType = 'complet'
-                furnitureTitle = 'Aménagement Complet'
-              }
-
+              const { type, title } = parseFurnitureType(r.notes || '')
               const b = Number(r.amount) || 85000
 
               return {
-                id: 'db_' + r.id,
+                id: String(r.id),
                 customer_name: r.customer_name || 'Client Devis',
                 phone: r.phone || '',
-                furniture_type: furnitureType,
-                furniture_title: furnitureTitle,
+                furniture_type: type,
+                furniture_title: title,
                 budget: b,
                 formatted_budget: new Intl.NumberFormat('fr-DZ').format(b) + ' DA',
                 status: r.funnel_stage === 'completed'
                   ? 'converted'
                   : r.funnel_stage === 'interested'
                   ? 'contacted'
+                  : r.funnel_stage === 'delivering'
+                  ? 'negotiating'
                   : 'nouveau',
                 created_at: r.created_at || new Date().toISOString(),
                 notes: r.notes || '',
@@ -145,27 +82,6 @@ export async function GET(request: NextRequest) {
     } catch (e) {
       console.error('Failed to query orders for cold leads:', e)
     }
-
-    // Merge without duplicates by phone + created_at day
-    const combinedMap = new Map<string, ColdLeadRecord>()
-
-    // Prioritize storage leads
-    for (const lead of storageLeads) {
-      const key = `${lead.phone.replace(/[^0-9]/g, '')}_${lead.created_at.substring(0, 10)}`
-      combinedMap.set(key, lead)
-    }
-
-    // Add db leads if not already present
-    for (const lead of dbLeads) {
-      const key = `${lead.phone.replace(/[^0-9]/g, '')}_${lead.created_at.substring(0, 10)}`
-      if (!combinedMap.has(key)) {
-        combinedMap.set(key, lead)
-      }
-    }
-
-    const allLeads = Array.from(combinedMap.values()).sort(
-      (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-    )
 
     // Compute analytics
     const totalLeads = allLeads.length
@@ -207,30 +123,83 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    // ── 1. Edge Rate Limiter (Anti-DDoS / Anti-Spam) ───────────
+    const rl = checkRateLimit(request, {
+      endpointName: 'cold-leads',
+      maxRequests: 5,
+      windowMs: 10 * 60 * 1000, // 5 requests per 10 minutes
+    })
+
+    if (!rl.allowed) {
+      return NextResponse.json(
+        { error: 'Trop de requêtes. Veuillez patienter quelques minutes.' },
+        { status: 429, headers: { 'Retry-After': String(Math.ceil(rl.resetMs / 1000)) } }
+      )
+    }
+
     const body = await request.json()
+
+    // ── 2. Silent Bot Honeypot Shield ────────────────────────
+    if (isBotHoneypotTriggered(body, ['website', 'nobot', 'company_fax'])) {
+      return NextResponse.json({ success: true, message: 'Reçu.' }, { status: 200 })
+    }
+
     const { customer_name, phone, furniture_type, furniture_title, budget, formatted_budget } = body
 
     if (!phone) {
       return NextResponse.json({ error: 'Numéro de téléphone requis' }, { status: 400 })
     }
 
+    const safeName = String(customer_name || 'Client').trim().slice(0, 100)
+    const safePhone = String(phone).trim().slice(0, 40)
+    const safeType = String(furniture_type || 'salon').trim().slice(0, 50)
+    const safeTitle = String(furniture_title || 'Salons & Canapés').trim().slice(0, 80)
     const b = Number(budget) || 85000
-    const newRecord: ColdLeadRecord = {
-      id: 'cold_' + Date.now().toString(36) + Math.random().toString(36).substring(2, 6),
-      customer_name: (customer_name || 'Client').trim(),
-      phone: String(phone).trim(),
-      furniture_type: furniture_type || 'salon',
-      furniture_title: furniture_title || 'Salons & Canapés',
-      budget: b,
-      formatted_budget: formatted_budget || new Intl.NumberFormat('fr-DZ').format(b) + ' DA',
-      status: 'nouveau',
-      created_at: new Date().toISOString(),
-      notes: `Choix Hero Shape: ${furniture_title || furniture_type} | Budget: ${formatted_budget || b + ' DA'}`,
+    const safeFormattedBudget = formatted_budget || new Intl.NumberFormat('fr-DZ').format(b) + ' DA'
+    const safeNotes = `[Cold Lead Widget] ${safeTitle} | Budget: ${safeFormattedBudget}`
+
+    // ── 3. Save directly to secure Supabase PostgreSQL orders table ──
+    const { url, key } = getSupabaseConfig()
+    let createdRecordId = 'cold_' + Date.now().toString(36)
+
+    try {
+      const dbRes = await fetch(`${url}/rest/v1/orders`, {
+        method: 'POST',
+        headers: {
+          ...supabaseHeaders(key),
+          'Prefer': 'return=representation',
+        },
+        body: JSON.stringify({
+          customer_name: safeName,
+          phone: safePhone,
+          amount: b,
+          funnel_stage: 'cold',
+          notes: safeNotes,
+        }),
+      })
+
+      if (dbRes.ok) {
+        const rows = await dbRes.json()
+        if (Array.isArray(rows) && rows[0]?.id) {
+          createdRecordId = String(rows[0].id)
+        }
+      }
+    } catch (dbErr) {
+      console.error('Failed to save cold lead to database:', dbErr)
     }
 
-    const currentLeads = await loadStorageColdLeads()
-    const updated = [newRecord, ...currentLeads]
-    await saveStorageColdLeads(updated)
+    const newRecord: ColdLeadRecord = {
+      id: createdRecordId,
+      customer_name: safeName,
+      phone: safePhone,
+      furniture_type: safeType,
+      furniture_title: safeTitle,
+      budget: b,
+      formatted_budget: safeFormattedBudget,
+      status: 'nouveau',
+      created_at: new Date().toISOString(),
+      notes: safeNotes,
+    }
 
     // ── Telegram admin ping — awaited so Cloudflare edge doesn't kill it ──
     await sendTelegramAlert({
@@ -239,7 +208,7 @@ export async function POST(request: NextRequest) {
       phone: newRecord.phone,
       category: newRecord.furniture_title,
       budget: newRecord.formatted_budget,
-    });
+    })
 
     return NextResponse.json({ success: true, lead: newRecord }, { status: 201 })
   } catch (err: any) {
@@ -262,47 +231,29 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ error: 'ID requis' }, { status: 400 })
     }
 
-    const currentLeads = await loadStorageColdLeads()
-    let found = false
-    const updated = currentLeads.map((l) => {
-      if (l.id === id) {
-        found = true
-        return {
-          ...l,
-          status: status || l.status,
-          notes: notes !== undefined ? notes : l.notes,
-        }
-      }
-      return l
+    const cleanId = String(id).replace('db_', '')
+    const { url, key } = getSupabaseConfig()
+
+    let dbFunnel = 'cold'
+    if (status === 'contacted') dbFunnel = 'interested'
+    else if (status === 'negotiating') dbFunnel = 'delivering'
+    else if (status === 'converted') dbFunnel = 'completed'
+
+    const patchBody: Record<string, any> = { funnel_stage: dbFunnel }
+    if (notes !== undefined) patchBody.notes = notes
+
+    const res = await fetch(`${url}/rest/v1/orders?id=eq.${cleanId}`, {
+      method: 'PATCH',
+      headers: supabaseHeaders(key),
+      body: JSON.stringify(patchBody),
     })
 
-    if (!found) {
-      // If it originated from DB table order
-      if (id.startsWith('db_')) {
-        const dbId = id.replace('db_', '')
-        const { url, key } = getSupabaseConfig()
-        let dbFunnel = 'cold'
-        if (status === 'contacted') dbFunnel = 'interested'
-        else if (status === 'negotiating') dbFunnel = 'delivering'
-        else if (status === 'converted') dbFunnel = 'completed'
-
-        await fetch(`${url}/rest/v1/orders?id=eq.${dbId}`, {
-          method: 'PATCH',
-          headers: supabaseHeaders(key),
-          body: JSON.stringify({ funnel_stage: dbFunnel }),
-        }).catch(() => {})
-
-        return NextResponse.json({ success: true, message: 'Statut mis à jour dans la base' })
-      }
-      return NextResponse.json({ error: 'Lead introuvable' }, { status: 404 })
+    if (!res.ok) {
+      const errText = await res.text()
+      return NextResponse.json({ error: `Erreur Supabase: ${errText}` }, { status: 500 })
     }
 
-    const saved = await saveStorageColdLeads(updated)
-    if (!saved) {
-      return NextResponse.json({ error: 'Erreur de sauvegarde Supabase' }, { status: 500 })
-    }
-
-    return NextResponse.json({ success: true, leads: updated })
+    return NextResponse.json({ success: true, message: 'Statut mis à jour dans la base' })
   } catch (err: any) {
     console.error('PATCH /api/admin/cold-leads error:', err)
     return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
@@ -323,21 +274,20 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: 'ID requis' }, { status: 400 })
     }
 
-    const currentLeads = await loadStorageColdLeads()
-    const updated = currentLeads.filter((l) => l.id !== id)
-    await saveStorageColdLeads(updated)
+    const cleanId = String(id).replace('db_', '')
+    const { url, key } = getSupabaseConfig()
 
-    // If the lead originated from the Supabase database table `orders`
-    if (id.startsWith('db_')) {
-      const dbId = id.replace('db_', '')
-      const { url, key } = getSupabaseConfig()
-      await fetch(`${url}/rest/v1/orders?id=eq.${dbId}`, {
-        method: 'DELETE',
-        headers: supabaseHeaders(key),
-      }).catch(() => {})
+    const res = await fetch(`${url}/rest/v1/orders?id=eq.${cleanId}`, {
+      method: 'DELETE',
+      headers: supabaseHeaders(key),
+    })
+
+    if (!res.ok) {
+      const errText = await res.text()
+      return NextResponse.json({ error: `Erreur Supabase: ${errText}` }, { status: 500 })
     }
 
-    return NextResponse.json({ success: true, message: 'Lead supprimé définitivement de la base et du stockage' })
+    return NextResponse.json({ success: true, message: 'Lead supprimé définitivement de la base de données' })
   } catch (err: any) {
     console.error('DELETE /api/admin/cold-leads error:', err)
     return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })

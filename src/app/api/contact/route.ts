@@ -1,12 +1,34 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseConfig, supabaseHeaders } from "@/lib/supabase-config";
 import { sendTelegramAlert } from "@/lib/telegram";
+import { checkRateLimit, isBotHoneypotTriggered } from "@/lib/rate-limit";
 
 export const runtime = 'edge';
 
 export async function POST(request: NextRequest) {
   try {
+    // ── 1. Edge Rate Limiter (Anti-DDoS / Anti-Spam) ───────────
+    const rl = checkRateLimit(request, {
+      endpointName: 'contact',
+      maxRequests: 5,
+      windowMs: 10 * 60 * 1000, // 5 requests per 10 minutes
+    });
+
+    if (!rl.allowed) {
+      return NextResponse.json(
+        { error: "Trop de messages envoyés. Veuillez patienter quelques minutes avant de réessayer." },
+        { status: 429, headers: { 'Retry-After': String(Math.ceil(rl.resetMs / 1000)) } }
+      );
+    }
+
     const body = await request.json();
+
+    // ── 2. Silent Bot Honeypot Shield ────────────────────────
+    if (isBotHoneypotTriggered(body, ['website', 'nobot', 'company_fax'])) {
+      // Return 200 to confuse the bot, but DO NOT save to DB or send Telegram alert
+      return NextResponse.json({ success: true, message: "Message reçu." }, { status: 200 });
+    }
+
     const { name, email, phone, subject, message, product } = body;
 
     // Validate required fields
@@ -26,6 +48,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // ── 3. Input Sanitization & Length Clamping ──────────────
+    const safeName = String(name).trim().slice(0, 100);
+    const safeEmail = String(email).trim().slice(0, 120);
+    const safePhone = String(phone || "").trim().slice(0, 40);
+    const safeSubject = String(subject || (product ? `Commande: ${product}` : "")).trim().slice(0, 200);
+    const safeMessage = String(message).trim().slice(0, 2500);
+    const safeProduct = String(product || "").trim().slice(0, 150);
+
     // ── Save to Supabase messages table ──────────────────────
     try {
       const { url, key } = getSupabaseConfig();
@@ -33,12 +63,12 @@ export async function POST(request: NextRequest) {
         method: "POST",
         headers: supabaseHeaders(key),
         body: JSON.stringify({
-          name,
-          email,
-          phone: phone || "",
-          subject: subject || (product ? `Commande: ${product}` : ""),
-          message,
-          product: product || "",
+          name: safeName,
+          email: safeEmail,
+          phone: safePhone,
+          subject: safeSubject,
+          message: safeMessage,
+          product: safeProduct,
           status: "new",
         }),
       });
@@ -53,10 +83,10 @@ export async function POST(request: NextRequest) {
     // Fires regardless of Supabase result so we never miss a lead
     await sendTelegramAlert({
       type: 'order',
-      name: name,
-      phone: phone || 'Non fourni',
-      subject: subject || (product ? `Commande: ${product}` : 'Demande générale'),
-      product: product || undefined,
+      name: safeName,
+      phone: safePhone || 'Non fourni',
+      subject: safeSubject,
+      product: safeProduct || undefined,
     });
 
     // ── If a webhook URL is configured, forward the submission ──
@@ -67,11 +97,11 @@ export async function POST(request: NextRequest) {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            name,
-            email,
-            phone,
-            subject,
-            message,
+            name: safeName,
+            email: safeEmail,
+            phone: safePhone,
+            subject: safeSubject,
+            message: safeMessage,
             source: "Château d'art Website",
             timestamp: new Date().toISOString(),
           }),

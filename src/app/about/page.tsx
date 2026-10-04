@@ -12,7 +12,7 @@ export default function AboutPage() {
   const siteConfig = useSiteConfig();
 
   return (
-    <main className="min-h-screen bg-[#0E0F10]">
+    <main id="main-content" className="min-h-screen bg-[#0E0F10]">
       <Header theme="dark" />
       
       {/* ── Section 1 - Page Hero ── */}

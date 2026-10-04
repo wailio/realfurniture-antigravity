@@ -144,6 +144,25 @@ button:disabled {
   cursor: not-allowed;
 }
 
+/* ── WCAG 2.1 AA Keyboard Focus Visibility ──────────
+   Required by law in many jurisdictions to prevent
+   accessibility lawsuits (ADA, RGAA, EN 301 549).
+   Uses :focus-visible so mouse clicks don't show rings.
+ ────────────────────────────────────────────────── */
+*:focus-visible {
+  outline: 2px solid #b68d40;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Override for elements that have custom focus styles */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: none; /* inputs use border-color focus style */
+}
+
+
 .interactive-tap {
   transition: transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.18s ease, filter 0.18s ease;
 }

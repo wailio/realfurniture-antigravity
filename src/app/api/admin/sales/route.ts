@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseConfig, supabaseHeaders } from '@/lib/supabase-config'
+import { requireAdminSession } from '@/lib/admin-auth'
 
 export const runtime = 'edge'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const session = await requireAdminSession(request)
+  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
   try {
     const { url, key } = getSupabaseConfig()
     const res = await fetch(
@@ -27,6 +31,9 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
+  const session = await requireAdminSession(request)
+  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
   try {
     const { url, key } = getSupabaseConfig()
     const body = await request.json()
@@ -60,6 +67,9 @@ export async function POST(request: NextRequest) {
 }
 
 export async function PATCH(request: NextRequest) {
+  const session = await requireAdminSession(request)
+  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
   try {
     const { url, key } = getSupabaseConfig()
     const body = await request.json()
@@ -91,6 +101,9 @@ export async function PATCH(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
+  const session = await requireAdminSession(request)
+  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
   try {
     const { url, key } = getSupabaseConfig()
     const { searchParams } = new URL(request.url)

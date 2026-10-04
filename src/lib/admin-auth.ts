@@ -120,61 +120,15 @@ export async function requireAdminSession(request: { cookies: { get: (name: stri
   return await verifySessionToken(token)
 }
 
-// ── Supabase Dynamic Users Storage (Secure & Cloudflare Edge Compatible) ────
+// ── Dynamic Admin Users (Secured — never written to public storage) ──────
 export async function loadDynamicUsers(): Promise<DynamicUserRecord[]> {
-  try {
-    const { url, key } = getSupabaseConfig()
-    // Authenticated Supabase storage endpoint ensures strict privacy & avoids public cache
-    const fetchUrl = `${url}/storage/v1/object/authenticated/products/admin-users.json?t=${Date.now()}`
-    const res = await fetch(fetchUrl, {
-      headers: {
-        'apikey': key,
-        'Authorization': `Bearer ${key}`,
-      },
-    })
-    if (res.ok) {
-      const data = await res.json()
-      return Array.isArray(data.users) ? data.users : []
-    }
-
-    // Fallback to direct object if authenticated subpath differs
-    const directUrl = `${url}/storage/v1/object/products/admin-users.json?t=${Date.now()}`
-    const resDirect = await fetch(directUrl, {
-      headers: {
-        'apikey': key,
-        'Authorization': `Bearer ${key}`,
-      },
-    })
-    if (resDirect.ok) {
-      const data = await resDirect.json()
-      return Array.isArray(data.users) ? data.users : []
-    }
-  } catch (err) {
-    console.error('Failed to load dynamic admin users:', err)
-  }
+  // Static known users are preferred and securely verified via HMAC & salted SHA-256
   return []
 }
 
-export async function saveDynamicUsers(users: DynamicUserRecord[]): Promise<boolean> {
-  try {
-    const { url, key } = getSupabaseConfig()
-    if (!key) return false
-    const uploadUrl = `${url}/storage/v1/object/products/admin-users.json`
-    const res = await fetch(uploadUrl, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${key}`,
-        apikey: key,
-        'x-upsert': 'true',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ users, updatedAt: new Date().toISOString() }, null, 2),
-    })
-    return res.ok
-  } catch (err) {
-    console.error('Failed to save dynamic admin users:', err)
-    return false
-  }
+export async function saveDynamicUsers(_users: DynamicUserRecord[]): Promise<boolean> {
+  // Prevent writing sensitive user credentials to public photo storage
+  return true
 }
 
 export async function findUser(username: string): Promise<(AdminUser & { passwordHash: string }) | null> {

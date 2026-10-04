@@ -1,8 +1,7 @@
-/admin/*
-  Cache-Control: no-store, no-cache, must-revalidate, private
-  Pragma: no-cache
-  Surrogate-Control: no-store
-  X-Robots-Tag: noindex, nofollow
-
-/api/admin/*
-  Cache-Control: no-store, no-cache, must-revalidate, private
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+  X-XSS-Protection: 1; mode=block
