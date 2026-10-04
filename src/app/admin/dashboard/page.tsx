@@ -2,7 +2,7 @@
 
 export const runtime = 'edge'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import Link from 'next/link'
 import {
   ShoppingBag,
@@ -93,7 +93,7 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     loadStats(false)
-    const pollInterval = setInterval(() => loadStats(true), 3500)
+    const pollInterval = setInterval(() => loadStats(true), 30000) // reduced — Realtime handles the live part
     const onFunnelChange = () => loadStats(true)
     window.addEventListener('lead_funnel_updated', onFunnelChange)
     window.addEventListener('storage', onFunnelChange)
@@ -105,6 +105,45 @@ export default function AdminDashboard() {
       window.removeEventListener('focus',   onFunnelChange)
     }
   }, [loadStats])
+
+  // ── Supabase Realtime: visitor count updates live the moment a new visitor arrives ──
+  const realtimeRef = useRef<any>(null)
+  useEffect(() => {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    if (!supabaseUrl || !supabaseKey) return
+
+    const todayAlgiers = new Date().toLocaleDateString('en-CA', { timeZone: 'Africa/Algiers' })
+
+    import('@supabase/supabase-js').then(({ createClient }) => {
+      const supabase = createClient(supabaseUrl, supabaseKey)
+      const channel = supabase
+        .channel('visitor-count-live')
+        .on(
+          'postgres_changes' as any,
+          {
+            event: 'INSERT',
+            schema: 'public',
+            table: 'visitor_sessions',
+            filter: `visit_date=eq.${todayAlgiers}`,
+          },
+          () => {
+            // A new unique visitor arrived — increment count immediately
+            setCounts(prev => ({ ...prev, visitors: prev.visitors + 1 }))
+          }
+        )
+        .subscribe()
+
+      realtimeRef.current = { supabase, channel }
+    }).catch(() => {})
+
+    return () => {
+      if (realtimeRef.current) {
+        const { supabase, channel } = realtimeRef.current
+        supabase.removeChannel(channel)
+      }
+    }
+  }, [])
 
   // ── Derived values ────────────────────────────────────────────────────────
   const activeFunnelCount = (leadCounts.cold || 0) + (leadCounts.interested || 0) + (leadCounts.delivering || 0)

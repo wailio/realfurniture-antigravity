@@ -1,55 +1,54 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createServerClient } from '@/lib/supabase-server'
+import { getSupabaseConfig, supabaseHeaders } from '@/lib/supabase-config'
 
 export const runtime = 'edge'
 
-function getTodayKey() {
-  const d = new Date()
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+function getTodayAlgiers(): string {
+  // Use Algeria timezone (UTC+1) for day boundary
+  return new Date().toLocaleDateString('en-CA', { timeZone: 'Africa/Algiers' }) // YYYY-MM-DD
 }
 
-function getFilePath(today: string) {
-  return `analytics/visitors-${today}.json`
+const NO_CACHE = {
+  'Cache-Control': 'no-store, no-cache, must-revalidate',
+  'CDN-Cache-Control': 'no-store',
 }
 
-// GET — return today's unique visitors count
+// GET — return today's unique visitor count
 export async function GET() {
   try {
-    const today = getTodayKey()
-    const supabase = createServerClient()
-    const filePath = getFilePath(today)
+    const today = getTodayAlgiers()
+    const { url, key } = getSupabaseConfig()
 
-    const { data, error } = await supabase.storage.from('products').download(filePath)
-    if (error || !data) {
-      return NextResponse.json({ todayUniqueVisitors: 0, date: today })
-    }
-
-    const text = await data.text()
-    const parsed = JSON.parse(text)
-    const visitors: string[] = Array.isArray(parsed?.visitors) ? parsed.visitors : []
-
-    return NextResponse.json(
-      {
-        todayUniqueVisitors: visitors.length,
-        date: today,
-      },
+    const res = await fetch(
+      `${url}/rest/v1/visitor_sessions?select=id&visit_date=eq.${today}`,
       {
         headers: {
-          'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
-          'CDN-Cache-Control': 'no-store',
+          ...supabaseHeaders(key),
+          'Prefer': 'count=exact',
         },
       }
+    )
+
+    if (!res.ok) {
+      return NextResponse.json(
+        { todayUniqueVisitors: 0, date: today },
+        { headers: NO_CACHE }
+      )
+    }
+
+    // Count comes from Content-Range header: "0-N/TOTAL"
+    const range = res.headers.get('content-range') || ''
+    const total = parseInt(range.split('/')[1] ?? '0', 10) || 0
+
+    return NextResponse.json(
+      { todayUniqueVisitors: isNaN(total) ? 0 : total, date: today },
+      { headers: NO_CACHE }
     )
   } catch (err) {
     console.error('GET /api/analytics/visitors error:', err)
     return NextResponse.json(
-      { todayUniqueVisitors: 0, date: getTodayKey() },
-      {
-        headers: {
-          'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
-          'CDN-Cache-Control': 'no-store',
-        },
-      }
+      { todayUniqueVisitors: 0, date: getTodayAlgiers() },
+      { headers: NO_CACHE }
     )
   }
 }
@@ -60,53 +59,54 @@ export async function POST(request: NextRequest) {
     const body = await request.json().catch(() => ({}))
     const { visitorId, isAdmin } = body as { visitorId?: string; isAdmin?: boolean }
 
-    // If request explicitly indicates admin
-    if (isAdmin) {
-      return NextResponse.json({ ignored: true, reason: 'admin' })
-    }
-
-    // If admin session cookie exists
+    // Skip admins
+    if (isAdmin) return NextResponse.json({ ignored: true, reason: 'admin' })
     const adminSession = request.cookies.get('admin_session')?.value
-    if (adminSession) {
-      return NextResponse.json({ ignored: true, reason: 'admin_session' })
-    }
+    if (adminSession) return NextResponse.json({ ignored: true, reason: 'admin_session' })
 
+    // Validate visitorId
     if (!visitorId || typeof visitorId !== 'string' || visitorId.length > 80) {
       return NextResponse.json({ error: 'Invalid visitorId' }, { status: 400 })
     }
 
-    const today = getTodayKey()
-    const supabase = createServerClient()
-    const filePath = getFilePath(today)
+    const today = getTodayAlgiers()
+    const { url, key } = getSupabaseConfig()
 
-    let visitors: string[] = []
+    // Upsert with conflict resolution — guarantees exactly 1 row per (visitor_id, visit_date)
+    // ON CONFLICT DO NOTHING = silent deduplication, no error thrown
+    const res = await fetch(`${url}/rest/v1/visitor_sessions`, {
+      method: 'POST',
+      headers: {
+        ...supabaseHeaders(key),
+        'Prefer': 'resolution=ignore-duplicates,return=minimal',
+      },
+      body: JSON.stringify({
+        visitor_id: visitorId,
+        visit_date: today,
+      }),
+    })
 
-    try {
-      const { data } = await supabase.storage.from('products').download(filePath)
-      if (data) {
-        const text = await data.text()
-        const parsed = JSON.parse(text)
-        if (Array.isArray(parsed?.visitors)) {
-          visitors = parsed.visitors
-        }
-      }
-    } catch {}
-
-    // Deduplicate: 1 person per device per day
-    if (!visitors.includes(visitorId)) {
-      visitors.push(visitorId)
-
-      await supabase.storage.from('products').upload(
-        filePath,
-        JSON.stringify({ date: today, visitors }),
-        { upsert: true, contentType: 'application/json' }
-      )
+    if (!res.ok) {
+      const errText = await res.text()
+      console.error('[visitors] Supabase insert error:', res.status, errText)
+      return NextResponse.json({ success: false, error: 'DB error' }, { status: 500 })
     }
 
-    return NextResponse.json({
-      success: true,
-      totalToday: visitors.length,
-    })
+    // Get updated count for the response
+    const countRes = await fetch(
+      `${url}/rest/v1/visitor_sessions?select=id&visit_date=eq.${today}`,
+      {
+        headers: {
+          ...supabaseHeaders(key),
+          'Prefer': 'count=exact',
+        },
+      }
+    )
+
+    const range = countRes.headers.get('content-range') || ''
+    const total = parseInt(range.split('/')[1] ?? '0', 10) || 0
+
+    return NextResponse.json({ success: true, totalToday: total })
   } catch (err) {
     console.error('POST /api/analytics/visitors error:', err)
     return NextResponse.json({ success: false }, { status: 500 })
