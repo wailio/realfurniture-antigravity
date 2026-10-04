@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import {
   Check,
   ArrowRight,
@@ -10,6 +10,7 @@ import {
   User,
   Loader2,
   MessageCircle,
+  ChevronDown,
 } from 'lucide-react'
 
 // Furniture categories for Step 1
@@ -51,6 +52,216 @@ const MIN_PRICE = 20000
 const MAX_PRICE = 180000
 const PRICE_STEP = 5000
 
+// ── Before / After showroom images ────────────────────────────────────────
+const SHOWROOM_IMAGES = [
+  { src: '/showroom-avant.jpg', label: 'AVANT', sublabel: 'Style Rustique' },
+  { src: '/showroom-apres.jpg', label: 'APRÈS', sublabel: 'Style Prestige' },
+]
+
+// ── SuccessScreen ──────────────────────────────────────────────────────────
+function SuccessScreen({
+  name,
+  categoryLabel,
+  budget,
+  formatPrice,
+  onReset,
+}: {
+  name: string
+  categoryLabel: string
+  budget: number
+  formatPrice: (v: number) => string
+  onReset: () => void
+}) {
+  // Before/After swiper state
+  const [imgIndex, setImgIndex] = useState(0)
+  const [dragging, setDragging] = useState(false)
+  const startXRef = useRef(0)
+  const hintedRef = useRef(false)
+
+  // Pop-out hint: auto-swipe right then left on mount
+  useEffect(() => {
+    if (hintedRef.current) return
+    hintedRef.current = true
+    const t1 = setTimeout(() => setImgIndex(1), 700)
+    const t2 = setTimeout(() => setImgIndex(0), 1500)
+    return () => { clearTimeout(t1); clearTimeout(t2) }
+  }, [])
+
+  const goTo = useCallback((i: number) => {
+    setImgIndex(Math.max(0, Math.min(SHOWROOM_IMAGES.length - 1, i)))
+  }, [])
+
+  // Touch / Mouse drag handlers
+  const onDragStart = (x: number) => { setDragging(true); startXRef.current = x }
+  const onDragEnd   = (x: number) => {
+    if (!dragging) return
+    setDragging(false)
+    const diff = startXRef.current - x
+    if (diff > 30) goTo(imgIndex + 1)
+    else if (diff < -30) goTo(imgIndex - 1)
+  }
+
+  const scrollToFaq = () => {
+    const el = document.getElementById('faq')
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
+  return (
+    <div className="flex flex-col items-center gap-0 animate-fade-in-up py-2">
+
+      {/* ── Info strip ── */}
+      <p className="text-white/55 text-[11px] leading-relaxed text-center mb-5 px-1">
+        Votre sélection{' '}
+        <strong className="text-white/80">{categoryLabel}</strong>
+        {' '}(Budget :{' '}
+        <span className="text-[#d1aa5c]">{formatPrice(budget)}</span>
+        {') '}a été envoyée directement à nos conseillers au Showroom de Birkhadem.
+      </p>
+
+      {/* ── Next steps heading ── */}
+      <p className="text-white/35 text-[10px] font-semibold tracking-[0.12em] uppercase self-start mb-2">
+        Prochaines étapes
+      </p>
+
+      {/* ── Step 1 card ── */}
+      <div
+        className="w-full rounded-2xl flex items-center gap-3 px-4 py-3.5 mb-3"
+        style={{
+          background: 'rgba(255,255,255,0.06)',
+          border: '1px solid rgba(255,255,255,0.09)',
+        }}
+      >
+        {/* Number pill */}
+        <div
+          className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 text-white font-bold text-sm"
+          style={{ background: 'rgba(30,31,35,0.95)', border: '1px solid rgba(255,255,255,0.12)' }}
+        >
+          1
+        </div>
+
+        {/* Text */}
+        <div className="flex-1 min-w-0">
+          <p className="text-white text-[13px] font-medium leading-tight">
+            Un membre de l&apos;équipe vous appellera
+          </p>
+          <p className="text-[#d1aa5c] text-[12px] font-semibold mt-0.5">
+            dans 5 minutes
+          </p>
+        </div>
+
+        {/* Phone icon */}
+        <Phone className="w-4 h-4 text-white/30 shrink-0" />
+      </div>
+
+      {/* ── Before / After swiper ── */}
+      <div className="w-full mb-3">
+        <div
+          className="relative w-full overflow-hidden rounded-xl select-none"
+          style={{ height: 148, cursor: dragging ? 'grabbing' : 'grab' }}
+          onMouseDown={e => onDragStart(e.clientX)}
+          onMouseUp={e => onDragEnd(e.clientX)}
+          onMouseLeave={e => { if (dragging) onDragEnd(e.clientX) }}
+          onTouchStart={e => onDragStart(e.touches[0].clientX)}
+          onTouchEnd={e => onDragEnd(e.changedTouches[0].clientX)}
+        >
+          {/* Images strip */}
+          <div
+            className="flex h-full transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]"
+            style={{ transform: `translateX(-${imgIndex * 100}%)`, width: `${SHOWROOM_IMAGES.length * 100}%` }}
+          >
+            {SHOWROOM_IMAGES.map((img, i) => (
+              <div key={i} className="relative shrink-0" style={{ width: `${100 / SHOWROOM_IMAGES.length}%` }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={img.src}
+                  alt={img.label}
+                  className="w-full h-full object-cover"
+                  draggable={false}
+                />
+                {/* Label */}
+                <div className="absolute top-2.5 left-3 flex flex-col">
+                  <span
+                    className="text-[10px] font-bold tracking-widest px-2 py-0.5 rounded"
+                    style={{ background: 'rgba(0,0,0,0.55)', color: '#d1aa5c' }}
+                  >
+                    {img.label}
+                  </span>
+                  <span className="text-[9px] text-white/60 mt-0.5 ml-2">{img.sublabel}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Dots */}
+          <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+            {SHOWROOM_IMAGES.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => goTo(i)}
+                className="transition-all duration-300"
+                style={{
+                  width: i === imgIndex ? 16 : 5,
+                  height: 5,
+                  borderRadius: 99,
+                  background: i === imgIndex ? '#d1aa5c' : 'rgba(255,255,255,0.35)',
+                  border: 'none',
+                  cursor: 'pointer',
+                  padding: 0,
+                }}
+              />
+            ))}
+          </div>
+
+          {/* Swipe hint text */}
+          <div
+            className="absolute bottom-2.5 right-3 text-[9px] text-white/30 z-10 select-none"
+          >
+            glissez ›
+          </div>
+        </div>
+      </div>
+
+      {/* ── Step 2 — scroll to FAQ ── */}
+      <div
+        className="w-full rounded-2xl flex items-center gap-3 px-4 py-3.5 mb-5 group cursor-pointer transition-all duration-300"
+        style={{
+          background: 'rgba(255,255,255,0.04)',
+          border: '1px solid rgba(255,255,255,0.07)',
+        }}
+        onClick={scrollToFaq}
+      >
+        {/* Number pill */}
+        <div
+          className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 text-white font-bold text-sm transition-colors duration-300 group-hover:text-[#d1aa5c]"
+          style={{ background: 'rgba(30,31,35,0.95)', border: '1px solid rgba(255,255,255,0.10)' }}
+        >
+          2
+        </div>
+
+        {/* Text */}
+        <p className="flex-1 text-white/50 text-[13px] font-medium transition-colors duration-300 group-hover:text-[#d1aa5c]">
+          Si vous avez des questions, descendez
+        </p>
+
+        {/* Arrow icon */}
+        <ChevronDown
+          className="w-4 h-4 shrink-0 transition-colors duration-300 text-white/25 group-hover:text-[#d1aa5c]"
+        />
+      </div>
+
+      {/* ── Reset ── */}
+      <button
+        type="button"
+        onClick={onReset}
+        className="text-[11px] text-white/30 hover:text-white/70 py-1 transition-colors cursor-pointer"
+      >
+        Faire une autre demande
+      </button>
+    </div>
+  )
+}
+
+// ── Main Widget ────────────────────────────────────────────────────────────
 export function HeroQuoteWidget() {
   const [step, setStep] = useState<1 | 2 | 3>(1)
   const [selectedType, setSelectedType] = useState<string | null>(null)
@@ -168,73 +379,15 @@ export function HeroQuoteWidget() {
           style={{ background: 'radial-gradient(circle, #d1aa5c 0%, transparent 70%)' }}
         />
 
-        {/* ── SUCCESS STATE (Done Effect) ── */}
+        {/* ── SUCCESS STATE ── */}
         {submitted ? (
-          <div className="py-5 lg:py-4 text-center flex flex-col items-center animate-fade-in-up">
-            {/* Glowing Golden Done Icon */}
-            <div className="relative mb-4 lg:mb-3">
-              <div
-                className="w-16 h-16 lg:w-14 lg:h-14 rounded-full flex items-center justify-center relative z-10"
-                style={{
-                  background: 'linear-gradient(135deg, #d1aa5c 0%, #b68d40 100%)',
-                  boxShadow: '0 0 30px rgba(209, 170, 92, 0.55), inset 0 1px 1px rgba(255,255,255,0.4)',
-                }}
-              >
-                <Check className="w-8 h-8 lg:w-7 lg:h-7 text-[#0E0F10] stroke-[2.8]" />
-              </div>
-              <div
-                className="absolute inset-0 rounded-full animate-ping opacity-25 pointer-events-none"
-                style={{ background: '#d1aa5c' }}
-              />
-            </div>
-
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10.5px] lg:text-[10px] font-semibold tracking-wider text-[#d1aa5c] bg-[#d1aa5c]/10 border border-[#d1aa5c]/25 uppercase mb-2">
-              <Sparkles className="w-3 h-3" />
-              <span>Demande transmise avec succès</span>
-            </span>
-
-            <h3 className="font-fraunces text-2xl lg:text-xl font-light text-white mb-1.5">
-              Merci, {name} !
-            </h3>
-            <p className="text-white/70 text-xs lg:text-[12px] max-w-sm mb-5 lg:mb-4 leading-relaxed">
-              Votre sélection <strong className="text-white">{categoryLabel}</strong> (Budget :{' '}
-              <span className="text-[#d1aa5c]">{formatPrice(budget)}</span>) a été envoyée directement à nos conseillers au
-              Showroom de Birkhadem.
-            </p>
-
-            {/* Direct WhatsApp Call to Action */}
-            <div className="w-full flex flex-col gap-2">
-              <a
-                href={whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full py-3 lg:py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 text-xs lg:text-[12.5px] font-semibold text-[#0E0F10] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
-                style={{
-                  cursor: 'pointer',
-                  background: 'linear-gradient(135deg, #d1aa5c 0%, #b68d40 100%)',
-                  boxShadow: '0 8px 20px rgba(209, 170, 92, 0.35)',
-                }}
-              >
-                <MessageCircle className="w-4 h-4 fill-black/20" />
-                <span>Discuter immédiatement sur WhatsApp</span>
-              </a>
-
-              <button
-                type="button"
-                onClick={() => {
-                  setSubmitted(false)
-                  setStep(1)
-                  setName('')
-                  setPhone('')
-                  setSelectedType(null)
-                }}
-                className="text-[11px] text-white/40 hover:text-white/80 py-1.5 transition-colors cursor-pointer"
-                style={{ cursor: 'pointer' }}
-              >
-                Faire une autre demande
-              </button>
-            </div>
-          </div>
+          <SuccessScreen
+            name={name}
+            categoryLabel={categoryLabel}
+            budget={budget}
+            formatPrice={formatPrice}
+            onReset={() => { setSubmitted(false); setStep(1); setName(''); setPhone(''); setSelectedType(null) }}
+          />
         ) : (
           <div>
             {/* ── Top Bar: Step Counter & Progress Indicator ── */}
