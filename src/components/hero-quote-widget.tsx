@@ -54,25 +54,23 @@ const PRICE_STEP = 5000
 
 // ── Before / After split-divider slider ───────────────────────────────────
 function BeforeAfterSlider() {
-  const [pos, setPos] = useState(50)          // 0–100%
-  const [isAnimating, setIsAnimating] = useState(true) // hint = CSS transition ON
+  const [pos, setPos] = useState(50)
+  const [isAnimating, setIsAnimating] = useState(true)
   const containerRef = useRef<HTMLDivElement>(null)
   const draggingRef  = useRef(false)
   const hintedRef    = useRef(false)
 
-  // Hint: slide divider 50→25→75→50 on mount
   useEffect(() => {
     if (hintedRef.current) return
     hintedRef.current = true
-    setIsAnimating(true)
     const t1 = setTimeout(() => setPos(25), 500)
     const t2 = setTimeout(() => setPos(75), 1100)
-    const t3 = setTimeout(() => { setPos(50); }, 1700)
-    const t4 = setTimeout(() => setIsAnimating(false), 2100) // disable transition after hint
+    const t3 = setTimeout(() => setPos(50), 1700)
+    const t4 = setTimeout(() => setIsAnimating(false), 2200)
     return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4) }
   }, [])
 
-  const clamp = (x: number) => Math.max(3, Math.min(97, x))
+  const clamp = (x: number) => Math.max(2, Math.min(98, x))
 
   const updatePos = useCallback((clientX: number) => {
     if (!containerRef.current) return
@@ -80,7 +78,6 @@ function BeforeAfterSlider() {
     setPos(clamp(((clientX - rect.left) / rect.width) * 100))
   }, [])
 
-  // Global mouse move/up so drag works even if cursor leaves the element
   useEffect(() => {
     const onMove = (e: MouseEvent) => { if (draggingRef.current) updatePos(e.clientX) }
     const onUp   = () => { draggingRef.current = false }
@@ -89,87 +86,62 @@ function BeforeAfterSlider() {
     return () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp) }
   }, [updatePos])
 
-  const transition = isAnimating ? 'all 0.55s cubic-bezier(0.32,0.72,0,1)' : 'none'
+  const easing = '0.55s cubic-bezier(0.32,0.72,0,1)'
+  const clipT  = isAnimating ? `clip-path ${easing}` : 'none'
+  const posT   = isAnimating ? `left ${easing}`      : 'none'
 
   return (
     <div
       ref={containerRef}
       className="relative w-full overflow-hidden rounded-xl select-none"
-      style={{ height: 152, cursor: draggingRef.current ? 'grabbing' : 'grab', touchAction: 'none' }}
+      style={{ height: 152, touchAction: 'none', cursor: 'col-resize' }}
       onMouseDown={e => { e.preventDefault(); draggingRef.current = true; setIsAnimating(false); updatePos(e.clientX) }}
       onTouchStart={e => { draggingRef.current = true; setIsAnimating(false); updatePos(e.touches[0].clientX) }}
       onTouchMove={e => { e.preventDefault(); updatePos(e.touches[0].clientX) }}
       onTouchEnd={() => { draggingRef.current = false }}
     >
-      {/* ── AVANT image (full, underneath) ── */}
+      {/* AVANT — full, underneath, never changes */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/showroom-avant.jpg"
-        alt="Avant"
-        className="absolute inset-0 w-full h-full object-cover"
-        draggable={false}
-      />
+      <img src="/showroom-avant.jpg" alt="Avant"
+        className="absolute inset-0 w-full h-full object-cover" draggable={false} />
 
-      {/* ── APRÈS image (clipped to left of divider) ── */}
-      <div
-        className="absolute inset-0 overflow-hidden"
-        style={{ width: `${pos}%`, transition }}
-      >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/showroom-apres.jpg"
-          alt="Après"
-          className="absolute inset-0 h-full object-cover object-left"
-          style={{ width: containerRef.current ? containerRef.current.offsetWidth : 400 }}
-          draggable={false}
-        />
-      </div>
+      {/* APRÈS — identical size/position, revealed from left via clip-path only */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/showroom-apres.jpg" alt="Après"
+        className="absolute inset-0 w-full h-full object-cover" draggable={false}
+        style={{ clipPath: `inset(0 ${100 - pos}% 0 0)`, transition: clipT }} />
 
-      {/* ── Divider line ── */}
-      <div
-        className="absolute top-0 bottom-0 w-[2px] z-20 pointer-events-none"
-        style={{ left: `${pos}%`, transform: 'translateX(-50%)', background: 'rgba(255,255,255,0.9)', transition }}
-      />
+      {/* Divider line */}
+      <div className="absolute top-0 bottom-0 w-px z-20 pointer-events-none"
+        style={{ left: `${pos}%`, background: 'rgba(255,255,255,0.95)', transition: posT }} />
 
-      {/* ── Handle circle ── */}
-      <div
-        className="absolute top-1/2 z-30 flex items-center justify-center rounded-full shadow-lg"
+      {/* Handle */}
+      <div className="absolute top-1/2 z-30 flex items-center justify-center rounded-full"
         style={{
-          left: `${pos}%`,
-          transform: 'translate(-50%, -50%)',
-          width: 34,
-          height: 34,
-          background: 'white',
-          boxShadow: '0 2px 12px rgba(0,0,0,0.45)',
-          transition,
-          cursor: 'grab',
-        }}
-      >
-        {/* ← → arrows */}
-        <svg width="18" height="10" viewBox="0 0 18 10" fill="none">
-          <path d="M5.5 5H12.5M5.5 5L3 2.5M5.5 5L3 7.5M12.5 5L15 2.5M12.5 5L15 7.5"
-            stroke="#333" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+          left: `${pos}%`, transform: 'translate(-50%,-50%)',
+          width: 32, height: 32, background: 'white',
+          boxShadow: '0 2px 14px rgba(0,0,0,0.5)',
+          transition: posT, cursor: 'col-resize',
+        }}>
+        <svg width="16" height="10" viewBox="0 0 16 10" fill="none">
+          <path d="M4.5 5H11.5M4.5 5L2.5 2.5M4.5 5L2.5 7.5M11.5 5L13.5 2.5M11.5 5L13.5 7.5"
+            stroke="#444" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
       </div>
 
-      {/* ── AVANT label (right side of image) ── */}
-      <div className="absolute top-2.5 right-3 z-10 pointer-events-none">
-        <span className="text-[9px] font-bold tracking-widest px-2 py-0.5 rounded"
-          style={{ background: 'rgba(0,0,0,0.55)', color: 'rgba(255,255,255,0.7)' }}>
-          AVANT
-        </span>
+      {/* Labels */}
+      <div className="absolute top-2 left-2.5 z-10 pointer-events-none">
+        <span className="text-[9px] font-bold tracking-wider px-1.5 py-0.5 rounded"
+          style={{ background: 'rgba(0,0,0,0.5)', color: '#d1aa5c' }}>APRÈS</span>
       </div>
-
-      {/* ── APRÈS label (left side, visible when divider moves right) ── */}
-      <div className="absolute top-2.5 left-3 z-10 pointer-events-none">
-        <span className="text-[9px] font-bold tracking-widest px-2 py-0.5 rounded"
-          style={{ background: 'rgba(0,0,0,0.55)', color: '#d1aa5c' }}>
-          APRÈS
-        </span>
+      <div className="absolute top-2 right-2.5 z-10 pointer-events-none">
+        <span className="text-[9px] font-bold tracking-wider px-1.5 py-0.5 rounded"
+          style={{ background: 'rgba(0,0,0,0.5)', color: 'rgba(255,255,255,0.65)' }}>AVANT</span>
       </div>
     </div>
   )
 }
+
 
 // ── SuccessScreen ──────────────────────────────────────────────────────────
 function SuccessScreen({
