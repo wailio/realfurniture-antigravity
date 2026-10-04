@@ -52,15 +52,127 @@ const MIN_PRICE = 20000
 const MAX_PRICE = 180000
 const PRICE_STEP = 5000
 
-// ── Before / After showroom images ────────────────────────────────────────
-const SHOWROOM_IMAGES = [
-  { src: '/showroom-avant.jpg', label: 'AVANT', sublabel: 'Style Rustique' },
-  { src: '/showroom-apres.jpg', label: 'APRÈS', sublabel: 'Style Prestige' },
-]
+// ── Before / After split-divider slider ───────────────────────────────────
+function BeforeAfterSlider() {
+  const [pos, setPos] = useState(50)          // 0–100%
+  const [isAnimating, setIsAnimating] = useState(true) // hint = CSS transition ON
+  const containerRef = useRef<HTMLDivElement>(null)
+  const draggingRef  = useRef(false)
+  const hintedRef    = useRef(false)
+
+  // Hint: slide divider 50→25→75→50 on mount
+  useEffect(() => {
+    if (hintedRef.current) return
+    hintedRef.current = true
+    setIsAnimating(true)
+    const t1 = setTimeout(() => setPos(25), 500)
+    const t2 = setTimeout(() => setPos(75), 1100)
+    const t3 = setTimeout(() => { setPos(50); }, 1700)
+    const t4 = setTimeout(() => setIsAnimating(false), 2100) // disable transition after hint
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4) }
+  }, [])
+
+  const clamp = (x: number) => Math.max(3, Math.min(97, x))
+
+  const updatePos = useCallback((clientX: number) => {
+    if (!containerRef.current) return
+    const rect = containerRef.current.getBoundingClientRect()
+    setPos(clamp(((clientX - rect.left) / rect.width) * 100))
+  }, [])
+
+  // Global mouse move/up so drag works even if cursor leaves the element
+  useEffect(() => {
+    const onMove = (e: MouseEvent) => { if (draggingRef.current) updatePos(e.clientX) }
+    const onUp   = () => { draggingRef.current = false }
+    window.addEventListener('mousemove', onMove)
+    window.addEventListener('mouseup',   onUp)
+    return () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp) }
+  }, [updatePos])
+
+  const transition = isAnimating ? 'all 0.55s cubic-bezier(0.32,0.72,0,1)' : 'none'
+
+  return (
+    <div
+      ref={containerRef}
+      className="relative w-full overflow-hidden rounded-xl select-none"
+      style={{ height: 152, cursor: draggingRef.current ? 'grabbing' : 'grab', touchAction: 'none' }}
+      onMouseDown={e => { e.preventDefault(); draggingRef.current = true; setIsAnimating(false); updatePos(e.clientX) }}
+      onTouchStart={e => { draggingRef.current = true; setIsAnimating(false); updatePos(e.touches[0].clientX) }}
+      onTouchMove={e => { e.preventDefault(); updatePos(e.touches[0].clientX) }}
+      onTouchEnd={() => { draggingRef.current = false }}
+    >
+      {/* ── AVANT image (full, underneath) ── */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/showroom-avant.jpg"
+        alt="Avant"
+        className="absolute inset-0 w-full h-full object-cover"
+        draggable={false}
+      />
+
+      {/* ── APRÈS image (clipped to left of divider) ── */}
+      <div
+        className="absolute inset-0 overflow-hidden"
+        style={{ width: `${pos}%`, transition }}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/showroom-apres.jpg"
+          alt="Après"
+          className="absolute inset-0 h-full object-cover object-left"
+          style={{ width: containerRef.current ? containerRef.current.offsetWidth : 400 }}
+          draggable={false}
+        />
+      </div>
+
+      {/* ── Divider line ── */}
+      <div
+        className="absolute top-0 bottom-0 w-[2px] z-20 pointer-events-none"
+        style={{ left: `${pos}%`, transform: 'translateX(-50%)', background: 'rgba(255,255,255,0.9)', transition }}
+      />
+
+      {/* ── Handle circle ── */}
+      <div
+        className="absolute top-1/2 z-30 flex items-center justify-center rounded-full shadow-lg"
+        style={{
+          left: `${pos}%`,
+          transform: 'translate(-50%, -50%)',
+          width: 34,
+          height: 34,
+          background: 'white',
+          boxShadow: '0 2px 12px rgba(0,0,0,0.45)',
+          transition,
+          cursor: 'grab',
+        }}
+      >
+        {/* ← → arrows */}
+        <svg width="18" height="10" viewBox="0 0 18 10" fill="none">
+          <path d="M5.5 5H12.5M5.5 5L3 2.5M5.5 5L3 7.5M12.5 5L15 2.5M12.5 5L15 7.5"
+            stroke="#333" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      </div>
+
+      {/* ── AVANT label (right side of image) ── */}
+      <div className="absolute top-2.5 right-3 z-10 pointer-events-none">
+        <span className="text-[9px] font-bold tracking-widest px-2 py-0.5 rounded"
+          style={{ background: 'rgba(0,0,0,0.55)', color: 'rgba(255,255,255,0.7)' }}>
+          AVANT
+        </span>
+      </div>
+
+      {/* ── APRÈS label (left side, visible when divider moves right) ── */}
+      <div className="absolute top-2.5 left-3 z-10 pointer-events-none">
+        <span className="text-[9px] font-bold tracking-widest px-2 py-0.5 rounded"
+          style={{ background: 'rgba(0,0,0,0.55)', color: '#d1aa5c' }}>
+          APRÈS
+        </span>
+      </div>
+    </div>
+  )
+}
 
 // ── SuccessScreen ──────────────────────────────────────────────────────────
 function SuccessScreen({
-  name,
   categoryLabel,
   budget,
   formatPrice,
@@ -72,35 +184,6 @@ function SuccessScreen({
   formatPrice: (v: number) => string
   onReset: () => void
 }) {
-  // Before/After swiper state
-  const [imgIndex, setImgIndex] = useState(0)
-  const [dragging, setDragging] = useState(false)
-  const startXRef = useRef(0)
-  const hintedRef = useRef(false)
-
-  // Pop-out hint: auto-swipe right then left on mount
-  useEffect(() => {
-    if (hintedRef.current) return
-    hintedRef.current = true
-    const t1 = setTimeout(() => setImgIndex(1), 700)
-    const t2 = setTimeout(() => setImgIndex(0), 1500)
-    return () => { clearTimeout(t1); clearTimeout(t2) }
-  }, [])
-
-  const goTo = useCallback((i: number) => {
-    setImgIndex(Math.max(0, Math.min(SHOWROOM_IMAGES.length - 1, i)))
-  }, [])
-
-  // Touch / Mouse drag handlers
-  const onDragStart = (x: number) => { setDragging(true); startXRef.current = x }
-  const onDragEnd   = (x: number) => {
-    if (!dragging) return
-    setDragging(false)
-    const diff = startXRef.current - x
-    if (diff > 30) goTo(imgIndex + 1)
-    else if (diff < -30) goTo(imgIndex - 1)
-  }
-
   const scrollToFaq = () => {
     const el = document.getElementById('faq')
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -131,15 +214,12 @@ function SuccessScreen({
           border: '1px solid rgba(255,255,255,0.09)',
         }}
       >
-        {/* Number pill */}
         <div
           className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 text-white font-bold text-sm"
           style={{ background: 'rgba(30,31,35,0.95)', border: '1px solid rgba(255,255,255,0.12)' }}
         >
           1
         </div>
-
-        {/* Text */}
         <div className="flex-1 min-w-0">
           <p className="text-white text-[13px] font-medium leading-tight">
             Un membre de l&apos;équipe vous appellera
@@ -148,77 +228,12 @@ function SuccessScreen({
             dans 5 minutes
           </p>
         </div>
-
-        {/* Phone icon */}
         <Phone className="w-4 h-4 text-white/30 shrink-0" />
       </div>
 
-      {/* ── Before / After swiper ── */}
+      {/* ── Before / After split-divider ── */}
       <div className="w-full mb-3">
-        <div
-          className="relative w-full overflow-hidden rounded-xl select-none"
-          style={{ height: 148, cursor: dragging ? 'grabbing' : 'grab' }}
-          onMouseDown={e => onDragStart(e.clientX)}
-          onMouseUp={e => onDragEnd(e.clientX)}
-          onMouseLeave={e => { if (dragging) onDragEnd(e.clientX) }}
-          onTouchStart={e => onDragStart(e.touches[0].clientX)}
-          onTouchEnd={e => onDragEnd(e.changedTouches[0].clientX)}
-        >
-          {/* Images strip */}
-          <div
-            className="flex h-full transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]"
-            style={{ transform: `translateX(-${imgIndex * 100}%)`, width: `${SHOWROOM_IMAGES.length * 100}%` }}
-          >
-            {SHOWROOM_IMAGES.map((img, i) => (
-              <div key={i} className="relative shrink-0" style={{ width: `${100 / SHOWROOM_IMAGES.length}%` }}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={img.src}
-                  alt={img.label}
-                  className="w-full h-full object-cover"
-                  draggable={false}
-                />
-                {/* Label */}
-                <div className="absolute top-2.5 left-3 flex flex-col">
-                  <span
-                    className="text-[10px] font-bold tracking-widest px-2 py-0.5 rounded"
-                    style={{ background: 'rgba(0,0,0,0.55)', color: '#d1aa5c' }}
-                  >
-                    {img.label}
-                  </span>
-                  <span className="text-[9px] text-white/60 mt-0.5 ml-2">{img.sublabel}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Dots */}
-          <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
-            {SHOWROOM_IMAGES.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => goTo(i)}
-                className="transition-all duration-300"
-                style={{
-                  width: i === imgIndex ? 16 : 5,
-                  height: 5,
-                  borderRadius: 99,
-                  background: i === imgIndex ? '#d1aa5c' : 'rgba(255,255,255,0.35)',
-                  border: 'none',
-                  cursor: 'pointer',
-                  padding: 0,
-                }}
-              />
-            ))}
-          </div>
-
-          {/* Swipe hint text */}
-          <div
-            className="absolute bottom-2.5 right-3 text-[9px] text-white/30 z-10 select-none"
-          >
-            glissez ›
-          </div>
-        </div>
+        <BeforeAfterSlider />
       </div>
 
       {/* ── Step 2 — scroll to FAQ ── */}
