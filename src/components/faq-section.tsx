@@ -1,12 +1,12 @@
-'use client'
+'use client';
 
-import React, { useState, useRef, useEffect } from 'react'
-import { Plus } from 'lucide-react'
-import { LuxuryReveal } from '@/components/luxury-reveal'
+import React, { useState, useRef, useCallback } from 'react';
+import { Plus } from 'lucide-react';
+import { LuxuryReveal } from '@/components/luxury-reveal';
 
 export interface FaqItem {
-  question: string
-  answer: string
+  question: string;
+  answer: string;
 }
 
 export const FAQ_DATA: FaqItem[] = [
@@ -40,67 +40,36 @@ export const FAQ_DATA: FaqItem[] = [
     answer:
       "Oui, nous proposons plus de 150 tissus et teintes exclusives au choix (velours, bouclette, cuir...) ainsi que des dimensions personnalisées. Rendez-vous au showroom ou contactez-nous sur WhatsApp.",
   },
-]
+];
+
+// Delay (ms) before closing on mouse-leave — prevents flicker when moving fast between items
+const CLOSE_DELAY = 120;
 
 export function FaqSection() {
-  const [openIndex, setOpenIndex] = useState<number | null>(null)
-  const itemRefs = useRef<(HTMLDivElement | null)[]>([])
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  // Ref to hold the pending close timer so we can cancel it if re-entering
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Toggle open state on click
-  const handleToggle = (index: number) => {
-    setOpenIndex((prev) => (prev === index ? null : index))
-  }
-
-  // Active tracker: close and reset immediately when mouse leaves that space of the question shape
-  useEffect(() => {
-    if (openIndex === null) return
-
-    const currentEl = itemRefs.current[openIndex]
-
-    // Check if cursor is outside the question's bounding box
-    const handleGlobalMouseMove = (e: MouseEvent) => {
-      if (!currentEl) return
-      const rect = currentEl.getBoundingClientRect()
-      const isInside =
-        e.clientX >= rect.left &&
-        e.clientX <= rect.right &&
-        e.clientY >= rect.top &&
-        e.clientY <= rect.bottom
-
-      if (!isInside) {
-        setOpenIndex(null)
-      }
+  const cancelClose = useCallback(() => {
+    if (closeTimer.current !== null) {
+      clearTimeout(closeTimer.current);
+      closeTimer.current = null;
     }
+  }, []);
 
-    // Cursor exits window / moves to taskbar / off-screen
-    const handleDocMouseOut = (e: MouseEvent) => {
-      if (!e.relatedTarget && !(e as any).toElement) {
-        setOpenIndex(null)
-      }
-    }
+  const handleEnter = useCallback((index: number) => {
+    cancelClose();
+    setOpenIndex(index);
+  }, [cancelClose]);
 
-    const handleDocMouseLeave = () => {
-      setOpenIndex(null)
-    }
+  const handleLeave = useCallback(() => {
+    cancelClose();
+    closeTimer.current = setTimeout(() => {
+      setOpenIndex(null);
+      closeTimer.current = null;
+    }, CLOSE_DELAY);
+  }, [cancelClose]);
 
-    const handleWindowBlur = () => {
-      setOpenIndex(null)
-    }
-
-    window.addEventListener('mousemove', handleGlobalMouseMove, { passive: true })
-    document.addEventListener('mouseout', handleDocMouseOut)
-    document.addEventListener('mouseleave', handleDocMouseLeave)
-    window.addEventListener('blur', handleWindowBlur)
-
-    return () => {
-      window.removeEventListener('mousemove', handleGlobalMouseMove)
-      document.removeEventListener('mouseout', handleDocMouseOut)
-      document.removeEventListener('mouseleave', handleDocMouseLeave)
-      window.removeEventListener('blur', handleWindowBlur)
-    }
-  }, [openIndex])
-
-  // JSON-LD structured data for Google FAQ schema rich snippets
   const faqSchema = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
@@ -112,135 +81,107 @@ export function FaqSection() {
         text: item.answer,
       },
     })),
-  }
+  };
 
   return (
     <section
       id="faq"
-      className="relative w-full pt-28 md:pt-36 lg:pt-44 pb-24 md:pb-32 bg-[#0E0F10] text-[#B7BBC0] overflow-hidden border-t border-white/[0.06]"
+      className="relative w-full py-20 md:py-28 lg:py-32 bg-[#FFFFFF] text-neutral-900 overflow-hidden border-t border-neutral-200/80 font-sans"
       aria-labelledby="faq-heading"
     >
-      {/* Structured SEO Schema */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
 
-      {/* Subtle ambient lighting */}
-      <div
-        className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] rounded-full pointer-events-none opacity-15 blur-[120px]"
-        style={{ background: 'radial-gradient(circle, #d1aa5c 0%, transparent 70%)' }}
-      />
+      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
 
-      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* ── Section Header (Generous spacing, Circular Std font, Bigger Title) ── */}
-        <div className="text-left mb-16 md:mb-24 lg:mb-28">
-          <LuxuryReveal delay={0} variant="up">
-            <div className="inline-flex items-center gap-2 border border-[#d1aa5c]/25 bg-black/40 backdrop-blur-md px-3.5 py-1.5 rounded-none text-[10px] md:text-xs font-circular text-[#f3e3be] tracking-[2.5px] uppercase shadow-sm mb-5 md:mb-6" style={{ fontFamily: "'Circular Std', 'Circular', -apple-system, BlinkMacSystemFont, sans-serif" }}>
-              <span className="w-1.5 h-1.5 rounded-none bg-[#d1aa5c]" />
-              <span>F.A.Q · FOIRE AUX QUESTIONS</span>
+        {/* Section Header */}
+        <div className="text-center mb-14 md:mb-18">
+          <LuxuryReveal delay={0}>
+            <div className="inline-flex items-center gap-2 border border-neutral-200 bg-neutral-100 px-3.5 py-1.5 rounded-full text-[11px] font-semibold text-neutral-800 tracking-wider uppercase mb-4 shadow-sm">
+              <span className="w-1.5 h-1.5 rounded-full bg-neutral-900" />
+              <span>F.A.Q · Questions fréquentes</span>
             </div>
           </LuxuryReveal>
 
-          {/* Big commanding title with Circular Std font & light golden 'avant d'acheter.' */}
-          <LuxuryReveal delay={100} variant="up">
+          <LuxuryReveal delay={100}>
             <h2
               id="faq-heading"
-              className="font-circular text-4xl sm:text-5xl md:text-6xl lg:text-[56px] xl:text-[62px] text-white font-normal tracking-[-0.03em] leading-[1.12] max-w-4xl"
-              style={{ fontFamily: "'Circular Std', 'Circular', -apple-system, BlinkMacSystemFont, sans-serif" }}
+              className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#111827] tracking-tight leading-tight"
             >
-              <span>Questions que les gens se posent </span>
-              <span className="text-[#f5e2b8] font-normal">avant d&apos;acheter.</span>
+              Tout ce que vous devez savoir <br className="hidden sm:inline" />
+              <span className="font-serif italic font-light text-neutral-600">avant de choisir.</span>
             </h2>
           </LuxuryReveal>
 
-          {/* Subtitle: smaller, longer, normal font, delicate light platinum/champagne */}
-          <LuxuryReveal delay={180} variant="up">
-            <p
-              className="text-[13px] sm:text-[14px] text-[#e8dfcf]/75 font-normal tracking-normal mt-4 md:mt-5 leading-relaxed max-w-3xl font-circular"
-              style={{ fontFamily: "'Circular Std', 'Circular', -apple-system, BlinkMacSystemFont, sans-serif" }}
-            >
-              Tout ce que vous devez savoir sur la livraison, nos garanties et le showroom de Birkhadem.
+          <LuxuryReveal delay={150}>
+            <p className="text-sm sm:text-base text-neutral-500 mt-3 max-w-xl mx-auto">
+              Livraison dans les 58 wilayas, montage gratuit, garanties et options sur mesure.
             </p>
           </LuxuryReveal>
         </div>
 
-        {/* ── Questions Line-Separated Stack (Sharp-edged, reduced spacing, normal luxurious question font) ── */}
-        <div className="border-t border-white/10 divide-y divide-white/10">
+        {/* FAQ Cards — hover to expand */}
+        <div className="flex flex-col gap-3">
           {FAQ_DATA.map((item, index) => {
-            const isOpen = openIndex === index
+            const isOpen = openIndex === index;
             return (
-              <LuxuryReveal key={index} delay={index * 50 + 100} variant="up">
+              <LuxuryReveal key={index} delay={index * 40}>
                 <div
-                  ref={(el) => {
-                    itemRefs.current[index] = el
-                  }}
-                  onMouseLeave={() => {
-                    if (openIndex === index) {
-                      setOpenIndex(null)
+                  onMouseEnter={() => handleEnter(index)}
+                  onMouseLeave={handleLeave}
+                  className={`
+                    relative rounded-2xl border px-5 sm:px-6 py-4 sm:py-5
+                    transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]
+                    cursor-pointer select-none
+                    ${isOpen
+                      ? 'bg-[#F7F7F5] border-neutral-300/80 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.08)]'
+                      : 'bg-white border-neutral-200 hover:border-neutral-300 hover:shadow-[0_2px_12px_-4px_rgba(0,0,0,0.06)]'
                     }
-                  }}
-                  className={`group transition-all duration-200 ease-out rounded-none py-3.5 px-3 sm:py-4 sm:px-4 my-0.5 cursor-pointer ${
-                    isOpen
-                      ? 'border border-[#d1aa5c]/35 shadow-[0_4px_24px_rgba(209,170,92,0.08)]'
-                      : 'border border-transparent hover:border-white/10'
-                  }`}
-                  style={{
-                    cursor: 'pointer',
-                    background: isOpen
-                      ? 'linear-gradient(135deg, rgba(209, 170, 92, 0.09) 0%, rgba(209, 170, 92, 0.03) 100%)'
-                      : 'transparent',
-                  }}
-                  onClick={() => handleToggle(index)}
+                  `}
                 >
-                  {/* Header Row: Question + Sharp Minimal Toggle Icon */}
+                  {/* Question row */}
                   <div className="flex items-center justify-between gap-4">
-                    {/* Simpler, luxurious, normal-looking font for question text in Circular Std */}
                     <h3
-                      className={`text-[15.5px] sm:text-[17px] font-circular font-normal tracking-[-0.015em] leading-snug transition-colors duration-200 select-none ${
-                        isOpen
-                          ? 'text-[#f5e2b8] font-medium'
-                          : 'text-white/90 group-hover:text-white'
+                      className={`text-sm sm:text-[15px] font-medium tracking-tight transition-colors duration-200 leading-snug ${
+                        isOpen ? 'text-neutral-900 font-semibold' : 'text-neutral-700'
                       }`}
-                      style={{ fontFamily: "'Circular Std', 'Circular', -apple-system, BlinkMacSystemFont, sans-serif" }}
                     >
                       {item.question}
                     </h3>
 
-                    {/* Sharp-edged Minimal Action Toggle */}
+                    {/* + → × icon */}
                     <div
-                      className={`shrink-0 w-7 h-7 rounded-none flex items-center justify-center transition-all duration-200 border ${
+                      className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center border transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                         isOpen
-                          ? 'bg-[#d1aa5c] border-[#d1aa5c] text-[#0E0F10] rotate-45 shadow-[0_0_12px_rgba(209,170,92,0.35)]'
-                          : 'bg-white/[0.03] border-white/15 text-white/50 group-hover:text-white group-hover:border-white/30 group-hover:bg-white/[0.06]'
+                          ? 'bg-neutral-900 border-neutral-900 text-white rotate-45'
+                          : 'bg-white border-neutral-200 text-neutral-400 hover:border-neutral-400 hover:text-neutral-700'
                       }`}
-                      aria-label={isOpen ? 'Fermer la réponse' : 'Ouvrir la réponse'}
                     >
-                      <Plus className="w-3.5 h-3.5 stroke-[2.2]" />
+                      <Plus className="w-4 h-4" />
                     </div>
                   </div>
 
-                  {/* Smooth Animated Collapsible Answer Environment */}
+                  {/* Answer — smooth slide open/close via grid trick */}
                   <div
-                    className={`grid transition-all duration-250 ease-out overflow-hidden ${
-                      isOpen
-                        ? 'grid-rows-[1fr] opacity-100 mt-2.5 sm:mt-3 pt-2.5 border-t border-[#d1aa5c]/20'
-                        : 'grid-rows-[0fr] opacity-0 mt-0 pt-0 border-t-0'
+                    className={`grid transition-all duration-350 ease-[cubic-bezier(0.22,1,0.36,1)] overflow-hidden ${
+                      isOpen ? 'grid-rows-[1fr] opacity-100 mt-3' : 'grid-rows-[0fr] opacity-0 mt-0'
                     }`}
                   >
                     <div className="overflow-hidden">
-                      {/* Response text keeps clean readable styling */}
-                      <p className="text-xs sm:text-[13.5px] leading-relaxed text-[#D4D4D8]/90 font-sora font-light pr-6">
+                      <p className="text-sm leading-relaxed text-neutral-500 pr-8 pb-1">
                         {item.answer}
                       </p>
                     </div>
                   </div>
                 </div>
               </LuxuryReveal>
-            )
+            );
           })}
         </div>
+
       </div>
     </section>
-  )
+  );
 }

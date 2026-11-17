@@ -18,13 +18,27 @@ export function LuxuryReveal({
   delay = 0,
   variant = 'up',
   className = '',
-  threshold = 0.15,
+  threshold = 0.05,
   once = true,
 }: LuxuryRevealProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
+    if (!ref.current) return;
+
+    // Immediately mark visible if already inside or above viewport
+    const rect = ref.current.getBoundingClientRect();
+    if (rect.top < window.innerHeight + 100 && rect.bottom > -50) {
+      setIsVisible(true);
+      if (once) return;
+    }
+
+    if (typeof IntersectionObserver === 'undefined') {
+      setIsVisible(true);
+      return;
+    }
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -36,12 +50,10 @@ export function LuxuryReveal({
           setIsVisible(false);
         }
       },
-      { threshold }
+      { threshold: Math.min(threshold, 0.05) }
     );
 
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
+    observer.observe(ref.current);
 
     return () => {
       if (ref.current) {

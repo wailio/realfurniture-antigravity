@@ -2,21 +2,40 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { Phone, ChevronDown, Menu, X, Check, Instagram, Facebook, Youtube } from 'lucide-react';
-import { TikTokIcon } from '@/components/icons';
+import { ChevronDown, Menu, X, Check } from 'lucide-react';
 import { useSiteConfig } from '@/lib/use-site-config';
 
 interface HeaderProps {
-  theme?: 'dark' | 'light';
+  theme?: 'dark' | 'light' | 'overlay';
+  sticky?: boolean;
 }
 
-export function Header({ theme = 'dark' }: HeaderProps) {
+export function Header({ theme = 'overlay', sticky = false }: HeaderProps) {
   const siteConfig = useSiteConfig();
+  const isOverlay = theme === 'overlay';
+  const isDark = theme === 'dark' || isOverlay;
+
   const [isProductsOpen, setIsProductsOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobileProductsOpen, setIsMobileProductsOpen] = useState(false);
   const [isLangOpen, setIsLangOpen] = useState(false);
   const [selectedLang, setSelectedLang] = useState<'FR' | 'AR'>('FR');
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    let ticking = false;
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setScrolled(window.scrollY > 20);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   const productsDropdownRef = useRef<HTMLDivElement>(null);
   const langDropdownRef = useRef<HTMLDivElement>(null);
@@ -44,239 +63,56 @@ export function Header({ theme = 'dark' }: HeaderProps) {
 
   const categories = [
     { name: 'Salle à manger', href: '/all-products?category=salle-a-manger' },
-    { name: 'Canapés', href: '/all-products?category=sofas' },
-    { name: 'Chambres', href: '/all-products?category=chambres' },
-    { name: 'Armoires', href: '/all-products?category=armoire' },
-    { name: 'Accessoires', href: '/all-products?category=accessories' },
+    { name: 'Canapés & Salons', href: '/all-products?category=sofas' },
+    { name: 'Chambres & Suites', href: '/all-products?category=chambres' },
+    { name: 'Armoires & Dressings', href: '/all-products?category=armoire' },
+    { name: 'Accessoires & Décoration', href: '/all-products?category=accessories' },
   ];
 
-  const isDark = theme === 'dark';
-
   return (
-    <header className="sticky top-0 w-full z-50 shadow-md font-sora transition-colors duration-300">
-      {/* ── ROW 1: Top Promo Bar (Dark, Full Width, with Socials on Left) ── */}
-      <div className="bg-[#0A0B0C] text-[#F2F1EF] text-xs py-1.5 px-4 sm:px-6 md:px-10 lg:px-12 border-b border-white/5">
-        <div className="max-w-[1440px] mx-auto flex items-center justify-between">
-          {/* LEFT: Social Icons — all screens, tiny on mobile */}
-          <div className="flex items-center gap-1.5 md:gap-3 shrink-0">
-            <a href={siteConfig.instagram_url || "https://www.instagram.com/chateau_dart_meubles/"} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-[#B7BBC0] hover:text-[#b68d40] transition-colors p-0.5">
-              <Instagram className="w-2.5 h-2.5 md:w-3.5 md:h-3.5" />
-            </a>
-            <a href={siteConfig.facebook_url || "https://www.facebook.com/chateau.dart.alger/"} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="text-[#B7BBC0] hover:text-[#b68d40] transition-colors p-0.5">
-              <Facebook className="w-2.5 h-2.5 md:w-3.5 md:h-3.5" />
-            </a>
-            <a href={siteConfig.tiktok_url || "https://www.tiktok.com/@chateaudart_meubles"} target="_blank" rel="noopener noreferrer" aria-label="TikTok" className="text-[#B7BBC0] hover:text-[#b68d40] transition-colors p-0.5">
-              <TikTokIcon className="w-2.5 h-2.5 md:w-3.5 md:h-3.5" />
-            </a>
-            <a href={siteConfig.youtube_url || "https://www.youtube.com/@chateaudart/featured"} target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="text-[#B7BBC0] hover:text-[#b68d40] transition-colors p-0.5 hidden sm:block">
-              <Youtube className="w-2.5 h-2.5 md:w-3.5 md:h-3.5" />
-            </a>
-          </div>
+    <header
+      className={`w-full z-40 transition-all duration-300 ${
+        sticky ? 'sticky top-0' : isOverlay ? 'absolute top-0 inset-x-0' : 'relative'
+      } ${
+        isOverlay
+          ? 'bg-gradient-to-b from-black/85 via-black/40 to-transparent border-b border-white/10'
+          : isDark
+            ? scrolled
+              ? 'bg-[#0B0D11]/95 backdrop-blur-2xl border-b border-white/10 shadow-[0_4px_25px_rgba(0,0,0,0.35)]'
+              : 'bg-[#0B0D11] border-b border-white/10'
+            : scrolled && sticky
+              ? 'bg-white/95 backdrop-blur-2xl border-b border-neutral-200/90 shadow-[0_4px_24px_rgba(0,0,0,0.06)]'
+              : 'bg-white border-b border-neutral-200/80 shadow-xs'
+      }`}
+    >
+      <div className="max-w-[1560px] mx-auto px-6 sm:px-10 md:px-14 lg:px-20 py-4 md:py-5 flex items-center justify-between gap-6">
+        {/* ── LEFT: Brand Logo Icon (Clean, without text) ── */}
+        <Link href="/" className="group flex items-center shrink-0 focus-visible:outline-none">
+          <img
+            src="/bigtower.png"
+            alt="Château d'Art"
+            className={`h-10 sm:h-11 md:h-12 lg:h-13 w-auto object-contain transition-transform duration-300 group-hover:scale-105 ${
+              isDark
+                ? 'brightness-0 invert drop-shadow-[0_2px_12px_rgba(0,0,0,0.7)]'
+                : 'drop-shadow-xs'
+            }`}
+          />
+        </Link>
 
-          {/* RIGHT: Promo text — right on mobile, center on desktop */}
-          <div className="flex-1 flex justify-end md:justify-center md:text-center font-medium tracking-wider min-w-0 pl-3 md:pl-0">
-            <span className="md:hidden text-[9px] text-[#B7BBC0] truncate text-right block max-w-[240px] sm:max-w-[320px] ml-auto">
-              {siteConfig.promo_bar || 'Livraison + montage dans les 58 wilayas · Gratuit sur Alger – Blida – Boumerdès – Médéa – Tipaza'}
-            </span>
-            <span className="hidden md:inline text-[11px]">
-              {siteConfig.promo_bar || 'Livraison + montage dans les 58 wilayas · Gratuit sur Alger – Blida – Boumerdès – Médéa – Tipaza'}
-            </span>
-          </div>
-
-          {/* RIGHT: desktop only */}
-          <div className="hidden md:flex items-center justify-end w-[116px] text-[10px] text-[#A1A1AA] uppercase tracking-widest font-medium">
-            <span>Haute Création</span>
-          </div>
-        </div>
-      </div>
-
-      {/* ── ROW 2: Main Header Bar (Task Bar with Prominent Logo) ── */}
-      <div
-        className={`py-1 md:py-1.5 px-4 sm:px-6 md:px-10 lg:px-12 min-h-[64px] md:min-h-[92px] lg:min-h-[96px] flex items-center transition-colors duration-300 ${
-          isDark
-            ? 'bg-[#101114] border-b border-white/10'
-            : 'bg-white border-b border-[#E4E4E7]'
-        }`}
-      >
-        <div className="max-w-[1440px] w-full mx-auto flex items-center justify-between">
-          
-          {/* LEFT: Phone / Need Help block — desktop only */}
-          <div className="hidden md:flex flex-1 items-center justify-start">
-            <a
-              href={`tel:${siteConfig.phone.replace(/[^0-9]/g, '')}`}
-              className="group inline-flex items-center gap-3.5 transition-transform duration-250 ease-out hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b68d40]"
-              aria-label={`Besoin d'aide ? ${siteConfig.phone}`}
-            >
-              <div
-                className={`w-11 h-11 md:w-12 md:h-12 rounded-full flex items-center justify-center transition-all duration-250 ease-out group-hover:bg-[#8f7137] group-hover:text-white group-hover:shadow-[0_6px_18px_rgba(182,141,64,0.38)] ${
-                  isDark
-                    ? 'bg-[#F4F4F5] text-[#121316]'
-                    : 'bg-[#F4F4F5] text-[#18181B]'
-                }`}
-              >
-                <Phone className="w-4 h-4 md:w-5 md:h-5 transition-colors duration-250" />
-              </div>
-              <div className="hidden sm:flex flex-col text-left">
-                <span
-                  className={`text-[11px] font-medium transition-colors duration-250 tracking-wide ${
-                    isDark
-                      ? 'text-[#9CA3AF] group-hover:text-[#f4d79a]'
-                      : 'text-[#71717A] group-hover:text-[#8f7137]'
-                  }`}
-                >
-                  Need Help ?
-                </span>
-                <span
-                  className={`text-sm md:text-base font-bold transition-colors duration-250 tracking-tight ${
-                    isDark
-                      ? 'text-white group-hover:text-[#f4d79a]'
-                      : 'text-[#18181B] group-hover:text-[#8f7137]'
-                  }`}
-                >
-                  {siteConfig.phone}
-                </span>
-              </div>
-            </a>
-          </div>
-
-          {/* CENTER: Logo — left on mobile, centered on desktop */}
-          <div className="flex-1 md:flex-shrink-0 flex items-center justify-start md:justify-center">
-            <Link href="/" className="group flex items-center py-0">
-              <img
-                src="/bigtower.png"
-                alt="Château d'art"
-                className="h-[52px] sm:h-[56px] md:h-[76px] lg:h-[84px] w-auto object-contain transition-transform duration-300 group-hover:scale-105 drop-shadow-md"
-              />
-            </Link>
-          </div>
-
-          {/* RIGHT: Language Switcher (NO search, wishlist, account, or cart icons) */}
-          <div className="flex-1 flex items-center justify-end gap-2.5 md:gap-3.5">
-            {/* Language Switcher with User's Uploaded Flag Images */}
-            <div className="hidden md:block relative" ref={langDropdownRef}>
-              <button
-                type="button"
-                onClick={() => setIsLangOpen(!isLangOpen)}
-                className={`inline-flex items-center justify-center gap-1.5 md:gap-2 text-white w-24 md:w-28 h-8 md:h-9 rounded-none text-[11px] md:text-xs font-semibold shadow-sm transition-colors ${
-                  isDark
-                    ? 'bg-[#23262D] hover:bg-[#2D313A] border border-white/10'
-                    : 'bg-[#374151] hover:bg-[#2D333B]'
-                }`}
-                aria-haspopup="true"
-                aria-expanded={isLangOpen}
-              >
-                {selectedLang === 'FR' ? (
-                  <>
-                    <img
-                      src="/flags/fr.webp"
-                      alt="France"
-                      className="w-4.5 h-3 object-cover rounded-none shadow-xs"
-                    />
-                    <span>FR</span>
-                  </>
-                ) : (
-                  <>
-                    <img
-                      src="/flags/sa.webp"
-                      alt="Arabic"
-                      className="w-4.5 h-3 object-cover rounded-none shadow-xs"
-                    />
-                    <span>AR</span>
-                  </>
-                )}
-                <ChevronDown
-                  className={`w-3 h-3 transition-transform duration-200 ${
-                    isLangOpen ? 'rotate-180' : ''
-                  }`}
-                />
-              </button>
-
-              {/* Language Dropdown */}
-              {isLangOpen && (
-                <div className="absolute right-0 mt-1 w-full min-w-[140px] bg-[#1E2024] border border-white/15 rounded-none shadow-2xl py-1.5 z-50 animate-fade-in-down">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSelectedLang('FR');
-                      setIsLangOpen(false);
-                    }}
-                    className="w-full flex items-center justify-between px-3.5 py-2.5 text-xs text-white hover:bg-white/10 transition-colors text-left"
-                  >
-                    <div className="flex items-center gap-2.5">
-                      <img
-                        src="/flags/fr.webp"
-                        alt="France"
-                        className="w-5 h-3.5 object-cover rounded-none"
-                      />
-                      <span>Français</span>
-                    </div>
-                    {selectedLang === 'FR' && (
-                      <Check className="w-3.5 h-3.5 text-[#b68d40]" />
-                    )}
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSelectedLang('AR');
-                      setIsLangOpen(false);
-                    }}
-                    className="w-full flex items-center justify-between px-3.5 py-2.5 text-xs text-white hover:bg-white/10 transition-colors text-left"
-                  >
-                    <div className="flex items-center gap-2.5">
-                      <img
-                        src="/flags/sa.webp"
-                        alt="Arabic"
-                        className="w-5 h-3.5 object-cover rounded-none"
-                      />
-                      <span>العربية</span>
-                    </div>
-                    {selectedLang === 'AR' && (
-                      <Check className="w-3.5 h-3.5 text-[#b68d40]" />
-                    )}
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/* Mobile Hamburger toggle */}
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className={`md:hidden p-2 transition-colors ${
-                isDark
-                  ? 'text-white hover:text-[#b68d40]'
-                  : 'text-[#18181B] hover:text-[#b68d40]'
-              }`}
-              aria-label="Menu"
-            >
-              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* ── ROW 3: Navigation Bar ── */}
-      <nav
-        className={`hidden md:block py-2 md:py-2.5 px-6 md:px-12 transition-colors duration-300 ${
-          isDark
-            ? 'bg-[#15161A] border-b border-white/10'
-            : 'bg-[#F5F1E8] border-b border-[#E9E4DA]'
-        }`}
-      >
-        <div
-          className={`max-w-[1440px] mx-auto flex items-center justify-center gap-9 md:gap-12 lg:gap-16 text-sm font-medium tracking-wide ${
-            isDark ? 'text-[#E4E4E7]' : 'text-[#27272A]'
+        {/* ── CENTER: Compact Navigation Menu (Art Home Furniture Font, Size & Spacing) ── */}
+        <nav
+          className={`hidden lg:flex items-center gap-6 xl:gap-8 text-[13px] xl:text-[13.5px] font-medium tracking-normal transition-colors ${
+            isDark ? 'text-white/85' : 'text-neutral-700'
           }`}
         >
-          {/* Accueil */}
           <Link
             href="/"
-            className="hover:text-[#b68d40] transition-colors py-1 font-medium"
+            className={`py-1.5 transition-colors ${isDark ? 'hover:text-white' : 'hover:text-black'}`}
           >
             Accueil
           </Link>
 
-          {/* Produits with Dropdown */}
+          {/* Collection with Dropdown */}
           <div
             className="relative"
             ref={productsDropdownRef}
@@ -285,39 +121,41 @@ export function Header({ theme = 'dark' }: HeaderProps) {
           >
             <Link
               href="/all-products"
-              className="inline-flex items-center gap-1.5 py-1 text-[#b68d40] font-semibold hover:text-[#cf9d42] transition-colors"
+              className={`inline-flex items-center gap-1 py-1.5 transition-colors ${
+                isDark ? 'hover:text-white' : 'hover:text-black'
+              }`}
             >
-              <span>Produits</span>
+              <span>Collection</span>
               <ChevronDown
                 className={`w-3.5 h-3.5 transition-transform duration-200 ${
-                  isProductsOpen ? 'rotate-180' : ''
-                }`}
+                  isDark ? 'text-white/50' : 'text-neutral-400'
+                } ${isProductsOpen ? 'rotate-180' : ''}`}
               />
             </Link>
 
             {/* Dropdown Menu */}
             <div
-              className={`absolute left-0 top-full pt-2 w-52 transition-all duration-200 ${
+              className={`absolute left-0 top-full pt-2 w-60 transition-all duration-200 ${
                 isProductsOpen
                   ? 'opacity-100 visible translate-y-0'
                   : 'opacity-0 invisible -translate-y-1'
               }`}
             >
               <div
-                className={`rounded-md shadow-2xl py-2.5 overflow-hidden border ${
+                className={`rounded-2xl shadow-2xl p-2 overflow-hidden border backdrop-blur-2xl ${
                   isDark
-                    ? 'bg-[#1A1C21] border-white/15 text-[#E4E4E7]'
-                    : 'bg-white border-[#E9E4DA] text-[#3F3F46]'
+                    ? 'border-white/15 bg-[#0C0F16]/95 text-neutral-200'
+                    : 'border-neutral-200/80 bg-white/95 text-neutral-800'
                 }`}
               >
                 {categories.map((cat) => (
                   <Link
                     key={cat.name}
                     href={cat.href}
-                    className={`block px-5 py-2.5 text-sm transition-colors ${
+                    className={`block px-4 py-2 text-xs tracking-wide rounded-xl transition-colors ${
                       isDark
-                        ? 'hover:bg-white/10 hover:text-white'
-                        : 'hover:text-[#18181B] hover:bg-[#F5F1E8]'
+                        ? 'hover:bg-white/10 hover:text-white text-neutral-300'
+                        : 'hover:bg-neutral-100 hover:text-black text-neutral-700'
                     }`}
                   >
                     {cat.name}
@@ -327,94 +165,177 @@ export function Header({ theme = 'dark' }: HeaderProps) {
             </div>
           </div>
 
-          {/* Pièces */}
-          <Link
-            href="/rooms"
-            className="hover:text-[#b68d40] transition-colors py-1"
-          >
-            Pièces
-          </Link>
-
-          {/* Inspirations */}
-          <Link
-            href="/inspirations"
-            className="hover:text-[#b68d40] transition-colors py-1"
-          >
-            Inspirations
-          </Link>
-
-          {/* Offres */}
-          <Link
-            href="/offers"
-            className="hover:text-[#b68d40] transition-colors py-1"
-          >
-            Offres
-          </Link>
-
-          {/* À Propos */}
           <Link
             href="/about"
-            className="hover:text-[#b68d40] transition-colors py-1"
+            className={`py-1.5 transition-colors ${isDark ? 'hover:text-white' : 'hover:text-black'}`}
           >
             À Propos
           </Link>
 
-          {/* Contact */}
+          <Link
+            href="/showroom"
+            className={`py-1.5 transition-colors ${isDark ? 'hover:text-white' : 'hover:text-black'}`}
+          >
+            Showroom
+          </Link>
+
+          <Link
+            href="/inspirations"
+            className={`py-1.5 transition-colors ${isDark ? 'hover:text-white' : 'hover:text-black'}`}
+          >
+            Inspirations
+          </Link>
+
           <Link
             href="/contact"
-            className="hover:text-[#b68d40] transition-colors py-1"
+            className={`py-1.5 transition-colors ${isDark ? 'hover:text-white' : 'hover:text-black'}`}
           >
             Contact
           </Link>
+        </nav>
+
+        {/* ── RIGHT: Smooth Language Switcher with Flags Only (No phone, no devis button) ── */}
+        <div className="flex items-center gap-3 shrink-0">
+          <div className="relative" ref={langDropdownRef}>
+            <button
+              type="button"
+              onClick={() => setIsLangOpen(!isLangOpen)}
+              className={`inline-flex items-center justify-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold border transition-all select-none backdrop-blur-md ${
+                isDark
+                  ? 'text-white/90 hover:text-white bg-white/10 hover:bg-white/20 border-white/20 shadow-xs'
+                  : 'text-neutral-800 bg-neutral-100 hover:bg-neutral-200/80 border-neutral-200'
+              }`}
+              aria-haspopup="true"
+              aria-expanded={isLangOpen}
+            >
+              <img
+                src={selectedLang === 'FR' ? '/flags/fr.webp' : '/flags/sa.webp'}
+                alt={selectedLang}
+                className="w-4 h-2.5 object-cover rounded-xs"
+              />
+              <span>{selectedLang}</span>
+              <ChevronDown className="w-3 h-3 opacity-60" />
+            </button>
+
+            {isLangOpen && (
+              <div
+                className={`absolute right-0 mt-2 w-32 backdrop-blur-2xl border rounded-2xl shadow-2xl py-1.5 z-50 animate-in fade-in duration-150 ${
+                  isDark
+                    ? 'bg-[#0D0F14]/95 border-white/15 text-neutral-200'
+                    : 'bg-white/95 border-neutral-200/80 text-neutral-800'
+                }`}
+              >
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedLang('FR');
+                    setIsLangOpen(false);
+                  }}
+                  className={`w-full flex items-center justify-between px-3.5 py-2 text-xs text-left font-medium ${
+                    isDark ? 'hover:bg-white/10 text-white' : 'hover:bg-neutral-100 text-neutral-800'
+                  }`}
+                >
+                  <div className="flex items-center gap-2">
+                    <img src="/flags/fr.webp" alt="France" className="w-4 h-2.5 object-cover rounded-xs" />
+                    <span>FR</span>
+                  </div>
+                  {selectedLang === 'FR' && <Check className="w-3.5 h-3.5 text-[#d1aa5c]" />}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedLang('AR');
+                    setIsLangOpen(false);
+                  }}
+                  className={`w-full flex items-center justify-between px-3.5 py-2 text-xs text-left font-medium ${
+                    isDark ? 'hover:bg-white/10 text-white' : 'hover:bg-neutral-100 text-neutral-800'
+                  }`}
+                >
+                  <div className="flex items-center gap-2">
+                    <img src="/flags/sa.webp" alt="Arabic" className="w-4 h-2.5 object-cover rounded-xs" />
+                    <span>AR</span>
+                  </div>
+                  {selectedLang === 'AR' && <Check className="w-3.5 h-3.5 text-[#d1aa5c]" />}
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Mobile Hamburger toggle */}
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className={`lg:hidden p-2 transition-colors rounded-xl ${
+              isDark
+                ? 'text-white hover:bg-white/10'
+                : 'text-neutral-800 hover:text-black hover:bg-neutral-100'
+            }`}
+            aria-label="Menu"
+          >
+            {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+          </button>
         </div>
-      </nav>
+      </div>
 
       {/* ── MOBILE MENU OVERLAY ── */}
       {isMobileMenuOpen && (
-        <div className="md:hidden backdrop-blur-xl bg-[#0A0B0C]/88 border-b border-white/10 px-5 py-4 animate-fade-in shadow-2xl">
-          {/* Phone shortcut */}
-          <a
-            href={`tel:${siteConfig.phone.replace(/[^0-9]/g, '')}`}
-            onClick={() => setIsMobileMenuOpen(false)}
-            className="flex items-center gap-2.5 p-2.5 mb-3 bg-white/5 border border-white/10 rounded-sm"
-          >
-            <div className="w-7 h-7 rounded-full flex items-center justify-center bg-[#b68d40] text-white flex-shrink-0">
-              <Phone className="w-3.5 h-3.5" />
-            </div>
-            <div>
-              <span className="text-[10px] text-[#B7BBC0] block leading-none mb-0.5">Need Help?</span>
-              <span className="text-xs font-bold text-white">{siteConfig.phone}</span>
-            </div>
-          </a>
-
+        <div
+          className={`lg:hidden backdrop-blur-2xl border-t px-6 py-6 animate-in fade-in duration-200 shadow-2xl ${
+            isDark
+              ? 'bg-[#0B0D11]/98 border-white/10 text-white'
+              : 'bg-white/98 border-neutral-200 text-neutral-800'
+          }`}
+        >
           {/* Nav Links */}
-          <nav className="flex flex-col text-sm font-medium text-[#E4E4E7]">
-            <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="py-2 border-b border-white/8 hover:text-[#b68d40] transition-colors">Accueil</Link>
+          <nav className={`flex flex-col text-sm font-medium divide-y tracking-wide ${
+            isDark ? 'text-neutral-200 divide-white/10' : 'text-neutral-800 divide-neutral-100'
+          }`}>
+            <Link
+              href="/"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className={`py-3 font-semibold uppercase tracking-wider text-xs ${isDark ? 'text-white' : 'text-black'}`}
+            >
+              Accueil
+            </Link>
 
             <div>
               <button
                 type="button"
                 onClick={() => setIsMobileProductsOpen(!isMobileProductsOpen)}
-                className="w-full flex items-center justify-between py-2 border-b border-white/8 text-[#b68d40]"
+                className={`w-full flex items-center justify-between py-3 font-semibold uppercase tracking-wider text-xs ${
+                  isDark ? 'text-white' : 'text-neutral-900'
+                }`}
               >
-                <span>Produits</span>
+                <span>Collection</span>
                 <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isMobileProductsOpen ? 'rotate-180' : ''}`} />
               </button>
               {isMobileProductsOpen && (
-                <div className="pl-3 py-1.5 flex flex-col gap-1 bg-white/5 rounded-sm my-1 text-xs text-[#B7BBC0]">
-                  <Link href="/all-products" onClick={() => setIsMobileMenuOpen(false)} className="py-1 text-white hover:text-[#b68d40]">Tous les produits</Link>
+                <div className={`pl-3 py-1 flex flex-col gap-1.5 my-1 text-xs rounded-xl p-2.5 ${
+                  isDark ? 'bg-white/10 text-neutral-200' : 'bg-neutral-50 text-neutral-600'
+                }`}>
+                  <Link href="/all-products" onClick={() => setIsMobileMenuOpen(false)} className={`py-1 font-semibold ${isDark ? 'text-white' : 'text-black'}`}>
+                    Tous les modèles
+                  </Link>
                   {categories.map((cat) => (
-                    <Link key={cat.name} href={cat.href} onClick={() => setIsMobileMenuOpen(false)} className="py-1 hover:text-[#b68d40]">{cat.name}</Link>
+                    <Link key={cat.name} href={cat.href} onClick={() => setIsMobileMenuOpen(false)} className={`py-1 ${isDark ? 'hover:text-white' : 'hover:text-black'}`}>
+                      {cat.name}
+                    </Link>
                   ))}
                 </div>
               )}
             </div>
 
-            <Link href="/rooms" onClick={() => setIsMobileMenuOpen(false)} className="py-2 border-b border-white/8 hover:text-[#b68d40] transition-colors">Pièces</Link>
-            <Link href="/inspirations" onClick={() => setIsMobileMenuOpen(false)} className="py-2 border-b border-white/8 hover:text-[#b68d40] transition-colors">Inspirations</Link>
-            <Link href="/offers" onClick={() => setIsMobileMenuOpen(false)} className="py-2 border-b border-white/8 hover:text-[#b68d40] transition-colors">Offres</Link>
-            <Link href="/about" onClick={() => setIsMobileMenuOpen(false)} className="py-2 border-b border-white/8 hover:text-[#b68d40] transition-colors">À Propos</Link>
-            <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} className="py-2 hover:text-[#b68d40] transition-colors">Contact</Link>
+            <Link href="/about" onClick={() => setIsMobileMenuOpen(false)} className={`py-3 uppercase tracking-wider text-xs ${isDark ? 'hover:text-white' : 'hover:text-black'}`}>
+              À Propos
+            </Link>
+            <Link href="/showroom" onClick={() => setIsMobileMenuOpen(false)} className={`py-3 uppercase tracking-wider text-xs ${isDark ? 'hover:text-white' : 'hover:text-black'}`}>
+              Showroom
+            </Link>
+            <Link href="/inspirations" onClick={() => setIsMobileMenuOpen(false)} className={`py-3 uppercase tracking-wider text-xs ${isDark ? 'hover:text-white' : 'hover:text-black'}`}>
+              Inspirations
+            </Link>
+            <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} className={`py-3 uppercase tracking-wider text-xs ${isDark ? 'hover:text-white' : 'hover:text-black'}`}>
+              Contact
+            </Link>
           </nav>
         </div>
       )}

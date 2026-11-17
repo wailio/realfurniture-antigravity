@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
 import { Instagram, Facebook, Youtube, ArrowUpRight } from 'lucide-react';
 import { LuxuryReveal } from '@/components/luxury-reveal';
 
@@ -59,42 +58,41 @@ const stories: StoryItem[] = [
 
 export function DesignStories() {
   return (
-    <section className="relative w-full py-20 md:py-32 bg-[#0E0F10] border-t border-white/10 overflow-hidden font-sora">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="relative w-full py-20 md:py-28 bg-[#FAFAFA] border-t border-neutral-200/80 overflow-hidden font-sans">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Section Heading */}
-        <div className="text-center mb-14 md:mb-20">
+        {/* Header with badge */}
+        <div className="text-center mb-12 md:mb-16">
           <LuxuryReveal>
-            <div className="inline-flex items-center gap-2 border border-white/15 bg-white/5 px-4 py-1.5 rounded-none text-xs font-medium tracking-wider text-[#b68d40] mb-4 shadow-sm">
-              <span className="w-1.5 h-1.5 bg-[#b68d40]" />
-              <span>Design Stories</span>
+            <div className="inline-flex items-center gap-2 border border-neutral-200 bg-white px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wider text-neutral-800 mb-3 shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
+              <span className="w-1.5 h-1.5 rounded-full bg-neutral-900" />
+              <span>Réseaux &amp; Coulisses</span>
             </div>
-            
-            <h2 className="font-fraunces font-light text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-white tracking-tight leading-tight">
-              Modern Living Inspirations
+          </LuxuryReveal>
+          <LuxuryReveal>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-sans font-extrabold text-[#111827] tracking-tight leading-tight">
+              Nos Réalisations en <span className="font-serif italic font-light text-neutral-600">Mouvement</span>
             </h2>
           </LuxuryReveal>
         </div>
 
-        {/* 4 Story Video Shapes Container (Sideways scrollable on mobile, 4-col grid on desktop) */}
+        {/* 4 Story Video Cards Container with tight vertical padding */}
         <div className="relative">
-          <div className="flex lg:grid lg:grid-cols-4 overflow-x-auto lg:overflow-visible gap-5 lg:gap-6 pb-6 pt-2 px-2 sm:px-4 lg:px-0 snap-x snap-mandatory scrollbar-hide">
+          <div className="flex lg:grid lg:grid-cols-4 overflow-x-auto lg:overflow-visible gap-5 lg:gap-6 pb-2 pt-1 px-1 sm:px-2 lg:px-0 snap-x snap-mandatory scrollbar-hide">
             {stories.map((story, idx) => {
               const IconComponent = story.icon;
               return (
                 <LuxuryReveal 
                   key={story.id} 
-                  delay={idx * 100}
-                  className={`shrink-0 snap-center w-[250px] sm:w-[285px] lg:w-auto ${
-                    idx >= 2 ? 'story-reveal-no-mobile-anim' : ''
-                  }`}
+                  delay={idx * 80}
+                  className="shrink-0 snap-center w-[260px] sm:w-[285px] lg:w-auto"
                 >
                   <a
                     href={story.link}
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={`Voir nos créations sur ${story.name}`}
-                    className="story-item group relative block h-[400px] sm:h-[450px] lg:h-[510px] w-full rounded-[24px] overflow-hidden border border-white/10 hover:border-[#b68d40]/60 transition-all duration-500 shadow-2xl bg-[#141518]"
+                    className="story-item group relative block h-[420px] sm:h-[460px] lg:h-[500px] w-full rounded-[24px] overflow-hidden border border-neutral-200/90 hover:border-neutral-400 transition-all duration-300 shadow-[0_8px_24px_-6px_rgba(0,0,0,0.06)] hover:shadow-[0_16px_36px_-8px_rgba(0,0,0,0.12)] bg-neutral-100"
                   >
                     {/* Background Video */}
                     <video
@@ -103,43 +101,39 @@ export function DesignStories() {
                       muted
                       loop
                       playsInline
-                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-108"
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                     />
 
-                    {/* Dark gradient overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/35 transition-opacity duration-500 group-hover:opacity-90 pointer-events-none" />
-
-                    {/* Subtle Gold Tint Hover Overlay */}
-                    <div className="absolute inset-0 bg-[#b68d40]/20 backdrop-blur-[1px] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                    {/* Gradient Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-black/30 pointer-events-none" />
 
                     {/* Top Platform Tag */}
-                    <div className="absolute top-4 left-4 z-10">
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/50 backdrop-blur-md border border-white/15 text-[11px] text-[#F2F1EF] font-medium tracking-wide">
-                        <IconComponent className="w-3.5 h-3.5 text-[#b68d40]" />
+                    <div className="absolute top-3.5 left-3.5 z-10">
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/90 backdrop-blur-md border border-white/50 text-[11px] text-neutral-900 font-semibold shadow-sm">
+                        <IconComponent className="w-3.5 h-3.5 text-neutral-900" />
                         <span>{story.name}</span>
                       </span>
                     </div>
 
-                    {/* Center Animated Pop-up Social Icon (Livora style) */}
+                    {/* Center Animated Pop-up Social Icon (Apple hover tactile button) */}
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 pointer-events-none">
-                      <div className="w-14 h-14 rounded-full bg-[#b68d40] text-white flex items-center justify-center shadow-[0_10px_30px_rgba(182,141,64,0.6)] transform scale-0 group-hover:scale-100 transition-all duration-400 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:shadow-[0_14px_35px_rgba(182,141,64,0.85)]">
-                        <IconComponent className="w-6 h-6 transition-transform duration-300 group-hover:scale-110" />
+                      <div className="w-13 h-13 rounded-full bg-white text-neutral-900 flex items-center justify-center shadow-xl transform scale-0 group-hover:scale-100 transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)]">
+                        <IconComponent className="w-5 h-5" />
                       </div>
                     </div>
 
-                    {/* Bottom Metadata & CTA */}
-                    <div className="absolute bottom-0 left-0 right-0 p-5 z-10 flex items-end justify-between">
-                      <div>
-                        <span className="text-[10px] uppercase tracking-[2px] text-[#b68d40] font-semibold block mb-0.5">
+                    {/* Bottom Metadata — text directly on video */}
+                    <div className="absolute bottom-7 left-4 right-4 z-10 flex items-end justify-between">
+                      <div className="min-w-0 pr-2">
+                        <span className="text-[10px] uppercase tracking-widest text-white/60 font-semibold block mb-0.5">
                           {story.name}
                         </span>
-                        <p className="font-fraunces text-base sm:text-lg text-white font-normal line-clamp-1">
+                        <p className="text-sm font-semibold text-white truncate">
                           {story.handle}
                         </p>
                       </div>
-
-                      <div className="hidden lg:flex w-9 h-9 rounded-full bg-white/10 border border-white/20 items-center justify-center text-white transition-all duration-300 group-hover:bg-[#b68d40] group-hover:border-[#b68d40] group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
-                        <ArrowUpRight className="w-4 h-4" />
+                      <div className="w-7 h-7 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 text-white flex items-center justify-center shrink-0 group-hover:bg-white group-hover:text-neutral-900 transition-all duration-300">
+                        <ArrowUpRight className="w-3.5 h-3.5" />
                       </div>
                     </div>
                   </a>
@@ -149,28 +143,11 @@ export function DesignStories() {
           </div>
 
           {/* Subtle Mobile Swipe Hint */}
-          <div className="flex lg:hidden justify-center items-center gap-1.5 mt-2 text-[11px] text-[#A1A1AA]">
-            <span>Glissez pour découvrir</span>
+          <div className="flex lg:hidden justify-center items-center gap-1.5 mt-2 text-[11px] text-neutral-400">
+            <span>Glissez pour voir plus</span>
             <span>&rarr;</span>
           </div>
         </div>
-
-        {/* Bottom Banner (Matching Reference) */}
-        <LuxuryReveal delay={300}>
-          <div className="mt-14 md:mt-18 text-center flex flex-wrap items-center justify-center gap-2.5 text-xs md:text-sm text-[#A1A1AA]">
-            <span className="px-2.5 py-0.5 rounded-full bg-[#b68d40] text-white text-[11px] font-bold uppercase tracking-wider shadow-sm">
-              Devis
-            </span>
-            <span>Donnons vie à vos plus beaux projets d&apos;intérieur.</span>
-            <Link 
-              href="/contact" 
-              className="font-bold underline text-white hover:text-[#b68d40] transition-colors ml-1 inline-flex items-center gap-1"
-            >
-              <span>Demander un devis gratuit</span>
-              <ArrowUpRight className="w-3.5 h-3.5" />
-            </Link>
-          </div>
-        </LuxuryReveal>
 
       </div>
     </section>

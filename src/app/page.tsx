@@ -9,66 +9,31 @@ import {
   ChevronLeft, 
   ChevronRight, 
   Star,
-  Sparkles,
   ArrowRight,
   ArrowUpRight,
 } from 'lucide-react';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { LuxuryReveal } from '@/components/luxury-reveal';
-import { ProductCard } from '@/components/product-card';
 import { CurvedProductShowcase } from '@/components/curved-product-showcase';
+import { ArtHomeCollectionSlider } from '@/components/arthome-collection-slider';
+import { ArtHomeNewArrivals } from '@/components/arthome-new-arrivals';
+import { ArtHomeRoomsAndFeatured } from '@/components/arthome-rooms-and-featured';
 import { DesignStories } from '@/components/design-stories';
-import { ReviewsSection } from '@/components/reviews-section';
 import { HeroQuoteWidget } from '@/components/hero-quote-widget';
 import { FaqSection } from '@/components/faq-section';
-import { products, formatPrice } from '@/lib/products';
+import { products } from '@/lib/products';
 import { useSiteConfig } from '@/lib/use-site-config';
 
 export default function HomePage() {
   const siteConfig = useSiteConfig();
-  const carouselRef = useRef<HTMLDivElement>(null);
-
-  const scrollCarousel = (direction: 'left' | 'right') => {
-    if (carouselRef.current) {
-      const scrollAmount = direction === 'left' ? -340 : 340;
-      carouselRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-    }
-  };
 
   const categories = [
     { name: 'Salle à manger', image: '/categories/salle-a-manger.jpg', slug: 'salle-a-manger' },
-    { name: 'Canapés', image: '/categories/canapes.jpg', slug: 'sofas' },
-    { name: 'Chambres', image: '/categories/chambres.jpg', slug: 'chambres' },
-    { name: 'Armoire', image: '/categories/armoire.jpg', slug: 'armoire' },
+    { name: 'Canapés & Salons', image: '/categories/canapes.jpg', slug: 'sofas' },
+    { name: 'Chambres & Suites', image: '/categories/chambres.jpg', slug: 'chambres' },
+    { name: 'Armoires & Dressings', image: '/categories/armoire.jpg', slug: 'armoire' },
     { name: 'Accessoires', image: '/categories/accessoires.jpg', slug: 'accessories' },
-  ];
-
-  const reviews = [
-    { 
-      name: siteConfig.review_1_name || 'Dr. Amina K.', 
-      city: 'Alger',
-      text: siteConfig.review_1_text || 'La qualité des finitions et le confort du salon dépassent toutes mes attentes. Une véritable pièce maîtresse dans notre maison.',
-      rating: 5 
-    },
-    { 
-      name: siteConfig.review_2_name || 'Yacine M.', 
-      city: 'Oran',
-      text: siteConfig.review_2_text || "Livraison ponctuelle et montage très professionnel. Les matériaux en bois massif et les tissus sont d'un raffinement rare.",
-      rating: 5 
-    },
-    { 
-      name: siteConfig.review_3_name || 'Nadia & Farouk B.', 
-      city: 'Constantine',
-      text: siteConfig.review_3_text || "Nous avons meublé notre salle à manger et notre chambre complète. L'accompagnement de l'équipe a été exceptionnel du début à la fin.",
-      rating: 5 
-    },
-    { 
-      name: siteConfig.review_4_name || 'Karim S.', 
-      city: 'Sétif',
-      text: siteConfig.review_4_text || "Le design contemporain s'intègre avec une élégance naturelle. Service client réactif et conseils avisés. Je recommande sans réserve.",
-      rating: 5 
-    },
   ];
 
   const [productList, setProductList] = React.useState<any[]>(products);
@@ -84,239 +49,352 @@ export default function HomePage() {
       .catch(() => {});
   }, []);
 
-  const carouselProducts = productList.slice(0, 6);
-  const gridProducts = productList.slice(6, 12);
-
   return (
-    <main id="main-content" className="min-h-screen bg-[#0E0F10] font-sans">
-      <Header theme="dark" />
-
-      {/* ── Section 1: Cinematic High-Converting Hero with Interactive Quote Widget ── */}
-      <section className="relative w-full min-h-[680px] lg:min-h-[660px] xl:min-h-[700px] overflow-hidden flex items-start lg:items-center pt-10 pb-14 md:py-20 lg:py-10 xl:py-14">
-        {/* Background Video or Custom Image */}
-        {siteConfig.hero_image_1 ? (
+    <main id="main-content" className="min-h-screen bg-white text-neutral-900 font-sans selection:bg-[#111827] selection:text-white">
+      {/* ── Section 1: Compact Architectural Hero with Taskbar Directly Overlaid ── */}
+      <section className="hero-section relative w-full min-h-[640px] lg:min-h-[670px] xl:min-h-[700px] overflow-hidden flex flex-col justify-between bg-[#08090C]">
+        {/* Real Luxury Mansion & Villa Interior Background — Grand Scale & Architectural Depth */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <img
-            src={siteConfig.hero_image_1}
-            alt="Hero background"
-            className="absolute inset-0 w-full h-full object-cover"
+            src="/hero-mansion.jpg"
+            alt="Château d'Art — Mobilier d'exception"
+            className="w-full h-full object-cover object-[center_42%] select-none scale-[1.01]"
+            style={{
+              filter: 'contrast(1.05) brightness(0.92) saturate(1.04)',
+            }}
           />
-        ) : (
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="absolute inset-0 w-full h-full object-cover"
-          >
-            <source src="/bgvideo.mp4" type="video/mp4" />
-          </video>
-        )}
 
-        {/* Ambient Dark Overlay tailored for two-column contrast */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0E0F10]/95 via-[#0E0F10]/85 to-[#0E0F10]/75 z-10 pointer-events-none" />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0E0F10]/80 via-transparent to-[#0E0F10] z-10 pointer-events-none" />
+          {/* Luxury Atmospheric Lighting & Scrim Effects: */}
+          <div
+            className="absolute inset-x-0 top-0 h-40 pointer-events-none"
+            style={{
+              background: 'linear-gradient(to bottom, rgba(4, 5, 8, 0.90) 0%, rgba(4, 5, 8, 0.45) 55%, transparent 100%)',
+            }}
+          />
 
-        <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 lg:gap-10 xl:gap-12 items-center">
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: 'linear-gradient(to right, rgba(5, 7, 10, 0.88) 0%, rgba(5, 7, 10, 0.72) 36%, rgba(5, 7, 10, 0.28) 70%, rgba(5, 7, 10, 0.05) 100%)',
+            }}
+          />
+
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: 'radial-gradient(circle at 38% 54%, rgba(212, 175, 55, 0.12) 0%, rgba(212, 175, 55, 0.02) 42%, transparent 70%), radial-gradient(circle at 78% 68%, rgba(225, 185, 105, 0.09) 0%, transparent 50%)',
+            }}
+          />
+
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: 'radial-gradient(ellipse at 50% 50%, transparent 45%, rgba(4, 5, 8, 0.55) 100%)',
+            }}
+          />
+
+          {/* Seamless bottom fade into the gold ticker */}
+          <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#111827] via-[#111827]/70 to-transparent pointer-events-none" />
+        </div>
+
+        {/* ── TOP TASKBAR: Placed Directly on the Background Image ── */}
+        <Header theme="overlay" />
+
+        {/* ── HERO CONTENT GRID: Compact, Visible Above the Fold Without Scrolling ── */}
+        <div className="relative z-20 w-full max-w-[1560px] mx-auto px-6 sm:px-10 md:px-14 lg:px-20 xl:px-24 pt-20 pb-8 md:pt-24 md:pb-10 lg:pt-24 lg:pb-10 my-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 xl:gap-14 items-center">
             
-            {/* ── Left Column: High-Conversion Headline, Copy & Google Reviews ── */}
-            <div className="lg:col-span-6 xl:col-span-7 text-left flex flex-col items-start lg:-translate-y-3 xl:-translate-y-4">
+            {/* ── Left Column: Lightly Scaled Up for Prominence ── */}
+            <div className="lg:col-span-6 xl:col-span-7 text-left flex flex-col items-start lg:-translate-y-1">
+              
               {/* Eyebrow badge */}
-              <LuxuryReveal variant="up" delay={50} className="mb-2 lg:mb-2.5">
-                <span className="inline-flex items-center gap-1.5 border border-white/15 bg-black/40 backdrop-blur-md px-2.5 py-1 md:px-3.5 md:py-1.5 rounded-none text-[8px] md:text-xs font-sora text-[#E4E4E7] tracking-[1.5px] md:tracking-[2.5px] uppercase shadow-sm">
-                  <span className="w-1 h-1 md:w-1.5 md:h-1.5 rounded-none bg-[#d1aa5c] shadow-[0_0_8px_#d1aa5c]" />
-                  <span>{siteConfig.hero_eyebrow || "CHÂTEAU D'ART · MAISON DE DESIGN"}</span>
+              <div className="mb-2.5">
+                <span className="text-[11px] sm:text-[12px] tracking-[0.18em] text-[#d1aa5c] uppercase font-medium flex items-center gap-2">
+                  <span className="inline-block w-5 h-px bg-[#d1aa5c]/60" />
+                  <span>Choisissez ce que vous souhaitez sur le côté droit</span>
+                  <span className="inline-block w-5 h-px bg-[#d1aa5c]/60" />
                 </span>
-              </LuxuryReveal>
+              </div>
 
-              {/* Main Headline */}
-              <LuxuryReveal variant="up" delay={150} className="mb-2 lg:mb-3">
-                <h1 className="font-sora text-3xl sm:text-4xl md:text-5xl lg:text-[40px] xl:text-[48px] text-white leading-[1.14] tracking-tight">
-                  <span className="font-light text-white/85 block">
+              {/* Main Headline with Apple / Luxury thick-and-thin typographic duel */}
+              <div className="mb-3">
+                <h1 className="text-3xl sm:text-4xl md:text-[44px] lg:text-[48px] xl:text-[54px] text-white leading-[1.08] tracking-tight">
+                  <span className="font-serif italic font-light text-white/95 block text-3xl sm:text-4xl md:text-[44px] lg:text-[48px] xl:text-[52px] mb-0.5 drop-shadow-md">
                     Meilleur magasin de Meubles,
                   </span>
-                  <span className="font-extrabold text-white block mt-0.5 tracking-tight text-4xl sm:text-4xl md:text-5xl lg:text-[40px] xl:text-[48px]">
+                  <span className="font-sans font-black text-white block tracking-tight drop-shadow-lg text-4xl sm:text-5xl md:text-[48px] lg:text-[52px] xl:text-[58px]">
                     à Birkhadem
                   </span>
                 </h1>
-              </LuxuryReveal>
+              </div>
 
-              {/* Subtitle — slightly hidden on mobile to save vertical space */}
-              <LuxuryReveal variant="up" delay={250} className="mb-3 lg:mb-4 max-w-xl">
-                <p className="font-sora text-[10px] md:text-base lg:text-[14px] xl:text-[15px] text-white/70 leading-relaxed font-normal">
-                  {siteConfig.hero_subtitle || "Matières nobles, proportions sculpturales et finitions artisanales pensées pour sublimer vos espaces de vie."}
+              {/* Useful Subtitle (Max 3 lines, comfortable reading size) */}
+              <div className="mb-5 max-w-xl">
+                <p className="text-[13.5px] sm:text-[14.5px] md:text-[15px] text-white/80 leading-relaxed font-light drop-shadow-sm line-clamp-3">
+                  Canapés d&apos;exception, salons modulaires et mobilier sur-mesure confectionnés dans nos ateliers à Birkhadem avec des finitions haut de gamme pour sublimer votre intérieur.
                 </p>
-              </LuxuryReveal>
+              </div>
 
-              {/* Google Reviews — DESKTOP ONLY (on mobile it shows below the widget) */}
-              <LuxuryReveal variant="up" delay={340} className="hidden lg:block mb-4.5">
+              {/* CTA Buttons — Slightly larger & comfortable */}
+              <div className="flex flex-wrap items-center gap-3.5 mb-6">
+                <a
+                  href="#devis"
+                  className="inline-flex items-center justify-center px-6 sm:px-7 py-3 rounded-full bg-[#d1aa5c] hover:bg-amber-400 text-black font-semibold text-xs sm:text-[12.5px] tracking-wider uppercase transition-all duration-200 shadow-md hover:scale-[1.02] active:scale-[0.98]"
+                >
+                  Demander un devis
+                </a>
+                <Link
+                  href="/all-products"
+                  className="group inline-flex items-center gap-2 px-5 sm:px-6 py-3 rounded-full border border-white/35 hover:border-white hover:bg-white/10 text-white/90 hover:text-white text-xs sm:text-[12.5px] font-normal tracking-wide transition-all duration-200 backdrop-blur-xs"
+                >
+                  <span>découvrir les créations</span>
+                  <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1" />
+                </Link>
+              </div>
+
+              {/* Stats Row with delicate vertical dividers */}
+              <div className="flex flex-wrap items-center gap-6 sm:gap-8 pt-4 border-t border-white/12 text-white/90">
                 <a
                   href="https://www.google.com/maps/place/Ch%C3%A2teau+D'Art+-+meubles/@36.7083703,3.0600586,17z/data=!4m8!3m7!1s0x128fad5fae229a89:0xa8afd38ca1b6e44f!8m2!3d36.7083703!4d3.0626335!9m1!1b1!16s%2Fg%2F11gsn14yk8"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group inline-flex flex-wrap items-center gap-3 px-4 py-2 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-[#d1aa5c]/40 transition-all duration-300 shadow-lg"
-                  title="Voir les avis sur Google Maps"
+                  className="group flex flex-col cursor-pointer"
                 >
-                  <div className="flex items-center gap-1">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 fill-[#d1aa5c] text-[#d1aa5c]" />
-                    ))}
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-bold text-base sm:text-lg text-white group-hover:text-amber-300 transition-colors">4.9</span>
+                    <div className="flex text-amber-400">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                      ))}
+                    </div>
                   </div>
-                  <span className="text-sm font-semibold text-white group-hover:text-[#d1aa5c] transition-colors">
-                    4.9 / 5 sur Google Maps
-                  </span>
-                  <span className="text-white/30">•</span>
-                  <span className="text-xs text-white/60 group-hover:text-white/80 transition-colors">
-                    Showroom Birkhadem • Devis gratuit
-                  </span>
-                  <ArrowUpRight className="w-3.5 h-3.5 text-white/40 group-hover:text-[#d1aa5c] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                  <span className="text-[10px] sm:text-[10.5px] text-white/65 tracking-wider mt-0.5">200+ avis Google Maps</span>
                 </a>
-              </LuxuryReveal>
 
-              {/* CTA Buttons — DESKTOP ONLY */}
-              <LuxuryReveal variant="up" delay={420} className="hidden lg:flex items-center gap-3">
-                <Link
-                  href="/all-products"
-                  className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/15 text-white px-5 py-2.5 lg:px-4 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all border border-white/10"
-                >
-                  <span>Explorer le catalogue</span>
-                  <ArrowRight className="w-3.5 h-3.5 text-[#d1aa5c]" />
-                </Link>
-                <Link
-                  href="/contact"
-                  className="inline-flex items-center gap-2 text-white/70 hover:text-white px-4 py-2.5 text-xs font-medium transition-colors"
-                >
-                  <span>Nous trouver</span>
-                </Link>
-              </LuxuryReveal>
+                <div className="h-7 w-px bg-white/15" />
+
+                <div className="flex flex-col">
+                  <span className="font-bold text-base sm:text-lg text-white leading-none">100%</span>
+                  <span className="text-[10px] sm:text-[10.5px] text-white/65 tracking-wider mt-1">sur-mesure garanti</span>
+                </div>
+
+                <div className="h-7 w-px bg-white/15" />
+
+                <div className="flex flex-col">
+                  <span className="font-bold text-base sm:text-lg text-white leading-none">10 ans</span>
+                  <span className="text-[10px] sm:text-[10.5px] text-white/65 tracking-wider mt-1">garantie boiserie</span>
+                </div>
+              </div>
             </div>
 
-            {/* ── Right Column: Widget + (mobile) Reviews + (mobile) Buttons ── */}
-            <div className="lg:col-span-6 xl:col-span-5 w-full flex flex-col items-center lg:items-end lg:justify-end">
-              <LuxuryReveal variant="right" delay={200} className="w-full flex justify-center lg:justify-end">
+            {/* ── Right Column: Interactive Widget (Raised Up) ── */}
+            <div className="lg:col-span-6 xl:col-span-5 w-full flex flex-col items-center lg:items-end lg:justify-center lg:-translate-y-2 xl:-translate-y-3">
+              <div className="w-full flex justify-center lg:justify-end">
                 <HeroQuoteWidget />
-              </LuxuryReveal>
+              </div>
 
-              {/* Google Reviews — MOBILE ONLY, below widget */}
-              <LuxuryReveal variant="up" delay={400} className="flex lg:hidden mt-3 w-full justify-center">
-                <a
-                  href="https://www.google.com/maps/place/Ch%C3%A2teau+D'Art+-+meubles/@36.7083703,3.0600586,17z/data=!4m8!3m7!1s0x128fad5fae229a89:0xa8afd38ca1b6e44f!8m2!3d36.7083703!4d3.0626335!9m1!1b1!16s%2Fg%2F11gsn14yk8"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/[0.05] border border-white/10 hover:border-[#d1aa5c]/40 transition-all"
-                  title="Voir les avis sur Google Maps"
-                >
-                  <div className="flex items-center gap-0.5">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-2.5 h-2.5 fill-[#d1aa5c] text-[#d1aa5c]" />
-                    ))}
-                  </div>
-                  <span className="text-[9px] font-semibold text-white/80">4.9 / 5 · Google Maps</span>
-                  <ArrowUpRight className="w-2.5 h-2.5 text-white/40" />
-                </a>
-              </LuxuryReveal>
-
-              {/* CTA Buttons — MOBILE ONLY, below reviews */}
-              <LuxuryReveal variant="up" delay={500} className="flex lg:hidden items-center gap-2 mt-2.5 w-full justify-center">
+              {/* Mobile CTA shortcuts below widget */}
+              <div className="flex lg:hidden items-center gap-2 mt-3 w-full justify-center">
                 <Link
                   href="/all-products"
-                  className="inline-flex items-center gap-1.5 bg-white/10 hover:bg-white/15 text-white px-3.5 py-2 rounded-lg text-[10px] font-semibold uppercase tracking-wider transition-all border border-white/10"
+                  className="inline-flex items-center gap-1.5 bg-[#111827] text-white px-4 py-2 rounded-full text-[11px] font-semibold uppercase tracking-wider shadow-xs"
                 >
                   <span>Explorer</span>
-                  <ArrowRight className="w-3 h-3 text-[#d1aa5c]" />
+                  <ArrowRight className="w-3 h-3" />
                 </Link>
                 <Link
                   href="/contact"
-                  className="inline-flex items-center gap-1 text-white/60 hover:text-white px-3 py-2 text-[10px] font-medium transition-colors border border-white/10 rounded-lg"
+                  className="inline-flex items-center gap-1 bg-white text-neutral-800 border border-neutral-200 px-4 py-2 rounded-full text-[11px] font-semibold uppercase tracking-wider"
                 >
-                  <span>Nous trouver</span>
+                  <span>Showroom</span>
                 </Link>
-              </LuxuryReveal>
+              </div>
             </div>
 
           </div>
         </div>
       </section>
 
+      {/* ── Section 2: Luxury Animated Delivery & Craftsmanship Ticker with Artistic Paint Throws ── */}
+      <section className="relative overflow-hidden bg-[#101217] text-white border-y border-white/[0.12]">
+        {/* Ambient Luminous White Paint Diffusions (Soft Atelier Mist) */}
+        <div className="pointer-events-none absolute -top-10 left-[15%] h-36 w-80 rounded-full bg-white/[0.09] blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-10 right-[20%] h-32 w-96 rounded-full bg-white/[0.08] blur-3xl" />
+        <div className="pointer-events-none absolute top-1/2 left-[55%] -translate-y-1/2 h-24 w-64 rounded-full bg-white/[0.06] blur-2xl" />
 
-      {/* ── Section 2: Luxury Animated Delivery & Craftsmanship Ticker ── */}
-      <section className="relative overflow-hidden bg-gradient-to-r from-[#1E1912] via-[#2c2418] to-[#8b7344] text-white border-y border-white/10 md:px-6 before:pointer-events-none before:absolute before:inset-0 before:bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.12),transparent_55%)] before:opacity-60">
+        {/* Artistic Hand-Crafted Paint Throws & Random Splatters Overlay */}
+        <svg
+          className="pointer-events-none absolute inset-0 h-full w-full opacity-65 mix-blend-screen"
+          xmlns="http://www.w3.org/2000/svg"
+          preserveAspectRatio="none"
+          viewBox="0 0 1440 96"
+          fill="none"
+        >
+          {/* Dynamic White Paint Throw / Brush Splashes (Organic curved gestures) */}
+          <path
+            d="M-20,48 C60,20 140,75 220,38 C280,10 320,62 380,44 C420,32 450,55 490,48 C430,60 360,65 300,52 C210,78 120,50 -20,62 Z"
+            fill="url(#whitePaintGlow1)"
+            opacity="0.35"
+          />
+          <path
+            d="M620,25 C710,5 790,60 880,32 C950,10 1020,45 1110,28 C1040,55 960,42 900,58 C820,65 730,40 620,42 Z"
+            fill="url(#whitePaintGlow2)"
+            opacity="0.3"
+          />
+          <path
+            d="M1180,60 C1240,30 1310,75 1390,40 C1430,22 1470,50 1500,35 C1470,62 1420,68 1360,55 C1290,75 1230,68 1180,72 Z"
+            fill="url(#whitePaintGlow1)"
+            opacity="0.25"
+          />
+
+          {/* Random Paint Splatters & Droplets (Flicks of white paint of various sizes) */}
+          <circle cx="85" cy="22" r="1.5" fill="#FFFFFF" opacity="0.8" />
+          <circle cx="98" cy="30" r="2.8" fill="#FFFFFF" opacity="0.65" />
+          <circle cx="112" cy="18" r="1.2" fill="#FFFFFF" opacity="0.5" />
+          <circle cx="125" cy="36" r="3.2" fill="#FFFFFF" opacity="0.75" />
+          <circle cx="140" cy="26" r="1.6" fill="#FFFFFF" opacity="0.6" />
+          <circle cx="160" cy="42" r="2.2" fill="#FFFFFF" opacity="0.4" />
+          <circle cx="175" cy="20" r="1.0" fill="#FFFFFF" opacity="0.7" />
+
+          <circle cx="340" cy="68" r="2.5" fill="#FFFFFF" opacity="0.7" />
+          <circle cx="355" cy="74" r="1.5" fill="#FFFFFF" opacity="0.5" />
+          <circle cx="370" cy="62" r="3.5" fill="#FFFFFF" opacity="0.6" />
+          <circle cx="388" cy="78" r="1.8" fill="#FFFFFF" opacity="0.8" />
+          <circle cx="405" cy="65" r="2.0" fill="#FFFFFF" opacity="0.45" />
+
+          <circle cx="580" cy="18" r="2.2" fill="#FFFFFF" opacity="0.75" />
+          <circle cx="598" cy="28" r="3.6" fill="#FFFFFF" opacity="0.6" />
+          <circle cx="615" cy="14" r="1.4" fill="#FFFFFF" opacity="0.8" />
+          <circle cx="632" cy="32" r="2.0" fill="#FFFFFF" opacity="0.5" />
+
+          <circle cx="820" cy="72" r="3.0" fill="#FFFFFF" opacity="0.7" />
+          <circle cx="838" cy="64" r="1.5" fill="#FFFFFF" opacity="0.6" />
+          <circle cx="855" cy="80" r="2.4" fill="#FFFFFF" opacity="0.8" />
+          <circle cx="875" cy="68" r="1.2" fill="#FFFFFF" opacity="0.5" />
+
+          <circle cx="1060" cy="24" r="3.2" fill="#FFFFFF" opacity="0.65" />
+          <circle cx="1078" cy="16" r="1.6" fill="#FFFFFF" opacity="0.8" />
+          <circle cx="1095" cy="34" r="2.6" fill="#FFFFFF" opacity="0.7" />
+          <circle cx="1115" cy="20" r="1.2" fill="#FFFFFF" opacity="0.45" />
+
+          <circle cx="1290" cy="70" r="2.8" fill="#FFFFFF" opacity="0.75" />
+          <circle cx="1308" cy="78" r="1.4" fill="#FFFFFF" opacity="0.5" />
+          <circle cx="1325" cy="62" r="3.4" fill="#FFFFFF" opacity="0.65" />
+          <circle cx="1345" cy="74" r="1.8" fill="#FFFFFF" opacity="0.8" />
+
+          {/* Linear Paint Gradients */}
+          <defs>
+            <linearGradient id="whitePaintGlow1" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.8" />
+              <stop offset="50%" stopColor="#FFFFFF" stopOpacity="0.4" />
+              <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0" />
+            </linearGradient>
+            <linearGradient id="whitePaintGlow2" x1="100%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.7" />
+              <stop offset="60%" stopColor="#FFFFFF" stopOpacity="0.35" />
+              <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0" />
+            </linearGradient>
+          </defs>
+        </svg>
+
+        {/* Subtle Edge Fade Gradients for Seamless Dissolve */}
+        <div className="pointer-events-none absolute inset-y-0 left-0 w-16 md:w-28 bg-gradient-to-r from-[#101217] via-[#101217]/90 to-transparent z-10" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 w-16 md:w-28 bg-gradient-to-l from-[#101217] via-[#101217]/90 to-transparent z-10" />
+
         {/* Desktop Tickers (Two opposite lines: Right and Left) */}
         <div className="relative hidden overflow-hidden md:block">
-          {/* Top Line: Moving to the Right */}
-          <div className="border-b border-white/10 py-3.5">
-            <div className="delivery-marquee delivery-marquee-right flex w-max items-center gap-10 whitespace-nowrap">
+          {/* Top Line: Gliding to the Right */}
+          <div className="border-b border-white/[0.08] py-3">
+            <div className="delivery-marquee delivery-marquee-right flex w-max items-center gap-12 whitespace-nowrap">
               {[...Array(4)].map((_, i) => (
                 <span
                   key={i}
-                  className="flex items-center gap-4 text-xs font-semibold uppercase tracking-[0.16em] text-[#f8f3e8] lg:text-sm"
+                  className="flex items-center gap-6 text-[12px] lg:text-[12.5px] font-normal uppercase tracking-[0.2em] text-white/80"
                 >
-                  <Check className="h-4 w-4 text-[#d1aa5c]" />
-                  <span>Livraison + montage dans les 58 wilayas</span>
-                  <span className="text-[#d1aa5c]">✦</span>
-                  <Truck className="h-4 w-4 text-[#d1aa5c]" />
-                  <span>Gratuit sur Alger, Blida, Boumerdès, Médéa &amp; Tipaza</span>
-                  <span className="text-[#d1aa5c]">◆</span>
+                  <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-white/[0.12] text-white border border-white/25 text-[11px] font-semibold tracking-wider shadow-[0_0_14px_rgba(255,255,255,0.12)]">
+                    Livraison 58 Wilayas
+                  </span>
+                  <span>Montage professionnel soigné</span>
+                  <span className="text-white/40 text-[10px]">✦</span>
+                  <span className="text-white font-medium">Offerte sur Alger &amp; wilayas limitrophes</span>
+                  <span className="text-white/40 text-[10px]">✦</span>
+                  <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-white/[0.09] text-white border border-white/20 text-[11px] font-medium tracking-wider">
+                    Ateliers d&apos;artisanat
+                  </span>
+                  <span>Confection sur-mesure</span>
+                  <span className="text-white/40 text-[10px]">✦</span>
+                  <span className="text-white font-medium">Showroom d&apos;exception à Birkhadem</span>
+                  <span className="text-white/40 text-[10px]">✦</span>
                 </span>
               ))}
             </div>
           </div>
 
-          {/* Bottom Line: Moving to the Left (Useful furniture guarantees & custom craftmanship) */}
-          <div className="bg-[#17130e]/40 py-3.5">
-            <div className="delivery-marquee delivery-marquee-left flex w-max items-center gap-10 whitespace-nowrap">
+          {/* Bottom Line: Gliding to the Left */}
+          <div className="py-3 bg-white/[0.02]">
+            <div className="delivery-marquee delivery-marquee-left flex w-max items-center gap-12 whitespace-nowrap">
               {[...Array(4)].map((_, i) => (
                 <span
                   key={i}
-                  className="flex items-center gap-4 text-xs font-semibold uppercase tracking-[0.16em] text-[#f8f3e8] lg:text-sm"
+                  className="flex items-center gap-6 text-[12px] lg:text-[12.5px] font-normal uppercase tracking-[0.2em] text-white/80"
                 >
-                  <Sparkles className="h-4 w-4 text-[#d1aa5c]" />
-                  <span>Fabrication artisanale en bois noble séché</span>
-                  <span className="text-[#d1aa5c]">✦</span>
-                  <ShieldCheck className="h-4 w-4 text-[#d1aa5c]" />
-                  <span>Personnalisation sur-mesure des dimensions &amp; tissus</span>
-                  <span className="text-[#d1aa5c]">✦</span>
-                  <Check className="h-4 w-4 text-[#d1aa5c]" />
-                  <span>Showroom d&apos;exception à Birkhadem · Plans 3D offerts</span>
-                  <span className="text-[#d1aa5c]">✦</span>
-                  <ShieldCheck className="h-4 w-4 text-[#d1aa5c]" />
-                  <span>Paiement sécurisé à la livraison après inspection</span>
-                  <span className="text-[#d1aa5c]">◆</span>
+                  <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-white/[0.12] text-white border border-white/25 text-[11px] font-semibold tracking-wider shadow-[0_0_14px_rgba(255,255,255,0.12)]">
+                    Garantie 10 Ans
+                  </span>
+                  <span>Boiserie noble séchée au four</span>
+                  <span className="text-white/40 text-[10px]">✦</span>
+                  <span className="text-white font-medium">Tissus anti-taches &amp; cuirs italiens au choix</span>
+                  <span className="text-white/40 text-[10px]">✦</span>
+                  <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-white/[0.09] text-white border border-white/20 text-[11px] font-medium tracking-wider">
+                    Étude 3D Offerte
+                  </span>
+                  <span>Personnalisation complète des dimensions</span>
+                  <span className="text-white/40 text-[10px]">✦</span>
+                  <span className="text-white font-medium">Paiement sécurisé après inspection</span>
+                  <span className="text-white/40 text-[10px]">✦</span>
                 </span>
               ))}
             </div>
           </div>
         </div>
 
-        {/* Mobile Ticker (Two lines moving in opposite directions) */}
-        <div className="relative space-y-px overflow-hidden md:hidden">
+        {/* Mobile Ticker (Two sleek calm gliding lines with white capsules) */}
+        <div className="relative overflow-hidden md:hidden">
           {/* Top Line: Moving to the Right */}
-          <div className="border-b border-white/10 bg-black/10 py-3">
+          <div className="border-b border-white/[0.08] py-2.5">
             <div className="delivery-marquee delivery-marquee-right flex w-max items-center gap-8 whitespace-nowrap">
               {[...Array(4)].map((_, i) => (
                 <span
                   key={i}
-                  className="flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#f8f3e8]"
+                  className="flex items-center gap-3 text-[10.5px] uppercase tracking-[0.18em] text-white/80"
                 >
-                  <Check className="h-4 w-4 text-[#d1aa5c]" />
-                  <span>Livraison + montage dans les 58 wilayas</span>
-                  <span className="text-[#d1aa5c]">✦</span>
+                  <span className="px-2 py-0.5 rounded-full bg-white/15 text-white border border-white/25 text-[9.5px] font-semibold">
+                    58 Wilayas
+                  </span>
+                  <span>Livraison &amp; montage soigné</span>
+                  <span className="text-white/40 text-[9px]">✦</span>
+                  <span className="text-white font-medium">Showroom Birkhadem</span>
+                  <span className="text-white/40 text-[9px]">✦</span>
                 </span>
               ))}
             </div>
           </div>
 
           {/* Bottom Line: Moving to the Left */}
-          <div className="bg-[#17130e]/35 py-3">
+          <div className="py-2.5 bg-white/[0.02]">
             <div className="delivery-marquee delivery-marquee-left flex w-max items-center gap-8 whitespace-nowrap">
               {[...Array(4)].map((_, i) => (
                 <span
                   key={i}
-                  className="flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#f8f3e8]"
+                  className="flex items-center gap-3 text-[10.5px] uppercase tracking-[0.18em] text-white/80"
                 >
-                  <Truck className="h-4 w-4 text-[#d1aa5c]" />
-                  <span>Gratuit sur Alger, Blida, Boumerdès, Médéa &amp; Tipaza</span>
-                  <span className="text-[#d1aa5c]">◆</span>
+                  <span className="px-2 py-0.5 rounded-full bg-white/15 text-white border border-white/25 text-[9.5px] font-semibold">
+                    Garantie 10 ans
+                  </span>
+                  <span>Boiserie noble · Sur-mesure</span>
+                  <span className="text-white/40 text-[9px]">✦</span>
+                  <span className="text-white font-medium">Paiement après inspection</span>
+                  <span className="text-white/40 text-[9px]">✦</span>
                 </span>
               ))}
             </div>
@@ -327,33 +405,165 @@ export default function HomePage() {
       {/* ── Section 3: 3D Curved Product Showcase ── */}
       <CurvedProductShowcase />
 
-      {/* ── Section 4: Categories ── */}
-      <section className="bg-gradient-to-b from-[#0E0F10] to-[#141518] pt-10 md:pt-14 pb-6 md:pb-8 border-t border-white/5">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-6 md:mb-8">
-            <span className="inline-flex items-center gap-2 border border-white/10 px-3.5 py-1 text-[11px] uppercase tracking-[3px] text-[#A1A1AA] mb-2 rounded-none">
-              <Sparkles className="w-3 h-3 text-[#b68d40]" />
-              Nos Univers
-            </span>
-            <h2 className="font-fraunces font-light text-2xl sm:text-3xl md:text-4xl text-white">
-              Explorer par Catégorie
+      {/* ── Section 4: Compact Thin Options Bar ("Nos Univers") with Square Apple Glass Tiles & Large Circles ── */}
+      <section className="relative py-6 sm:py-7 md:py-8 overflow-hidden border-y border-white/60">
+        {/* Layer 1: Real Mansion Hero Background Image */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <img
+            src="/hero-mansion.jpg"
+            alt="Atelier d'exception"
+            className="w-full h-full object-cover object-[center_38%] scale-105 select-none"
+            style={{
+              filter: 'contrast(1.05) brightness(0.92) saturate(1.05)',
+            }}
+          />
+        </div>
+
+        {/* Layer 2: Pure Apple / iOS Glassy Frosted Diffusion (Soft, Eye-Comfy, Thin Dock Aesthetic) */}
+        <div className="absolute inset-0 pointer-events-none backdrop-blur-2xl md:backdrop-blur-3xl bg-white/70" />
+
+        {/* Layer 3: Architectural 2D Furniture Shapes Distributed Across the Entire Section (30% or less opacity) */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden select-none">
+          {/* 1. Far Left Top: Dining Table & Chairs 2D Plan */}
+          <div className="absolute -top-6 left-[2%] opacity-[0.07] -rotate-12 transition-transform duration-700">
+            <img
+              src="/shapes/shape-dining-set.png"
+              alt=""
+              className="w-26 sm:w-32 md:w-38 h-auto drop-shadow-xs"
+              draggable={false}
+            />
+          </div>
+
+          {/* 2. Upper Mid-Left: Wood Coffee Table with Books */}
+          <div className="absolute top-[8%] left-[21%] opacity-[0.06] rotate-12 hidden sm:block">
+            <img
+              src="/shapes/shape-coffee-table.png"
+              alt=""
+              className="w-16 sm:w-20 md:w-22 h-auto drop-shadow-xs"
+              draggable={false}
+            />
+          </div>
+
+          {/* 3. Upper Center (Behind Header): Stools & Round Lounge Piece */}
+          <div className="absolute -top-8 left-[48%] -translate-x-1/2 opacity-[0.06] -rotate-15">
+            <img
+              src="/shapes/shape-round-stools.png"
+              alt=""
+              className="w-20 sm:w-24 md:w-26 h-auto drop-shadow-xs"
+              draggable={false}
+            />
+          </div>
+
+          {/* 4. Upper Mid-Right: Designer Olive Plant */}
+          <div className="absolute top-[12%] right-[22%] opacity-[0.06] rotate-45 hidden md:block">
+            <img
+              src="/shapes/shape-olive-plant.png"
+              alt=""
+              className="w-14 sm:w-16 md:w-18 h-auto drop-shadow-xs"
+              draggable={false}
+            />
+          </div>
+
+          {/* 5. Far Right Top: Luxury 2-Seater Sofa 2D Plan */}
+          <div className="absolute -top-4 right-[2%] opacity-[0.07] rotate-8 transition-transform duration-700">
+            <img
+              src="/shapes/shape-sofa-top.png"
+              alt=""
+              className="w-28 sm:w-34 md:w-40 h-auto drop-shadow-xs"
+              draggable={false}
+            />
+          </div>
+
+          {/* 6. Lower Far-Left: Organic Olive Plant Accent */}
+          <div className="absolute bottom-[8%] left-[4%] opacity-[0.06] -rotate-30 hidden sm:block">
+            <img
+              src="/shapes/shape-olive-plant.png"
+              alt=""
+              className="w-14 sm:w-16 md:w-18 h-auto drop-shadow-xs"
+              draggable={false}
+            />
+          </div>
+
+          {/* 7. Lower Mid-Left: Vertical Sofa with Cushions */}
+          <div className="absolute -bottom-10 left-[26%] opacity-[0.06] -rotate-8 hidden md:block">
+            <img
+              src="/shapes/shape-sofa-vertical.png"
+              alt=""
+              className="w-18 sm:w-22 md:w-24 h-auto drop-shadow-xs"
+              draggable={false}
+            />
+          </div>
+
+          {/* 8. Lower Center: Sculptural Armchair with Cushions */}
+          <div className="absolute -bottom-8 left-[52%] -translate-x-1/2 opacity-[0.06] rotate-12 hidden sm:block">
+            <img
+              src="/shapes/shape-armchair.png"
+              alt=""
+              className="w-16 sm:w-18 md:w-22 h-auto drop-shadow-xs"
+              draggable={false}
+            />
+          </div>
+
+          {/* 9. Lower Mid-Right: Round Stools & Table Combo */}
+          <div className="absolute -bottom-8 right-[24%] opacity-[0.06] rotate-18 hidden lg:block">
+            <img
+              src="/shapes/shape-round-stools.png"
+              alt=""
+              className="w-18 sm:w-20 md:w-22 h-auto drop-shadow-xs"
+              draggable={false}
+            />
+          </div>
+
+          {/* 10. Far Right Bottom: Long Artisan Buffet Table */}
+          <div className="absolute -bottom-8 right-[3%] opacity-[0.07] -rotate-6 hidden sm:block">
+            <img
+              src="/shapes/shape-buffet-table.png"
+              alt=""
+              className="w-16 sm:w-20 md:w-24 h-auto drop-shadow-xs"
+              draggable={false}
+            />
+          </div>
+        </div>
+
+        {/* Layer 4: Interactive Content with Compact Square Apple Frosted Glass Tiles */}
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
+          {/* Thin, Sleek Options Bar Header */}
+          <div className="text-center mb-3 sm:mb-4">
+            <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-white/80 backdrop-blur-md border border-white/90 shadow-xs mb-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#d1aa5c]" />
+              <span className="text-[10px] md:text-[10.5px] uppercase tracking-[2.5px] text-neutral-600 font-semibold">
+                Nos Univers
+              </span>
+            </div>
+            <h2 className="font-serif italic font-normal text-xl sm:text-2xl md:text-[26px] text-neutral-900 tracking-tight leading-tight">
+              Explorer par <span className="font-sans font-extrabold not-italic text-neutral-950">Catégorie</span>
             </h2>
           </div>
           
-          <div className="flex overflow-x-auto md:overflow-visible md:flex-wrap justify-start md:justify-center gap-4 sm:gap-6 md:gap-8 lg:gap-10 pb-1 scrollbar-hide">
+          {/* Square Option Tiles Grid with Maximized Inner Circles */}
+          <div className="flex overflow-x-auto md:overflow-visible md:flex-wrap justify-start md:justify-center items-center gap-3 sm:gap-4 md:gap-5 lg:gap-6 pb-2 px-1 scrollbar-hide">
             {categories.map((cat, index) => (
-              <LuxuryReveal key={cat.name} delay={index * 60} className="shrink-0">
-                <Link href={`/all-products?category=${cat.slug}`} scroll={false} className="interactive-tap group flex flex-col items-center">
-                  <div className="w-22 h-22 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-30 lg:h-30 rounded-full overflow-hidden border-2 border-white/15 group-hover:border-[#b68d40] transition-all duration-500 mb-2.5 shadow-md group-hover:shadow-[0_8px_20px_rgba(182,141,64,0.25)]">
+              <LuxuryReveal key={cat.name} delay={index * 50} className="shrink-0">
+                <Link
+                  href={`/all-products?category=${cat.slug}`}
+                  scroll={false}
+                  className="group flex flex-col items-center justify-between aspect-square w-[125px] sm:w-[140px] md:w-[152px] lg:w-[160px] bg-white/70 hover:bg-white/95 backdrop-blur-2xl border border-white/85 hover:border-white shadow-[0_6px_20px_-6px_rgba(0,0,0,0.06)] hover:shadow-[0_16px_32px_-8px_rgba(0,0,0,0.14)] rounded-[22px] sm:rounded-[26px] p-2.5 sm:p-3 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1.5 cursor-pointer"
+                >
+                  {/* Big Circular Photo Frame (Larger scale inside the square tile) */}
+                  <div className="relative w-[82px] h-[82px] sm:w-[94px] sm:h-[94px] md:w-[104px] md:h-[104px] lg:w-[110px] lg:h-[110px] rounded-full overflow-hidden p-1 bg-white/95 shadow-sm border border-neutral-200/70 group-hover:border-neutral-950 group-hover:shadow-md transition-all duration-400 shrink-0">
                     <img
                       src={cat.image}
                       alt={cat.name}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
+                      className="w-full h-full object-cover rounded-full group-hover:scale-108 transition-transform duration-500 ease-out"
                     />
                   </div>
-                  <span className="font-sora text-xs sm:text-sm text-[#D1D5DB] group-hover:text-[#b68d40] transition-colors duration-300 font-medium tracking-wide">
-                    {cat.name}
-                  </span>
+
+                  {/* Clean Category Label at the bottom of the square */}
+                  <div className="w-full px-1 text-center">
+                    <span className="block text-[11px] sm:text-xs font-semibold text-neutral-800 group-hover:text-black transition-colors tracking-tight truncate">
+                      {cat.name}
+                    </span>
+                  </div>
                 </Link>
               </LuxuryReveal>
             ))}
@@ -361,209 +571,21 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Section 5: Products Carousel ('NOS PRODUITS') ── */}
-      <section className="bg-[#0E0F10] py-16 md:py-24 overflow-hidden border-t border-white/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-10 flex justify-between items-end">
-          <h2 className="font-fraunces font-light italic text-3xl md:text-4xl text-[#F2F1EF] uppercase tracking-wide">
-            NOS PRODUITS
-          </h2>
-          <div className="hidden md:flex gap-3">
-            <button 
-              onClick={() => scrollCarousel('left')}
-              className="w-10 h-10 flex items-center justify-center bg-[#F2F1EF]/95 text-[#0E0F10] hover:bg-[#0E0F10] hover:text-[#F2F1EF] border border-[#F2F1EF]/95 transition-colors cursor-pointer"
-              aria-label="Scroll left"
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-            <button 
-              onClick={() => scrollCarousel('right')}
-              className="w-10 h-10 flex items-center justify-center bg-[#F2F1EF]/95 text-[#0E0F10] hover:bg-[#0E0F10] hover:text-[#F2F1EF] border border-[#F2F1EF]/95 transition-colors cursor-pointer"
-              aria-label="Scroll right"
-            >
-              <ChevronRight className="w-5 h-5" />
-            </button>
-          </div>
-        </div>
-
-        <div className="relative max-w-7xl mx-auto">
-          {/* Mobile Arrows */}
-          <div className="absolute top-1/2 -translate-y-1/2 left-2 z-10 md:hidden">
-            <button 
-              onClick={() => scrollCarousel('left')}
-              className="w-8 h-8 flex items-center justify-center bg-[#18191B] border border-[rgba(199,203,209,0.3)] text-[#C7CBD1] rounded-full shadow-lg"
-              aria-label="Scroll left"
-            >
-              <ChevronLeft className="w-4 h-4" />
-            </button>
-          </div>
-          <div className="absolute top-1/2 -translate-y-1/2 right-2 z-10 md:hidden">
-            <button 
-              onClick={() => scrollCarousel('right')}
-              className="w-8 h-8 flex items-center justify-center bg-[#18191B] border border-[rgba(199,203,209,0.3)] text-[#C7CBD1] rounded-full shadow-lg"
-              aria-label="Scroll right"
-            >
-              <ChevronRight className="w-4 h-4" />
-            </button>
-          </div>
-
-          {/* Sideways scrollable container */}
-          <div 
-            ref={carouselRef}
-            className="flex overflow-x-auto gap-4 md:gap-6 px-4 sm:px-6 lg:px-8 pb-8 scrollbar-hide md:[mask-image:linear-gradient(90deg,transparent_0%,black_5%,black_95%,transparent_100%)] snap-x snap-mandatory"
-          >
-            {carouselProducts.map((product, idx) => (
-              <LuxuryReveal key={product.id} delay={idx * 100} className="shrink-0 snap-start">
-                <ProductCard product={product} />
-              </LuxuryReveal>
-            ))}
-          </div>
-        </div>
+      {/* ── Cloned Art Home Furniture Interactive Collection Slider (Hotspots & Lookbook Carousel) ── */}
+      <section className="relative mt-12 sm:mt-16 md:mt-20 mb-[45px] sm:mb-[60px] md:mb-[6vh]">
+        <ArtHomeCollectionSlider />
       </section>
 
-      {/* ── Section 6: Modèles Prêts Grid (Wide Horizontal Luxury Editorial Format) ── */}
-      <section className="bg-[#101114] py-16 md:py-24 border-t border-white/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12 md:mb-16">
-            <span className="inline-flex items-center gap-2 border border-[#b68d40]/30 bg-[#18191B] px-3.5 py-1 text-[11px] uppercase tracking-[3px] text-[#b68d40] font-bold mb-3 font-sora shadow-sm rounded-none">
-              <Sparkles className="w-3 h-3 text-[#b68d40]" />
-              Disponibilité Immédiate
-            </span>
-            <h2 className="font-fraunces font-light text-3xl sm:text-4xl md:text-5xl text-white mb-3">
-              Modèles Prêts à Livrer
-            </h2>
-            <div className="w-16 h-[2px] bg-[#b68d40] mx-auto mb-4" />
-            <p className="font-sora text-xs sm:text-sm md:text-base text-[#A1A1AA] max-w-2xl mx-auto leading-relaxed">
-              Sélection exclusive de créations confectionnées et prêtes pour une expédition soignée chez vous sous 48 à 72 heures.
-            </p>
-          </div>
-          
-          {/* 2-Column Wide Horizontal Cards Grid (Close to each other, horizontally broad) */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-4 md:gap-5">
-            {gridProducts.map((product, idx) => (
-              <LuxuryReveal key={product.id} delay={idx * 80} className="w-full">
-                <div className="group relative bg-[#141518] border border-white/10 hover:border-[#b68d40]/60 transition-all duration-500 rounded-none overflow-hidden flex flex-col h-full shadow-xl hover:shadow-[0_16px_40px_rgba(0,0,0,0.85)]">
-                  
-                  {/* Wide Horizontal Image Viewport */}
-                  <div className="relative aspect-[16/10] sm:aspect-[16/9] md:aspect-[16/10] w-full overflow-hidden bg-[#0A0B0C]">
-                    <img 
-                      src={product.image} 
-                      alt={product.name}
-                      className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105" 
-                    />
+      {/* ── Cloned Art Home Furniture 'New Arrivals' Section (Black Marble, Cormorant Title, Vamtam Rolling Button) ── */}
+      <ArtHomeNewArrivals />
 
-                    {/* Ambient Vignette Gradient */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#141518] via-transparent to-black/40 pointer-events-none" />
+      {/* ── Section 5 & 6: Art Home Cloned Unified Section ('Shop by Rooms' & 'NOS CRÉATIONS DU MOMENT') ── */}
+      <ArtHomeRoomsAndFeatured products={productList} />
 
-                    {/* Top Badges */}
-                    <div className="absolute top-3.5 left-3.5 right-3.5 flex items-center justify-between z-10 pointer-events-none">
-                      <div className="flex items-center gap-2">
-                        <span className="bg-black/75 backdrop-blur-md border border-white/15 text-[#f4d79a] text-[10px] font-bold uppercase tracking-[2px] px-2.5 py-1 font-sora shadow-md rounded-none">
-                          {product.category.replace('-', ' ')}
-                        </span>
-                        {product.discount && (
-                          <span className="bg-[#b68d40] text-black text-[10px] font-bold px-2 py-1 font-sora shadow-md rounded-none">
-                            -{product.discount}%
-                          </span>
-                        )}
-                      </div>
-
-                      {/* Ready to ship badge */}
-                      <span className="inline-flex items-center gap-1.5 bg-black/75 backdrop-blur-md border border-emerald-500/30 text-emerald-400 text-[10px] font-medium tracking-wider px-2.5 py-1 font-sora shadow-md rounded-none">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                        <span>Expédition 48h</span>
-                      </span>
-                    </div>
-
-                    {/* Quick link overlay */}
-                    <Link 
-                      href={`/product/${product.id}`}
-                      className="absolute inset-0 z-10"
-                      aria-label={product.name}
-                    />
-                  </div>
-
-                  {/* Editorial Bottom Surface */}
-                  <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between font-sora bg-[#141518]">
-                    <div>
-                      <div className="flex items-center justify-between gap-2 mb-1.5">
-                        <span className="text-[10px] sm:text-[11px] text-[#b68d40] font-semibold uppercase tracking-[2.5px]">
-                          {product.brand || "Château d'art"}
-                        </span>
-                        <span className="text-[10px] text-[#71717A] tracking-wider uppercase">
-                          Prêt à livrer
-                        </span>
-                      </div>
-
-                      <Link href={`/product/${product.id}`} className="block group/title">
-                        <h3 className="font-fraunces text-lg sm:text-xl md:text-2xl text-white font-normal leading-snug line-clamp-1 group-hover/title:text-[#b68d40] transition-colors mb-1.5">
-                          {product.name}
-                        </h3>
-                      </Link>
-
-                      <p className="text-xs text-[#9CA3AF] line-clamp-1 leading-relaxed mb-3">
-                        {product.description || "Création sculpturale confectionnée dans le respect de l'ébénisterie d'art."}
-                      </p>
-                    </div>
-
-                    {/* Price & Action Row */}
-                    <div className="pt-3 border-t border-white/10 flex items-center justify-between gap-3">
-                      <div className="flex flex-col">
-                        <div className="flex items-baseline gap-2">
-                          <span className="text-lg sm:text-xl font-bold text-[#f4d79a]">
-                            {formatPrice(product.price)}
-                          </span>
-                          {product.originalPrice && (
-                            <span className="text-xs text-[#71717A] line-through">
-                              {formatPrice(product.originalPrice)}
-                            </span>
-                          )}
-                        </div>
-                        <span className="text-[9px] text-[#71717A] tracking-wide">
-                          Livraison + montage inclus
-                        </span>
-                      </div>
-
-                      <div className="flex items-center gap-2">
-                        <Link
-                          href={`/product/${product.id}`}
-                          className="interactive-tap px-3 sm:px-4 py-2 bg-white/5 hover:bg-white/10 text-white text-xs font-medium tracking-wider uppercase border border-white/15 transition-all"
-                        >
-                          Détails
-                        </Link>
-                        <Link
-                          href={`/contact?product=${encodeURIComponent(product.name)}&image=${encodeURIComponent(product.image)}&id=${encodeURIComponent(String(product.id))}&subject=${encodeURIComponent(`Commande rapide: ${product.name}`)}#contact-form`}
-                          className="interactive-tap px-4 sm:px-5 py-2 bg-[#b68d40] hover:bg-[#c99b4d] text-black text-xs font-bold tracking-wider uppercase transition-all shadow-md hover:scale-105"
-                        >
-                          Commander
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-
-                </div>
-              </LuxuryReveal>
-            ))}
-          </div>
-          
-          <div className="mt-12 md:mt-16 text-center">
-            <Link 
-              href="/all-products" 
-              className="interactive-tap inline-flex items-center gap-2 border border-white/20 bg-[#0E0F10] text-white px-10 py-4 uppercase tracking-[2.5px] text-xs font-bold transition-all duration-300 hover:bg-[#b68d40] hover:border-[#b68d40] hover:text-black shadow-xl hover:scale-105"
-            >
-              <span>Voir tout le catalogue complet</span>
-              <ArrowRight size={14} />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Section 6.5: Design Stories & Inspirations (Interactive Video Shapes) ── */}
+      {/* ── Section 6.5: Design Stories & Inspirations (Social Videos) ── */}
       <DesignStories />
 
-      {/* ── Section 7: Témoignages & Avis Clients Google (Livora Layout for Desktop, Mobile preserved) ── */}
-      <ReviewsSection />
-
-      {/* ── Section 8: FAQ (SEO Structured Q&A, Golden Environment & MouseLeave Auto-Close) ── */}
+      {/* ── Section 8: FAQ ── */}
       <FaqSection />
 
       <Footer />
