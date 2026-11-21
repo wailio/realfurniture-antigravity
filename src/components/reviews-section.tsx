@@ -230,7 +230,7 @@ export function ReviewsSection() {
               >
                 <img
                   src="/reviews-chair-lamp-transparent.png"
-                  alt="Mobilier d'art Château d'art"
+                  alt="Mobilier d'exception M&F Meubles"
                   className="w-full max-w-[530px] h-auto object-contain pointer-events-none"
                   style={{
                     mixBlendMode: 'multiply',

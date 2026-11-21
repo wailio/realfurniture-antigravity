@@ -17,7 +17,10 @@ import {
   X,
   Users2,
   Sliders,
+  Sun,
+  Moon,
 } from 'lucide-react'
+import { useAdminTheme } from '@/contexts/theme-context'
 
 interface NavItem {
   label: string
@@ -57,24 +60,10 @@ const NAV: { group: string | null; items: NavItem[] }[] = [
   },
 ]
 
-// Shared frosted glass hover state for all sidebar items
-const HOVER_STYLE = {
-  border: '1px solid rgba(255, 255, 255, 0.14)',
-  background: 'linear-gradient(145deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%)',
-  color: '#FFFFFF',
-  boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.10), 0 4px 12px rgba(0,0,0,0.3)',
-}
-
-const REST_STYLE = {
-  border: '1px solid transparent',
-  background: 'transparent',
-  color: '#8E929B',
-  boxShadow: 'none',
-}
-
 export default function AdminSidebar() {
   const pathname = usePathname()
   const router = useRouter()
+  const { isDark, toggleTheme } = useAdminTheme()
   const [collapsed, setCollapsed] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [loggingOut, setLoggingOut] = useState(false)
@@ -153,17 +142,17 @@ export default function AdminSidebar() {
   const isSettingsActive = pathname === '/admin/settings' || pathname.startsWith('/admin/settings/')
 
   function applyHover(el: HTMLElement) {
-    el.style.border = HOVER_STYLE.border
-    el.style.background = HOVER_STYLE.background
-    el.style.color = HOVER_STYLE.color
-    el.style.boxShadow = HOVER_STYLE.boxShadow
+    el.style.border = isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #E2E8F0'
+    el.style.background = isDark ? 'rgba(255,255,255,0.06)' : '#F1F5F9'
+    el.style.color = isDark ? '#FFFFFF' : '#0F172A'
+    el.style.boxShadow = 'none'
   }
   function removeHover(el: HTMLElement, keepActive: boolean) {
     if (keepActive) return
-    el.style.border = REST_STYLE.border
-    el.style.background = REST_STYLE.background
-    el.style.color = REST_STYLE.color
-    el.style.boxShadow = REST_STYLE.boxShadow
+    el.style.border = '1px solid transparent'
+    el.style.background = 'transparent'
+    el.style.color = isDark ? 'rgba(235,235,245,0.6)' : '#64748B'
+    el.style.boxShadow = 'none'
   }
 
   function hasItemAccess(item: NavItem) {
@@ -186,18 +175,24 @@ export default function AdminSidebar() {
           MOBILE TOP BAR (Visible only on small screens < md)
          ───────────────────────────────────────────────────────────────── */}
       <header
-        className="flex md:hidden items-center justify-between px-4 h-14 shrink-0 sticky top-0 z-40"
+        className="flex md:hidden items-center justify-between px-4 h-14 shrink-0 sticky top-0 z-40 border-b"
         style={{
-          background: 'rgba(10, 11, 12, 0.88)',
+          background: isDark ? 'rgba(0,0,0,0.9)' : 'rgba(255,255,255,0.95)',
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
-          borderBottom: '1px solid rgba(255,255,255,0.08)',
+          borderColor: isDark ? 'rgba(255,255,255,0.08)' : '#E5E7EB',
+          transition: 'background 0.3s ease, border-color 0.3s ease',
         }}
       >
         <button
           type="button"
           onClick={() => setMobileOpen(true)}
-          className="flex items-center justify-center w-10 h-10 rounded-lg active:scale-95 transition-all text-[#C7CBD1] hover:text-white hover:bg-white/5 border border-white/5"
+          className="flex items-center justify-center w-10 h-10 rounded-xl active:scale-95 transition-all"
+          style={{
+            color: isDark ? '#FFFFFF' : '#0F172A',
+            background: isDark ? 'rgba(255,255,255,0.08)' : '#F1F5F9',
+            border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E5E7EB',
+          }}
           aria-label="Ouvrir le menu"
         >
           <Menu className="w-5 h-5" />
@@ -205,11 +200,11 @@ export default function AdminSidebar() {
 
         <Link href="/admin/dashboard" className="flex items-center gap-2">
           <Image
-            src="/bigtower.png"
-            alt="Château d'art"
-            width={105}
-            height={25}
-            className="h-6 w-auto object-contain"
+            src={isDark ? '/taskbarlogo-white.png' : '/taskbarlogo.png'}
+            alt="M&F Meubles"
+            width={130}
+            height={30}
+            className="h-7 w-auto object-contain"
             priority
           />
         </Link>
@@ -218,13 +213,11 @@ export default function AdminSidebar() {
         <button
           type="button"
           onClick={confirmLogout}
-          className="flex items-center justify-center w-9 h-9 rounded-full border border-white/10 text-white/80 active:scale-95 transition-all"
+          className="flex items-center justify-center w-9 h-9 rounded-xl active:scale-95 transition-all"
           style={{
-            background: currentUser.role === 'developer'
-              ? 'linear-gradient(135deg, #1E293B 0%, #0F172A 100%)'
-              : 'linear-gradient(135deg, #2A2B2E 0%, #1A1B1E 100%)',
-            borderColor: currentUser.role === 'developer' ? 'rgba(209, 170, 92, 0.4)' : 'rgba(255,255,255,0.12)',
-            color: currentUser.role === 'developer' ? '#d1aa5c' : '#FFFFFF',
+            border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E5E7EB',
+            background: isDark ? '#2C2C2E' : '#F1F5F9',
+            color: isDark ? '#FFFFFF' : '#0F172A',
           }}
           title="Se déconnecter"
         >
@@ -239,31 +232,42 @@ export default function AdminSidebar() {
          ───────────────────────────────────────────────────────────────── */}
       {mobileOpen && (
         <div
-          className="fixed inset-0 z-50 md:hidden bg-black/75 backdrop-blur-sm transition-opacity duration-300"
+          className={`fixed inset-0 z-50 md:hidden backdrop-blur-xs transition-opacity duration-300 ${isDark ? 'bg-black/60' : 'bg-slate-900/40'}`}
           onClick={() => setMobileOpen(false)}
           aria-hidden="true"
         />
       )}
 
       <aside
-        className={`fixed top-0 bottom-0 left-0 z-50 md:hidden w-[280px] bg-[#0A0B0C] border-r border-white/10 flex flex-col transition-transform duration-300 ease-out shadow-2xl ${
+        className={`fixed top-0 bottom-0 left-0 z-50 md:hidden w-[280px] flex flex-col transition-transform duration-300 ease-out shadow-2xl ${
           mobileOpen ? 'translate-x-0' : '-translate-x-full pointer-events-none'
         }`}
-        style={{ fontFamily: 'var(--font-body)' }}
+        style={{
+          fontFamily: 'var(--font-body)',
+          background: isDark ? '#1C1C1E' : '#FAFAFB',
+          borderRight: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E5E7EB',
+          transition: 'background 0.3s ease, border-color 0.3s ease',
+        }}
       >
         {/* Drawer Header */}
-        <div className="flex items-center justify-between h-16 px-5 border-b border-white/5">
-          <Image
-            src="/bigtower.png"
-            alt="Château d'art"
-            width={120}
-            height={28}
-            className="h-7 w-auto object-contain"
-          />
+        <div
+          className="flex items-center justify-between h-16 px-5"
+          style={{ borderBottom: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E5E7EB' }}
+        >
+          <Link href="/admin/dashboard" onClick={() => setMobileOpen(false)} className="flex items-center">
+            <Image
+              src={isDark ? '/taskbarlogo-white.png' : '/taskbarlogo.png'}
+              alt="M&F Meubles"
+              width={130}
+              height={30}
+              className="h-7 w-auto object-contain"
+            />
+          </Link>
           <button
             type="button"
             onClick={() => setMobileOpen(false)}
-            className="w-8 h-8 rounded-lg flex items-center justify-center text-[#8E929B] hover:text-white hover:bg-white/10 transition-colors"
+            className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors"
+            style={{ color: isDark ? 'rgba(235,235,245,0.6)' : '#64748B' }}
             aria-label="Fermer"
           >
             <X className="w-5 h-5" />
@@ -278,7 +282,10 @@ export default function AdminSidebar() {
             return (
               <div key={si} className="mb-3">
                 {section.group && (
-                  <p className="text-[10px] font-semibold tracking-wider text-[#4A4D55] uppercase px-3 py-2">
+                  <p
+                    className="text-[10px] font-bold tracking-wider uppercase px-3 py-2"
+                    style={{ color: isDark ? 'rgba(235,235,245,0.3)' : '#94A3B8' }}
+                  >
                     {section.group}
                   </p>
                 )}
@@ -289,19 +296,25 @@ export default function AdminSidebar() {
                       key={item.href}
                       href={item.href}
                       onClick={() => setMobileOpen(false)}
-                      className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all mb-1"
+                      className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all mb-1"
                       style={{
                         background: active
-                          ? 'linear-gradient(145deg, rgba(255,255,255,0.09) 0%, rgba(255,255,255,0.04) 100%)'
+                          ? isDark ? 'rgba(255,255,255,0.12)' : '#0F172A'
                           : 'transparent',
-                        color: active ? '#FFFFFF' : '#8E929B',
-                        border: active ? '1px solid rgba(255,255,255,0.18)' : '1px solid transparent',
-                        boxShadow: active ? 'inset 0 1px 0 rgba(255,255,255,0.12), 0 4px 12px rgba(0,0,0,0.4)' : 'none',
+                        color: active ? '#FFFFFF' : isDark ? 'rgba(235,235,245,0.6)' : '#64748B',
+                        border: active
+                          ? isDark ? '1px solid rgba(255,255,255,0.15)' : '1px solid #0F172A'
+                          : '1px solid transparent',
+                        boxShadow: active && !isDark ? '0 2px 6px rgba(15,23,42,0.12)' : 'none',
+                        fontWeight: active ? 600 : 500,
                       }}
                     >
-                      <item.icon className="w-4 h-4 shrink-0" style={{ color: active ? '#d1aa5c' : '#8E929B' }} />
+                      <item.icon
+                        className="w-4 h-4 shrink-0"
+                        style={{ color: active ? '#FFFFFF' : isDark ? 'rgba(235,235,245,0.6)' : '#64748B' }}
+                      />
                       <span>{item.label}</span>
-                      {active && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-[#d1aa5c]" />}
+                      {active && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-white" />}
                     </Link>
                   )
                 })}
@@ -311,16 +324,24 @@ export default function AdminSidebar() {
         </nav>
 
         {/* Drawer Bottom */}
-        <div className="border-t border-white/5 p-3 space-y-2">
+        <div
+          className="p-3 space-y-2"
+          style={{ borderTop: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E5E7EB' }}
+        >
           {(currentUser.role === 'developer' || currentUser.username === 'wailio' || currentUser.username === 'toweradmin') && (
             <Link
               href="/admin/settings"
               onClick={() => setMobileOpen(false)}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all"
+              className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all"
               style={{
-                background: isSettingsActive ? 'rgba(255,255,255,0.08)' : 'transparent',
-                color: isSettingsActive ? '#FFFFFF' : '#8E929B',
-                border: isSettingsActive ? '1px solid rgba(255,255,255,0.15)' : '1px solid transparent',
+                background: isSettingsActive
+                  ? isDark ? 'rgba(255,255,255,0.12)' : '#0F172A'
+                  : 'transparent',
+                color: isSettingsActive ? '#FFFFFF' : isDark ? 'rgba(235,235,245,0.6)' : '#64748B',
+                border: isSettingsActive
+                  ? isDark ? '1px solid rgba(255,255,255,0.15)' : '1px solid #0F172A'
+                  : '1px solid transparent',
+                fontWeight: isSettingsActive ? 600 : 500,
               }}
             >
               <Settings className="w-4 h-4 shrink-0" />
@@ -328,29 +349,65 @@ export default function AdminSidebar() {
             </Link>
           )}
 
+          {/* Theme Toggle — mobile drawer */}
+          <button
+            type="button"
+            onClick={toggleTheme}
+            title={isDark ? 'Mode clair' : 'Mode sombre'}
+            style={{
+              width: '100%',
+              padding: '9px 14px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'flex-start',
+              gap: 12,
+              borderRadius: 12,
+              background: 'transparent',
+              border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E5E7EB',
+              cursor: 'pointer',
+              color: isDark ? 'rgba(235,235,245,0.6)' : '#64748B',
+              transition: 'all 0.2s ease',
+              marginBottom: 6,
+            }}
+          >
+            {isDark
+              ? <Sun style={{ width: 16, height: 16, flexShrink: 0 }} />
+              : <Moon style={{ width: 16, height: 16, flexShrink: 0 }} />
+            }
+            <span style={{ fontSize: 13, fontWeight: 500 }}>
+              {isDark ? 'Mode clair' : 'Mode sombre'}
+            </span>
+          </button>
+
           <div
             onClick={confirmLogout}
-            className="flex items-center gap-3 p-2.5 rounded-xl border border-white/5 bg-white/[0.03] cursor-pointer hover:bg-white/[0.06] transition-colors"
+            className="flex items-center gap-3 p-2.5 rounded-xl cursor-pointer transition-colors"
+            style={{
+              border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E5E7EB',
+              background: isDark ? '#2C2C2E' : '#FFFFFF',
+            }}
           >
             <div
               className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs shrink-0"
-              style={{
-                background: currentUser.role === 'developer'
-                  ? 'linear-gradient(135deg, #1E293B 0%, #0F172A 100%)'
-                  : 'linear-gradient(135deg, #2A2B2E 0%, #1A1B1E 100%)',
-                color: currentUser.role === 'developer' ? '#d1aa5c' : '#C7CBD1',
-                border: currentUser.role === 'developer' ? '1px solid rgba(209, 170, 92, 0.4)' : '1px solid rgba(255,255,255,0.1)',
-              }}
+              style={{ background: '#0F172A', color: '#FFFFFF' }}
             >
               {currentUser.displayName ? currentUser.displayName.charAt(0).toUpperCase() : 'A'}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-semibold text-white truncate">{currentUser.displayName || 'Admin'}</p>
-              <p className="text-[10px] text-[#d1aa5c] truncate">
+              <p
+                className="text-xs font-semibold truncate"
+                style={{ color: isDark ? '#FFFFFF' : '#0F172A' }}
+              >
+                {currentUser.displayName || 'Admin'}
+              </p>
+              <p
+                className="text-[10px] truncate"
+                style={{ color: isDark ? 'rgba(235,235,245,0.6)' : '#64748B' }}
+              >
                 {currentUser.role === 'developer' ? 'Développeur' : 'Administrateur'}
               </p>
             </div>
-            <LogOut className={`w-4 h-4 ${loggingOut ? 'text-red-400' : 'text-white/40'}`} />
+            <LogOut className={`w-4 h-4 ${loggingOut ? 'text-red-500' : ''}`} style={{ color: loggingOut ? '#FF453A' : '#94A3B8' }} />
           </div>
         </div>
       </aside>
@@ -361,12 +418,13 @@ export default function AdminSidebar() {
       <aside
         className="hidden md:flex flex-col shrink-0 transition-all duration-300"
         style={{
-          width: collapsed ? 72 : 248,
-          background: '#0A0B0C',
-          borderRight: '1px solid rgba(255,255,255,0.05)',
+          width: collapsed ? 72 : 252,
+          background: isDark ? '#1C1C1E' : '#FAFAFB',
+          borderRight: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E5E7EB',
           height: '100vh',
           position: 'sticky',
           top: 0,
+          transition: 'background 0.3s ease, border-color 0.3s ease, width 0.3s ease',
         }}
       >
         {/* Logo / Collapse */}
@@ -375,35 +433,37 @@ export default function AdminSidebar() {
           style={{
             height: 72,
             padding: collapsed ? '0 16px' : '0 20px',
-            borderBottom: '1px solid rgba(255,255,255,0.05)',
+            borderBottom: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E5E7EB',
           }}
         >
           {collapsed ? (
             <button
               onClick={() => setCollapsed(false)}
-              className="flex items-center justify-center w-8 h-8 rounded-lg hover:bg-white/5 transition-colors"
-              aria-label="Expand sidebar"
+              className="flex items-center justify-center w-8 h-8 rounded-lg transition-colors mx-auto"
+              style={{ color: isDark ? 'rgba(235,235,245,0.6)' : '#64748B' }}
+              aria-label="Ouvrir le menu"
             >
-              <ChevronRight className="w-4 h-4 text-[#B7BBC0]" />
+              <ChevronRight className="w-4 h-4" />
             </button>
           ) : (
             <div className="flex items-center justify-between w-full">
               <Link href="/admin/dashboard" className="flex items-center">
                 <Image
-                  src="/bigtower.png"
-                  alt="Château d'art"
-                  width={120}
-                  height={29}
+                  src={isDark ? '/taskbarlogo-white.png' : '/taskbarlogo.png'}
+                  alt="M&F Meubles"
+                  width={130}
+                  height={30}
                   className="h-7 w-auto object-contain cursor-pointer"
                   priority
                 />
               </Link>
               <button
                 onClick={() => setCollapsed(true)}
-                className="flex items-center justify-center w-7 h-7 rounded-lg hover:bg-white/5 transition-colors ml-2"
+                className="flex items-center justify-center w-7 h-7 rounded-lg transition-colors ml-2"
+                style={{ color: isDark ? 'rgba(235,235,245,0.3)' : '#94A3B8' }}
                 aria-label="Collapse sidebar"
               >
-                <ChevronRight className="w-3.5 h-3.5 text-[#4A4D55] rotate-180" />
+                <ChevronRight className="w-3.5 h-3.5 rotate-180" />
               </button>
             </div>
           )}
@@ -420,9 +480,9 @@ export default function AdminSidebar() {
                   <p
                     style={{
                       fontSize: 10,
-                      fontWeight: 600,
+                      fontWeight: 700,
                       letterSpacing: '0.12em',
-                      color: '#4A4D55',
+                      color: isDark ? 'rgba(235,235,245,0.3)' : '#94A3B8',
                       textTransform: 'uppercase',
                       padding: '16px 20px 6px',
                     }}
@@ -431,7 +491,13 @@ export default function AdminSidebar() {
                   </p>
                 )}
                 {section.group && collapsed && (
-                  <div style={{ height: 1, background: 'rgba(255,255,255,0.05)', margin: '12px 10px' }} />
+                  <div
+                    style={{
+                      height: 1,
+                      background: isDark ? 'rgba(255,255,255,0.08)' : '#E5E7EB',
+                      margin: '12px 10px',
+                    }}
+                  />
                 )}
                 {visibleItems.map((item) => {
                   const active = isActive(item.href)
@@ -442,19 +508,20 @@ export default function AdminSidebar() {
                       title={collapsed ? item.label : undefined}
                       className="flex items-center gap-3 transition-all duration-200 group"
                       style={{
-                        padding: collapsed ? '9px 0' : '9px 16px',
+                        padding: collapsed ? '9px 0' : '9px 14px',
                         justifyContent: collapsed ? 'center' : 'flex-start',
                         margin: '2px 10px',
-                        borderRadius: 10,
-                        border: active ? '1px solid rgba(255,255,255,0.18)' : '1px solid transparent',
+                        borderRadius: 12,
+                        border: active
+                          ? isDark ? '1px solid rgba(255,255,255,0.15)' : '1px solid #0F172A'
+                          : '1px solid transparent',
                         background: active
-                          ? 'linear-gradient(145deg, rgba(255,255,255,0.09) 0%, rgba(255,255,255,0.04) 100%)'
+                          ? isDark ? 'rgba(255,255,255,0.12)' : '#0F172A'
                           : 'transparent',
-                        color: active ? '#FFFFFF' : '#8E929B',
-                        boxShadow: active
-                          ? 'inset 0 1px 0 0 rgba(255,255,255,0.12), 0 4px 12px rgba(0,0,0,0.4)'
-                          : 'none',
+                        color: active ? '#FFFFFF' : isDark ? 'rgba(235,235,245,0.6)' : '#64748B',
+                        boxShadow: active && !isDark ? '0 2px 6px rgba(15,23,42,0.12)' : 'none',
                         textDecoration: 'none',
+                        fontWeight: active ? 600 : 500,
                       }}
                       onMouseEnter={(e) => {
                         if (!active) applyHover(e.currentTarget as HTMLElement)
@@ -465,24 +532,27 @@ export default function AdminSidebar() {
                     >
                       <item.icon
                         className="shrink-0 transition-colors"
-                        style={{ width: 17, height: 17, color: active ? '#FFFFFF' : '#8E929B' }}
+                        style={{
+                          width: 17,
+                          height: 17,
+                          color: active ? '#FFFFFF' : isDark ? 'rgba(235,235,245,0.6)' : '#64748B',
+                        }}
                       />
                       {!collapsed && (
                         <span
                           style={{
-                            fontSize: 13.5,
-                            fontWeight: active ? 500 : 400,
-                            letterSpacing: '0.01em',
+                            fontSize: 13,
+                            letterSpacing: '-0.01em',
                             transition: 'color 0.15s',
                           }}
                         >
                           {item.label}
                         </span>
                       )}
-                      {!collapsed && (
+                      {!collapsed && active && (
                         <div
-                          className={`ml-auto transition-opacity duration-200 ${active ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
-                          style={{ width: 4, height: 4, borderRadius: 99, background: '#FFFFFF' }}
+                          className="ml-auto"
+                          style={{ width: 5, height: 5, borderRadius: 99, background: '#FFFFFF' }}
                         />
                       )}
                     </Link>
@@ -494,7 +564,12 @@ export default function AdminSidebar() {
         </nav>
 
         {/* Bottom Block */}
-        <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', padding: '12px 10px' }}>
+        <div
+          style={{
+            borderTop: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E5E7EB',
+            padding: '12px 10px',
+          }}
+        >
           {/* Settings */}
           {(currentUser.role === 'developer' || currentUser.username === 'wailio' || currentUser.username === 'toweradmin') && (
             <Link
@@ -502,26 +577,62 @@ export default function AdminSidebar() {
               title={collapsed ? 'Paramètres' : undefined}
               className="flex items-center gap-3"
               style={{
-                padding: collapsed ? '9px 0' : '9px 16px',
+                padding: collapsed ? '9px 0' : '9px 14px',
                 justifyContent: collapsed ? 'center' : 'flex-start',
-                borderRadius: 10,
-                border: isSettingsActive ? '1px solid rgba(255,255,255,0.18)' : '1px solid transparent',
+                borderRadius: 12,
+                border: isSettingsActive
+                  ? isDark ? '1px solid rgba(255,255,255,0.15)' : '1px solid #0F172A'
+                  : '1px solid transparent',
                 background: isSettingsActive
-                  ? 'linear-gradient(145deg, rgba(255,255,255,0.09) 0%, rgba(255,255,255,0.04) 100%)'
+                  ? isDark ? 'rgba(255,255,255,0.12)' : '#0F172A'
                   : 'transparent',
-                color: isSettingsActive ? '#FFFFFF' : '#8E929B',
-                boxShadow: isSettingsActive ? 'inset 0 1px 0 0 rgba(255,255,255,0.12), 0 4px 12px rgba(0,0,0,0.4)' : 'none',
-                transition: 'all 0.2s cubic-bezier(0.32,0.72,0,1)',
+                color: isSettingsActive ? '#FFFFFF' : isDark ? 'rgba(235,235,245,0.6)' : '#64748B',
+                boxShadow: isSettingsActive && !isDark ? '0 2px 6px rgba(15,23,42,0.12)' : 'none',
+                transition: 'all 0.15s ease',
                 textDecoration: 'none',
+                fontWeight: isSettingsActive ? 600 : 500,
                 margin: '2px 0',
               }}
               onMouseEnter={(e) => { if (!isSettingsActive) applyHover(e.currentTarget as HTMLElement) }}
               onMouseLeave={(e) => { if (!isSettingsActive) removeHover(e.currentTarget as HTMLElement, false) }}
             >
               <Settings style={{ width: 17, height: 17, flexShrink: 0 }} />
-              {!collapsed && <span style={{ fontSize: 13.5, fontWeight: isSettingsActive ? 500 : 400, letterSpacing: '0.01em' }}>Paramètres</span>}
+              {!collapsed && <span style={{ fontSize: 13, letterSpacing: '-0.01em' }}>Paramètres</span>}
             </Link>
           )}
+
+          {/* Theme Toggle — desktop sidebar */}
+          <button
+            type="button"
+            onClick={toggleTheme}
+            title={isDark ? 'Mode clair' : 'Mode sombre'}
+            style={{
+              width: '100%',
+              padding: collapsed ? '9px 0' : '9px 14px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: collapsed ? 'center' : 'flex-start',
+              gap: 12,
+              borderRadius: 12,
+              background: 'transparent',
+              border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E5E7EB',
+              cursor: 'pointer',
+              color: isDark ? 'rgba(235,235,245,0.6)' : '#64748B',
+              transition: 'all 0.2s ease',
+              marginBottom: 6,
+              marginTop: 4,
+            }}
+          >
+            {isDark
+              ? <Sun style={{ width: 17, height: 17, flexShrink: 0 }} />
+              : <Moon style={{ width: 17, height: 17, flexShrink: 0 }} />
+            }
+            {!collapsed && (
+              <span style={{ fontSize: 13, letterSpacing: '-0.01em', fontWeight: 500 }}>
+                {isDark ? 'Mode clair' : 'Mode sombre'}
+              </span>
+            )}
+          </button>
 
           {/* Account row */}
           <div
@@ -531,29 +642,22 @@ export default function AdminSidebar() {
               gap: collapsed ? 0 : 10,
               padding: collapsed ? '9px 0' : '9px 12px',
               justifyContent: collapsed ? 'center' : 'flex-start',
-              marginTop: 6,
-              borderRadius: 10,
-              border: '1px solid transparent',
-              background: 'transparent',
+              borderRadius: 12,
+              border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E5E7EB',
+              background: isDark ? '#2C2C2E' : '#FFFFFF',
               cursor: 'pointer',
-              transition: 'all 0.2s cubic-bezier(0.32,0.72,0,1)',
+              transition: 'all 0.15s ease',
+              boxShadow: isDark ? 'none' : '0 1px 2px rgba(15,23,42,0.03)',
             }}
-            onMouseEnter={(e) => applyHover(e.currentTarget as HTMLElement)}
-            onMouseLeave={(e) => removeHover(e.currentTarget as HTMLElement, false)}
             onClick={confirmLogout}
             title="Se déconnecter"
           >
             <div
               style={{
                 width: 30, height: 30, borderRadius: 99, flexShrink: 0,
-                background: currentUser.role === 'developer'
-                  ? 'linear-gradient(135deg, #1E293B 0%, #0F172A 100%)'
-                  : 'linear-gradient(135deg, #2A2B2E 0%, #1A1B1E 100%)',
-                border: currentUser.role === 'developer'
-                  ? '1px solid rgba(209, 170, 92, 0.35)'
-                  : '1px solid rgba(255,255,255,0.12)',
+                background: '#0F172A',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 12, color: currentUser.role === 'developer' ? '#d1aa5c' : '#C7CBD1', fontWeight: 600,
+                fontSize: 12, color: '#FFFFFF', fontWeight: 700,
               }}
             >
               {currentUser.displayName ? currentUser.displayName.charAt(0).toUpperCase() : 'A'}
@@ -561,14 +665,31 @@ export default function AdminSidebar() {
             {!collapsed && (
               <>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.92)', fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  <p
+                    style={{
+                      fontSize: 12.5,
+                      color: isDark ? '#FFFFFF' : '#0F172A',
+                      fontWeight: 600,
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                    }}
+                  >
                     {currentUser.displayName || 'Admin'}
                   </p>
-                  <p style={{ fontSize: 11, color: currentUser.role === 'developer' ? '#d1aa5c' : 'rgba(255,255,255,0.4)', marginTop: 1, fontWeight: 500 }}>
-                    {currentUser.role === 'developer' ? 'Développeur (Accès Total)' : 'Administrateur'}
+                  <p style={{ fontSize: 11, color: isDark ? 'rgba(235,235,245,0.6)' : '#64748B', marginTop: 1, fontWeight: 500 }}>
+                    {currentUser.role === 'developer' ? 'Développeur' : 'Administrateur'}
                   </p>
                 </div>
-                <LogOut style={{ width: 14, height: 14, color: loggingOut ? '#f87171' : 'rgba(255,255,255,0.3)', flexShrink: 0, transition: 'color 0.2s' }} />
+                <LogOut
+                  style={{
+                    width: 14,
+                    height: 14,
+                    color: loggingOut ? '#FF453A' : '#94A3B8',
+                    flexShrink: 0,
+                    transition: 'color 0.2s',
+                  }}
+                />
               </>
             )}
           </div>
@@ -585,26 +706,25 @@ export default function AdminSidebar() {
         >
           {/* Scrim */}
           <div
-            className="absolute inset-0"
-            style={{ background: 'rgba(0, 0, 0, 0.5)', backdropFilter: 'blur(4px)', WebkitBackdropFilter: 'blur(4px)' }}
+            className={`absolute inset-0 backdrop-blur-xs transition-opacity duration-300 ${isDark ? 'bg-black/60' : 'bg-slate-900/40'}`}
             onClick={() => setShowLogoutConfirm(false)}
           />
 
           {/* Action Sheet */}
           <div
-            className="relative w-full mx-4 mb-6 md:mb-0 md:w-[340px] flex flex-col gap-2.5"
+            className="relative w-full mx-4 mb-6 md:mb-0 md:w-[340px] flex flex-col gap-2.5 z-10"
             style={{ maxWidth: 380, animation: 'iosSheetIn 0.38s cubic-bezier(0.32, 0.72, 0, 1) both' }}
           >
             {/* Main card */}
             <div
               style={{
-                background: 'rgba(28, 28, 30, 0.95)',
+                background: isDark ? 'rgba(28,28,30,0.95)' : 'rgba(255,255,255,0.96)',
                 backdropFilter: 'blur(30px)',
                 WebkitBackdropFilter: 'blur(30px)',
-                borderRadius: 16,
+                borderRadius: 18,
                 overflow: 'hidden',
-                boxShadow: '0 20px 60px rgba(0,0,0,0.6)',
-                border: '1px solid rgba(255,255,255,0.09)',
+                boxShadow: isDark ? '0 20px 50px rgba(0,0,0,0.6)' : '0 20px 50px rgba(15,23,42,0.15)',
+                border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #E2E8F0',
               }}
             >
               {/* Title + message */}
@@ -612,14 +732,14 @@ export default function AdminSidebar() {
                 style={{
                   padding: '18px 20px 14px',
                   textAlign: 'center',
-                  borderBottom: '1px solid rgba(255,255,255,0.08)',
+                  borderBottom: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E2E8F0',
                 }}
               >
-                <p style={{ fontSize: 14, fontWeight: 700, color: '#FFFFFF', marginBottom: 4 }}>
+                <p style={{ fontSize: 14, fontWeight: 700, color: isDark ? '#FFFFFF' : '#0F172A', marginBottom: 4 }}>
                   Se déconnecter ?
                 </p>
-                <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.45)', lineHeight: 1.5 }}>
-                  Vous allez quitter l'espace admin. Vous devrez vous reconnecter pour accéder à nouveau au tableau de bord.
+                <p style={{ fontSize: 12.5, color: isDark ? 'rgba(235,235,245,0.6)' : '#64748B', lineHeight: 1.5 }}>
+                  Vous allez quitter l&apos;espace admin. Vous devrez vous reconnecter pour accéder à nouveau au tableau de bord.
                 </p>
               </div>
 
@@ -632,7 +752,7 @@ export default function AdminSidebar() {
                   width: '100%',
                   padding: '16px 20px',
                   textAlign: 'center',
-                  fontSize: 17,
+                  fontSize: 16,
                   fontWeight: 600,
                   color: '#FF453A',
                   background: 'transparent',
@@ -644,7 +764,11 @@ export default function AdminSidebar() {
                   gap: 8,
                   transition: 'background 0.15s',
                 }}
-                onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,69,58,0.08)' }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLButtonElement).style.background = isDark
+                    ? 'rgba(255,69,58,0.1)'
+                    : '#FEF2F2'
+                }}
                 onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.background = 'transparent' }}
               >
                 <LogOut style={{ width: 18, height: 18 }} />
@@ -658,22 +782,24 @@ export default function AdminSidebar() {
               onClick={() => setShowLogoutConfirm(false)}
               style={{
                 width: '100%',
-                padding: '17px 20px',
+                padding: '16px 20px',
                 textAlign: 'center',
-                fontSize: 17,
-                fontWeight: 700,
-                color: '#FFFFFF',
-                background: 'rgba(28, 28, 30, 0.95)',
-                backdropFilter: 'blur(30px)',
-                WebkitBackdropFilter: 'blur(30px)',
-                borderRadius: 16,
-                border: '1px solid rgba(255,255,255,0.09)',
+                fontSize: 16,
+                fontWeight: 600,
+                color: isDark ? '#FFFFFF' : '#0F172A',
+                background: isDark ? '#2C2C2E' : '#FFFFFF',
+                borderRadius: 18,
+                border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #E2E8F0',
                 cursor: 'pointer',
-                boxShadow: '0 8px 30px rgba(0,0,0,0.4)',
+                boxShadow: isDark ? 'none' : '0 4px 16px rgba(15,23,42,0.06)',
                 transition: 'background 0.15s',
               }}
-              onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(44,44,46,0.98)' }}
-              onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(28,28,30,0.95)' }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLButtonElement).style.background = isDark ? '#3A3A3C' : '#F8FAFC'
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLButtonElement).style.background = isDark ? '#2C2C2E' : '#FFFFFF'
+              }}
             >
               Annuler
             </button>

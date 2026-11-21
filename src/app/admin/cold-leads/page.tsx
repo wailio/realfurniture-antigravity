@@ -1,7 +1,6 @@
 'use client'
 
 export const runtime = 'edge'
-// Build version: 2026-10-03-restored-smooth
 
 import { useState, useEffect, useMemo } from 'react'
 import {
@@ -19,11 +18,14 @@ import {
   Send,
   Loader2,
   Sliders,
+  Armchair,
+  X,
 } from 'lucide-react'
 import { showIosToast, showIosConfirm } from '@/components/ui/ios-dialog'
+import { useAdminTheme } from '@/contexts/theme-context'
 
 // Handcrafted bespoke furniture icons (anti-AI slop, architectural line art)
-function SalonIcon({ className = "w-7 h-7", ...props }: React.SVGProps<SVGSVGElement>) {
+function SalonIcon({ className = "w-6 h-6", ...props }: React.SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>
       <path d="M4 11V8a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v3" />
@@ -37,7 +39,7 @@ function SalonIcon({ className = "w-7 h-7", ...props }: React.SVGProps<SVGSVGEle
   )
 }
 
-function DiningTableIcon({ className = "w-7 h-7", ...props }: React.SVGProps<SVGSVGElement>) {
+function DiningTableIcon({ className = "w-6 h-6", ...props }: React.SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>
       <path d="M3 10h18" />
@@ -50,7 +52,7 @@ function DiningTableIcon({ className = "w-7 h-7", ...props }: React.SVGProps<SVG
   )
 }
 
-function BedroomIcon({ className = "w-7 h-7", ...props }: React.SVGProps<SVGSVGElement>) {
+function BedroomIcon({ className = "w-6 h-6", ...props }: React.SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>
       <path d="M3 5v14" />
@@ -64,7 +66,7 @@ function BedroomIcon({ className = "w-7 h-7", ...props }: React.SVGProps<SVGSVGE
   )
 }
 
-function WardrobeIcon({ className = "w-7 h-7", ...props }: React.SVGProps<SVGSVGElement>) {
+function WardrobeIcon({ className = "w-6 h-6", ...props }: React.SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>
       <rect x="4" y="3" width="16" height="18" rx="1.5" />
@@ -76,7 +78,7 @@ function WardrobeIcon({ className = "w-7 h-7", ...props }: React.SVGProps<SVGSVG
   )
 }
 
-function DecorIcon({ className = "w-7 h-7", ...props }: React.SVGProps<SVGSVGElement>) {
+function DecorIcon({ className = "w-6 h-6", ...props }: React.SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>
       <path d="M12 2v6" />
@@ -89,7 +91,7 @@ function DecorIcon({ className = "w-7 h-7", ...props }: React.SVGProps<SVGSVGEle
   )
 }
 
-function FullProjectIcon({ className = "w-7 h-7", ...props }: React.SVGProps<SVGSVGElement>) {
+function FullProjectIcon({ className = "w-6 h-6", ...props }: React.SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>
       <rect x="3" y="3" width="18" height="18" rx="1.5" />
@@ -101,94 +103,91 @@ function FullProjectIcon({ className = "w-7 h-7", ...props }: React.SVGProps<SVG
   )
 }
 
-// Category metadata with bespoke icons (no background tiles, pure icons)
 const CATEGORIES: Record<
   string,
-  { title: string; subtitle: string; icon: any; color: string; bg: string; border: string }
+  { title: string; subtitle: string; icon: any; color: string }
 > = {
   salon: {
     title: 'Salons & Canapés',
     subtitle: 'Modulables, velours & cuir',
     icon: SalonIcon,
-    color: '#d1aa5c',
-    bg: 'transparent',
-    border: 'transparent',
+    color: '#3B82F6',
   },
   'salle-a-manger': {
     title: 'Salles à Manger',
     subtitle: 'Tables, chaises & buffets',
     icon: DiningTableIcon,
-    color: '#60A5FA',
-    bg: 'transparent',
-    border: 'transparent',
+    color: '#0A84FF',
   },
   chambre: {
     title: 'Chambres à Coucher',
     subtitle: 'Lits, chevets & dressings',
     icon: BedroomIcon,
-    color: '#C084FC',
-    bg: 'transparent',
-    border: 'transparent',
+    color: '#A855F7',
   },
   armoire: {
     title: 'Dressings & Armoires',
     subtitle: 'Sur-mesure & rangements',
     icon: WardrobeIcon,
-    color: '#34D399',
-    bg: 'transparent',
-    border: 'transparent',
+    color: '#10B981',
   },
   deco: {
     title: 'Décoration & Art',
     subtitle: 'Miroirs, consoles & luminaires',
     icon: DecorIcon,
-    color: '#F472B6',
-    bg: 'transparent',
-    border: 'transparent',
+    color: '#EC4899',
   },
   complet: {
     title: 'Aménagement Complet',
     subtitle: 'Villa, appartement ou bureau',
     icon: FullProjectIcon,
-    color: '#FBBF24',
-    bg: 'transparent',
-    border: 'transparent',
+    color: '#F59E0B',
   },
 }
 
 const STATUS_CONFIG: Record<
   string,
-  { label: string; color: string; bg: string; border: string }
+  { label: string; color: string; bg: string; border: string; darkBg: string; darkBorder: string }
 > = {
   nouveau: {
     label: 'Nouveau Choix',
-    color: '#d1aa5c',
-    bg: 'rgba(209, 170, 92, 0.15)',
-    border: 'rgba(209, 170, 92, 0.35)',
+    color: '#F59E0B',
+    bg: '#FEF3C7',
+    border: '#FDE68A',
+    darkBg: 'rgba(245,158,11,0.15)',
+    darkBorder: 'rgba(245,158,11,0.3)',
   },
   contacted: {
     label: 'Contacté',
-    color: '#60A5FA',
-    bg: 'rgba(96, 165, 250, 0.15)',
-    border: 'rgba(96, 165, 250, 0.35)',
+    color: '#3B82F6',
+    bg: '#EFF6FF',
+    border: '#BFDBFE',
+    darkBg: 'rgba(59,130,246,0.15)',
+    darkBorder: 'rgba(59,130,246,0.3)',
   },
   negotiating: {
     label: 'En Négociation',
-    color: '#C084FC',
-    bg: 'rgba(192, 132, 252, 0.15)',
-    border: 'rgba(192, 132, 252, 0.35)',
+    color: '#A855F7',
+    bg: '#F5F3FF',
+    border: '#DDD6FE',
+    darkBg: 'rgba(168,85,247,0.15)',
+    darkBorder: 'rgba(168,85,247,0.3)',
   },
   converted: {
     label: 'Vente Conclue',
-    color: '#34D399',
-    bg: 'rgba(52, 211, 153, 0.15)',
-    border: 'rgba(52, 211, 153, 0.35)',
+    color: '#10B981',
+    bg: '#ECFDF5',
+    border: '#A7F3D0',
+    darkBg: 'rgba(16,185,129,0.15)',
+    darkBorder: 'rgba(16,185,129,0.3)',
   },
   archived: {
     label: 'Classé',
-    color: '#94A3B8',
-    bg: 'rgba(148, 163, 184, 0.10)',
-    border: 'rgba(148, 163, 184, 0.20)',
+    color: '#64748B',
+    bg: '#F8FAFC',
+    border: '#E2E8F0',
+    darkBg: 'rgba(255,255,255,0.06)',
+    darkBorder: 'rgba(255,255,255,0.1)',
   },
 }
 
@@ -222,6 +221,7 @@ function formatPrice(val: number) {
 }
 
 export default function ColdLeadsPage() {
+  const { isDark } = useAdminTheme()
   const [leads, setLeads] = useState<ColdLead[]>([])
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
@@ -255,7 +255,6 @@ export default function ColdLeadsPage() {
     loadData()
   }, [])
 
-  // Update lead status
   const handleStatusChange = async (leadId: string, newStatus: string) => {
     try {
       const res = await fetch('/api/admin/cold-leads', {
@@ -267,16 +266,15 @@ export default function ColdLeadsPage() {
         setLeads((prev) =>
           prev.map((l) => (l.id === leadId ? { ...l, status: newStatus as any } : l))
         )
-        showIosToast('Statut mis à jour')
+        showIosToast('Statut mis à jour ✓', 'success')
       } else {
-        showIosToast('Erreur de mise à jour')
+        showIosToast('Erreur de mise à jour', 'error')
       }
     } catch {
-      showIosToast('Erreur réseau')
+      showIosToast('Erreur réseau', 'error')
     }
   }
 
-  // Delete lead
   const handleDelete = async (lead: ColdLead) => {
     const confirmed = await showIosConfirm({
       title: 'Supprimer ce choix ?',
@@ -291,14 +289,13 @@ export default function ColdLeadsPage() {
       const res = await fetch(`/api/admin/cold-leads?id=${lead.id}`, { method: 'DELETE' })
       if (res.ok) {
         setLeads((prev) => prev.filter((l) => l.id !== lead.id))
-        showIosToast('Demande supprimée')
+        showIosToast('Demande supprimée ✓', 'info')
       }
     } catch {
-      showIosToast('Erreur lors de la suppression')
+      showIosToast('Erreur lors de la suppression', 'error')
     }
   }
 
-  // Filtered list
   const filteredLeads = useMemo(() => {
     return leads.filter((l) => {
       const matchSearch =
@@ -315,101 +312,133 @@ export default function ColdLeadsPage() {
   }, [leads, search, selectedCategory, selectedStatus])
 
   return (
-    <div className="min-h-screen text-white" style={{ fontFamily: 'var(--font-body)', background: 'transparent' }}>
-      {/* ── Page Header ── */}
+    <div className="min-h-screen" style={{ background: 'transparent' }}>
+      {/* ── Apple Frosted Sticky Header ── */}
       <div
-        className="sticky top-0 z-30 px-4 md:px-8 py-4 md:py-6 flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/[0.08]"
         style={{
-          background: 'rgba(10, 11, 12, 0.88)',
+          background: isDark ? 'rgba(0, 0, 0, 0.75)' : 'rgba(245, 245, 247, 0.85)',
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
+          borderBottom: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid rgba(0, 0, 0, 0.05)',
+          padding: 'clamp(14px, 2vw, 20px) clamp(16px, 3vw, 28px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: 12,
+          position: 'sticky',
+          top: 0,
+          zIndex: 40,
+          transition: 'background 0.3s ease, border-color 0.3s ease',
         }}
       >
         <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="w-2 h-2 rounded-full bg-[#d1aa5c] shadow-[0_0_8px_#d1aa5c]" />
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-[#d1aa5c]">
-              Suivi · Entonnoir Hero
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 }}>
+            <span style={{ width: 8, height: 8, borderRadius: 99, background: '#10B981' }} />
+            <span style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: isDark ? '#30D158' : '#047857' }}>
+              Entonnoir Hero • M&amp;F Meubles
             </span>
           </div>
           <h1
-            className="text-2xl md:text-3xl font-light text-white tracking-tight"
-            style={{ fontFamily: 'var(--font-heading)' }}
+            style={{
+              fontFamily: 'var(--font-heading)',
+              fontSize: 20,
+              fontWeight: 400,
+              color: isDark ? '#FFFFFF' : '#0F172A',
+              letterSpacing: '-0.02em',
+              margin: 0,
+            }}
           >
-            Cold Lead choices
+            Cold Leads <span style={{ fontWeight: 800 }}>• Choix &amp; Budgets Visiteurs</span>
           </h1>
-          <p className="text-xs text-white/50 mt-0.5">
-            Choix et budgets sélectionnés en direct par les visiteurs depuis le widget d'accueil
+          <p style={{ fontSize: 11.5, color: isDark ? 'rgba(235,235,245,0.6)' : '#64748B', marginTop: 2 }}>
+            Demandes et sélections enregistrées en direct depuis le configurateur d&apos;accueil
           </p>
         </div>
 
         {/* Action button */}
-        <div className="flex items-center gap-2.5">
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <button
             type="button"
             onClick={() => loadData(true)}
             disabled={refreshing}
-            className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-medium text-white/80 bg-white/[0.05] hover:bg-white/10 border border-white/10 active:scale-95 transition-all cursor-pointer"
-            style={{ cursor: refreshing ? 'wait' : 'pointer' }}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6,
+              padding: '7px 14px',
+              borderRadius: 12,
+              fontSize: 12,
+              fontWeight: 600,
+              color: isDark ? '#FFFFFF' : '#0F172A',
+              background: isDark ? '#1C1C1E' : '#FFFFFF',
+              border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E2E8F0',
+              cursor: refreshing ? 'wait' : 'pointer',
+              boxShadow: isDark ? 'none' : '0 1px 2px rgba(15,23,42,0.03)',
+              transition: 'all 0.15s ease',
+            }}
           >
-            <RefreshCw className={`w-3.5 h-3.5 text-[#d1aa5c] ${refreshing ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} style={{ color: isDark ? '#FFFFFF' : '#0F172A' }} />
             <span>Actualiser</span>
           </button>
         </div>
       </div>
 
-      <div className="px-4 md:px-8 py-6 space-y-6 max-w-7xl mx-auto">
-        {/* ── Key Metrics: Clear Visual Hierarchy (Primary Hero + 3 Secondary) ── */}
+      <div style={{ padding: 'clamp(14px, 2.5vw, 28px)', maxWidth: 1400, margin: '0 auto' }}>
+        {/* ── Key Metrics (Apple Light/Dark Squircle Card) ── */}
         <div
-          className="rounded-xl border p-5 md:p-6"
           style={{
-            background: 'rgba(255, 255, 255, 0.04)',
-            borderColor: 'rgba(255, 255, 255, 0.08)',
+            background: isDark ? '#1C1C1E' : '#FFFFFF',
+            borderRadius: 20,
+            border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E5E7EB',
+            padding: '24px 28px',
+            boxShadow: isDark ? '0 2px 8px rgba(0,0,0,0.3)' : '0 1px 3px rgba(15,23,42,0.03), 0 4px 16px rgba(15,23,42,0.02)',
+            marginBottom: 24,
+            transition: 'background 0.3s ease, border-color 0.3s ease',
           }}
         >
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 24 }}>
             {/* Primary Hero Metric */}
             <div>
-              <p className="text-[11px] font-semibold uppercase tracking-wider text-white/40 mb-1">
+              <p style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: isDark ? 'rgba(235,235,245,0.6)' : '#64748B', marginBottom: 4 }}>
                 Nouveaux choix à traiter
               </p>
-              <div className="flex items-baseline gap-3">
-                <p className="text-4xl md:text-5xl font-bold text-white tracking-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 12 }}>
+                <p style={{ fontSize: 36, fontWeight: 800, color: isDark ? '#FFFFFF' : '#0F172A', letterSpacing: '-0.03em', margin: 0, fontVariantNumeric: 'tabular-nums' }}>
                   {leads.filter((l) => l.status === 'nouveau').length}
                 </p>
-                <span className="text-xs text-[#d1aa5c] font-medium">
-                  {leads.filter((l) => l.status === 'nouveau').length > 0 ? 'En attente de premier contact' : 'Toutes les demandes traitées'}
+                <span style={{ fontSize: 12, color: '#F59E0B', fontWeight: 600 }}>
+                  {leads.filter((l) => l.status === 'nouveau').length > 0 ? 'En attente de premier contact' : 'Toutes les demandes traitées ✓'}
                 </span>
               </div>
-              <p className="text-xs text-white/40 mt-1">
-                Prospects qualifiés via le configurateur hero
+              <p style={{ fontSize: 12, color: isDark ? 'rgba(235,235,245,0.4)' : '#94A3B8', marginTop: 4 }}>
+                Prospects qualifiés via le configurateur interactif
               </p>
             </div>
 
             {/* 3 Secondary Metrics with subtle hairline dividers */}
-            <div className="grid grid-cols-3 gap-4 pt-4 md:pt-0 border-t md:border-t-0 md:border-l border-white/10 md:pl-8">
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24, paddingLeft: 24, borderLeft: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #F1F5F9' }}>
               <div>
-                <p className="text-xl md:text-2xl font-bold text-white tracking-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>
+                <p style={{ fontSize: 22, fontWeight: 800, color: isDark ? '#FFFFFF' : '#0F172A', letterSpacing: '-0.02em', margin: 0, fontVariantNumeric: 'tabular-nums' }}>
                   {leads.length}
                 </p>
-                <p className="text-[11px] text-white/50 font-medium mt-0.5">Total demandes</p>
-                <p className="text-[10px] text-white/30 mt-0.5">Depuis l&apos;ouverture</p>
+                <p style={{ fontSize: 11.5, color: isDark ? 'rgba(235,235,245,0.6)' : '#64748B', fontWeight: 600, marginTop: 2 }}>Total demandes</p>
+                <p style={{ fontSize: 10.5, color: isDark ? 'rgba(235,235,245,0.4)' : '#94A3B8', marginTop: 2 }}>Depuis le début</p>
               </div>
 
               <div>
-                <p className="text-xl md:text-2xl font-bold text-[#d1aa5c] tracking-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>
+                <p style={{ fontSize: 22, fontWeight: 800, color: '#F59E0B', letterSpacing: '-0.02em', margin: 0, fontVariantNumeric: 'tabular-nums' }}>
                   {formatPrice(avgBudget)}
                 </p>
-                <p className="text-[11px] text-white/50 font-medium mt-0.5">Budget moyen</p>
-                <p className="text-[10px] text-white/30 mt-0.5">Par sélection</p>
+                <p style={{ fontSize: 11.5, color: isDark ? 'rgba(235,235,245,0.6)' : '#64748B', fontWeight: 600, marginTop: 2 }}>Budget moyen</p>
+                <p style={{ fontSize: 10.5, color: isDark ? 'rgba(235,235,245,0.4)' : '#94A3B8', marginTop: 2 }}>Par sélection</p>
               </div>
 
               <div>
-                <p className="text-xl md:text-2xl font-bold text-[#34D399] tracking-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>
+                <p style={{ fontSize: 22, fontWeight: 800, color: isDark ? '#30D158' : '#047857', letterSpacing: '-0.02em', margin: 0, fontVariantNumeric: 'tabular-nums' }}>
                   {leads.filter((l) => l.status === 'converted').length}
                 </p>
-                <p className="text-[11px] text-white/50 font-medium mt-0.5">Ventes conclues</p>
-                <p className="text-[10px] text-white/30 mt-0.5">
+                <p style={{ fontSize: 11.5, color: isDark ? 'rgba(235,235,245,0.6)' : '#64748B', fontWeight: 600, marginTop: 2 }}>Ventes conclues</p>
+                <p style={{ fontSize: 10.5, color: isDark ? 'rgba(235,235,245,0.4)' : '#94A3B8', marginTop: 2 }}>
                   {leads.length > 0 ? `${Math.round((leads.filter((l) => l.status === 'converted').length / leads.length) * 100)}% taux` : '—'}
                 </p>
               </div>
@@ -417,16 +446,16 @@ export default function ColdLeadsPage() {
           </div>
         </div>
 
-        {/* ── Category Breakdown Grid (Creative Product Type Visual System) ── */}
-        <div>
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-white/80">
+        {/* ── Category Breakdown Grid (Apple Squircle Cards) ── */}
+        <div style={{ marginBottom: 24 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+            <h2 style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: isDark ? '#FFFFFF' : '#0F172A', margin: 0 }}>
               Distribution par type de mobilier
             </h2>
-            <span className="text-xs text-white/40">Cliquez sur une catégorie pour filtrer</span>
+            <span style={{ fontSize: 11.5, color: isDark ? 'rgba(235,235,245,0.6)' : '#64748B' }}>Cliquez sur une catégorie pour filtrer</span>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2.5">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 12 }}>
             {Object.entries(CATEGORIES).map(([catKey, cat]) => {
               const IconComp = cat.icon
               const count = typeDistribution[catKey]?.count || 0
@@ -438,24 +467,33 @@ export default function ColdLeadsPage() {
                   key={catKey}
                   type="button"
                   onClick={() => setSelectedCategory(isSelected ? 'all' : catKey)}
-                  className={`text-left p-3.5 rounded-2xl border transition-all duration-200 active:scale-95 relative overflow-hidden cursor-pointer ${
-                    isSelected
-                      ? 'border-[#d1aa5c] shadow-[0_0_20px_rgba(209,170,92,0.25)]'
-                      : 'border-white/10 hover:border-white/20 bg-white/[0.03] hover:bg-white/[0.06]'
-                  }`}
                   style={{
+                    textAlign: 'left',
+                    padding: '16px 14px',
+                    borderRadius: 16,
+                    border: isSelected
+                      ? (isDark ? '2px solid #FFFFFF' : '2px solid #0F172A')
+                      : (isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E2E8F0'),
+                    background: isSelected
+                      ? (isDark ? '#2C2C2E' : '#F8FAFC')
+                      : (isDark ? '#1C1C1E' : '#FFFFFF'),
+                    boxShadow: isSelected
+                      ? (isDark ? '0 4px 14px rgba(0,0,0,0.5)' : '0 4px 14px rgba(15,23,42,0.08)')
+                      : (isDark ? 'none' : '0 1px 3px rgba(15,23,42,0.02)'),
                     cursor: 'pointer',
-                    background: isSelected ? 'rgba(209, 170, 92, 0.15)' : undefined,
+                    transition: 'all 0.15s ease',
                   }}
                 >
-                  <div className="mb-3 flex items-center" style={{ color: cat.color }}>
-                    <IconComp className="w-7 h-7" />
+                  <div style={{ marginBottom: 10, color: cat.color }}>
+                    <IconComp className="w-6 h-6" />
                   </div>
 
-                  <p className="text-xs font-bold text-white truncate leading-tight">{cat.title}</p>
-                  <div className="flex items-center justify-between mt-2 pt-2 border-t border-white/[0.06]">
-                    <span className="text-base font-light font-fraunces text-white">{count}</span>
-                    <span className="text-[10px] font-mono text-[#d1aa5c] font-semibold">
+                  <p style={{ fontSize: 12.5, fontWeight: 700, color: isDark ? '#FFFFFF' : '#0F172A', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', margin: 0 }}>
+                    {cat.title}
+                  </p>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 10, paddingTop: 8, borderTop: isDark ? '1px solid rgba(255,255,255,0.06)' : '1px solid #F1F5F9' }}>
+                    <span style={{ fontSize: 15, fontWeight: 800, color: isDark ? '#FFFFFF' : '#0F172A' }}>{count}</span>
+                    <span style={{ fontSize: 11, fontWeight: 700, color: isDark ? 'rgba(235,235,245,0.6)' : '#64748B' }}>
                       {percentage}%
                     </span>
                   </div>
@@ -466,31 +504,63 @@ export default function ColdLeadsPage() {
         </div>
 
         {/* ── Search & Filter Tabs ── */}
-        <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 pt-2">
-          {/* Search Input */}
-          <div className="relative flex-1 max-w-md">
-            <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-white/40 pointer-events-none" />
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 20, flexWrap: 'wrap' }}>
+          {/* Search Capsule Pill */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8,
+              background: isDark ? '#1C1C1E' : '#FFFFFF',
+              borderRadius: 9999,
+              padding: '9px 16px',
+              border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #DFE3E8',
+              width: '100%',
+              maxWidth: 320,
+              boxShadow: isDark ? 'none' : '0 1px 3px rgba(15, 23, 42, 0.04)',
+            }}
+          >
+            <Search className="w-4 h-4 text-[#94A3B8] shrink-0" />
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Rechercher par nom, téléphone, type..."
-              className="w-full pl-9 pr-4 py-2.5 rounded-xl text-xs bg-white/[0.05] border border-white/10 text-white placeholder-white/30 focus:outline-none focus:border-[#d1aa5c] transition-colors"
+              style={{
+                border: 'none',
+                outline: 'none',
+                background: 'transparent',
+                fontSize: 12.5,
+                color: isDark ? '#FFFFFF' : '#0F172A',
+                width: '100%',
+              }}
             />
             {search && (
               <button
                 type="button"
                 onClick={() => setSearch('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white text-xs cursor-pointer"
-                style={{ cursor: 'pointer' }}
+                style={{ border: 'none', background: 'none', cursor: 'pointer', padding: 0 }}
               >
-                ×
+                <X className="w-3.5 h-3.5 text-[#94A3B8]" />
               </button>
             )}
           </div>
 
-          {/* Status Filter Pills */}
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+          {/* Status Filter Segmented Control */}
+          <div
+            style={{
+              display: 'inline-flex',
+              gap: 2,
+              flexWrap: 'nowrap',
+              overflowX: 'auto',
+              scrollbarWidth: 'none',
+              WebkitOverflowScrolling: 'touch',
+              background: isDark ? '#2C2C2E' : '#DFE4EA',
+              padding: '3px',
+              borderRadius: 14,
+              border: isDark ? '1px solid rgba(255,255,255,0.06)' : '1px solid #D5DBE2',
+            } as React.CSSProperties}
+          >
             {['all', 'nouveau', 'contacted', 'negotiating', 'converted', 'archived'].map((statusKey) => {
               const isSelected = selectedStatus === statusKey
               const label =
@@ -503,12 +573,20 @@ export default function ColdLeadsPage() {
                   key={statusKey}
                   type="button"
                   onClick={() => setSelectedStatus(statusKey)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all cursor-pointer ${
-                    isSelected
-                      ? 'bg-[#d1aa5c] text-[#0E0F10] font-bold shadow-md'
-                      : 'bg-white/[0.04] text-white/70 hover:bg-white/[0.08] hover:text-white border border-white/5'
-                  }`}
-                  style={{ cursor: 'pointer' }}
+                  style={{
+                    padding: '6px 14px',
+                    borderRadius: 11,
+                    fontSize: 11.5,
+                    fontWeight: isSelected ? 600 : 500,
+                    border: 'none',
+                    cursor: 'pointer',
+                    background: isSelected ? (isDark ? '#3A3A3C' : '#FFFFFF') : 'transparent',
+                    color: isSelected ? (isDark ? '#FFFFFF' : '#0F172A') : (isDark ? 'rgba(235,235,245,0.6)' : '#64748B'),
+                    boxShadow: isSelected ? (isDark ? '0 1px 4px rgba(0,0,0,0.3)' : '0 2px 6px rgba(0,0,0,0.08)') : 'none',
+                    whiteSpace: 'nowrap',
+                    flexShrink: 0,
+                    transition: 'all 0.15s ease',
+                  }}
                 >
                   {label}
                 </button>
@@ -519,25 +597,30 @@ export default function ColdLeadsPage() {
 
         {/* ── Leads Feed / List ── */}
         {loading ? (
-          <div className="py-20 flex flex-col items-center justify-center gap-3 text-white/50">
-            <Loader2 className="w-6 h-6 animate-spin text-[#d1aa5c]" />
-            <span className="text-xs">Chargement des choix clients...</span>
+          <div style={{ display: 'flex', justifyContent: 'center', padding: '60px 0' }}>
+            <Loader2 className="w-7 h-7 animate-spin" style={{ color: isDark ? '#FFFFFF' : '#0F172A' }} />
           </div>
         ) : filteredLeads.length === 0 ? (
           <div
-            className="py-16 text-center rounded-2xl border border-white/10"
-            style={{ background: 'rgba(255, 255, 255, 0.02)' }}
+            style={{
+              textAlign: 'center',
+              padding: '70px 20px',
+              background: isDark ? '#1C1C1E' : '#FFFFFF',
+              borderRadius: 20,
+              border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E5E7EB',
+              boxShadow: isDark ? 'none' : '0 1px 3px rgba(0,0,0,0.04)',
+            }}
           >
-            <Sliders className="w-8 h-8 mx-auto text-white/20 mb-2" />
-            <p className="text-sm text-white/60 font-medium">Aucun résultat trouvé</p>
-            <p className="text-xs text-white/30 mt-1">
+            <Sliders className="w-10 h-10 mx-auto text-[#94A3B8] mb-3" />
+            <p style={{ color: isDark ? '#FFFFFF' : '#0F172A', fontSize: 16, fontWeight: 700, margin: 0 }}>Aucun résultat trouvé</p>
+            <p style={{ color: isDark ? 'rgba(235,235,245,0.6)' : '#64748B', fontSize: 13, marginTop: 6 }}>
               {search || selectedCategory !== 'all' || selectedStatus !== 'all'
-                ? 'Essayez de réinitialiser vos filtres.'
-                : 'Les choix des visiteurs via le widget apparaîtront ici en direct.'}
+                ? 'Essayez de réinitialiser vos filtres de recherche.'
+                : 'Les choix des visiteurs via le widget d’accueil apparaîtront ici.'}
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 16 }}>
             {filteredLeads.map((lead) => {
               const catMeta = CATEGORIES[lead.furniture_type] || CATEGORIES.salon
               const IconComp = catMeta.icon
@@ -547,9 +630,8 @@ export default function ColdLeadsPage() {
                 Math.max(0, ((lead.budget - 20000) / (180000 - 20000)) * 100)
               )
 
-              // WhatsApp message with lead info
               const waText = encodeURIComponent(
-                `Bonjour ${lead.customer_name} ! Nous avons bien reçu votre demande sur Château d'art pour : ${lead.furniture_title} (Budget estimé : ${lead.formatted_budget}). Êtes-vous disponible pour que notre architecte d'intérieur vous présente notre catalogue ?`
+                `Bonjour ${lead.customer_name} ! Nous avons bien reçu votre demande sur M&F Meubles pour : ${lead.furniture_title} (Budget estimé : ${lead.formatted_budget}). Êtes-vous disponible pour que notre architecte d'intérieur vous présente notre showroom ?`
               )
               const cleanPhone = lead.phone.replace(/[^0-9]/g, '')
               const waPhone = cleanPhone.startsWith('0')
@@ -562,115 +644,151 @@ export default function ColdLeadsPage() {
               return (
                 <div
                   key={lead.id}
-                  className="rounded-2xl border transition-all duration-300 p-4 md:p-5 flex flex-col justify-between group hover:border-[#d1aa5c]/40"
                   style={{
-                    background: 'rgba(20, 21, 24, 0.75)',
-                    borderColor: 'rgba(255, 255, 255, 0.08)',
-                    boxShadow: '0 12px 35px rgba(0, 0, 0, 0.45)',
+                    background: isDark ? '#1C1C1E' : '#FFFFFF',
+                    borderRadius: 18,
+                    border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E5E7EB',
+                    padding: '20px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    boxShadow: isDark ? '0 2px 8px rgba(0,0,0,0.2)' : '0 1px 3px rgba(15,23,42,0.03), 0 4px 12px rgba(15,23,42,0.02)',
+                    transition: 'all 0.15s ease',
                   }}
                 >
                   <div>
-                    {/* Top row: Category badge + Time ago */}
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center gap-2">
-                        <div className="flex items-center justify-center shrink-0" style={{ color: catMeta.color }}>
+                    {/* Top row: Category icon & title + Time ago */}
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                        <div
+                          style={{
+                            width: 38,
+                            height: 38,
+                            borderRadius: 10,
+                            background: isDark ? '#2C2C2E' : '#F8FAFC',
+                            border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E2E8F0',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: catMeta.color,
+                            flexShrink: 0,
+                          }}
+                        >
                           <IconComp className="w-5 h-5" />
                         </div>
                         <div>
-                          <p className="text-xs font-bold text-white leading-tight">
+                          <p style={{ fontSize: 13.5, fontWeight: 700, color: isDark ? '#FFFFFF' : '#0F172A', lineHeight: 1.25, margin: 0 }}>
                             {lead.furniture_title}
                           </p>
-                          <p className="text-[10px] text-white/40">{catMeta.subtitle}</p>
+                          <p style={{ fontSize: 11, color: isDark ? 'rgba(235,235,245,0.6)' : '#64748B', margin: '2px 0 0 0' }}>{catMeta.subtitle}</p>
                         </div>
                       </div>
 
-                      <span className="text-[10px] text-white/40 flex items-center gap-1 font-mono">
-                        <Clock className="w-3 h-3 text-white/30" />
+                      <span style={{ fontSize: 11, color: isDark ? 'rgba(235,235,245,0.4)' : '#94A3B8', display: 'flex', alignItems: 'center', gap: 4 }}>
+                        <Clock className="w-3 h-3 text-[#94A3B8]" />
                         <span>{timeAgo(lead.created_at)}</span>
                       </span>
                     </div>
 
-                    {/* Customer Info */}
-                    <div className="p-3 rounded-xl bg-white/[0.03] border border-white/[0.06] mb-3">
-                      <p className="text-sm font-semibold text-white tracking-tight">
+                    {/* Customer Info Box */}
+                    <div
+                      style={{
+                        padding: '12px 14px',
+                        borderRadius: 12,
+                        background: isDark ? '#2C2C2E' : '#F8FAFC',
+                        border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E2E8F0',
+                        marginBottom: 14,
+                      }}
+                    >
+                      <p style={{ fontSize: 14, fontWeight: 700, color: isDark ? '#FFFFFF' : '#0F172A', margin: 0 }}>
                         {lead.customer_name}
                       </p>
                       <a
                         href={`tel:${lead.phone}`}
-                        className="text-xs text-[#d1aa5c] hover:underline flex items-center gap-1.5 mt-0.5 font-mono cursor-pointer"
-                        style={{ cursor: 'pointer' }}
+                        style={{
+                          fontSize: 12.5,
+                          color: isDark ? '#0A84FF' : '#2563EB',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: 6,
+                          marginTop: 4,
+                          textDecoration: 'none',
+                          fontWeight: 500,
+                        }}
                       >
-                        <Phone className="w-3 h-3" />
+                        <Phone className="w-3.5 h-3.5" />
                         <span>{lead.phone}</span>
                       </a>
                     </div>
 
                     {/* Budget Scale Visual Bar */}
-                    <div className="mb-4">
-                      <div className="flex items-center justify-between text-[11px] mb-1">
-                        <span className="text-white/50 text-[10px] uppercase font-semibold">
+                    <div style={{ marginBottom: 16 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
+                        <span style={{ fontSize: 11, color: isDark ? 'rgba(235,235,245,0.6)' : '#64748B', textTransform: 'uppercase', fontWeight: 600 }}>
                           Budget sélectionné
                         </span>
-                        <span className="font-fraunces text-base font-light text-[#d1aa5c]">
+                        <span style={{ fontSize: 14, fontWeight: 800, color: isDark ? '#FFFFFF' : '#0F172A' }}>
                           {lead.formatted_budget}
                         </span>
                       </div>
-                      <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden relative">
+                      <div style={{ width: '100%', height: 6, background: isDark ? '#3A3A3C' : '#E2E8F0', borderRadius: 99, overflow: 'hidden' }}>
                         <div
-                          className="h-full rounded-full transition-all"
                           style={{
+                            height: '100%',
+                            borderRadius: 99,
                             width: `${budgetRatio}%`,
-                            background:
-                              'linear-gradient(90deg, #b68d40 0%, #d1aa5c 50%, #f5d78e 100%)',
+                            background: isDark ? '#FFFFFF' : '#0F172A',
                           }}
                         />
                       </div>
-                      <div className="flex justify-between text-[9px] font-mono text-white/30 mt-1">
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: isDark ? 'rgba(235,235,245,0.4)' : '#94A3B8', marginTop: 4 }}>
                         <span>20k DA</span>
                         <span>180k DA</span>
                       </div>
                     </div>
                   </div>
 
-                  {/* Bottom: Status Dropdown + WhatsApp / Call Actions */}
-                  <div className="pt-3 border-t border-white/[0.08] flex items-center justify-between gap-2">
-                    {/* Status selector */}
+                  {/* Bottom: Status Select + WhatsApp / Call Actions */}
+                  <div style={{ paddingTop: 14, borderTop: isDark ? '1px solid rgba(255,255,255,0.06)' : '1px solid #F1F5F9', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
                     <select
                       value={lead.status}
                       onChange={(e) => handleStatusChange(lead.id, e.target.value)}
-                      className="text-xs font-semibold px-2.5 py-1.5 rounded-lg border focus:outline-none cursor-pointer"
                       style={{
-                        cursor: 'pointer',
-                        background: statusMeta.bg,
+                        fontSize: 11.5,
+                        fontWeight: 600,
+                        padding: '6px 10px',
+                        borderRadius: 10,
+                        border: `1px solid ${isDark ? statusMeta.darkBorder : statusMeta.border}`,
+                        background: isDark ? statusMeta.darkBg : statusMeta.bg,
                         color: statusMeta.color,
-                        borderColor: statusMeta.border,
+                        outline: 'none',
+                        cursor: 'pointer',
                       }}
                     >
-                      <option value="nouveau" className="bg-[#141518] text-[#d1aa5c]">
-                        Nouveau
-                      </option>
-                      <option value="contacted" className="bg-[#141518] text-[#60A5FA]">
-                        Contacté
-                      </option>
-                      <option value="negotiating" className="bg-[#141518] text-[#C084FC]">
-                        En Négociation
-                      </option>
-                      <option value="converted" className="bg-[#141518] text-[#34D399]">
-                        Vente Conclue
-                      </option>
-                      <option value="archived" className="bg-[#141518] text-[#94A3B8]">
-                        Classé
-                      </option>
+                      <option value="nouveau">Nouveau</option>
+                      <option value="contacted">Contacté</option>
+                      <option value="negotiating">En Négociation</option>
+                      <option value="converted">Vente Conclue</option>
+                      <option value="archived">Classé</option>
                     </select>
 
-                    {/* Actions */}
-                    <div className="flex items-center gap-1.5">
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                       <a
                         href={whatsappLink}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="p-2 rounded-lg bg-[#25D366]/15 hover:bg-[#25D366]/25 border border-[#25D366]/30 text-[#25D366] transition-all cursor-pointer"
-                        style={{ cursor: 'pointer' }}
+                        style={{
+                          padding: '7px 10px',
+                          borderRadius: 8,
+                          background: isDark ? 'rgba(16,185,129,0.15)' : '#ECFDF5',
+                          border: isDark ? '1px solid rgba(16,185,129,0.3)' : '1px solid #A7F3D0',
+                          color: isDark ? '#30D158' : '#047857',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          textDecoration: 'none',
+                          transition: 'all 0.15s ease',
+                        }}
                         title="Contacter sur WhatsApp"
                       >
                         <MessageCircle className="w-4 h-4" />
@@ -678,19 +796,39 @@ export default function ColdLeadsPage() {
 
                       <a
                         href={`tel:${lead.phone}`}
-                        className="p-2 rounded-lg bg-white/[0.05] hover:bg-white/10 border border-white/10 text-white/80 transition-all cursor-pointer"
-                        style={{ cursor: 'pointer' }}
+                        style={{
+                          padding: '7px 10px',
+                          borderRadius: 8,
+                          background: isDark ? '#2C2C2E' : '#F1F5F9',
+                          border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E2E8F0',
+                          color: isDark ? '#FFFFFF' : '#0F172A',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          textDecoration: 'none',
+                          transition: 'all 0.15s ease',
+                        }}
                         title="Appeler directement"
                       >
-                        <Phone className="w-4 h-4" />
+                        <Phone className="w-4 h-4 text-[#3B82F6]" />
                       </a>
 
                       <button
                         type="button"
                         onClick={() => handleDelete(lead)}
-                        className="p-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 text-red-400 transition-all cursor-pointer"
-                        style={{ cursor: 'pointer' }}
-                        title="Supprimer"
+                        style={{
+                          padding: '7px 10px',
+                          borderRadius: 8,
+                          background: isDark ? 'rgba(239,68,68,0.12)' : '#FEF2F2',
+                          border: isDark ? '1px solid rgba(239,68,68,0.3)' : '1px solid #FECACA',
+                          color: isDark ? '#FF453A' : '#DC2626',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          cursor: 'pointer',
+                          transition: 'all 0.15s ease',
+                        }}
+                        title="Supprimer ce lead"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>

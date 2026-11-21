@@ -42,7 +42,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
             image: item.images?.[0] || '/products/salon/aa.jpg',
             images: item.images && item.images.length > 0 ? item.images : ['/products/salon/aa.jpg'],
             category: item.category,
-            brand: "Château d'art",
+            brand: "M&F Meubles",
           };
         }
       }

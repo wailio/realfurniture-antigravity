@@ -38,6 +38,25 @@ export default function HomePage() {
 
   const [productList, setProductList] = React.useState<any[]>(products);
 
+  // 5 Showroom Showcase Background Images — starting strictly with '1bg-b' (hero-1.jpg)
+  const heroImages = [
+    { src: '/hero/hero-1.jpg', alt: "M&F Meubles — Salon d'angle modulable de prestige", label: "Salon Modulable" },
+    { src: '/hero/hero-2.jpg', alt: "M&F Meubles — Canapés Chesterfield et marbre d'exception", label: "Chesterfield Luxe" },
+    { src: '/hero/hero-3.jpg', alt: "M&F Meubles — Table à manger et finitions or", label: "Salle à Manger" },
+    { src: '/hero/hero-4.jpg', alt: "M&F Meubles — Espace salle à manger contemporain avec miroir", label: "Espace Réception" },
+    { src: '/hero/hero-5.jpg', alt: "M&F Meubles — Séjour complet et meuble TV haut de gamme", label: "Salon Séjour" },
+  ];
+
+  const [activeHeroIndex, setActiveHeroIndex] = React.useState(0);
+
+  React.useEffect(() => {
+    // 5.5 seconds per slide: smooth, relaxing luxury showroom ambiance
+    const timer = setInterval(() => {
+      setActiveHeroIndex((prev) => (prev + 1) % heroImages.length);
+    }, 5500);
+    return () => clearInterval(timer);
+  }, [heroImages.length]);
+
   React.useEffect(() => {
     fetch('/api/products?t=' + Date.now(), { cache: 'no-store' })
       .then(res => res.ok ? res.json() : null)
@@ -53,48 +72,66 @@ export default function HomePage() {
     <main id="main-content" className="min-h-screen bg-white text-neutral-900 font-sans selection:bg-[#111827] selection:text-white">
       {/* ── Section 1: Compact Architectural Hero with Taskbar Directly Overlaid ── */}
       <section className="hero-section relative w-full min-h-[640px] lg:min-h-[670px] xl:min-h-[700px] overflow-hidden flex flex-col justify-between bg-[#08090C]">
-        {/* Real Luxury Mansion & Villa Interior Background — Grand Scale & Architectural Depth */}
+        {/* ── 5 Showroom Showcase Background Images (Continuous Crossfade & Subtle Zoom) ── */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <img
-            src="/hero-mansion.jpg"
-            alt="Château d'Art — Mobilier d'exception"
-            className="w-full h-full object-cover object-[center_42%] select-none scale-[1.01]"
-            style={{
-              filter: 'contrast(1.05) brightness(0.92) saturate(1.04)',
-            }}
-          />
+          {heroImages.map((img, idx) => {
+            const isActive = idx === activeHeroIndex;
+            return (
+              <div
+                key={img.src}
+                className={`absolute inset-0 transition-opacity duration-[1800ms] ease-in-out ${
+                  isActive ? 'opacity-100' : 'opacity-0'
+                }`}
+                style={{
+                  transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
+                  zIndex: isActive ? 2 : 1,
+                }}
+              >
+                <img
+                  src={img.src}
+                  alt={img.alt}
+                  className={`w-full h-full object-cover object-[center_42%] select-none transition-transform duration-[6000ms] ease-out ${
+                    isActive ? 'scale-105' : 'scale-100'
+                  }`}
+                  style={{
+                    filter: 'contrast(1.04) brightness(0.92) saturate(1.05)',
+                  }}
+                />
+              </div>
+            );
+          })}
 
           {/* Luxury Atmospheric Lighting & Scrim Effects: */}
           <div
-            className="absolute inset-x-0 top-0 h-40 pointer-events-none"
+            className="absolute inset-x-0 top-0 h-40 pointer-events-none z-10"
             style={{
               background: 'linear-gradient(to bottom, rgba(4, 5, 8, 0.90) 0%, rgba(4, 5, 8, 0.45) 55%, transparent 100%)',
             }}
           />
 
           <div
-            className="absolute inset-0 pointer-events-none"
+            className="absolute inset-0 pointer-events-none z-10"
             style={{
               background: 'linear-gradient(to right, rgba(5, 7, 10, 0.88) 0%, rgba(5, 7, 10, 0.72) 36%, rgba(5, 7, 10, 0.28) 70%, rgba(5, 7, 10, 0.05) 100%)',
             }}
           />
 
           <div
-            className="absolute inset-0 pointer-events-none"
+            className="absolute inset-0 pointer-events-none z-10"
             style={{
               background: 'radial-gradient(circle at 38% 54%, rgba(212, 175, 55, 0.12) 0%, rgba(212, 175, 55, 0.02) 42%, transparent 70%), radial-gradient(circle at 78% 68%, rgba(225, 185, 105, 0.09) 0%, transparent 50%)',
             }}
           />
 
           <div
-            className="absolute inset-0 pointer-events-none"
+            className="absolute inset-0 pointer-events-none z-10"
             style={{
               background: 'radial-gradient(ellipse at 50% 50%, transparent 45%, rgba(4, 5, 8, 0.55) 100%)',
             }}
           />
 
           {/* Seamless bottom fade into the gold ticker */}
-          <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#111827] via-[#111827]/70 to-transparent pointer-events-none" />
+          <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#111827] via-[#111827]/70 to-transparent pointer-events-none z-10" />
         </div>
 
         {/* ── TOP TASKBAR: Placed Directly on the Background Image ── */}
@@ -123,7 +160,7 @@ export default function HomePage() {
                     Meilleur magasin de Meubles,
                   </span>
                   <span className="font-sans font-black text-white block tracking-tight drop-shadow-lg text-4xl sm:text-5xl md:text-[48px] lg:text-[52px] xl:text-[58px]">
-                    à Birkhadem
+                    à Kouba, Alger
                   </span>
                 </h1>
               </div>
@@ -131,7 +168,7 @@ export default function HomePage() {
               {/* Useful Subtitle (Max 3 lines, comfortable reading size) */}
               <div className="mb-5 max-w-xl">
                 <p className="text-[13.5px] sm:text-[14.5px] md:text-[15px] text-white/80 leading-relaxed font-light drop-shadow-sm line-clamp-3">
-                  Canapés d&apos;exception, salons modulaires et mobilier sur-mesure confectionnés dans nos ateliers à Birkhadem avec des finitions haut de gamme pour sublimer votre intérieur.
+                  Canapés d&apos;exception, salons modulaires et mobilier sur-mesure confectionnés dans nos ateliers et showroom à Kouba (Alger) avec des finitions haut de gamme pour sublimer votre intérieur.
                 </p>
               </div>
 
@@ -152,10 +189,10 @@ export default function HomePage() {
                 </Link>
               </div>
 
-              {/* Stats Row with delicate vertical dividers */}
+              {/* Stats Row with delicate vertical dividers & Slideshow indicators */}
               <div className="flex flex-wrap items-center gap-6 sm:gap-8 pt-4 border-t border-white/12 text-white/90">
                 <a
-                  href="https://www.google.com/maps/place/Ch%C3%A2teau+D'Art+-+meubles/@36.7083703,3.0600586,17z/data=!4m8!3m7!1s0x128fad5fae229a89:0xa8afd38ca1b6e44f!8m2!3d36.7083703!4d3.0626335!9m1!1b1!16s%2Fg%2F11gsn14yk8"
+                  href="https://maps.app.goo.gl/PgX4a88fpg7dPQkFA"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="group flex flex-col cursor-pointer"
@@ -168,7 +205,7 @@ export default function HomePage() {
                       ))}
                     </div>
                   </div>
-                  <span className="text-[10px] sm:text-[10.5px] text-white/65 tracking-wider mt-0.5">200+ avis Google Maps</span>
+                  <span className="text-[10px] sm:text-[10.5px] text-white/65 tracking-wider mt-0.5">Avis vérifiés Google Maps</span>
                 </a>
 
                 <div className="h-7 w-px bg-white/15" />
@@ -184,6 +221,26 @@ export default function HomePage() {
                   <span className="font-bold text-base sm:text-lg text-white leading-none">10 ans</span>
                   <span className="text-[10px] sm:text-[10.5px] text-white/65 tracking-wider mt-1">garantie boiserie</span>
                 </div>
+              </div>
+
+              {/* Minimal Luxury Slideshow Navigation Indicators */}
+              <div className="flex items-center gap-2 mt-5">
+                {heroImages.map((img, idx) => (
+                  <button
+                    key={img.src}
+                    type="button"
+                    onClick={() => setActiveHeroIndex(idx)}
+                    aria-label={`Afficher ${img.label}`}
+                    className={`h-1.5 rounded-full transition-all duration-500 cursor-pointer ${
+                      idx === activeHeroIndex
+                        ? 'w-8 bg-[#d1aa5c]'
+                        : 'w-2 bg-white/30 hover:bg-white/60'
+                    }`}
+                  />
+                ))}
+                <span className="text-[10px] uppercase tracking-widest text-white/40 ml-2 font-light">
+                  {heroImages[activeHeroIndex]?.label}
+                </span>
               </div>
             </div>
 
@@ -323,7 +380,7 @@ export default function HomePage() {
                   </span>
                   <span>Confection sur-mesure</span>
                   <span className="text-white/40 text-[10px]">✦</span>
-                  <span className="text-white font-medium">Showroom d&apos;exception à Birkhadem</span>
+                  <span className="text-white font-medium">Showroom d&apos;exception à Kouba (Alger)</span>
                   <span className="text-white/40 text-[10px]">✦</span>
                 </span>
               ))}
@@ -373,7 +430,7 @@ export default function HomePage() {
                   </span>
                   <span>Livraison &amp; montage soigné</span>
                   <span className="text-white/40 text-[9px]">✦</span>
-                  <span className="text-white font-medium">Showroom Birkhadem</span>
+                  <span className="text-white font-medium">Showroom Kouba</span>
                   <span className="text-white/40 text-[9px]">✦</span>
                 </span>
               ))}

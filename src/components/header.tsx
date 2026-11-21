@@ -89,13 +89,9 @@ export function Header({ theme = 'overlay', sticky = false }: HeaderProps) {
         {/* ── LEFT: Brand Logo Icon (Clean, without text) ── */}
         <Link href="/" className="group flex items-center shrink-0 focus-visible:outline-none">
           <img
-            src="/bigtower.png"
-            alt="Château d'Art"
-            className={`h-10 sm:h-11 md:h-12 lg:h-13 w-auto object-contain transition-transform duration-300 group-hover:scale-105 ${
-              isDark
-                ? 'brightness-0 invert drop-shadow-[0_2px_12px_rgba(0,0,0,0.7)]'
-                : 'drop-shadow-xs'
-            }`}
+            src={isDark ? '/taskbarlogo-white.png' : '/taskbarlogo.png'}
+            alt="M&F Meubles"
+            className="h-8 sm:h-9 md:h-10 w-auto object-contain transition-transform duration-300 group-hover:scale-105 drop-shadow-xs"
           />
         </Link>
 

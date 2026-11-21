@@ -5,12 +5,14 @@ import { usePathname } from 'next/navigation'
 import AdminSidebar from '@/components/admin/sidebar'
 import IosDialogContainer from '@/components/ui/ios-dialog'
 import AdminNotifications from '@/components/admin/notifications'
+import { AdminThemeProvider, useAdminTheme } from '@/contexts/theme-context'
 
-export default function AdminLayout({ children }: { children: ReactNode }) {
+function AdminLayoutInner({ children }: { children: ReactNode }) {
   const pathname = usePathname()
   const isLoginPage = pathname === '/admin/login' || pathname === '/admin'
   const [authorized, setAuthorized] = useState(false)
   const [checking, setChecking] = useState(!isLoginPage)
+  const { isDark } = useAdminTheme()
 
   useEffect(() => {
     if (isLoginPage) {
@@ -20,7 +22,6 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
 
     let isMounted = true
 
-    // Check with server if current session cookie is valid
     fetch('/api/admin/me')
       .then((res) => {
         if (res.ok) return res.json()
@@ -93,8 +94,17 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
 
   if (checking) {
     return (
-      <div className="flex h-screen items-center justify-center bg-[#07090E]">
-        <div className="w-8 h-8 border-2 border-[#d1aa5c]/20 border-t-[#d1aa5c] rounded-full animate-spin" />
+      <div
+        className="flex h-screen items-center justify-center"
+        style={{ background: isDark ? '#000000' : '#F5F5F7' }}
+      >
+        <div
+          className="w-8 h-8 rounded-full animate-spin"
+          style={{
+            border: isDark ? '2px solid rgba(255,255,255,0.1)' : '2px solid #E5E7EB',
+            borderTopColor: isDark ? '#FFFFFF' : '#0F172A',
+          }}
+        />
       </div>
     )
   }
@@ -105,26 +115,18 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
 
   return (
     <div
-      className="flex flex-col md:flex-row h-[100dvh] overflow-hidden bg-[#0A0B0C] admin-area relative"
+      className="flex flex-col md:flex-row h-[100dvh] overflow-hidden admin-area relative"
       style={{
         fontFamily: 'var(--font-body)',
         height: '100dvh',
+        cursor: 'default',
+        background: isDark ? '#000000' : '#F5F5F7',
+        color: isDark ? '#FFFFFF' : '#0F172A',
+        transition: 'background 0.3s ease, color 0.3s ease',
       }}
     >
       <IosDialogContainer />
       <AdminNotifications />
-
-      {/* Hardware-accelerated fixed background (NO background-attachment: fixed repaint lag) */}
-      <div
-        className="fixed inset-0 pointer-events-none z-0"
-        style={{
-          backgroundImage: `linear-gradient(to bottom, rgba(7,9,14,0.40) 0%, rgba(5,7,12,0.65) 100%), url('/admin-bg.jpg')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center top',
-          backgroundRepeat: 'no-repeat',
-        }}
-        aria-hidden="true"
-      />
 
       <AdminSidebar />
 
@@ -135,7 +137,8 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
           overscrollBehaviorY: 'contain',
           touchAction: 'pan-y',
           scrollBehavior: 'smooth',
-          background: 'transparent',
+          background: isDark ? '#000000' : '#F5F5F7',
+          transition: 'background 0.3s ease',
         }}
       >
         <div className="pb-16 md:pb-8 min-h-full">
@@ -143,5 +146,13 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         </div>
       </main>
     </div>
+  )
+}
+
+export default function AdminLayout({ children }: { children: ReactNode }) {
+  return (
+    <AdminThemeProvider>
+      <AdminLayoutInner>{children}</AdminLayoutInner>
+    </AdminThemeProvider>
   )
 }

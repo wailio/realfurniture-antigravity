@@ -83,7 +83,7 @@ export function ProductDetailShowcase({ product }: ProductDetailShowcaseProps) {
   ];
 
   const orderSubject = `Commande: ${product.name} (${selectedFinish})`;
-  const orderMessage = `Bonjour Château d'art, je souhaite commander : ${product.name}\n- Finition : ${selectedFinish}\n- Quantité : ${quantity}\n- Prix : ${formatPrice(product.price * quantity)}`;
+  const orderMessage = `Bonjour M&F Meubles, je souhaite commander : ${product.name}\n- Finition : ${selectedFinish}\n- Quantité : ${quantity}\n- Prix : ${formatPrice(product.price * quantity)}`;
   const contactUrl = `/contact?product=${encodeURIComponent(product.name)}&image=${encodeURIComponent(product.image)}&id=${encodeURIComponent(String(product.id))}&subject=${encodeURIComponent(orderSubject)}&message=${encodeURIComponent(orderMessage)}#contact-form`;
   const whatsappUrl = `https://wa.me/213561719100?text=${encodeURIComponent(orderMessage)}`;
 
@@ -175,7 +175,7 @@ export function ProductDetailShowcase({ product }: ProductDetailShowcaseProps) {
         <LuxuryReveal delay={0}>
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neutral-100 text-[11px] font-semibold text-neutral-700 uppercase tracking-wider mb-3">
-              <span>{product.brand || "Château d'art"}</span>
+              <span>{product.brand || "M&F Meubles"}</span>
               <span>·</span>
               <span className="text-emerald-700">En stock prêt à livrer</span>
             </div>

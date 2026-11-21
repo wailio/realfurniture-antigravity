@@ -26,7 +26,7 @@ function mapDbProduct(item: any): Product {
     image: imgs[0],
     images: imgs,
     category: item.category || 'sofas',
-    brand: item.brand || "Château d'art",
+    brand: item.brand || "M&F Meubles",
     featured: true,
     finishes: DEFAULT_FINISHES,
     features: DEFAULT_FEATURES,

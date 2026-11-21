@@ -9,6 +9,7 @@
 
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { X, Phone, MessageSquare } from 'lucide-react'
+import { useAdminTheme } from '@/contexts/theme-context'
 
 interface Notification {
   id: string
@@ -21,6 +22,7 @@ interface Notification {
 }
 
 export default function AdminNotifications() {
+  const { isDark } = useAdminTheme()
   const [toasts, setToasts] = useState<Notification[]>([])
   const channelRef = useRef<any>(null)
   const mountedRef = useRef(true)
@@ -50,40 +52,47 @@ export default function AdminNotifications() {
     import('@supabase/supabase-js').then(({ createClient }) => {
       if (!mountedRef.current) return
 
-      const supabase = createClient(supabaseUrl, supabaseKey)
-
-      // Subscribe to new rows on the messages table (contact form submissions)
-      const channel = supabase
-        .channel('admin-notifications')
+      const client = createClient(supabaseUrl, supabaseKey)
+      const channel = client
+        .channel('admin-realtime-orders')
         .on(
           'postgres_changes' as any,
-          { event: 'INSERT', schema: 'public', table: 'messages' },
+          {
+            event: 'INSERT',
+            schema: 'public',
+            table: 'messages',
+          },
           (payload: any) => {
             const row = payload.new
             if (!row) return
+
+            // Audio ping if browser allows
+            try {
+              const audio = new Audio('/sounds/notification.mp3')
+              audio.volume = 0.4
+              audio.play().catch(() => {})
+            } catch {}
+
             addToast({
               id: row.id || String(Date.now()),
-              name: row.name || 'Client',
+              name: row.name || 'Client Showroom',
               phone: row.phone || '',
-              product: row.product || undefined,
-              subject: row.subject || undefined,
-              type: 'order',
+              product: row.product || row.subject || undefined,
+              subject: row.subject,
+              type: row.product ? 'cold_lead' : 'order',
               at: new Date().toLocaleTimeString('fr-DZ', { hour: '2-digit', minute: '2-digit' }),
             })
           }
         )
         .subscribe()
 
-      channelRef.current = { supabase, channel }
-    }).catch(err => {
-      console.warn('[AdminNotifications] Failed to init realtime:', err)
-    })
+      channelRef.current = { client, channel }
+    }).catch(() => {})
 
     return () => {
       mountedRef.current = false
       if (channelRef.current) {
-        const { supabase, channel } = channelRef.current
-        supabase.removeChannel(channel)
+        channelRef.current.client.removeChannel(channelRef.current.channel)
       }
     }
   }, [addToast])
@@ -94,34 +103,36 @@ export default function AdminNotifications() {
     <div
       style={{
         position: 'fixed',
-        top: 16,
-        right: 16,
+        bottom: 24,
+        right: 24,
         zIndex: 9999,
         display: 'flex',
         flexDirection: 'column',
         gap: 10,
         pointerEvents: 'none',
+        maxWidth: 'calc(100vw - 48px)',
       }}
-      aria-live="polite"
-      aria-label="Notifications admin"
     >
       {toasts.map(toast => (
         <div
           key={toast.id}
           style={{
             pointerEvents: 'all',
-            background: 'rgba(10, 11, 14, 0.92)',
+            background: isDark ? 'rgba(28, 28, 30, 0.95)' : 'rgba(255, 255, 255, 0.96)',
             backdropFilter: 'blur(24px)',
             WebkitBackdropFilter: 'blur(24px)',
-            border: '1px solid rgba(209, 170, 92, 0.35)',
-            borderRadius: 12,
+            border: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #E2E8F0',
+            borderRadius: 16,
             padding: '14px 16px',
-            width: 320,
-            boxShadow: '0 16px 48px rgba(0,0,0,0.6), 0 0 0 1px rgba(209,170,92,0.1)',
+            width: 330,
+            boxShadow: isDark
+              ? '0 16px 40px -8px rgba(0, 0, 0, 0.5), 0 2px 6px rgba(0,0,0,0.3)'
+              : '0 16px 40px -8px rgba(15, 23, 42, 0.12), 0 2px 6px rgba(0,0,0,0.04)',
             animation: 'slideInRight 0.25s cubic-bezier(0.16,1,0.3,1)',
             display: 'flex',
             gap: 12,
             alignItems: 'flex-start',
+            transition: 'background 0.3s ease, border-color 0.3s ease',
           }}
         >
           {/* Icon */}
@@ -129,9 +140,9 @@ export default function AdminNotifications() {
             style={{
               width: 36,
               height: 36,
-              borderRadius: 8,
-              background: 'rgba(209,170,92,0.12)',
-              border: '1px solid rgba(209,170,92,0.25)',
+              borderRadius: 10,
+              background: isDark ? '#2C2C2E' : '#F1F5F9',
+              border: isDark ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid #E2E8F0',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -139,39 +150,33 @@ export default function AdminNotifications() {
               marginTop: 1,
             }}
           >
-            <MessageSquare style={{ width: 16, height: 16, color: '#d1aa5c' }} />
+            <MessageSquare style={{ width: 16, height: 16, color: isDark ? '#FFFFFF' : '#0F172A' }} />
           </div>
 
           {/* Content */}
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 }}>
-              <p style={{ fontSize: 11, fontWeight: 700, color: '#d1aa5c', textTransform: 'uppercase', letterSpacing: '0.06em', margin: 0 }}>
+              <p style={{ fontSize: 11, fontWeight: 700, color: isDark ? '#30D158' : '#047857', textTransform: 'uppercase', letterSpacing: '0.06em', margin: 0 }}>
                 Nouvelle Demande
               </p>
-              <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.35)', flexShrink: 0 }}>{toast.at}</span>
+              <span style={{ fontSize: 10, color: isDark ? 'rgba(235, 235, 245, 0.4)' : '#94A3B8', flexShrink: 0 }}>{toast.at}</span>
             </div>
 
-            <p style={{ fontSize: 14, fontWeight: 600, color: '#FFFFFF', margin: '4px 0 2px' }}>
+            <p style={{ fontSize: 14, fontWeight: 700, color: isDark ? '#FFFFFF' : '#0F172A', margin: '4px 0 2px' }}>
               {toast.name}
             </p>
 
             {toast.phone && (
-              <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', margin: 0, display: 'flex', alignItems: 'center', gap: 5 }}>
-                <Phone style={{ width: 11, height: 11 }} />
+              <p style={{ fontSize: 12, color: isDark ? 'rgba(235, 235, 245, 0.6)' : '#64748B', margin: 0, display: 'flex', alignItems: 'center', gap: 5 }}>
+                <Phone style={{ width: 11, height: 11, color: isDark ? 'rgba(235, 235, 245, 0.4)' : '#94A3B8' }} />
                 {toast.phone}
               </p>
             )}
 
             {toast.product && (
-              <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.65)', margin: '4px 0 0', lineHeight: 1.4 }}>
+              <p style={{ fontSize: 12, color: isDark ? 'rgba(235, 235, 245, 0.6)' : '#475569', margin: '4px 0 0', lineHeight: 1.4 }}>
                 Modèle :{' '}
-                <strong
-                  style={{
-                    color: '#FFFFFF',
-                    background: 'linear-gradient(180deg, transparent 45%, rgba(245,158,11,0.38) 45%)',
-                    padding: '0 2px',
-                  }}
-                >
+                <strong style={{ color: isDark ? '#FFFFFF' : '#0F172A', fontWeight: 600 }}>
                   {toast.product}
                 </strong>
               </p>
@@ -182,11 +187,11 @@ export default function AdminNotifications() {
               style={{
                 display: 'inline-block',
                 marginTop: 8,
-                fontSize: 11,
+                fontSize: 11.5,
                 fontWeight: 600,
-                color: '#d1aa5c',
+                color: isDark ? '#FFFFFF' : '#0F172A',
                 textDecoration: 'none',
-                borderBottom: '1px solid rgba(209,170,92,0.4)',
+                borderBottom: isDark ? '1px solid rgba(255, 255, 255, 0.2)' : '1px solid #CBD5E1',
                 lineHeight: 1.2,
               }}
             >
@@ -202,7 +207,7 @@ export default function AdminNotifications() {
               border: 'none',
               cursor: 'pointer',
               padding: 2,
-              color: 'rgba(255,255,255,0.3)',
+              color: isDark ? 'rgba(235, 235, 245, 0.4)' : '#94A3B8',
               flexShrink: 0,
               lineHeight: 0,
             }}

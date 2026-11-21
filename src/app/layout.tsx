@@ -34,9 +34,9 @@ const sora = Sora({
 });
 
 export const metadata: Metadata = {
-  title: "Château d'art | Mobilier & Design d'Exception",
+  title: "M&F Meubles | Mobilier & Design d'Exception · Kouba, Alger",
   description:
-    "Maison Château d'art : Mobilier sculptural, boiseries d'art et créations d'exception façonnées pour sublimer vos intérieurs.",
+    "M&F Meubles : Salons contemporains haut de gamme, tables en marbre sculpté et mobilier d'exception confectionnés pour sublimer vos intérieurs à Alger.",
   icons: {
     icon: [
       { url: "/favicon.ico" },

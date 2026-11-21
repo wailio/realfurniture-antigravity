@@ -109,7 +109,7 @@ export default function AboutPage() {
 
                 <p className="text-neutral-500 text-sm md:text-base max-w-lg mt-6 leading-relaxed font-light">
                   {siteConfig.about_philosophie ||
-                    "Château d'art crée des pièces qui allient l'héritage artisanal algérien et le design contemporain le plus pointu."}
+                    "M&F Meubles crée des pièces qui allient l'héritage artisanal algérien et le design contemporain le plus pointu."}
                 </p>
 
                 <div className="flex flex-wrap items-center gap-3 mt-8">
@@ -136,7 +136,7 @@ export default function AboutPage() {
               <div className="relative w-full max-w-[380px]">
                 <Image
                   src="/images/chateau-dart-emblem.png"
-                  alt="Château d'art — Emblème"
+                  alt="M&F Meubles — Emblème"
                   width={380}
                   height={380}
                   className="w-full h-auto object-contain opacity-[0.88]"
@@ -280,7 +280,7 @@ export default function AboutPage() {
             <div className="relative group overflow-hidden aspect-[4/3] shadow-xl bg-neutral-100">
               <Image
                 src={siteConfig.about_image || '/images/acbd.jpg'}
-                alt="Showroom Château d'art"
+                alt="Showroom M&F Meubles"
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
@@ -288,7 +288,7 @@ export default function AboutPage() {
               {/* caption overlay */}
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent px-6 py-5">
                 <span className="text-white text-xs font-medium tracking-wide">
-                  Showroom Birkhadem · Alger
+                  Showroom Kouba · Alger
                 </span>
               </div>
             </div>
@@ -305,7 +305,7 @@ export default function AboutPage() {
               </h2>
               <p className="text-neutral-600 text-sm leading-relaxed">
                 {siteConfig.about_histoire ||
-                  "Fondée avec la vision d'offrir un mobilier d'excellence en Algérie, Château d'art s'impose comme une référence incontournable."}
+                  "Fondée avec la vision d'offrir un mobilier d'excellence en Algérie, M&F Meubles s'impose comme une référence incontournable."}
               </p>
               <p className="text-neutral-500 text-sm leading-relaxed">
                 {siteConfig.about_histoire_2 ||

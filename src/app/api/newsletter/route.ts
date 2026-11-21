@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email,
-          source: "Château d'art Website",
+          source: "M&F Meubles Website",
           timestamp: new Date().toISOString(),
         }),
       });

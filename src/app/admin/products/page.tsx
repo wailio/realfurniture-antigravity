@@ -4,6 +4,7 @@ export const runtime = 'edge'
 
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { showIosToast, showIosConfirm } from '@/components/ui/ios-dialog'
+import { useAdminTheme } from '@/contexts/theme-context'
 import {
   Plus,
   Search,
@@ -21,7 +22,6 @@ import {
   Layers,
   RefreshCw,
   UploadCloud,
-  ImagePlus,
   CheckCircle2,
 } from 'lucide-react'
 
@@ -70,7 +70,7 @@ function matchCategory(productCat: string | undefined, filterVal: string): boole
   return false
 }
 
-// Authentic Château d'art collection files for the horizontal stacked deck
+// Authentic M&F Meubles collection files for the horizontal stacked deck
 const COLLECTION_FILES = [
   {
     name: 'Salons Modulables',
@@ -122,6 +122,7 @@ const EMPTY_FORM = {
 }
 
 export default function AdminProductsPage() {
+  const { isDark } = useAdminTheme()
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -336,40 +337,72 @@ export default function AdminProductsPage() {
     return true
   }
 
+  // Dark-aware dynamic styles
+  const labelStyle: React.CSSProperties = {
+    display: 'block',
+    fontSize: 12,
+    fontWeight: 600,
+    color: isDark ? 'rgba(235,235,245,0.6)' : '#334155',
+    letterSpacing: '-0.01em',
+    marginBottom: 6,
+    transition: 'color 0.3s ease',
+  }
+
+  const inputStyle: React.CSSProperties = {
+    width: '100%',
+    padding: '10px 14px',
+    borderRadius: 12,
+    border: isDark ? '1.5px solid rgba(255,255,255,0.12)' : '1.5px solid #E2E8F0',
+    background: isDark ? '#2C2C2E' : '#F8FAFC',
+    fontSize: 13.5,
+    color: isDark ? '#FFFFFF' : '#0F172A',
+    outline: 'none',
+    transition: 'border-color 0.15s, background 0.3s ease, color 0.3s ease',
+    boxSizing: 'border-box',
+  }
+
   return (
-    <div className="min-h-screen" style={{ background: 'transparent' }}>
-      {/* Header — Exact #0A0B0C matching sidebar, restored original size */}
+    <div className="min-h-screen" style={{ background: 'transparent', transition: 'background 0.3s ease' }}>
+      {/* ── Page Header: Apple frosted header ── */}
       <div
         style={{
-          background: '#0A0B0C',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
-          padding: 'clamp(16px, 2.5vw, 28px) clamp(16px, 4vw, 36px)',
+          background: isDark ? 'rgba(0,0,0,0.75)' : 'rgba(245, 245, 247, 0.85)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          borderBottom: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid rgba(0, 0, 0, 0.05)',
+          padding: '14px clamp(16px, 3vw, 28px)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           gap: 16,
           flexWrap: 'wrap',
+          position: 'sticky',
+          top: 0,
+          zIndex: 40,
+          transition: 'background 0.3s ease, border-color 0.3s ease',
         }}
       >
         <div>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: 12 }}>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
             <h1
               style={{
                 fontFamily: 'var(--font-heading)',
-                fontSize: 26,
-                fontWeight: 300,
-                color: '#FFFFFF',
-                letterSpacing: '-0.02em',
+                fontSize: 18,
+                fontWeight: 400,
+                color: isDark ? '#FFFFFF' : '#0F172A',
+                letterSpacing: '-0.01em',
+                margin: 0,
+                transition: 'color 0.3s ease',
               }}
             >
-              Produits
+              Produits &amp; Catalogue <span style={{ fontWeight: 800 }}>• M&amp;F Meubles</span>
             </h1>
-            <span style={{ fontSize: 13, color: '#A1A1AA' }}>
-              ({products.length} produit{products.length !== 1 ? 's' : ''})
+            <span style={{ fontSize: 12, color: isDark ? 'rgba(235,235,245,0.6)' : '#64748B', fontWeight: 500, transition: 'color 0.3s ease' }}>
+              ({products.length} pièce{products.length !== 1 ? 's' : ''})
             </span>
           </div>
-          <p style={{ fontSize: 13, color: '#A1A1AA', marginTop: 4 }}>
-            Gérez votre catalogue de mobilier de prestige
+          <p style={{ fontSize: 11.5, color: isDark ? 'rgba(235,235,245,0.6)' : '#64748B', marginTop: 2, transition: 'color 0.3s ease' }}>
+            Gestion des collections, prix, finitions et disponibilités showroom
           </p>
         </div>
 
@@ -383,19 +416,19 @@ export default function AdminProductsPage() {
                 display: 'flex',
                 alignItems: 'center',
                 gap: 8,
-                background: 'rgba(255, 255, 255, 0.04)',
-                color: '#F2F1EF',
-                padding: '10px 18px',
-                borderRadius: 6,
-                fontSize: 13,
-                fontWeight: 500,
-                border: '1px solid rgba(255, 255, 255, 0.10)',
+                background: isDark ? '#2C2C2E' : '#FFFFFF',
+                color: isDark ? '#FFFFFF' : '#0F172A',
+                padding: '8px 16px',
+                borderRadius: 12,
+                fontSize: 12,
+                fontWeight: 600,
+                border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #E2E8F0',
                 cursor: seeding ? 'wait' : 'pointer',
-                transition: 'all 0.15s',
+                boxShadow: '0 1px 2px rgba(15,23,42,0.03)',
+                transition: 'all 0.15s, background 0.3s ease, color 0.3s ease',
               }}
-              className="hover:bg-white/[0.08]"
             >
-              {seeding ? <Loader2 className="w-4 h-4 animate-spin text-[#d1aa5c]" /> : <Sparkles className="w-4 h-4 text-[#d1aa5c]" />}
+              {seeding ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4 text-[#B8860B]" />}
               {seeding ? 'Importation...' : 'Importer le catalogue'}
             </button>
           )}
@@ -407,19 +440,17 @@ export default function AdminProductsPage() {
               display: 'flex',
               alignItems: 'center',
               gap: 8,
-              background: '#d1aa5c',
-              color: '#0A0B0C',
-              padding: '9px 18px',
-              borderRadius: 6,
-              fontSize: 12.5,
+              background: isDark ? '#FFFFFF' : '#0F172A',
+              color: isDark ? '#000000' : '#FFFFFF',
+              padding: '8px 16px',
+              borderRadius: 12,
+              fontSize: 12,
               fontWeight: 600,
-              letterSpacing: '0.01em',
               border: 'none',
               cursor: 'pointer',
-              transition: 'opacity 0.15s ease',
+              boxShadow: '0 2px 6px rgba(15,23,42,0.12)',
+              transition: 'background 0.3s ease, color 0.3s ease',
             }}
-            onMouseEnter={e => (e.currentTarget.style.opacity = '0.9')}
-            onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
           >
             <Plus className="w-4 h-4" />
             Nouveau produit
@@ -427,36 +458,37 @@ export default function AdminProductsPage() {
         </div>
       </div>
 
-      <div style={{ padding: 'clamp(16px, 3.5vw, 36px)' }}>
-        {/* ── HORIZONTAL STACKED FILES DECK (Directly on background, bigger & wider, no transparent shape) ── */}
-        <div style={{ marginBottom: 36 }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16, flexWrap: 'wrap', gap: 8 }}>
+      <div style={{ padding: 'clamp(14px, 2.5vw, 28px)' }}>
+        {/* ── HORIZONTAL STACKED FILES DECK ── */}
+        <div style={{ marginBottom: 32 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14, flexWrap: 'wrap', gap: 8 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <Layers className="w-4 h-4" style={{ color: '#d1aa5c' }} />
+              <Layers className="w-4 h-4" style={{ color: isDark ? '#FFFFFF' : '#0F172A' }} />
               <span
                 style={{
-                  fontSize: 12.5,
-                  fontWeight: 600,
+                  fontSize: 12,
+                  fontWeight: 700,
                   textTransform: 'uppercase',
                   letterSpacing: '0.08em',
-                  color: '#f8f3e8',
+                  color: isDark ? 'rgba(235,235,245,0.3)' : '#0F172A',
+                  transition: 'color 0.3s ease',
                 }}
               >
-                Collections &amp; Échantillons
+                Collections &amp; Lignes de Mobilier
               </span>
             </div>
-            <span style={{ fontSize: 11.5, color: '#d1aa5c' }}>
+            <span style={{ fontSize: 11.5, color: isDark ? 'rgba(235,235,245,0.6)' : '#64748B', transition: 'color 0.3s ease' }}>
               Cliquez sur un dossier pour filtrer
             </span>
           </div>
 
-          {/* Overlapping File Cards — directly on background with NO surrounding card box */}
+          {/* Overlapping File Cards */}
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
               overflowX: 'auto',
-              padding: '16px 8px 30px 8px',
+              padding: '12px 4px 24px 4px',
               WebkitOverflowScrolling: 'touch',
               scrollbarWidth: 'none',
               msOverflowStyle: 'none',
@@ -467,7 +499,7 @@ export default function AdminProductsPage() {
                 display: 'flex',
                 alignItems: 'center',
                 margin: '0 auto',
-                padding: '10px 16px',
+                padding: '6px 12px',
               }}
             >
               {COLLECTION_FILES.map((file, i) => {
@@ -478,30 +510,32 @@ export default function AdminProductsPage() {
                   <div
                     key={i}
                     onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      setFilter(file.category);
+                      e.preventDefault()
+                      e.stopPropagation()
+                      setFilter(file.category)
                     }}
                     onMouseEnter={() => setHoveredFileIndex(i)}
                     onMouseLeave={() => setHoveredFileIndex(null)}
                     style={{
                       position: 'relative',
-                      width: 'clamp(180px, 22vw, 235px)',
-                      height: 'clamp(230px, 28vw, 290px)',
+                      width: 'clamp(175px, 20vw, 220px)',
+                      height: 'clamp(220px, 26vw, 275px)',
                       marginLeft: i === 0 ? 0 : 'clamp(-28px, -4vw, -45px)',
-                      borderRadius: 18,
-                      background: '#151619',
-                      border: isActive ? '3px solid #d1aa5c' : '2px solid rgba(255, 255, 255, 0.25)',
+                      borderRadius: 20,
+                      background: isDark ? '#1C1C1E' : '#FFFFFF',
+                      border: isActive
+                        ? (isDark ? '3px solid #FFFFFF' : '3px solid #0F172A')
+                        : (isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E2E8F0'),
                       boxShadow: isHovered
-                        ? '0 26px 50px -5px rgba(0,0,0,0.75), 0 0 30px rgba(209, 170, 92, 0.45)'
+                        ? '0 24px 45px -8px rgba(15, 23, 42, 0.16)'
                         : isActive
-                        ? '0 18px 38px -5px rgba(209, 170, 92, 0.5)'
-                        : '0 12px 30px -5px rgba(0,0,0,0.5)',
+                        ? '0 14px 30px -6px rgba(15, 23, 42, 0.12)'
+                        : '0 6px 18px -4px rgba(15, 23, 42, 0.06)',
                       transform: isHovered
-                        ? 'translateY(-20px) scale(1.07) rotate(0deg)'
+                        ? 'translateY(-16px) scale(1.05) rotate(0deg)'
                         : `rotate(${file.angle}deg)`,
                       zIndex: isHovered ? 40 : isActive ? 20 : i + 1,
-                      transition: 'all 0.28s cubic-bezier(0.16, 1, 0.3, 1)',
+                      transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
                       cursor: 'pointer',
                       overflow: 'hidden',
                       flexShrink: 0,
@@ -525,7 +559,7 @@ export default function AdminProductsPage() {
                       style={{
                         position: 'absolute',
                         inset: 0,
-                        background: 'linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.30) 50%, transparent 100%)',
+                        background: 'linear-gradient(to top, rgba(15, 23, 42, 0.85) 0%, rgba(15, 23, 42, 0.15) 50%, transparent 100%)',
                       }}
                     />
 
@@ -535,16 +569,17 @@ export default function AdminProductsPage() {
                         position: 'absolute',
                         top: 10,
                         left: 10,
-                        background: 'rgba(8, 14, 32, 0.90)',
+                        background: isDark ? 'rgba(28,28,30,0.9)' : 'rgba(255, 255, 255, 0.95)',
                         backdropFilter: 'blur(8px)',
-                        border: '1px solid rgba(209, 170, 92, 0.35)',
+                        border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #E2E8F0',
                         padding: '4px 10px',
-                        borderRadius: 6,
+                        borderRadius: 8,
                         fontSize: 10.5,
                         fontWeight: 700,
-                        color: '#d1aa5c',
+                        color: isDark ? '#FFFFFF' : '#0F172A',
                         letterSpacing: '0.04em',
                         textTransform: 'uppercase',
+                        boxShadow: '0 2px 6px rgba(0,0,0,0.06)',
                       }}
                     >
                       {file.tag}
@@ -561,11 +596,10 @@ export default function AdminProductsPage() {
                     >
                       <p
                         style={{
-                          fontSize: 13.5,
-                          fontWeight: 600,
+                          fontSize: 13,
+                          fontWeight: 700,
                           color: '#FFFFFF',
                           lineHeight: 1.25,
-                          textShadow: '0 2px 6px rgba(0,0,0,0.9)',
                         }}
                       >
                         {file.name}
@@ -578,7 +612,7 @@ export default function AdminProductsPage() {
           </div>
         </div>
 
-        {/* ── FILTERS & CATEGORIES (Directly below stacked files deck) ── */}
+        {/* ── FILTERS & SEARCH BAR ── */}
         <div
           style={{
             display: 'flex',
@@ -586,52 +620,24 @@ export default function AdminProductsPage() {
             gap: 12,
             marginBottom: 24,
             flexWrap: 'wrap',
+            justifyContent: 'space-between',
           }}
         >
-          {/* Search Input */}
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 8,
-              background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
-              borderRadius: 6,
-              padding: '10px 16px',
-              border: '1px solid rgba(255,255,255,0.12)',
-              flex: 1,
-              minWidth: 220,
-              maxWidth: 340,
-              boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
-            }}
-          >
-            <Search className="w-4 h-4 text-[#6B7280] shrink-0" />
-            <input
-              type="text"
-              placeholder="Rechercher un produit..."
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              style={{
-                border: 'none',
-                outline: 'none',
-                background: 'transparent',
-                fontSize: 13,
-                color: '#FFFFFF',
-                width: '100%',
-              }}
-            />
-          </div>
-
           {/* Category Clickable Pills */}
           <div
             style={{
               display: 'flex',
-              gap: 8,
+              gap: 6,
               flexWrap: 'nowrap',
               overflowX: 'auto',
               WebkitOverflowScrolling: 'touch',
               scrollbarWidth: 'none',
-              paddingBottom: 4,
+              padding: '3px',
+              borderRadius: 14,
+              background: isDark ? '#2C2C2E' : '#DFE4EA',
+              border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #D5DBE2',
               maxWidth: '100%',
+              transition: 'background 0.3s ease, border-color 0.3s ease',
             }}
           >
             {CATEGORIES.map(cat => (
@@ -639,31 +645,76 @@ export default function AdminProductsPage() {
                 type="button"
                 key={cat.value}
                 onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setFilter(cat.value);
+                  e.preventDefault()
+                  e.stopPropagation()
+                  setFilter(cat.value)
                 }}
                 style={{
-                  padding: '9px 18px',
-                  borderRadius: 99,
-                  fontSize: 12.5,
-                  fontWeight: 600,
-                  border: filter === cat.value ? 'none' : '1px solid rgba(255,255,255,0.12)',
+                  padding: '6px 14px',
+                  borderRadius: 11,
+                  fontSize: 11.5,
+                  fontWeight: filter === cat.value ? 600 : 500,
+                  border: 'none',
                   cursor: 'pointer',
-                  transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
-                  background: filter === cat.value ? 'rgba(255,255,255,0.18)' : 'rgba(255,255,255,0.05)',
-                  color: filter === cat.value ? '#FFFFFF' : 'rgba(255,255,255,0.60)',
+                  transition: 'all 0.15s ease',
+                  background: filter === cat.value
+                    ? (isDark ? 'rgba(255,255,255,0.12)' : '#FFFFFF')
+                    : 'transparent',
+                  color: filter === cat.value
+                    ? (isDark ? '#FFFFFF' : '#0F172A')
+                    : (isDark ? 'rgba(235,235,245,0.6)' : '#64748B'),
                   boxShadow: filter === cat.value
-                    ? '0 4px 16px rgba(0,0,0,0.5)'
-                    : '0 2px 8px rgba(0,0,0,0.3)',
+                    ? '0 2px 6px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04)'
+                    : 'none',
                   whiteSpace: 'nowrap',
                   flexShrink: 0,
                 }}
-                className={filter !== cat.value ? 'hover:bg-white/10 hover:text-white' : ''}
               >
                 {cat.label}
               </button>
             ))}
+          </div>
+
+          {/* Search Input */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8,
+              background: isDark ? '#2C2C2E' : '#FFFFFF',
+              borderRadius: 9999,
+              padding: '9px 16px',
+              border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #DFE3E8',
+              width: '100%',
+              maxWidth: 320,
+              boxShadow: '0 1px 3px rgba(15, 23, 42, 0.04)',
+              transition: 'background 0.3s ease, border-color 0.3s ease',
+            }}
+          >
+            <Search className="w-4 h-4 shrink-0" style={{ color: isDark ? 'rgba(235,235,245,0.3)' : '#94A3B8' }} />
+            <input
+              type="text"
+              placeholder="Rechercher un modèle, salon, table..."
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              style={{
+                border: 'none',
+                outline: 'none',
+                background: 'transparent',
+                fontSize: 12.5,
+                color: isDark ? '#FFFFFF' : '#0F172A',
+                width: '100%',
+              }}
+            />
+            {search && (
+              <button
+                type="button"
+                onClick={() => setSearch('')}
+                style={{ border: 'none', background: 'none', cursor: 'pointer', padding: 0 }}
+              >
+                <X className="w-3.5 h-3.5" style={{ color: isDark ? 'rgba(235,235,245,0.3)' : '#94A3B8' }} />
+              </button>
+            )}
           </div>
         </div>
 
@@ -671,21 +722,21 @@ export default function AdminProductsPage() {
         {error && (
           <div
             style={{
-              background: 'rgba(239, 68, 68, 0.12)',
-              border: '1px solid rgba(239, 68, 68, 0.25)',
-              borderRadius: 6,
+              background: isDark ? 'rgba(255,69,58,0.1)' : '#FEF2F2',
+              border: isDark ? '1px solid rgba(255,69,58,0.3)' : '1px solid #FCA5A5',
+              borderRadius: 14,
               padding: '14px 18px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
               gap: 10,
               marginBottom: 20,
-              color: '#f87171',
+              color: '#FF453A',
               fontSize: 13,
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <AlertCircle className="w-4 h-4 shrink-0 text-[#f87171]" />
+              <AlertCircle className="w-4 h-4 shrink-0 text-[#FF453A]" />
               <span>{error}</span>
             </div>
             <button
@@ -693,10 +744,11 @@ export default function AdminProductsPage() {
               style={{
                 padding: '6px 14px',
                 borderRadius: 8,
-                background: 'rgba(255, 255, 255, 0.1)',
-                color: '#fff',
+                background: isDark ? '#2C2C2E' : '#FFFFFF',
+                color: isDark ? '#FFFFFF' : '#0F172A',
                 fontSize: 12,
-                border: '1px solid rgba(255, 255, 255, 0.2)',
+                fontWeight: 600,
+                border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #E2E8F0',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
@@ -711,51 +763,58 @@ export default function AdminProductsPage() {
         {/* ── PRODUCT GRID / EMPTY STATE ── */}
         {loading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: '60px 0' }}>
-            <Loader2 className="w-7 h-7 animate-spin text-[#d1aa5c]" />
+            <div
+              style={{
+                width: 28,
+                height: 28,
+                borderRadius: '50%',
+                border: isDark ? '3px solid rgba(255,255,255,0.1)' : '3px solid #E5E7EB',
+                borderTopColor: isDark ? '#FFFFFF' : '#0F172A',
+                animation: 'spin 0.8s linear infinite',
+              }}
+            />
           </div>
         ) : filteredProducts.length === 0 ? (
           <div
             style={{
               textAlign: 'center',
               padding: '70px 24px',
-              background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
-              borderRadius: 8,
-              border: '1px solid rgba(255,255,255,0.10)',
-              boxShadow: '0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.10)',
-              position: 'relative',
-              overflow: 'hidden',
+              background: isDark ? '#1C1C1E' : '#FFFFFF',
+              borderRadius: 24,
+              border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E5E7EB',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
+              transition: 'background 0.3s ease, border-color 0.3s ease',
             }}
           >
             <div
               style={{
-                width: 64,
-                height: 64,
-                borderRadius: 8,
-                background: 'rgba(255,255,255,0.07)',
-                border: '1px solid rgba(255,255,255,0.07)',
+                width: 56,
+                height: 56,
+                borderRadius: 16,
+                background: isDark ? '#2C2C2E' : '#F1F5F9',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 margin: '0 auto 16px',
               }}
             >
-              <Package className="w-7 h-7 text-[#111827]" />
+              <Package className="w-6 h-6" style={{ color: isDark ? 'rgba(235,235,245,0.6)' : '#64748B' }} />
             </div>
 
-            <p style={{ color: '#FFFFFF', fontSize: 17, fontWeight: 600 }}>
+            <p style={{ color: isDark ? '#FFFFFF' : '#0F172A', fontSize: 16, fontWeight: 700, transition: 'color 0.3s ease' }}>
               {products.length === 0
-                ? 'Le catalogue Supabase est prêt'
-                : 'Aucun produit dans cette catégorie'}
+                ? 'Le catalogue est prêt'
+                : 'Aucun produit dans cette sélection'}
             </p>
-            <p style={{ color: 'rgba(255,255,255,0.42)', fontSize: 13, marginTop: 6, maxWidth: 440, margin: '6px auto 20px' }}>
+            <p style={{ color: isDark ? 'rgba(235,235,245,0.6)' : '#64748B', fontSize: 13, marginTop: 6, maxWidth: 440, margin: '6px auto 20px', transition: 'color 0.3s ease' }}>
               {products.length === 0
-                ? 'Votre base de données Supabase est connectée. Vous pouvez importer les modèles de démonstration ou ajouter vos pièces sur-mesure.'
+                ? 'Vous pouvez importer les modèles de démonstration ou ajouter vos pièces sur-mesure.'
                 : search
                 ? 'Aucun modèle ne correspond à votre recherche.'
-                : 'Aucune pièce trouvée pour cette catégorie. Vous pouvez ajouter un produit ou réinitialiser le filtre.'}
+                : 'Aucune pièce trouvée pour cette catégorie.'}
             </p>
 
-            <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
               {products.length === 0 ? (
                 <button
                   type="button"
@@ -763,9 +822,9 @@ export default function AdminProductsPage() {
                   disabled={seeding}
                   style={{
                     padding: '9px 18px',
-                    background: '#d1aa5c',
-                    color: '#0A0B0C',
-                    borderRadius: 6,
+                    background: isDark ? '#FFFFFF' : '#0F172A',
+                    color: isDark ? '#000000' : '#FFFFFF',
+                    borderRadius: 12,
                     fontSize: 12.5,
                     fontWeight: 600,
                     border: 'none',
@@ -773,10 +832,7 @@ export default function AdminProductsPage() {
                     display: 'flex',
                     alignItems: 'center',
                     gap: 8,
-                    transition: 'opacity 0.15s ease',
                   }}
-                  onMouseEnter={e => (e.currentTarget.style.opacity = '0.9')}
-                  onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
                 >
                   {seeding ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
                   {seeding ? 'Importation...' : '✨ Importer les modèles du catalogue'}
@@ -786,17 +842,14 @@ export default function AdminProductsPage() {
                   type="button"
                   onClick={() => { setFilter('all'); setSearch('') }}
                   style={{
-                    padding: '11px 22px',
-                    background: '#111827',
-                    color: '#FFFFFF',
-                    borderRadius: 6,
-                    fontSize: 13,
+                    padding: '9px 18px',
+                    background: isDark ? '#FFFFFF' : '#0F172A',
+                    color: isDark ? '#000000' : '#FFFFFF',
+                    borderRadius: 12,
+                    fontSize: 12.5,
                     fontWeight: 600,
                     border: 'none',
                     cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 8,
                   }}
                 >
                   Voir tous les produits ({products.length})
@@ -807,19 +860,18 @@ export default function AdminProductsPage() {
                 type="button"
                 onClick={openAdd}
                 style={{
-                  padding: '11px 22px',
-                  background: 'rgba(255,255,255,0.07)',
-                  color: '#FFFFFF',
-                  borderRadius: 6,
-                  fontSize: 13,
-                  fontWeight: 500,
-                  border: '1px solid rgba(255,255,255,0.12)',
+                  padding: '9px 18px',
+                  background: isDark ? '#2C2C2E' : '#FFFFFF',
+                  color: isDark ? '#FFFFFF' : '#0F172A',
+                  borderRadius: 12,
+                  fontSize: 12.5,
+                  fontWeight: 600,
+                  border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #E2E8F0',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   gap: 8,
                 }}
-                className="hover:bg-[#E5E7EB]"
               >
                 <Plus className="w-4 h-4" />
                 Ajouter manuellement
@@ -830,25 +882,29 @@ export default function AdminProductsPage() {
           <div
             className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
             style={{
-              gap: 'clamp(8px, 2vw, 18px)',
+              gap: 'clamp(10px, 2vw, 18px)',
             }}
           >
             {filteredProducts.map(product => (
               <div
                 key={product.id}
                 style={{
-                  background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
-                  borderRadius: 8,
+                  background: isDark ? '#1C1C1E' : '#FFFFFF',
+                  borderRadius: 20,
                   overflow: 'hidden',
-                  border: '1px solid rgba(255,255,255,0.10)',
-                  boxShadow: '0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.10)',
-                  transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+                  border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E5E7EB',
+                  boxShadow: isDark
+                    ? '0 1px 2px rgba(0,0,0,0.3), 0 4px 14px -2px rgba(0,0,0,0.2)'
+                    : '0 1px 2px rgba(15, 23, 42, 0.02), 0 4px 14px -2px rgba(15, 23, 42, 0.04)',
+                  transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
                   position: 'relative',
+                  display: 'flex',
+                  flexDirection: 'column',
                 }}
-                className="hover:shadow-lg hover:-translate-y-1"
+                className="hover:shadow-md hover:-translate-y-0.5"
               >
                 {/* Product Image */}
-                <div className="h-28 sm:h-36 md:h-48" style={{ position: 'relative', background: 'rgba(255,255,255,0.07)', overflow: 'hidden' }}>
+                <div className="h-28 sm:h-36 md:h-48" style={{ position: 'relative', background: isDark ? '#2C2C2E' : '#F8FAFC', overflow: 'hidden' }}>
                   {product.images?.[0] ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
@@ -864,7 +920,7 @@ export default function AdminProductsPage() {
                     />
                   ) : (
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
-                      <ImageIcon className="w-7 h-7" style={{ color: 'rgba(255,255,255,0.30)' }} />
+                      <ImageIcon className="w-7 h-7" style={{ color: isDark ? 'rgba(235,235,245,0.3)' : '#94A3B8' }} />
                     </div>
                   )}
 
@@ -872,19 +928,19 @@ export default function AdminProductsPage() {
                   <div
                     style={{
                       position: 'absolute',
-                      top: 6,
-                      left: 6,
-                      background: product.in_stock ? 'rgba(16,185,129,0.92)' : 'rgba(239,68,68,0.92)',
-                      backdropFilter: 'blur(4px)',
-                      color: '#FFFFFF',
-                      fontSize: 8.5,
+                      top: 8,
+                      left: 8,
+                      background: product.in_stock ? '#ECFDF5' : '#FEF2F2',
+                      border: product.in_stock ? '1px solid #A7F3D0' : '1px solid #FCA5A5',
+                      color: product.in_stock ? '#047857' : '#B91C1C',
+                      fontSize: 9,
                       fontWeight: 700,
-                      padding: '2px 5px',
-                      borderRadius: 3,
+                      padding: '2px 7px',
+                      borderRadius: 99,
                       letterSpacing: '0.04em',
                     }}
                   >
-                    {product.in_stock ? 'STOCK' : 'RUPTURE'}
+                    {product.in_stock ? 'EN STOCK' : 'RUPTURE'}
                   </div>
 
                   {/* Multiple Images badge */}
@@ -892,15 +948,15 @@ export default function AdminProductsPage() {
                     <div
                       style={{
                         position: 'absolute',
-                        bottom: 6,
-                        right: 6,
-                        background: 'rgba(0,0,0,0.65)',
-                        color: '#fff',
-                        fontSize: 8.5,
-                        padding: '1px 5px',
-                        borderRadius: 3,
+                        bottom: 8,
+                        right: 8,
+                        background: 'rgba(15, 23, 42, 0.75)',
+                        color: '#FFFFFF',
+                        fontSize: 9,
+                        fontWeight: 700,
+                        padding: '2px 7px',
+                        borderRadius: 99,
                         backdropFilter: 'blur(4px)',
-                        border: '1px solid rgba(255,255,255,0.1)',
                       }}
                     >
                       +{product.images.length - 1}
@@ -909,34 +965,35 @@ export default function AdminProductsPage() {
                 </div>
 
                 {/* Product Info */}
-                <div style={{ padding: 'clamp(8px, 1.5vw, 16px)' }}>
+                <div style={{ padding: 'clamp(10px, 1.5vw, 16px)', flex: 1, display: 'flex', flexDirection: 'column' }}>
                   <div className="flex flex-col gap-1 mb-2">
                     <p
                       style={{
-                        fontSize: 12.5,
-                        fontWeight: 600,
-                        color: '#FFFFFF',
-                        lineHeight: 1.25,
+                        fontSize: 13,
+                        fontWeight: 700,
+                        color: isDark ? '#FFFFFF' : '#0F172A',
+                        lineHeight: 1.3,
                         display: '-webkit-box',
                         WebkitLineClamp: 1,
                         WebkitBoxOrient: 'vertical',
                         overflow: 'hidden',
+                        transition: 'color 0.3s ease',
                       }}
                       title={product.name}
                     >
                       {product.name}
                     </p>
 
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 4, flexWrap: 'wrap' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 4, flexWrap: 'wrap', marginTop: 2 }}>
                       <span
                         style={{
-                          fontSize: 9.5,
-                          color: 'rgba(255,255,255,0.60)',
-                          background: 'rgba(255,255,255,0.07)',
-                          border: '1px solid rgba(255,255,255,0.07)',
-                          padding: '1px 6px',
-                          borderRadius: 3,
-                          fontWeight: 500,
+                          fontSize: 10,
+                          color: isDark ? 'rgba(235,235,245,0.6)' : '#475569',
+                          background: isDark ? '#2C2C2E' : '#F1F5F9',
+                          padding: '2px 7px',
+                          borderRadius: 6,
+                          fontWeight: 600,
+                          transition: 'color 0.3s ease, background 0.3s ease',
                         }}
                       >
                         {CATEGORIES.find(c => c.value === product.category)?.label || product.category}
@@ -944,12 +1001,12 @@ export default function AdminProductsPage() {
 
                       {product.sale_price ? (
                         <div style={{ textAlign: 'right' }}>
-                          <span style={{ fontSize: 12, fontWeight: 700, color: '#f87171' }}>
+                          <span style={{ fontSize: 13, fontWeight: 800, color: '#FF453A' }}>
                             {product.sale_price.toLocaleString('fr-DZ')} DA
                           </span>
                         </div>
                       ) : (
-                        <span style={{ fontSize: 12, fontWeight: 700, color: '#FFFFFF' }}>
+                        <span style={{ fontSize: 13, fontWeight: 800, color: isDark ? '#FFFFFF' : '#0F172A', transition: 'color 0.3s ease' }}>
                           {product.price.toLocaleString('fr-DZ')} DA
                         </span>
                       )}
@@ -960,8 +1017,8 @@ export default function AdminProductsPage() {
                     <p
                       className="hidden sm:block"
                       style={{
-                        fontSize: 11,
-                        color: 'rgba(255,255,255,0.42)',
+                        fontSize: 11.5,
+                        color: isDark ? 'rgba(235,235,245,0.6)' : '#64748B',
                         lineHeight: 1.4,
                         display: '-webkit-box',
                         WebkitLineClamp: 2,
@@ -969,6 +1026,7 @@ export default function AdminProductsPage() {
                         overflow: 'hidden',
                         marginBottom: 10,
                         marginTop: 4,
+                        transition: 'color 0.3s ease',
                       }}
                     >
                       {product.description}
@@ -979,27 +1037,27 @@ export default function AdminProductsPage() {
                     <button
                       type="button"
                       onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        openEdit(product);
+                        e.preventDefault()
+                        e.stopPropagation()
+                        openEdit(product)
                       }}
                       style={{
                         flex: 1,
-                        padding: '6px 0',
-                        borderRadius: 6,
-                        fontSize: 11,
-                        fontWeight: 500,
-                        background: 'rgba(255,255,255,0.07)',
-                        border: '1px solid rgba(255,255,255,0.10)',
+                        padding: '7px 0',
+                        borderRadius: 10,
+                        fontSize: 11.5,
+                        fontWeight: 600,
+                        background: isDark ? '#2C2C2E' : '#F1F5F9',
+                        border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E2E8F0',
                         cursor: 'pointer',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
                         gap: 4,
-                        color: '#FFFFFF',
-                        transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                        color: isDark ? 'rgba(235,235,245,0.6)' : '#0F172A',
+                        transition: 'all 0.15s ease',
                       }}
-                      className="hover:bg-[#007AFF] hover:text-white hover:border-[#007AFF]"
+                      className="hover:opacity-80"
                     >
                       <Pencil className="w-3 h-3 text-current" />
                       Modifier
@@ -1008,25 +1066,25 @@ export default function AdminProductsPage() {
                     <button
                       type="button"
                       onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        handleDelete(product.id);
+                        e.preventDefault()
+                        e.stopPropagation()
+                        handleDelete(product.id)
                       }}
                       disabled={deletingId === product.id}
                       style={{
-                        padding: '6px 9px',
-                        borderRadius: 6,
-                        fontSize: 11,
-                        background: 'rgba(239,68,68,0.15)',
-                        border: '1px solid rgba(239, 68, 68, 0.2)',
+                        padding: '7px 10px',
+                        borderRadius: 10,
+                        fontSize: 11.5,
+                        background: isDark ? 'rgba(255,69,58,0.15)' : '#FEF2F2',
+                        border: isDark ? '1px solid rgba(255,69,58,0.3)' : '1px solid #FCA5A5',
                         cursor: 'pointer',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        color: '#f87171',
-                        transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                        color: '#FF453A',
+                        transition: 'all 0.15s ease',
                       }}
-                      className="hover:bg-[#EF4444] hover:text-white"
+                      className="hover:opacity-80"
                     >
                       {deletingId === product.id
                         ? <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -1047,7 +1105,7 @@ export default function AdminProductsPage() {
           style={{
             position: 'fixed',
             inset: 0,
-            background: 'rgba(0, 0, 0, 0.70)',
+            background: isDark ? 'rgba(0,0,0,0.75)' : 'rgba(15, 23, 42, 0.45)',
             backdropFilter: 'blur(8px)',
             WebkitBackdropFilter: 'blur(8px)',
             zIndex: 60,
@@ -1060,13 +1118,16 @@ export default function AdminProductsPage() {
         >
           <div
             style={{
-              background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
-              borderRadius: 10,
+              background: isDark ? '#1C1C1E' : '#FFFFFF',
+              borderRadius: 24,
               width: '100%',
               maxWidth: 560,
-              border: '1px solid rgba(255,255,255,0.12)',
-              boxShadow: '0 24px 80px rgba(0, 0, 0, 0.25)',
+              border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #E2E8F0',
+              boxShadow: isDark
+                ? '0 24px 60px -12px rgba(0,0,0,0.6)'
+                : '0 24px 60px -12px rgba(15, 23, 42, 0.20)',
               overflow: 'hidden',
+              transition: 'background 0.3s ease, border-color 0.3s ease',
             }}
           >
             {/* Modal Header */}
@@ -1076,7 +1137,7 @@ export default function AdminProductsPage() {
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 padding: '22px 28px',
-                borderBottom: '1px solid rgba(255,255,255,0.10)',
+                borderBottom: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #F1F5F9',
               }}
             >
               <div>
@@ -1085,32 +1146,33 @@ export default function AdminProductsPage() {
                     fontFamily: 'var(--font-heading)',
                     fontSize: 18,
                     fontWeight: 600,
-                    color: '#FFFFFF',
+                    color: isDark ? '#FFFFFF' : '#0F172A',
                     letterSpacing: '-0.01em',
+                    transition: 'color 0.3s ease',
                   }}
                 >
                   {editing ? 'Modifier le produit' : 'Nouveau produit'}
                 </h2>
-                <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.42)', marginTop: 2 }}>
+                <p style={{ fontSize: 12, color: isDark ? 'rgba(235,235,245,0.6)' : '#64748B', marginTop: 2, transition: 'color 0.3s ease' }}>
                   Étape {step + 1} sur {STEPS.length} — {STEPS[step]}
                 </p>
               </div>
               <button
+                type="button"
                 onClick={closeModal}
                 style={{
                   width: 32,
                   height: 32,
                   borderRadius: 99,
-                  border: 'none',
-                  background: 'rgba(255,255,255,0.07)',
+                  border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #E2E8F0',
+                  background: isDark ? '#2C2C2E' : '#F8FAFC',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: 'rgba(255,255,255,0.60)',
-                  transition: 'background 0.15s',
+                  color: isDark ? 'rgba(235,235,245,0.6)' : '#64748B',
+                  transition: 'all 0.15s',
                 }}
-                className="hover:bg-[#E5E7EB]"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -1125,8 +1187,9 @@ export default function AdminProductsPage() {
                     flex: 1,
                     height: 3,
                     borderRadius: 99,
-                    background: i <= step ? '#d1aa5c' : 'rgba(255, 255, 255, 0.12)',
-                    boxShadow: i <= step ? '0 0 8px rgba(209, 170, 92, 0.4)' : 'none',
+                    background: i <= step
+                      ? (isDark ? '#FFFFFF' : '#0F172A')
+                      : (isDark ? 'rgba(255,255,255,0.12)' : '#E2E8F0'),
                     transition: 'background 0.3s',
                   }}
                 />
@@ -1188,7 +1251,7 @@ export default function AdminProductsPage() {
                         width: 44,
                         height: 24,
                         borderRadius: 99,
-                        background: form.in_stock ? '#10B981' : 'rgba(255, 255, 255, 0.15)',
+                        background: form.in_stock ? '#30D158' : (isDark ? '#3A3A3C' : '#CBD5E1'),
                         position: 'relative',
                         border: 'none',
                         cursor: 'pointer',
@@ -1206,11 +1269,11 @@ export default function AdminProductsPage() {
                           borderRadius: 99,
                           background: '#fff',
                           transition: 'left 0.2s',
-                          boxShadow: '0 1px 3px rgba(0,0,0,0.4)',
+                          boxShadow: '0 1px 3px rgba(0,0,0,0.15)',
                         }}
                       />
                     </button>
-                    <span style={{ fontSize: 13.5, color: '#E5E7EB' }}>En stock</span>
+                    <span style={{ fontSize: 13.5, color: isDark ? 'rgba(235,235,245,0.6)' : '#334155', fontWeight: 500, transition: 'color 0.3s ease' }}>En stock showroom</span>
                   </div>
                 </div>
               )}
@@ -1220,37 +1283,47 @@ export default function AdminProductsPage() {
                 <div>
                   <label style={{ ...labelStyle, marginBottom: 12 }}>Catégorie *</label>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                    {CATEGORIES.filter(c => c.value !== 'all').map(cat => (
-                      <button
-                        key={cat.value}
-                        type="button"
-                        onClick={() => setForm(f => ({ ...f, category: cat.value }))}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'space-between',
-                          padding: '13px 16px',
-                          borderRadius: 12,
-                          border: `1.5px solid ${form.category === cat.value ? '#d1aa5c' : 'rgba(255, 255, 255, 0.08)'}`,
-                          background: form.category === cat.value ? 'rgba(209, 170, 92, 0.15)' : 'rgba(255, 255, 255, 0.03)',
-                          cursor: 'pointer',
-                          transition: 'all 0.15s',
-                        }}
-                      >
-                        <span
+                    {CATEGORIES.filter(c => c.value !== 'all').map(cat => {
+                      const isSelected = form.category === cat.value
+                      return (
+                        <button
+                          key={cat.value}
+                          type="button"
+                          onClick={() => setForm(f => ({ ...f, category: cat.value }))}
                           style={{
-                            fontSize: 14,
-                            fontWeight: 500,
-                            color: form.category === cat.value ? '#d1aa5c' : '#D4D4D8',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            padding: '13px 16px',
+                            borderRadius: 12,
+                            border: isSelected
+                              ? (isDark ? '1.5px solid rgba(255,255,255,0.4)' : '1.5px solid #0F172A')
+                              : (isDark ? '1.5px solid rgba(255,255,255,0.08)' : '1.5px solid #E2E8F0'),
+                            background: isSelected
+                              ? (isDark ? '#2C2C2E' : '#F8FAFC')
+                              : (isDark ? '#1C1C1E' : '#FFFFFF'),
+                            cursor: 'pointer',
+                            transition: 'all 0.15s',
                           }}
                         >
-                          {cat.label}
-                        </span>
-                        {form.category === cat.value && (
-                          <Check className="w-4 h-4" style={{ color: '#d1aa5c' }} />
-                        )}
-                      </button>
-                    ))}
+                          <span
+                            style={{
+                              fontSize: 13.5,
+                              fontWeight: isSelected ? 600 : 500,
+                              color: isSelected
+                                ? (isDark ? '#FFFFFF' : '#0F172A')
+                                : (isDark ? 'rgba(235,235,245,0.6)' : '#475569'),
+                              transition: 'color 0.3s ease',
+                            }}
+                          >
+                            {cat.label}
+                          </span>
+                          {isSelected && (
+                            <Check className="w-4 h-4" style={{ color: isDark ? '#FFFFFF' : '#0F172A' }} />
+                          )}
+                        </button>
+                      )
+                    })}
                   </div>
                 </div>
               )}
@@ -1273,57 +1346,55 @@ export default function AdminProductsPage() {
                       if (!uploading) fileInputRef.current?.click()
                     }}
                     style={{
-                      border: '2px dashed #007AFF',
-                      background: 'rgba(0, 122, 255, 0.04)',
+                      border: isDark ? '2px dashed rgba(255,255,255,0.12)' : '2px dashed #CBD5E1',
+                      background: isDark ? '#2C2C2E' : '#F8FAFC',
                       borderRadius: 16,
-                      padding: '28px 20px',
+                      padding: '24px 20px',
                       textAlign: 'center',
                       cursor: uploading ? 'wait' : 'pointer',
-                      transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
-                      marginBottom: 20,
+                      transition: 'all 0.15s ease',
+                      marginBottom: 18,
                     }}
-                    onMouseEnter={e => (e.currentTarget.style.background = 'rgba(0, 122, 255, 0.08)')}
-                    onMouseLeave={e => (e.currentTarget.style.background = 'rgba(0, 122, 255, 0.04)')}
                   >
                     <div
                       style={{
-                        width: 52,
-                        height: 52,
+                        width: 48,
+                        height: 48,
                         borderRadius: 99,
-                        background: '#EBF5FF',
+                        background: isDark ? '#3A3A3C' : '#E2E8F0',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        margin: '0 auto 12px',
+                        margin: '0 auto 10px',
                       }}
                     >
                       {uploading ? (
-                        <Loader2 className="w-6 h-6 animate-spin text-[#007AFF]" />
+                        <Loader2 className="w-5 h-5 animate-spin" style={{ color: isDark ? '#FFFFFF' : '#0F172A' }} />
                       ) : (
-                        <UploadCloud className="w-6 h-6 text-[#007AFF]" />
+                        <UploadCloud className="w-5 h-5" style={{ color: isDark ? '#FFFFFF' : '#0F172A' }} />
                       )}
                     </div>
 
-                    <p style={{ fontSize: 14.5, fontWeight: 600, color: '#FFFFFF' }}>
+                    <p style={{ fontSize: 13.5, fontWeight: 600, color: isDark ? '#FFFFFF' : '#0F172A', transition: 'color 0.3s ease' }}>
                       {uploading ? 'Téléversement en cours sur Supabase...' : 'Importer depuis votre appareil'}
                     </p>
-                    <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.42)', marginTop: 4 }}>
+                    <p style={{ fontSize: 12, color: isDark ? 'rgba(235,235,245,0.6)' : '#64748B', marginTop: 2, transition: 'color 0.3s ease' }}>
                       Sélectionnez une ou plusieurs photos (PNG, JPG, WEBP)
                     </p>
                     <button
                       type="button"
                       disabled={uploading}
                       style={{
-                        marginTop: 14,
-                        padding: '8px 20px',
+                        marginTop: 12,
+                        padding: '7px 18px',
                         borderRadius: 99,
-                        background: '#007AFF',
-                        color: '#FFFFFF',
-                        fontSize: 12.5,
+                        background: isDark ? '#FFFFFF' : '#0F172A',
+                        color: isDark ? '#000000' : '#FFFFFF',
+                        fontSize: 12,
                         fontWeight: 600,
                         border: 'none',
                         cursor: 'pointer',
-                        boxShadow: '0 2px 8px rgba(0, 122, 255, 0.25)',
+                        boxShadow: '0 2px 6px rgba(15,23,42,0.12)',
                       }}
                     >
                       Choisir les photos
@@ -1333,11 +1404,11 @@ export default function AdminProductsPage() {
                   {/* Uploaded Photos Gallery */}
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-                      <span style={{ fontSize: 12.5, fontWeight: 600, color: 'rgba(255,255,255,0.75)' }}>
+                      <span style={{ fontSize: 12.5, fontWeight: 600, color: isDark ? '#FFFFFF' : '#0F172A', transition: 'color 0.3s ease' }}>
                         Photos du produit ({form.images.filter(Boolean).length})
                       </span>
                       {form.images.filter(Boolean).length > 0 && (
-                        <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.42)' }}>
+                        <span style={{ fontSize: 11, color: isDark ? 'rgba(235,235,245,0.6)' : '#64748B', transition: 'color 0.3s ease' }}>
                           La 1ère image est la couverture
                         </span>
                       )}
@@ -1346,13 +1417,14 @@ export default function AdminProductsPage() {
                     {form.images.filter(Boolean).length === 0 ? (
                       <div
                         style={{
-                          padding: '20px',
+                          padding: '18px',
                           borderRadius: 12,
-                          background: 'rgba(255,255,255,0.05)',
-                          border: '1px solid rgba(255,255,255,0.08)',
+                          background: isDark ? '#2C2C2E' : '#F8FAFC',
+                          border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E2E8F0',
                           textAlign: 'center',
-                          color: 'rgba(255,255,255,0.30)',
+                          color: isDark ? 'rgba(235,235,245,0.6)' : '#64748B',
                           fontSize: 12.5,
+                          transition: 'background 0.3s ease, border-color 0.3s ease, color 0.3s ease',
                         }}
                       >
                         Aucune photo importée. Cliquez sur le bouton ci-dessus pour importer depuis votre téléphone ou PC.
@@ -1366,10 +1438,12 @@ export default function AdminProductsPage() {
                               position: 'relative',
                               borderRadius: 12,
                               overflow: 'hidden',
-                              border: i === 0 ? '2px solid #007AFF' : '1px solid rgba(0, 0, 0, 0.1)',
+                              border: i === 0
+                                ? (isDark ? '2px solid rgba(255,255,255,0.4)' : '2px solid #0F172A')
+                                : (isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E2E8F0'),
                               aspectRatio: '1',
-                              background: 'rgba(255,255,255,0.07)',
-                              boxShadow: '0 2px 6px rgba(0,0,0,0.06)',
+                              background: isDark ? '#2C2C2E' : '#F8FAFC',
+                              boxShadow: '0 1px 3px rgba(15,23,42,0.06)',
                             }}
                           >
                             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -1386,8 +1460,8 @@ export default function AdminProductsPage() {
                                   position: 'absolute',
                                   top: 4,
                                   left: 4,
-                                  background: '#007AFF',
-                                  color: '#FFFFFF',
+                                  background: isDark ? '#FFFFFF' : '#0F172A',
+                                  color: isDark ? '#000000' : '#FFFFFF',
                                   borderRadius: 99,
                                   padding: '2px 6px',
                                   fontSize: 9,
@@ -1398,7 +1472,7 @@ export default function AdminProductsPage() {
                                   boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
                                 }}
                               >
-                                <Star className="w-2.5 h-2.5 fill-white text-white" />
+                                <Star className="w-2.5 h-2.5 fill-current text-current" />
                                 <span>Couverture</span>
                               </div>
                             )}
@@ -1409,7 +1483,7 @@ export default function AdminProductsPage() {
                                 position: 'absolute',
                                 bottom: 0,
                                 insetInline: 0,
-                                background: 'linear-gradient(to top, rgba(0,0,0,0.75), transparent)',
+                                background: 'linear-gradient(to top, rgba(15,23,42,0.8), transparent)',
                                 padding: '4px',
                                 display: 'flex',
                                 alignItems: 'center',
@@ -1452,7 +1526,7 @@ export default function AdminProductsPage() {
                                 title="Supprimer cette photo"
                                 style={{
                                   border: 'none',
-                                  background: 'rgba(239, 68, 68, 0.85)',
+                                  background: 'rgba(239, 68, 68, 0.9)',
                                   color: '#FFFFFF',
                                   borderRadius: 99,
                                   width: 20,
@@ -1477,19 +1551,28 @@ export default function AdminProductsPage() {
               {/* Step 3: Review */}
               {step === 3 && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-                  <p style={{ fontSize: 13, color: '#A1A1AA', marginBottom: 4 }}>Vérifiez avant d&apos;enregistrer :</p>
-                  <div style={{ background: 'rgba(0, 0, 0, 0.35)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: 8, padding: '16px 18px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+                  <p style={{ fontSize: 13, color: isDark ? 'rgba(235,235,245,0.6)' : '#64748B', marginBottom: 4, transition: 'color 0.3s ease' }}>Vérifiez les informations avant d&apos;enregistrer :</p>
+                  <div style={{
+                    background: isDark ? '#2C2C2E' : '#F8FAFC',
+                    border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E2E8F0',
+                    borderRadius: 14,
+                    padding: '16px 18px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 10,
+                    transition: 'background 0.3s ease, border-color 0.3s ease',
+                  }}>
                     {[
                       { label: 'Nom', value: form.name },
                       { label: 'Catégorie', value: CATEGORIES.find(c => c.value === form.category)?.label },
                       { label: 'Prix', value: `${Number(form.price).toLocaleString('fr-DZ')} DA` },
                       { label: 'Prix soldé', value: form.sale_price ? `${Number(form.sale_price).toLocaleString('fr-DZ')} DA` : '—' },
                       { label: 'Images', value: `${form.images.filter(Boolean).length} photo(s)` },
-                      { label: 'Stock', value: form.in_stock ? 'En stock' : 'Rupture' },
+                      { label: 'Stock showroom', value: form.in_stock ? 'En stock' : 'Rupture' },
                     ].map(row => (
-                      <div key={row.label} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13 }}>
-                        <span style={{ color: 'rgba(255,255,255,0.30)' }}>{row.label}</span>
-                        <span style={{ color: '#FFFFFF', fontWeight: 500 }}>{row.value}</span>
+                      <div key={row.label} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, borderBottom: isDark ? '1px solid rgba(255,255,255,0.05)' : 'none', paddingBottom: 4 }}>
+                        <span style={{ color: isDark ? 'rgba(235,235,245,0.6)' : '#64748B', transition: 'color 0.3s ease' }}>{row.label}</span>
+                        <span style={{ color: isDark ? '#FFFFFF' : '#0F172A', fontWeight: 600, transition: 'color 0.3s ease' }}>{row.value}</span>
                       </div>
                     ))}
                   </div>
@@ -1502,7 +1585,7 @@ export default function AdminProductsPage() {
                   style={{
                     fontSize: 13,
                     marginTop: 12,
-                    color: saveMsg.includes('✓') ? '#34d399' : '#f87171',
+                    color: saveMsg.includes('✓') ? '#30D158' : '#FF453A',
                     display: 'flex',
                     alignItems: 'center',
                     gap: 6,
@@ -1520,63 +1603,72 @@ export default function AdminProductsPage() {
                 display: 'flex',
                 justifyContent: 'space-between',
                 padding: '16px 28px',
-                borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+                borderTop: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #F1F5F9',
                 gap: 10,
               }}
             >
               <button
+                type="button"
                 onClick={step === 0 ? closeModal : () => setStep(s => s - 1)}
                 style={{
-                   padding: '10px 22px',
-                  borderRadius: 6,
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
-                  background: 'rgba(255, 255, 255, 0.05)',
-                  color: '#D4D4D8',
-                  fontSize: 13.5,
+                  padding: '9px 20px',
+                  borderRadius: 10,
+                  border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #E2E8F0',
+                  background: isDark ? '#2C2C2E' : '#F8FAFC',
+                  color: isDark ? 'rgba(235,235,245,0.6)' : '#475569',
+                  fontSize: 13,
                   cursor: 'pointer',
-                  fontWeight: 500,
+                  fontWeight: 600,
+                  transition: 'all 0.15s ease',
                 }}
               >
                 {step === 0 ? 'Annuler' : 'Précédent'}
               </button>
               {step < STEPS.length - 1 ? (
                 <button
+                  type="button"
                   onClick={() => { if (canNextStep()) setStep(s => s + 1) }}
                   disabled={!canNextStep()}
                   style={{
-                    padding: '10px 22px',
-                    borderRadius: 6,
+                    padding: '9px 22px',
+                    borderRadius: 10,
                     border: 'none',
-                    background: canNextStep() ? '#d1aa5c' : 'rgba(255, 255, 255, 0.08)',
-                    color: canNextStep() ? '#14120f' : '#71717A',
-                    fontSize: 13.5,
+                    background: canNextStep()
+                      ? (isDark ? '#FFFFFF' : '#0F172A')
+                      : (isDark ? 'rgba(255,255,255,0.12)' : '#E2E8F0'),
+                    color: canNextStep()
+                      ? (isDark ? '#000000' : '#FFFFFF')
+                      : (isDark ? 'rgba(235,235,245,0.3)' : '#94A3B8'),
+                    fontSize: 13,
                     cursor: canNextStep() ? 'pointer' : 'not-allowed',
                     fontWeight: 600,
                     display: 'flex',
                     alignItems: 'center',
                     gap: 6,
-                    transition: 'all 0.15s',
+                    transition: 'all 0.15s ease',
                   }}
                 >
                   Suivant <ChevronRight className="w-4 h-4" />
                 </button>
               ) : (
                 <button
+                  type="button"
                   onClick={handleSave}
                   disabled={saving}
                   style={{
-                    padding: '10px 26px',
-                    borderRadius: 6,
+                    padding: '9px 24px',
+                    borderRadius: 10,
                     border: 'none',
-                    background: '#d1aa5c',
-                    color: '#14120f',
-                    fontSize: 13.5,
+                    background: isDark ? '#FFFFFF' : '#0F172A',
+                    color: isDark ? '#000000' : '#FFFFFF',
+                    fontSize: 13,
                     cursor: saving ? 'wait' : 'pointer',
                     fontWeight: 600,
                     display: 'flex',
                     alignItems: 'center',
                     gap: 8,
                     opacity: saving ? 0.7 : 1,
+                    boxShadow: '0 2px 6px rgba(15,23,42,0.12)',
                   }}
                 >
                   {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
@@ -1587,29 +1679,13 @@ export default function AdminProductsPage() {
           </div>
         </div>
       )}
+
+      <style>{`
+        @keyframes spin { to { transform: rotate(360deg); } }
+        [data-admin-theme="dark"] .admin-card { background: #1C1C1E; border-color: rgba(255,255,255,0.08); }
+        [data-admin-theme="dark"] .admin-row { background: #1C1C1E; border-color: rgba(255,255,255,0.08); }
+        [data-admin-theme="dark"] .admin-row:hover { background: #2C2C2E; border-color: rgba(255,255,255,0.14); }
+      `}</style>
     </div>
   )
-}
-
-const labelStyle: React.CSSProperties = {
-  display: 'block',
-  fontSize: 11.5,
-  fontWeight: 600,
-  color: '#d1aa5c',
-  letterSpacing: '0.06em',
-  textTransform: 'uppercase',
-  marginBottom: 6,
-}
-
-const inputStyle: React.CSSProperties = {
-  width: '100%',
-  padding: '11px 14px',
-  borderRadius: 8,
-  border: '1px solid rgba(255, 255, 255, 0.12)',
-  background: 'rgba(0, 0, 0, 0.35)',
-  fontSize: 14,
-  color: '#FFFFFF',
-  outline: 'none',
-  transition: 'border-color 0.15s',
-  boxSizing: 'border-box',
 }

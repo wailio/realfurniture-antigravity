@@ -33,7 +33,7 @@ export const FAQ_DATA: FaqItem[] = [
   {
     question: "Quelle garantie offrez-vous sur vos meubles ?",
     answer:
-      "Tous nos meubles bénéficient d'une garantie constructeur de 2 à 5 ans couvrant la structure en bois massif, les mousses haute résilience et les mécanismes. Notre SAV est basé à Birkhadem.",
+      "Tous nos meubles bénéficient d'une garantie constructeur de 2 à 5 ans couvrant la structure en bois massif, les mousses haute résilience et les mécanismes. Notre SAV est basé à Kouba (Alger).",
   },
   {
     question: "Proposez-vous des meubles sur mesure ou des choix de couleurs et tissus ?",

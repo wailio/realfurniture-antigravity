@@ -10,34 +10,39 @@ import { products } from '@/lib/products';
 import { useSiteConfig } from '@/lib/use-site-config';
 
 function ShowroomMap() {
+  const siteConfig = useSiteConfig();
+  const mapSrc =
+    siteConfig.maps_embed_url ||
+    'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3197.9859247874274!2d3.07651347583487!3d36.72289927226924!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x128fadd15a1404d7%3A0xe033d167d05c196f!2sM%26F%20Meubles!5e0!3m2!1sfr!2sdz!4v1795257542578!5m2!1sfr!2sdz';
+
   return (
     <div className="w-full relative rounded-3xl overflow-hidden border border-neutral-200/80 shadow-sm bg-neutral-50">
       <div className="flex items-center justify-between px-4 py-3 bg-white border-b border-neutral-200/80 text-xs font-sans">
         <div className="flex items-center gap-2">
           <MapPin className="w-3.5 h-3.5 text-neutral-600" />
-          <span className="font-semibold text-neutral-900 text-[12px]">Château D&apos;Art — Showroom Birkhadem</span>
+          <span className="font-semibold text-neutral-900 text-[12px]">M&amp;F Meubles — Showroom Kouba</span>
         </div>
         <span className="text-[11px] text-neutral-400">Alger, Algérie</span>
       </div>
       <div className="relative w-full h-[200px] sm:h-[230px] overflow-hidden">
         <iframe 
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3198.5906046037494!2d3.060058575713971!3d36.70837457287061!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x128fad5fae229a89%3A0xa8afd38ca1b6e44f!2sCh%C3%A2teau%20D'Art%20-%20meubles!5e0!3m2!1sfr!2sdz!4v1789588881010!5m2!1sfr!2sdz" 
+          src={mapSrc} 
           width="100%" 
           height="100%" 
           style={{ border: 0 }} 
           allowFullScreen 
           loading="lazy" 
           referrerPolicy="strict-origin-when-cross-origin" 
-          title="Château D'Art Showroom" 
+          title="M&F Meubles Showroom Kouba" 
           className="w-full h-full" 
         />
         <a 
-          href="https://maps.google.com/?q=Ch%C3%A2teau+D'Art+-+meubles" 
+          href="https://maps.app.goo.gl/PgX4a88fpg7dPQkFA" 
           target="_blank" 
           rel="noopener noreferrer" 
           className="absolute bottom-3 right-3 z-10 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-neutral-900 text-white text-[11px] font-semibold hover:bg-neutral-800 transition-all shadow-sm"
         >
-          <span>Itinéraire</span>
+          <span>Itinéraire Google Maps</span>
           <ArrowUpRight className="w-3 h-3" />
         </a>
       </div>
@@ -144,7 +149,7 @@ function ContactContent() {
 
     if (stars >= 3) {
       if (reviewText.trim()) copyReviewText(reviewText.trim());
-      const googleReviewUrl = `https://www.google.com/search?q=Ch%C3%A2teau+D%27art+-+meubles+Birkhadem#lrd=0x128fad5fae229a89:0xa8afd38ca1b6e44f,3,${effectiveStars}`;
+      const googleReviewUrl = 'https://maps.app.goo.gl/PgX4a88fpg7dPQkFA';
       try {
         window.open(googleReviewUrl, '_blank', 'noopener,noreferrer');
       } catch {}
@@ -308,7 +313,7 @@ function ContactContent() {
                     <div>
                       <h4 className="text-xl font-bold text-neutral-900 mb-1">Message envoyé avec succès !</h4>
                       <p className="text-sm text-neutral-500 max-w-sm mx-auto leading-relaxed">
-                        Merci. Un conseiller Château d&apos;art vous contactera très bientôt.
+                        Merci. Un conseiller M&amp;F Meubles vous contactera très bientôt.
                       </p>
                     </div>
 
@@ -369,7 +374,7 @@ function ContactContent() {
                                 placeholder={
                                   reviewRating <= 2
                                     ? "Expliquez-nous ce qui n'a pas convenu..."
-                                    : "Partagez votre expérience avec Château d'art..."
+                                    : "Partagez votre expérience avec M&F Meubles..."
                                 }
                                 className="w-full bg-white border border-neutral-200 rounded-xl p-3 text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:border-neutral-900 transition-colors resize-none"
                               />
@@ -451,7 +456,7 @@ function ContactContent() {
 
                               <div className="pt-1 flex flex-col sm:flex-row items-center justify-center gap-2.5">
                                 <a
-                                  href={`https://www.google.com/search?q=Ch%C3%A2teau+D%27art+-+meubles+Birkhadem#lrd=0x128fad5fae229a89:0xa8afd38ca1b6e44f,3,${reviewSubmittedStars}`}
+                                  href="https://maps.app.goo.gl/PgX4a88fpg7dPQkFA"
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   className="inline-flex items-center gap-1.5 px-4 py-2 bg-neutral-900 hover:bg-neutral-800 text-white text-xs font-semibold rounded-full transition-all shadow-sm"

@@ -119,7 +119,8 @@ export function Footer() {
   };
 
   const mapSrc =
-    'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3198.5906046037494!2d3.060058575713971!3d36.70837457287061!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x128fad5fae229a89%3A0xa8afd38ca1b6e44f!2sCh%C3%A2teau%20D\'art%20-%20meubles!5e0!3m2!1sfr!2sdz!4v1789588881010!5m2!1sfr!2sdz';
+    siteConfig.maps_embed_url ||
+    'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3197.9859247874274!2d3.07651347583487!3d36.72289927226924!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x128fadd15a1404d7%3A0xe033d167d05c196f!2sM%26F%20Meubles!5e0!3m2!1sfr!2sdz!4v1795257542578!5m2!1sfr!2sdz';
 
   return (
     <footer className="relative font-sans" style={{ marginTop: -82, position: 'relative', zIndex: 10 }}>
@@ -180,10 +181,10 @@ export function Footer() {
         <div className="relative md:hidden px-5 pt-8 pb-8 flex flex-col gap-8" style={{ zIndex: 2 }}>
           <div className="flex flex-col items-center text-center gap-3">
             <Link href="/">
-              <img src="/logo.png" alt="Château d'art" className="h-10 w-auto object-contain brightness-0 invert" />
+              <img src="/smalllogo-white.png" alt="M&F Meubles" className="h-12 w-auto object-contain" />
             </Link>
             <p className="text-xs text-white/50 leading-relaxed max-w-xs">
-              Maison de mobilier contemporain et d&apos;art de vivre. Lignes pures, confort d&apos;exception.
+              Maison de mobilier contemporain et d&apos;art de vivre à Kouba, Alger. Lignes pures, confort d&apos;exception.
             </p>
           </div>
 
@@ -200,15 +201,15 @@ export function Footer() {
           </div>
 
           <div className="rounded-2xl overflow-hidden border border-white/10 h-36 w-full opacity-80">
-            <iframe title="Château d'art Maps" src={mapSrc} className="w-full h-full border-0" loading="lazy" referrerPolicy="strict-origin-when-cross-origin" />
+            <iframe title="M&F Meubles Maps" src={mapSrc} className="w-full h-full border-0" loading="lazy" referrerPolicy="strict-origin-when-cross-origin" />
           </div>
 
           <div className="flex justify-center gap-3">
             {[
-              { href: siteConfig.instagram_url || 'https://www.instagram.com/chateau_dart_meubles/', label: 'Instagram', icon: <Instagram size={15} /> },
-              { href: siteConfig.facebook_url || 'https://www.facebook.com/chateau.dart.alger/', label: 'Facebook', icon: <Facebook size={15} /> },
-              { href: siteConfig.tiktok_url || 'https://www.tiktok.com/@chateaudart_meubles', label: 'TikTok', icon: <TikTokIcon className="w-3.5 h-3.5" /> },
-              { href: siteConfig.youtube_url || 'https://www.youtube.com/@chateaudart/featured', label: 'YouTube', icon: <Youtube size={15} /> },
+              { href: siteConfig.instagram_url || 'https://www.instagram.com/mfmeubles/', label: 'Instagram', icon: <Instagram size={15} /> },
+              { href: siteConfig.facebook_url || 'https://www.facebook.com/profile.php?id=100063579698712&locale=fr_FR', label: 'Facebook', icon: <Facebook size={15} /> },
+              { href: siteConfig.tiktok_url || 'https://www.tiktok.com/@mfmeubleskouba', label: 'TikTok', icon: <TikTokIcon className="w-3.5 h-3.5" /> },
+              { href: 'https://maps.app.goo.gl/PgX4a88fpg7dPQkFA', label: 'Avis Google', icon: <Youtube size={15} /> },
             ].map((s) => (
               <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.label}
                 className="w-9 h-9 rounded-full bg-white/10 border border-white/15 flex items-center justify-center text-white/70 hover:bg-white/20 transition-all">
@@ -217,7 +218,7 @@ export function Footer() {
             ))}
           </div>
 
-          <p className="text-center text-[11px] text-white/30">© 2026 Château d&apos;art. Tous droits réservés.</p>
+          <p className="text-center text-[11px] text-white/30">© 2026 M&amp;F Meubles. Tous droits réservés.</p>
         </div>
 
         {/* ── DESKTOP ── */}
@@ -229,10 +230,10 @@ export function Footer() {
               {/* Logo + brand name side by side */}
               <div>
                 <Link href="/" className="inline-flex items-center gap-3 mb-4 group">
-                  <img src="/logo.png" alt="Château d'art" className="h-11 w-auto object-contain brightness-0 invert opacity-90 group-hover:opacity-100 transition-opacity" />
+                  <img src="/smalllogo-white.png" alt="M&F Meubles" className="h-12 w-auto object-contain opacity-95 group-hover:opacity-100 transition-opacity" />
                   <div className="flex flex-col leading-tight">
-                    <span className="font-serif italic text-white/85 text-sm tracking-wide">Château d&apos;Art</span>
-                    <span className="font-sans text-white/35 text-[9px] uppercase tracking-[3px]">Meublier · Alger</span>
+                    <span className="font-serif italic text-white/85 text-sm tracking-wide">M&amp;F Meubles</span>
+                    <span className="font-sans text-white/35 text-[9px] uppercase tracking-[3px]">Showroom · Kouba, Alger</span>
                   </div>
                 </Link>
                 <p className="text-sm text-white/45 max-w-sm leading-relaxed">
@@ -242,7 +243,7 @@ export function Footer() {
               </div>
               {/* Delivery note — no pill, just thin underline */}
               <span className="text-xs text-white/45 font-medium border-b border-white/20 pb-0.5 mt-1">
-                Livraison &amp; montage offerts sur Alger et environs
+                Livraison &amp; montage soigné sur Alger et les 58 wilayas
               </span>
             </div>
 
@@ -277,10 +278,10 @@ export function Footer() {
                 </div>
                 <div className="flex gap-2 mt-8">
                   {[
-                    { href: siteConfig.instagram_url || 'https://www.instagram.com/chateau_dart_meubles/', label: 'Instagram', icon: <Instagram size={13} /> },
-                    { href: siteConfig.facebook_url || 'https://www.facebook.com/chateau.dart.alger/', label: 'Facebook', icon: <Facebook size={13} /> },
-                    { href: siteConfig.tiktok_url || 'https://www.tiktok.com/@chateaudart_meubles', label: 'TikTok', icon: <TikTokIcon className="w-3 h-3" /> },
-                    { href: siteConfig.youtube_url || 'https://www.youtube.com/@chateaudart/featured', label: 'YouTube', icon: <Youtube size={13} /> },
+                    { href: siteConfig.instagram_url || 'https://www.instagram.com/mfmeubles/', label: 'Instagram', icon: <Instagram size={13} /> },
+                    { href: siteConfig.facebook_url || 'https://www.facebook.com/profile.php?id=100063579698712&locale=fr_FR', label: 'Facebook', icon: <Facebook size={13} /> },
+                    { href: siteConfig.tiktok_url || 'https://www.tiktok.com/@mfmeubleskouba', label: 'TikTok', icon: <TikTokIcon className="w-3 h-3" /> },
+                    { href: 'https://maps.app.goo.gl/PgX4a88fpg7dPQkFA', label: 'Avis Google', icon: <Youtube size={13} /> },
                   ].map((s) => (
                     <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.label}
                       className="w-8 h-8 rounded-full bg-white/8 border border-white/12 flex items-center justify-center text-white/50 hover:bg-white/18 hover:text-white transition-all">
@@ -368,7 +369,7 @@ export function Footer() {
 
             {/* Bottom legal */}
             <div className="mt-14 pt-6 border-t border-white/10 flex flex-col md:flex-row justify-between items-center text-[11px] text-white/25 gap-3">
-              <p>© 2026 Château d&apos;art. Tous droits réservés.</p>
+              <p>© 2026 M&amp;F Meubles. Tous droits réservés.</p>
               <div className="flex gap-6">
                 <Link href="/about" className="hover:text-white/60 transition-colors">Notre histoire</Link>
                 <Link href="/contact" className="hover:text-white/60 transition-colors">Contactez-nous</Link>

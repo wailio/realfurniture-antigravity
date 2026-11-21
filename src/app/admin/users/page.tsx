@@ -15,7 +15,6 @@ import {
   Mail,
   Phone,
   Calendar,
-  Activity,
   Lock,
   Plus,
   X,
@@ -28,6 +27,7 @@ import {
   Check,
 } from 'lucide-react'
 import { showIosToast, showIosConfirm } from '@/components/ui/ios-dialog'
+import { useAdminTheme } from '@/contexts/theme-context'
 
 // ── Types ────────────────────────────────────────────────────────────────────
 interface AdminUser {
@@ -45,14 +45,14 @@ interface AdminUser {
 }
 
 const ROLE_META = {
-  developer: { label: 'Développeur', color: '#d1aa5c', bg: 'rgba(209,170,92,0.12)', border: 'rgba(209,170,92,0.28)', icon: Crown },
-  admin:     { label: 'Administrateur', color: '#64D2FF', bg: 'rgba(100,210,255,0.12)', border: 'rgba(100,210,255,0.28)', icon: Shield },
+  developer: { label: 'Développeur', color: '#F59E0B', bg: '#FEF3C7', border: '#FDE68A', darkBg: 'rgba(245,158,11,0.15)', darkBorder: 'rgba(245,158,11,0.3)', icon: Crown },
+  admin:     { label: 'Administrateur', color: '#3B82F6', bg: '#EFF6FF', border: '#BFDBFE', darkBg: 'rgba(59,130,246,0.15)', darkBorder: 'rgba(59,130,246,0.3)', icon: Shield },
 }
 
 const STATUS_META = {
-  active:    { label: 'Actif',    color: '#30D158', bg: 'rgba(48,209,88,0.10)',   icon: CheckCircle2 },
-  inactive:  { label: 'Inactif', color: '#8E929B', bg: 'rgba(142,146,155,0.10)', icon: Clock },
-  suspended: { label: 'Suspendu', color: '#FF453A', bg: 'rgba(255,69,58,0.10)',  icon: UserX },
+  active:    { label: 'Actif',    color: '#10B981', bg: '#ECFDF5', darkBg: 'rgba(16,185,129,0.15)', icon: CheckCircle2 },
+  inactive:  { label: 'Inactif', color: '#64748B', bg: '#F8FAFC', darkBg: 'rgba(255,255,255,0.06)', icon: Clock },
+  suspended: { label: 'Suspendu', color: '#EF4444', bg: '#FEF2F2', darkBg: 'rgba(239,68,68,0.15)', icon: UserX },
 }
 
 const AVAILABLE_PERMISSIONS = [
@@ -63,23 +63,13 @@ const AVAILABLE_PERMISSIONS = [
   { key: 'website-info', label: 'Infos site',  desc: 'Textes et horaires' },
 ]
 
-function timeAgo(iso?: string) {
-  if (!iso) return 'Jamais'
-  const diff = Date.now() - new Date(iso).getTime()
-  const mins = Math.floor(diff / 60000)
-  if (mins < 2)  return 'À l\'instant'
-  if (mins < 60) return `Il y a ${mins} min`
-  const hrs = Math.floor(mins / 60)
-  if (hrs < 24)  return `Il y a ${hrs}h`
-  return `Il y a ${Math.floor(hrs / 24)}j`
-}
-
 function formatDate(iso?: string) {
   if (!iso) return '—'
   return new Date(iso).toLocaleDateString('fr-DZ', { day: 'numeric', month: 'long', year: 'numeric' })
 }
 
 export default function AdminUsersPage() {
+  const { isDark } = useAdminTheme()
   const [users, setUsers] = useState<AdminUser[]>([])
   const [loading, setLoading] = useState(true)
   const [customCount, setCustomCount] = useState(0)
@@ -103,7 +93,6 @@ export default function AdminUsersPage() {
     permissions: ['products', 'orders', 'sales', 'website-info'],
   })
 
-  // Load current user and users list
   useEffect(() => {
     try {
       const stored = sessionStorage.getItem('admin_user')
@@ -140,7 +129,6 @@ export default function AdminUsersPage() {
     }
   }
 
-  // Close popup menu on outside click
   useEffect(() => {
     if (!openMenu) return
     const handler = () => setOpenMenu(null)
@@ -148,7 +136,6 @@ export default function AdminUsersPage() {
     return () => window.removeEventListener('click', handler)
   }, [openMenu])
 
-  // Handle form permission toggle
   function togglePerm(key: string) {
     setForm(prev => {
       const exists = prev.permissions.includes(key)
@@ -159,7 +146,6 @@ export default function AdminUsersPage() {
     })
   }
 
-  // Handle Create User Submit
   async function handleCreateUser(e: React.FormEvent) {
     e.preventDefault()
     if (!form.username.trim() || !form.password.trim()) {
@@ -198,7 +184,7 @@ export default function AdminUsersPage() {
         setSelectedId(data.user.id)
       }
 
-      showIosToast('Utilisateur créé avec succès et prêt à se connecter !')
+      showIosToast('Utilisateur créé avec succès !', 'success')
       setShowCreateModal(false)
       setForm({
         username: '',
@@ -216,11 +202,10 @@ export default function AdminUsersPage() {
     }
   }
 
-  // Handle Delete User
   async function confirmDeleteUser(user: AdminUser) {
     setOpenMenu(null)
     if (user.isBuiltIn) {
-      showIosToast('Impossible de supprimer le compte système principal')
+      showIosToast('Impossible de supprimer le compte système principal', 'error')
       return
     }
 
@@ -239,15 +224,15 @@ export default function AdminUsersPage() {
         method: 'DELETE',
       })
       if (res.ok) {
-        showIosToast('Utilisateur supprimé')
+        showIosToast('Utilisateur supprimé ✓', 'info')
         if (selectedId === user.id) setSelectedId(null)
         await loadUsers()
       } else {
         const data = await res.json()
-        showIosToast(data.error || 'Erreur lors de la suppression')
+        showIosToast(data.error || 'Erreur lors de la suppression', 'error')
       }
     } catch {
-      showIosToast('Erreur réseau lors de la suppression')
+      showIosToast('Erreur réseau lors de la suppression', 'error')
     }
   }
 
@@ -261,52 +246,14 @@ export default function AdminUsersPage() {
 
   return (
     <div className="min-h-screen" style={{ background: 'transparent', fontFamily: 'var(--font-body)' }}>
-      <style>{`
-        .users-glass {
-          background: rgba(255,255,255,0.055);
-          border: 1px solid rgba(255,255,255,0.10);
-          backdrop-filter: blur(20px);
-          -webkit-backdrop-filter: blur(20px);
-        }
-        .user-row {
-          transition: all 0.18s cubic-bezier(0.32,0.72,0,1);
-          border-radius: 12px;
-          cursor: pointer;
-        }
-        .user-row:hover {
-          background: rgba(255,255,255,0.055) !important;
-        }
-        .user-row-selected {
-          background: rgba(255,255,255,0.09) !important;
-          border: 1px solid rgba(255,255,255,0.16) !important;
-        }
-        .perm-pill {
-          display: inline-flex;
-          align-items: center;
-          padding: 3px 9px;
-          border-radius: 6px;
-          font-size: 11px;
-          font-weight: 500;
-          white-space: nowrap;
-        }
-        .detail-row {
-          display: flex;
-          align-items: flex-start;
-          gap: 12px;
-          padding: 10px 0;
-          border-bottom: 1px solid rgba(255,255,255,0.06);
-        }
-        .detail-row:last-child { border-bottom: none; }
-      `}</style>
-
-      {/* ── Page Header: Icon directly on bg, one-line role text directly on bg ── */}
+      {/* ── Page Header: Apple Frosted Header ── */}
       <div
         style={{
-          background: 'rgba(10, 11, 12, 0.88)',
+          background: isDark ? 'rgba(0, 0, 0, 0.75)' : 'rgba(245, 245, 247, 0.85)',
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
-          padding: 'clamp(16px, 2vw, 22px) clamp(16px, 3vw, 28px)',
+          borderBottom: isDark ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid rgba(0, 0, 0, 0.05)',
+          padding: 'clamp(14px, 2vw, 20px) clamp(16px, 3vw, 28px)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -314,19 +261,19 @@ export default function AdminUsersPage() {
           position: 'sticky',
           top: 0,
           zIndex: 40,
+          transition: 'background 0.3s ease, border-color 0.3s ease',
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0 }}>
-          {/* User icon directly in background without any shape around it */}
-          <Users2 className="w-6 h-6 text-[#d1aa5c] shrink-0" />
+          <Users2 className="w-5 h-5 text-[#3B82F6] shrink-0" />
           <div style={{ minWidth: 0 }}>
             <h1
               style={{
                 fontFamily: 'var(--font-heading)',
-                fontSize: 24,
+                fontSize: 20,
                 fontWeight: 400,
-                color: '#FFFFFF',
-                letterSpacing: '-0.01em',
+                color: isDark ? '#FFFFFF' : '#0F172A',
+                letterSpacing: '-0.02em',
                 margin: 0,
                 lineHeight: 1.2,
                 whiteSpace: 'nowrap',
@@ -334,29 +281,37 @@ export default function AdminUsersPage() {
                 textOverflow: 'ellipsis',
               }}
             >
-              Utilisateurs
+              Utilisateurs &amp; Accès <span style={{ fontWeight: 800 }}>• M&amp;F Meubles</span>
             </h1>
-            <p className="hidden sm:block" style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.38)', marginTop: 2 }}>
+            <p className="hidden sm:block" style={{ fontSize: 11.5, color: isDark ? 'rgba(235,235,245,0.6)' : '#64748B', marginTop: 2 }}>
               Gestion des comptes administrateurs &amp; autorisations
             </p>
           </div>
         </div>
 
-        {/* Right side: role text directly in background, small, one line, no shape */}
+        {/* Right side */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexShrink: 0 }}>
-          <span style={{ fontSize: 11.5, color: '#d1aa5c', fontWeight: 500, whiteSpace: 'nowrap' }}>
-            {currentUserRole === 'developer' ? 'Accès développeur' : 'Accès administrateur'}
+          <span style={{ fontSize: 11.5, color: isDark ? '#F59E0B' : '#B45309', fontWeight: 600, whiteSpace: 'nowrap' }}>
+            {currentUserRole === 'developer' ? 'Accès Développeur' : 'Accès Administrateur'}
           </span>
 
-          {/* Add User Button */}
           <button
             type="button"
             onClick={() => setShowCreateModal(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-lg font-medium text-xs sm:text-[13px] transition-all active:scale-95"
             style={{
-              background: 'linear-gradient(135deg, #d1aa5c 0%, #b68d40 100%)',
-              color: '#0A0B0C',
-              boxShadow: '0 4px 14px rgba(209, 170, 92, 0.3)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6,
+              padding: '7px 14px',
+              borderRadius: 12,
+              fontSize: 12,
+              fontWeight: 600,
+              background: isDark ? '#FFFFFF' : '#0F172A',
+              color: isDark ? '#000000' : '#FFFFFF',
+              border: 'none',
+              cursor: 'pointer',
+              boxShadow: isDark ? 'none' : '0 2px 6px rgba(15,23,42,0.12)',
+              transition: 'background 0.15s ease',
             }}
           >
             <Plus className="w-4 h-4" />
@@ -365,9 +320,8 @@ export default function AdminUsersPage() {
         </div>
       </div>
 
-      <div style={{ padding: 'clamp(14px,2.5vw,26px) clamp(14px,3vw,28px)' }}>
-
-        {/* ── Status Info Bar: Count & Real-time Supabase sync notice ── */}
+      <div style={{ padding: 'clamp(14px,2.5vw,26px) clamp(14px,3vw,28px)', maxWidth: 1400, margin: '0 auto' }}>
+        {/* ── Status Info Bar ── */}
         <div
           style={{
             display: 'flex',
@@ -375,61 +329,87 @@ export default function AdminUsersPage() {
             justifyContent: 'space-between',
             gap: 12,
             padding: '11px 16px',
-            borderRadius: 12,
+            borderRadius: 14,
             marginBottom: 18,
-            background: 'rgba(209,170,92,0.06)',
-            border: '1px solid rgba(209,170,92,0.18)',
+            background: isDark ? 'rgba(59,130,246,0.1)' : '#EFF6FF',
+            border: isDark ? '1px solid rgba(59,130,246,0.2)' : '1px solid #BFDBFE',
             flexWrap: 'wrap',
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
-            <Lock style={{ width: 14, height: 14, color: '#d1aa5c', flexShrink: 0 }} />
-            <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.7)', margin: 0 }}>
+            <Lock style={{ width: 14, height: 14, color: '#3B82F6', flexShrink: 0 }} />
+            <p style={{ fontSize: 12.5, color: isDark ? 'rgba(235,235,245,0.85)' : '#1E3A8A', margin: 0 }}>
               Synchronisé en direct avec <strong>Supabase</strong> · Tout nouvel utilisateur peut se connecter instantanément.
             </p>
           </div>
-          <div style={{ fontSize: 11.5, color: '#d1aa5c', fontWeight: 600, whiteSpace: 'nowrap' }}>
+          <div style={{ fontSize: 11.5, color: isDark ? '#60A5FA' : '#1D4ED8', fontWeight: 600, whiteSpace: 'nowrap' }}>
             {customCount} / {maxCustomUsers} utilisateurs créés
           </div>
         </div>
 
         {/* ── Main Grid: User List (Left) + Detail Panel (Right) ── */}
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px]" style={{ gap: 16 }}>
-
           {/* ── Left: User List ── */}
           <div>
             {/* Search bar */}
             <div
-              className="users-glass"
-              style={{ borderRadius: 12, padding: '9px 14px', display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}
+              style={{
+                borderRadius: 9999,
+                padding: '9px 16px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 10,
+                marginBottom: 14,
+                background: isDark ? '#1C1C1E' : '#FFFFFF',
+                border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #DFE3E8',
+                boxShadow: isDark ? 'none' : '0 1px 3px rgba(15, 23, 42, 0.04)',
+              }}
             >
-              <Search style={{ width: 15, height: 15, color: 'rgba(255,255,255,0.3)', flexShrink: 0 }} />
+              <Search style={{ width: 15, height: 15, color: '#94A3B8', flexShrink: 0 }} />
               <input
                 type="text"
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 placeholder="Rechercher par nom ou identifiant..."
                 style={{
-                  flex: 1, background: 'transparent', border: 'none', outline: 'none',
-                  fontSize: 13, color: '#FFFFFF',
-                  caretColor: '#d1aa5c',
+                  flex: 1,
+                  background: 'transparent',
+                  border: 'none',
+                  outline: 'none',
+                  fontSize: 13,
+                  color: isDark ? '#FFFFFF' : '#0F172A',
                 }}
               />
               {search && (
-                <button onClick={() => setSearch('')} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.4)', cursor: 'pointer', fontSize: 16, lineHeight: 1, padding: 0 }}>×</button>
+                <button
+                  type="button"
+                  onClick={() => setSearch('')}
+                  style={{ background: 'none', border: 'none', color: '#94A3B8', cursor: 'pointer', padding: 0 }}
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
               )}
             </div>
 
             {/* User rows */}
             {loading ? (
-              <div className="flex items-center justify-center py-16 gap-3 text-white/50 text-sm">
-                <Loader2 className="w-5 h-5 animate-spin text-[#d1aa5c]" />
-                <span>Chargement des utilisateurs depuis Supabase...</span>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '60px 0' }}>
+                <Loader2 className="w-6 h-6 animate-spin" style={{ color: isDark ? '#FFFFFF' : '#0F172A' }} />
               </div>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {filtered.length === 0 ? (
-                  <div style={{ textAlign: 'center', padding: '40px 20px', color: 'rgba(255,255,255,0.3)', fontSize: 13 }}>
+                  <div
+                    style={{
+                      textAlign: 'center',
+                      padding: '50px 20px',
+                      background: isDark ? '#1C1C1E' : '#FFFFFF',
+                      borderRadius: 18,
+                      border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E5E7EB',
+                      color: isDark ? 'rgba(235,235,245,0.6)' : '#64748B',
+                      fontSize: 13,
+                    }}
+                  >
                     Aucun utilisateur trouvé
                   </div>
                 ) : filtered.map(user => {
@@ -443,26 +423,38 @@ export default function AdminUsersPage() {
                     <div
                       key={user.id}
                       onClick={() => setSelectedId(isSelected ? null : user.id)}
-                      className={`user-row ${isSelected ? 'user-row-selected' : ''}`}
                       style={{
                         display: 'flex',
                         alignItems: 'center',
                         gap: 12,
-                        padding: '12px 14px',
-                        background: isSelected ? undefined : 'rgba(255,255,255,0.03)',
-                        border: isSelected ? undefined : '1px solid rgba(255,255,255,0.07)',
+                        padding: '12px 16px',
+                        background: isSelected
+                          ? (isDark ? '#2C2C2E' : '#F1F5F9')
+                          : (isDark ? '#1C1C1E' : '#FFFFFF'),
+                        borderRadius: 16,
+                        border: isSelected
+                          ? (isDark ? '1px solid rgba(255,255,255,0.2)' : '1px solid #CBD5E1')
+                          : (isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E5E7EB'),
+                        boxShadow: isDark ? 'none' : '0 1px 3px rgba(15,23,42,0.02)',
+                        cursor: 'pointer',
+                        transition: 'all 0.15s ease',
                       }}
                     >
                       {/* Avatar */}
                       <div
                         style={{
-                          width: 38, height: 38, borderRadius: 10, flexShrink: 0,
-                          background: user.role === 'developer'
-                            ? 'linear-gradient(135deg, #2A2416 0%, #1A1710 100%)'
-                            : 'linear-gradient(135deg, #12182A 0%, #0C1018 100%)',
-                          border: `1.5px solid ${role.border}`,
-                          display: 'flex', alignItems: 'center', justifyContent: 'center',
-                          fontSize: 15, fontWeight: 700, color: role.color,
+                          width: 38,
+                          height: 38,
+                          borderRadius: 10,
+                          flexShrink: 0,
+                          background: isDark ? '#2C2C2E' : '#F1F5F9',
+                          border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E2E8F0',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: 15,
+                          fontWeight: 700,
+                          color: isDark ? '#FFFFFF' : '#0F172A',
                         }}
                       >
                         {user.displayName.charAt(0).toUpperCase()}
@@ -471,22 +463,41 @@ export default function AdminUsersPage() {
                       {/* Info */}
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 7, flexWrap: 'wrap' }}>
-                          <span style={{ fontSize: 13.5, fontWeight: 600, color: '#FFFFFF' }}>{user.displayName}</span>
-                          <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.38)' }}>@{user.username}</span>
+                          <span style={{ fontSize: 13.5, fontWeight: 700, color: isDark ? '#FFFFFF' : '#0F172A' }}>{user.displayName}</span>
+                          <span style={{ fontSize: 11, color: isDark ? 'rgba(235,235,245,0.4)' : '#94A3B8' }}>@{user.username}</span>
                           {user.isBuiltIn && (
-                            <span style={{ fontSize: 9.5, padding: '1px 6px', borderRadius: 4, background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.45)' }}>
+                            <span style={{ fontSize: 9.5, padding: '1px 6px', borderRadius: 4, background: isDark ? '#2C2C2E' : '#F1F5F9', color: isDark ? 'rgba(235,235,245,0.6)' : '#64748B', fontWeight: 600 }}>
                               Principal
                             </span>
                           )}
                         </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginTop: 3, flexWrap: 'wrap' }}>
-                          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '1.5px 7px', borderRadius: 5, background: role.bg, border: `1px solid ${role.border}` }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginTop: 4, flexWrap: 'wrap' }}>
+                          <div
+                            style={{
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: 4,
+                              padding: '2px 7px',
+                              borderRadius: 6,
+                              background: isDark ? role.darkBg : role.bg,
+                              border: `1px solid ${isDark ? role.darkBorder : role.border}`,
+                            }}
+                          >
                             <RoleIcon style={{ width: 10, height: 10, color: role.color }} />
                             <span style={{ fontSize: 10, fontWeight: 600, color: role.color }}>{role.label}</span>
                           </div>
-                          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '1.5px 7px', borderRadius: 5, background: status.bg, border: `1px solid ${status.color}25` }}>
+                          <div
+                            style={{
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: 4,
+                              padding: '2px 7px',
+                              borderRadius: 6,
+                              background: isDark ? status.darkBg : status.bg,
+                            }}
+                          >
                             <StatusIcon style={{ width: 10, height: 10, color: status.color }} />
-                            <span style={{ fontSize: 10, fontWeight: 500, color: status.color }}>{status.label}</span>
+                            <span style={{ fontSize: 10, fontWeight: 600, color: status.color }}>{status.label}</span>
                           </div>
                         </div>
                       </div>
@@ -496,7 +507,15 @@ export default function AdminUsersPage() {
                         <button
                           type="button"
                           onClick={e => { e.stopPropagation(); setOpenMenu(openMenu === user.id ? null : user.id) }}
-                          style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.35)', cursor: 'pointer', padding: '6px', borderRadius: 6, display: 'flex' }}
+                          style={{
+                            background: 'none',
+                            border: 'none',
+                            color: isDark ? 'rgba(235,235,245,0.4)' : '#94A3B8',
+                            cursor: 'pointer',
+                            padding: '6px',
+                            borderRadius: 6,
+                            display: 'flex',
+                          }}
                           title="Actions"
                         >
                           <MoreHorizontal style={{ width: 16, height: 16 }} />
@@ -505,17 +524,34 @@ export default function AdminUsersPage() {
                           <div
                             onClick={e => e.stopPropagation()}
                             style={{
-                              position: 'absolute', right: 0, top: '100%', marginTop: 4, zIndex: 100,
-                              background: 'rgba(22,24,28,0.97)', backdropFilter: 'blur(30px)',
-                              border: '1px solid rgba(255,255,255,0.12)', borderRadius: 12,
-                              padding: '5px', minWidth: 170,
-                              boxShadow: '0 12px 40px rgba(0,0,0,0.6)',
+                              position: 'absolute',
+                              right: 0,
+                              top: '100%',
+                              marginTop: 4,
+                              zIndex: 100,
+                              background: isDark ? '#2C2C2E' : '#FFFFFF',
+                              border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #E2E8F0',
+                              borderRadius: 12,
+                              padding: '5px',
+                              minWidth: 170,
+                              boxShadow: isDark ? '0 12px 40px rgba(0,0,0,0.6)' : '0 12px 30px rgba(15,23,42,0.1)',
                             }}
                           >
                             <button
                               type="button"
                               onClick={() => { setSelectedId(user.id); setOpenMenu(null) }}
-                              style={{ display: 'block', width: '100%', textAlign: 'left', padding: '8px 12px', borderRadius: 8, border: 'none', background: 'transparent', color: 'rgba(255,255,255,0.8)', cursor: 'pointer', fontSize: 12.5 }}
+                              style={{
+                                display: 'block',
+                                width: '100%',
+                                textAlign: 'left',
+                                padding: '8px 12px',
+                                borderRadius: 8,
+                                border: 'none',
+                                background: 'transparent',
+                                color: isDark ? '#FFFFFF' : '#0F172A',
+                                cursor: 'pointer',
+                                fontSize: 12.5,
+                              }}
                             >
                               Détails
                             </button>
@@ -523,7 +559,20 @@ export default function AdminUsersPage() {
                               <button
                                 type="button"
                                 onClick={() => confirmDeleteUser(user)}
-                                style={{ display: 'flex', alignItems: 'center', gap: 6, width: '100%', textAlign: 'left', padding: '8px 12px', borderRadius: 8, border: 'none', background: 'transparent', color: '#FF453A', cursor: 'pointer', fontSize: 12.5 }}
+                                style={{
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  gap: 6,
+                                  width: '100%',
+                                  textAlign: 'left',
+                                  padding: '8px 12px',
+                                  borderRadius: 8,
+                                  border: 'none',
+                                  background: 'transparent',
+                                  color: isDark ? '#FF453A' : '#DC2626',
+                                  cursor: 'pointer',
+                                  fontSize: 12.5,
+                                }}
                               >
                                 <Trash2 style={{ width: 13, height: 13 }} />
                                 <span>Supprimer</span>
@@ -543,59 +592,87 @@ export default function AdminUsersPage() {
           <div>
             {selectedUser ? (
               <div
-                className="users-glass"
-                style={{ borderRadius: 16, padding: '20px', position: 'sticky', top: 80 }}
+                style={{
+                  background: isDark ? '#1C1C1E' : '#FFFFFF',
+                  borderRadius: 18,
+                  border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E5E7EB',
+                  padding: '20px',
+                  position: 'sticky',
+                  top: 80,
+                  boxShadow: isDark ? 'none' : '0 1px 3px rgba(15,23,42,0.03)',
+                }}
               >
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', paddingBottom: 16, borderBottom: '1px solid rgba(255,255,255,0.07)', marginBottom: 14 }}>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', paddingBottom: 16, borderBottom: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #F1F5F9', marginBottom: 14 }}>
                   <div
                     style={{
-                      width: 58, height: 58, borderRadius: 16,
-                      background: 'linear-gradient(135deg, #12182A, #0C1018)',
-                      border: `2px solid ${ROLE_META[selectedUser.role]?.border || 'rgba(255,255,255,0.15)'}`,
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      fontSize: 22, fontWeight: 700, color: ROLE_META[selectedUser.role]?.color || '#FFFFFF',
+                      width: 58,
+                      height: 58,
+                      borderRadius: 16,
+                      background: isDark ? '#2C2C2E' : '#F1F5F9',
+                      border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #E2E8F0',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: 22,
+                      fontWeight: 700,
+                      color: isDark ? '#FFFFFF' : '#0F172A',
                       marginBottom: 10,
                     }}
                   >
                     {selectedUser.displayName.charAt(0).toUpperCase()}
                   </div>
-                  <p style={{ fontSize: 16, fontWeight: 700, color: '#FFFFFF', margin: 0 }}>{selectedUser.displayName}</p>
-                  <p style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.4)', marginTop: 2 }}>@{selectedUser.username}</p>
+                  <p style={{ fontSize: 16, fontWeight: 700, color: isDark ? '#FFFFFF' : '#0F172A', margin: 0 }}>{selectedUser.displayName}</p>
+                  <p style={{ fontSize: 11.5, color: isDark ? 'rgba(235,235,245,0.6)' : '#64748B', marginTop: 2 }}>@{selectedUser.username}</p>
                 </div>
 
                 <div>
                   {selectedUser.email && (
-                    <div className="detail-row">
-                      <Mail style={{ width: 13, height: 13, color: 'rgba(255,255,255,0.3)', marginTop: 1, flexShrink: 0 }} />
+                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, padding: '10px 0', borderBottom: isDark ? '1px solid rgba(255,255,255,0.06)' : '1px solid #F1F5F9' }}>
+                      <Mail style={{ width: 13, height: 13, color: '#94A3B8', marginTop: 2, flexShrink: 0 }} />
                       <div>
-                        <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.35)', marginBottom: 1 }}>Email</p>
-                        <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.85)' }}>{selectedUser.email}</p>
+                        <p style={{ fontSize: 10, color: isDark ? 'rgba(235,235,245,0.4)' : '#94A3B8', margin: 0 }}>Email</p>
+                        <p style={{ fontSize: 12, color: isDark ? '#FFFFFF' : '#0F172A', margin: '2px 0 0' }}>{selectedUser.email}</p>
                       </div>
                     </div>
                   )}
                   {selectedUser.phone && (
-                    <div className="detail-row">
-                      <Phone style={{ width: 13, height: 13, color: 'rgba(255,255,255,0.3)', marginTop: 1, flexShrink: 0 }} />
+                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, padding: '10px 0', borderBottom: isDark ? '1px solid rgba(255,255,255,0.06)' : '1px solid #F1F5F9' }}>
+                      <Phone style={{ width: 13, height: 13, color: '#94A3B8', marginTop: 2, flexShrink: 0 }} />
                       <div>
-                        <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.35)', marginBottom: 1 }}>Téléphone</p>
-                        <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.85)' }}>{selectedUser.phone}</p>
+                        <p style={{ fontSize: 10, color: isDark ? 'rgba(235,235,245,0.4)' : '#94A3B8', margin: 0 }}>Téléphone</p>
+                        <p style={{ fontSize: 12, color: isDark ? '#FFFFFF' : '#0F172A', margin: '2px 0 0' }}>{selectedUser.phone}</p>
                       </div>
                     </div>
                   )}
-                  <div className="detail-row">
-                    <Calendar style={{ width: 13, height: 13, color: 'rgba(255,255,255,0.3)', marginTop: 1, flexShrink: 0 }} />
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, padding: '10px 0', borderBottom: isDark ? '1px solid rgba(255,255,255,0.06)' : '1px solid #F1F5F9' }}>
+                    <Calendar style={{ width: 13, height: 13, color: '#94A3B8', marginTop: 2, flexShrink: 0 }} />
                     <div>
-                      <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.35)', marginBottom: 1 }}>Créé le</p>
-                      <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.85)' }}>{formatDate(selectedUser.createdAt)}</p>
+                      <p style={{ fontSize: 10, color: isDark ? 'rgba(235,235,245,0.4)' : '#94A3B8', margin: 0 }}>Créé le</p>
+                      <p style={{ fontSize: 12, color: isDark ? '#FFFFFF' : '#0F172A', margin: '2px 0 0' }}>{formatDate(selectedUser.createdAt)}</p>
                     </div>
                   </div>
 
                   {/* Permissions */}
                   <div style={{ marginTop: 14 }}>
-                    <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.35)', marginBottom: 7, textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 600 }}>Permissions actives</p>
+                    <p style={{ fontSize: 10, color: isDark ? 'rgba(235,235,245,0.4)' : '#94A3B8', marginBottom: 7, textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 700 }}>
+                      Permissions actives
+                    </p>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
                       {(selectedUser.permissions || []).map(p => (
-                        <span key={p} className="perm-pill" style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.8)' }}>
+                        <span
+                          key={p}
+                          style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            padding: '3px 9px',
+                            borderRadius: 6,
+                            fontSize: 11,
+                            fontWeight: 600,
+                            background: isDark ? '#2C2C2E' : '#F1F5F9',
+                            border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E2E8F0',
+                            color: isDark ? '#FFFFFF' : '#0F172A',
+                          }}
+                        >
                           {p === 'dashboard' ? 'Dashboard' : p === 'products' ? 'Produits' : p === 'orders' ? 'Commandes' : p === 'sales' ? 'Ventes' : p === 'website-info' ? 'Infos site' : p === 'users' ? 'Utilisateurs' : p}
                         </span>
                       ))}
@@ -607,7 +684,22 @@ export default function AdminUsersPage() {
                   <button
                     type="button"
                     onClick={() => confirmDeleteUser(selectedUser)}
-                    className="w-full mt-5 py-2.5 rounded-lg flex items-center justify-center gap-2 text-xs font-semibold text-red-400 bg-red-500/10 border border-red-500/20 hover:bg-red-500/15 transition-all"
+                    style={{
+                      width: '100%',
+                      marginTop: 18,
+                      padding: '9px',
+                      borderRadius: 10,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: 6,
+                      fontSize: 12,
+                      fontWeight: 600,
+                      color: isDark ? '#FF453A' : '#DC2626',
+                      background: isDark ? 'rgba(239,68,68,0.12)' : '#FEF2F2',
+                      border: isDark ? '1px solid rgba(239,68,68,0.3)' : '1px solid #FECACA',
+                      cursor: 'pointer',
+                    }}
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                     <span>Supprimer cet utilisateur</span>
@@ -618,9 +710,15 @@ export default function AdminUsersPage() {
                   type="button"
                   onClick={() => setSelectedId(null)}
                   style={{
-                    marginTop: 10, width: '100%', padding: '8px', borderRadius: 8,
-                    background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
-                    color: 'rgba(255,255,255,0.5)', cursor: 'pointer', fontSize: 12,
+                    marginTop: 10,
+                    width: '100%',
+                    padding: '8px',
+                    borderRadius: 8,
+                    background: isDark ? '#2C2C2E' : '#F1F5F9',
+                    border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E2E8F0',
+                    color: isDark ? 'rgba(235,235,245,0.6)' : '#64748B',
+                    cursor: 'pointer',
+                    fontSize: 12,
                   }}
                 >
                   Fermer
@@ -628,15 +726,24 @@ export default function AdminUsersPage() {
               </div>
             ) : (
               <div
-                className="users-glass"
                 style={{
-                  borderRadius: 16, padding: '36px 20px',
-                  display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-                  gap: 10, minHeight: 180, position: 'sticky', top: 80,
+                  background: isDark ? '#1C1C1E' : '#FFFFFF',
+                  borderRadius: 18,
+                  border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E5E7EB',
+                  padding: '36px 20px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 10,
+                  minHeight: 180,
+                  position: 'sticky',
+                  top: 80,
+                  boxShadow: isDark ? 'none' : '0 1px 3px rgba(15,23,42,0.03)',
                 }}
               >
-                <Users2 style={{ width: 22, height: 22, color: 'rgba(255,255,255,0.25)' }} />
-                <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.35)', textAlign: 'center' }}>
+                <Users2 style={{ width: 24, height: 24, color: '#94A3B8' }} />
+                <p style={{ fontSize: 12.5, color: isDark ? 'rgba(235,235,245,0.4)' : '#94A3B8', textAlign: 'center', margin: 0 }}>
                   Sélectionnez un utilisateur<br />pour voir ses autorisations
                 </p>
               </div>
@@ -645,41 +752,73 @@ export default function AdminUsersPage() {
         </div>
       </div>
 
-      {/* ── CREATE USER MODAL (iOS Style) ── */}
+      {/* ── CREATE USER MODAL ── */}
       {showCreateModal && (
         <div
-          className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/75 backdrop-blur-md"
+          className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
+          style={{ background: isDark ? 'rgba(0, 0, 0, 0.75)' : 'rgba(15, 23, 42, 0.45)', backdropFilter: 'blur(8px)' }}
           onClick={() => !createLoading && setShowCreateModal(false)}
         >
           <div
             className="w-full max-w-md rounded-2xl overflow-hidden relative"
             style={{
-              background: 'rgba(24, 26, 30, 0.98)',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
-              boxShadow: '0 24px 70px rgba(0, 0, 0, 0.8)',
+              background: isDark ? '#1C1C1E' : '#FFFFFF',
+              border: isDark ? '1px solid rgba(255, 255, 255, 0.12)' : '1px solid #E5E7EB',
+              boxShadow: isDark ? '0 24px 70px rgba(0, 0, 0, 0.8)' : '0 24px 60px -12px rgba(15,23,42,0.2)',
             }}
             onClick={e => e.stopPropagation()}
           >
             {/* Modal Header */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-white/10">
-              <div className="flex items-center gap-2.5">
-                <KeyRound className="w-5 h-5 text-[#d1aa5c]" />
-                <h3 className="text-base font-semibold text-white">Nouvel utilisateur</h3>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '16px 24px',
+                borderBottom: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #F1F5F9',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <KeyRound className="w-5 h-5 text-[#3B82F6]" />
+                <h3 style={{ fontSize: 16, fontWeight: 700, color: isDark ? '#FFFFFF' : '#0F172A', margin: 0 }}>Nouvel utilisateur</h3>
               </div>
               <button
                 type="button"
                 onClick={() => setShowCreateModal(false)}
                 disabled={createLoading}
-                className="w-8 h-8 rounded-lg flex items-center justify-center text-white/40 hover:text-white hover:bg-white/5 transition-colors"
+                style={{
+                  width: 32,
+                  height: 32,
+                  borderRadius: 8,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  background: isDark ? '#2C2C2E' : '#F1F5F9',
+                  border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E2E8F0',
+                  color: isDark ? 'rgba(235,235,245,0.6)' : '#64748B',
+                  cursor: 'pointer',
+                }}
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
             {/* Modal Body */}
-            <form onSubmit={handleCreateUser} className="p-6 space-y-4">
+            <form onSubmit={handleCreateUser} style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: 16 }}>
               {createError && (
-                <div className="flex items-center gap-2 p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs">
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 8,
+                    padding: '12px',
+                    borderRadius: 10,
+                    background: isDark ? 'rgba(239,68,68,0.12)' : '#FEF2F2',
+                    border: isDark ? '1px solid rgba(239,68,68,0.3)' : '1px solid #FECACA',
+                    color: isDark ? '#FF453A' : '#DC2626',
+                    fontSize: 12,
+                  }}
+                >
                   <AlertCircle className="w-4 h-4 shrink-0" />
                   <span>{createError}</span>
                 </div>
@@ -687,7 +826,7 @@ export default function AdminUsersPage() {
 
               {/* Display name */}
               <div>
-                <label className="block text-xs font-medium text-white/70 mb-1.5">
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: isDark ? 'rgba(235,235,245,0.8)' : '#334155', marginBottom: 6 }}>
                   Nom complet / Rôle
                 </label>
                 <input
@@ -696,13 +835,23 @@ export default function AdminUsersPage() {
                   value={form.displayName}
                   onChange={e => setForm({ ...form, displayName: e.target.value })}
                   placeholder="Ex: Karim Hadj (Commercial)"
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-white/[0.05] border border-white/10 text-sm text-white placeholder-white/25 focus:outline-none focus:border-[#d1aa5c] transition-colors"
+                  style={{
+                    width: '100%',
+                    padding: '10px 14px',
+                    borderRadius: 10,
+                    border: isDark ? '1.5px solid rgba(255,255,255,0.12)' : '1.5px solid #E2E8F0',
+                    background: isDark ? '#2C2C2E' : '#F8FAFC',
+                    fontSize: 13,
+                    color: isDark ? '#FFFFFF' : '#0F172A',
+                    outline: 'none',
+                    boxSizing: 'border-box',
+                  }}
                 />
               </div>
 
               {/* Username */}
               <div>
-                <label className="block text-xs font-medium text-white/70 mb-1.5">
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: isDark ? 'rgba(235,235,245,0.8)' : '#334155', marginBottom: 6 }}>
                   Identifiant de connexion (username)
                 </label>
                 <input
@@ -712,17 +861,29 @@ export default function AdminUsersPage() {
                   onChange={e => setForm({ ...form, username: e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, '') })}
                   placeholder="Ex: karim_commercial"
                   autoComplete="off"
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-white/[0.05] border border-white/10 text-sm text-white placeholder-white/25 focus:outline-none focus:border-[#d1aa5c] transition-colors"
+                  style={{
+                    width: '100%',
+                    padding: '10px 14px',
+                    borderRadius: 10,
+                    border: isDark ? '1.5px solid rgba(255,255,255,0.12)' : '1.5px solid #E2E8F0',
+                    background: isDark ? '#2C2C2E' : '#F8FAFC',
+                    fontSize: 13,
+                    color: isDark ? '#FFFFFF' : '#0F172A',
+                    outline: 'none',
+                    boxSizing: 'border-box',
+                  }}
                 />
-                <p className="text-[10.5px] text-white/35 mt-1">Lettres minuscules, chiffres, tirets uniquement.</p>
+                <p style={{ fontSize: 10.5, color: isDark ? 'rgba(235,235,245,0.4)' : '#94A3B8', marginTop: 4, margin: 0 }}>
+                  Lettres minuscules, chiffres, tirets uniquement.
+                </p>
               </div>
 
               {/* Password */}
               <div>
-                <label className="block text-xs font-medium text-white/70 mb-1.5">
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: isDark ? 'rgba(235,235,245,0.8)' : '#334155', marginBottom: 6 }}>
                   Mot de passe
                 </label>
-                <div className="relative">
+                <div style={{ position: 'relative' }}>
                   <input
                     type={showPassword ? 'text' : 'password'}
                     required
@@ -730,12 +891,33 @@ export default function AdminUsersPage() {
                     onChange={e => setForm({ ...form, password: e.target.value })}
                     placeholder="Minimum 4 caractères"
                     autoComplete="new-password"
-                    className="w-full px-3.5 py-2.5 pr-10 rounded-xl bg-white/[0.05] border border-white/10 text-sm text-white placeholder-white/25 focus:outline-none focus:border-[#d1aa5c] transition-colors"
+                    style={{
+                      width: '100%',
+                      padding: '10px 14px',
+                      paddingRight: '40px',
+                      borderRadius: 10,
+                      border: isDark ? '1.5px solid rgba(255,255,255,0.12)' : '1.5px solid #E2E8F0',
+                      background: isDark ? '#2C2C2E' : '#F8FAFC',
+                      fontSize: 13,
+                      color: isDark ? '#FFFFFF' : '#0F172A',
+                      outline: 'none',
+                      boxSizing: 'border-box',
+                    }}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white p-1"
+                    style={{
+                      position: 'absolute',
+                      right: 10,
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      background: 'none',
+                      border: 'none',
+                      color: '#94A3B8',
+                      cursor: 'pointer',
+                      padding: 4,
+                    }}
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -744,30 +926,48 @@ export default function AdminUsersPage() {
 
               {/* Permissions */}
               <div>
-                <label className="block text-xs font-medium text-white/70 mb-2">
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: isDark ? 'rgba(235,235,245,0.8)' : '#334155', marginBottom: 8 }}>
                   Sections accessibles
                 </label>
-                <div className="grid grid-cols-2 gap-2">
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
                   {AVAILABLE_PERMISSIONS.map(p => {
                     const active = form.permissions.includes(p.key)
                     return (
                       <div
                         key={p.key}
                         onClick={() => togglePerm(p.key)}
-                        className={`flex items-center gap-2 p-2.5 rounded-xl border cursor-pointer transition-all ${
-                          active
-                            ? 'bg-[#d1aa5c]/10 border-[#d1aa5c]/40 text-white'
-                            : 'bg-white/[0.02] border-white/5 text-white/40 hover:bg-white/[0.04]'
-                        }`}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 8,
+                          padding: '10px 12px',
+                          borderRadius: 10,
+                          border: active
+                            ? (isDark ? '1px solid rgba(59,130,246,0.4)' : '1px solid #93C5FD')
+                            : (isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E2E8F0'),
+                          background: active
+                            ? (isDark ? 'rgba(59,130,246,0.15)' : '#EFF6FF')
+                            : (isDark ? '#2C2C2E' : '#F8FAFC'),
+                          cursor: 'pointer',
+                          transition: 'all 0.15s ease',
+                        }}
                       >
                         <div
-                          className={`w-4 h-4 rounded flex items-center justify-center border text-[10px] ${
-                            active ? 'bg-[#d1aa5c] border-[#d1aa5c] text-black font-bold' : 'border-white/20'
-                          }`}
+                          style={{
+                            width: 16,
+                            height: 16,
+                            borderRadius: 4,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            border: active ? 'none' : (isDark ? '1px solid rgba(255,255,255,0.3)' : '1px solid #CBD5E1'),
+                            background: active ? '#3B82F6' : 'transparent',
+                            color: '#FFFFFF',
+                          }}
                         >
                           {active && <Check className="w-3 h-3 stroke-[3]" />}
                         </div>
-                        <span className="text-xs font-medium">{p.label}</span>
+                        <span style={{ fontSize: 12, fontWeight: 600, color: isDark ? '#FFFFFF' : '#0F172A' }}>{p.label}</span>
                       </div>
                     )
                   })}
@@ -778,11 +978,22 @@ export default function AdminUsersPage() {
               <button
                 type="submit"
                 disabled={createLoading}
-                className="w-full mt-4 py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-all"
                 style={{
-                  background: 'linear-gradient(135deg, #d1aa5c 0%, #b68d40 100%)',
-                  color: '#0A0B0C',
-                  boxShadow: '0 8px 24px rgba(209, 170, 92, 0.35)',
+                  width: '100%',
+                  marginTop: 10,
+                  padding: '12px',
+                  borderRadius: 12,
+                  fontWeight: 600,
+                  fontSize: 13,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 8,
+                  background: isDark ? '#FFFFFF' : '#0F172A',
+                  color: isDark ? '#000000' : '#FFFFFF',
+                  border: 'none',
+                  cursor: createLoading ? 'wait' : 'pointer',
+                  boxShadow: isDark ? 'none' : '0 2px 6px rgba(15,23,42,0.12)',
                 }}
               >
                 {createLoading ? (
@@ -791,7 +1002,7 @@ export default function AdminUsersPage() {
                     <span>Sauvegarde dans Supabase...</span>
                   </>
                 ) : (
-                  <span>Créer et autoriser l'accès</span>
+                  <span>Créer et autoriser l&apos;accès</span>
                 )}
               </button>
             </form>

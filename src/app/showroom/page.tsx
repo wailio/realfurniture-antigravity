@@ -202,7 +202,7 @@ function ScrollRevealImages() {
         <div className="absolute inset-0 flex items-center justify-center select-none pointer-events-none" style={{ zIndex: 10 }}>
           <div className="text-center px-6 w-full">
             {/* Thin line: font-serif italic font-light (same as hero "Meilleur magasin") */}
-            {/* Bold line: font-sans font-black (same as hero "à Birkhadem") */}
+            {/* Bold line: font-sans font-black (same as hero "à Kouba") */}
             <p className="text-[clamp(2.6rem,7.5vw,6.8rem)] leading-[1.1] tracking-tight text-black">
               <span className="font-serif italic font-light block">De plus près,</span>
               <span className="font-sans font-black block">de plus beau.</span>
@@ -312,7 +312,7 @@ export default function ShowroomPage() {
 
   const filteredPhotos = activeTab === 'all' ? SHOWROOM_PHOTOS : SHOWROOM_PHOTOS.filter(p => p.category === activeTab);
   const phone = siteConfig.phone_raw || '+213550000000';
-  const whatsappUrl = `https://wa.me/${phone.replace(/[^0-9]/g,'')}?text=${encodeURIComponent("Bonjour Château d'art, je souhaite planifier une visite personnalisée de votre showroom à Birkhadem.")}`;
+  const whatsappUrl = `https://wa.me/${phone.replace(/[^0-9]/g,'')}?text=${encodeURIComponent("Bonjour M&F Meubles, je souhaite planifier une visite personnalisée de votre showroom à Kouba.")}`;
 
   return (
     <main id="main-content" className="min-h-screen bg-white text-neutral-900 font-sans selection:bg-neutral-900 selection:text-white">
@@ -326,11 +326,11 @@ export default function ShowroomPage() {
           <div className="max-w-2xl">
             <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white border border-neutral-200 text-[10px] font-semibold text-neutral-600 shadow-xs mb-3 uppercase tracking-wider">
               <Sparkles className="w-3 h-3" />
-              Birkhadem · Alger · Plus de 800m²
+              Kouba · Alger · Showroom &amp; Espace Design
             </span>
             <h1 className="text-[28px] sm:text-4xl md:text-[42px] font-extrabold text-[#111827] tracking-tight leading-[1.06] mb-2">
               Le Showroom{' '}
-              <span className="font-serif italic font-light text-neutral-500">Château d&apos;Art</span>
+              <span className="font-serif italic font-light text-neutral-500">M&amp;F Meubles</span>
             </h1>
             <p className="text-neutral-500 text-xs sm:text-sm leading-relaxed max-w-lg">
               Venez vivre l&apos;expérience du mobilier haut de gamme — touchez, imaginez, choisissez, guidé par nos designers.
@@ -520,9 +520,9 @@ export default function ShowroomPage() {
                   </h2>
                   <div className="space-y-4">
                     {[
-                      { icon:<MapPin className="w-5 h-5 text-neutral-700 shrink-0 mt-0.5"/>, title:'Adresse', lines:["Château D'Art · Birkhadem, Alger (accès direct et parking clientèle réservé)."] },
-                      { icon:<Clock className="w-5 h-5 text-neutral-700 shrink-0 mt-0.5"/>, title:"Horaires d'Ouverture", lines:['Samedi – Jeudi : 09h00 – 19h30','Vendredi : 14h30 – 19h30'] },
-                      { icon:<Phone className="w-5 h-5 text-neutral-700 shrink-0 mt-0.5"/>, title:'Téléphone & WhatsApp', lines:[siteConfig.phone_raw || '+213 550 00 00 00','Accueil téléphonique 7j/7 de 09h00 à 20h00'] },
+                      { icon:<MapPin className="w-5 h-5 text-neutral-700 shrink-0 mt-0.5"/>, title:'Adresse', lines:["M&F Meubles · Kouba, Alger (accès direct et parking clientèle réservé)."] },
+                      { icon:<Clock className="w-5 h-5 text-neutral-700 shrink-0 mt-0.5"/>, title:"Horaires d'Ouverture", lines:['Samedi – Jeudi : 09h30 – 20h00','Vendredi : 14h30 – 20h00'] },
+                      { icon:<Phone className="w-5 h-5 text-neutral-700 shrink-0 mt-0.5"/>, title:'Téléphone & WhatsApp', lines:[siteConfig.phone_raw || '+213 561 71 91 00','Accueil téléphonique 7j/7 de 09h00 à 20h00'] },
                     ].map((row, i) => (
                       <div key={i} className="flex items-start gap-3.5 p-4 rounded-2xl bg-neutral-50 border border-neutral-200/70">
                         {row.icon}
@@ -544,15 +544,15 @@ export default function ShowroomPage() {
               <div className="lg:col-span-7 flex flex-col">
                 <div className="w-full h-full min-h-[380px] rounded-3xl overflow-hidden border border-neutral-200/80 shadow-md relative bg-neutral-100">
                   <div className="absolute top-4 left-4 z-10 bg-white/95 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-neutral-200 text-xs font-medium text-neutral-800 shadow-sm flex items-center gap-2">
-                    <MapPin className="w-3.5 h-3.5 text-neutral-700" /> Showroom Birkhadem
+                    <MapPin className="w-3.5 h-3.5 text-neutral-700" /> Showroom Kouba
                   </div>
                   <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3198.5906046037494!2d3.060058575713971!3d36.70837457287061!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x128fad5fae229a89%3A0xa8afd38ca1b6e44f!2sCh%C3%A2teau%20D'Art%20-%20meubles!5e0!3m2!1sfr!2sdz!4v1789588881010!5m2!1sfr!2sdz"
+                    src={siteConfig.maps_embed_url || "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3197.9859247874274!2d3.07651347583487!3d36.72289927226924!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x128fadd15a1404d7%3A0xe033d167d05c196f!2sM%26F%20Meubles!5e0!3m2!1sfr!2sdz!4v1795257542578!5m2!1sfr!2sdz"}
                     width="100%" height="100%" style={{ border: 0 }} allowFullScreen loading="lazy"
-                    referrerPolicy="strict-origin-when-cross-origin" title="Château D'Art Showroom"
+                    referrerPolicy="strict-origin-when-cross-origin" title="M&F Meubles Showroom Kouba"
                     className="w-full h-full min-h-[400px]"
                   />
-                  <a href="https://maps.google.com/?q=Ch%C3%A2teau+D'Art+-+meubles" target="_blank" rel="noopener noreferrer"
+                  <a href="https://maps.app.goo.gl/PgX4a88fpg7dPQkFA" target="_blank" rel="noopener noreferrer"
                     className="absolute bottom-4 right-4 z-10 inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-neutral-900 text-white text-xs font-semibold hover:bg-neutral-800 transition-all shadow-md">
                     Ouvrir dans Google Maps <ArrowUpRight className="w-3.5 h-3.5" />
                   </a>

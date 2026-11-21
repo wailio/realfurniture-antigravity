@@ -97,7 +97,7 @@ function BeforeAfterSlider() {
       {/* ── AFTER: Right side (Salon Meublé) ── */}
       <img
         src="/showroom-apres.jpg"
-        alt="Salon meublé Château d'art"
+        alt="Mobilier M&F Meubles"
         className="absolute inset-0 w-full h-full object-cover"
         draggable={false}
       />
@@ -176,7 +176,7 @@ function SuccessScreen({
 
       <p className="text-white/70 text-xs leading-relaxed text-center mb-5 px-1 max-w-sm">
         Votre sélection <strong className="text-white">{categoryLabel}</strong> (Budget :{' '}
-        <span className="font-semibold text-[#d1aa5c]">{formatPrice(budget)}</span>) a été transmise directement à nos conseillers du showroom de Birkhadem.
+        <span className="font-semibold text-[#d1aa5c]">{formatPrice(budget)}</span>) a été transmise directement à nos conseillers du showroom de Kouba.
       </p>
 
       {/* Step 1 call status */}

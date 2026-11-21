@@ -102,7 +102,7 @@ export async function POST(request: NextRequest) {
             phone: safePhone,
             subject: safeSubject,
             message: safeMessage,
-            source: "Château d'art Website",
+            source: "M&F Meubles Website",
             timestamp: new Date().toISOString(),
           }),
         });
