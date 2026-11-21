@@ -63,8 +63,8 @@ const COLLECTION_SLIDES: CollectionSlideItem[] = [
       },
       {
         id: 'dr-lamp',
-        x: 86,
-        y: 52,
+        x: 91,
+        y: 55,
         title: 'Console & Lampe Laiton Prestige',
         image: '/arthome-collection/console-lampe-laiton.png',
         link: '/all-products?category=accessories',
