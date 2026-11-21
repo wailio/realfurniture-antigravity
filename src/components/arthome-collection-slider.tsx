@@ -29,17 +29,17 @@ const COLLECTION_SLIDES: CollectionSlideItem[] = [
     hotspots: [
       {
         id: 'lr-couch',
-        x: 28,
-        y: 53,
+        x: 18,
+        y: 48,
         title: "Canapé d'Angle Camel Prestige",
         image: '/arthome-collection/canape-angle-velours.jpg',
         link: '/all-products?category=sofas',
-        position: 'top',
+        position: 'bottom',
       },
       {
         id: 'lr-table',
-        x: 48,
-        y: 63,
+        x: 50,
+        y: 68,
         title: 'Table Basse Gigogne Duo Chêne & Bronze',
         image: '/arthome-collection/table-basse-duo.png',
         link: '/all-products?category=accessories',
