@@ -49,26 +49,35 @@ const COLLECTION_SLIDES: CollectionSlideItem[] = [
   },
   {
     id: 2,
-    collectionName: 'Dining Room Collection',
+    collectionName: 'Salon Prestige Collection',
     bgImage: '/arthome-collection/dining-room-bg.jpg',
     hotspots: [
       {
-        id: 'dr-1',
-        x: 30,
-        y: 51,
-        title: 'Midnight Marble Dining Table',
-        image: '/arthome-collection/midnight-marble-dining-table.jpg',
-        link: '/all-products?category=salle-a-manger',
+        id: 'dr-table',
+        x: 51,
+        y: 62,
+        title: 'Table Basse Bronze Marbre Oxydé',
+        image: '/arthome-collection/table-basse-bronze.jpg',
+        link: '/all-products?category=accessories',
         position: 'top',
       },
       {
-        id: 'dr-2',
-        x: 47,
-        y: 61,
-        title: 'Curved Modern Lounge Chair',
-        image: '/arthome-collection/curved-modern-lounge-chair.jpg',
-        link: '/all-products?category=salle-a-manger',
-        position: 'top',
+        id: 'dr-lamp',
+        x: 86,
+        y: 52,
+        title: 'Console & Lampe Laiton Prestige',
+        image: '/arthome-collection/console-lampe-laiton.png',
+        link: '/all-products?category=accessories',
+        position: 'left',
+      },
+      {
+        id: 'dr-couch',
+        x: 27,
+        y: 46,
+        title: 'Canapé Panoramique Crème Grand Confort',
+        image: '/arthome-collection/canape-panoramique-creme.jpg',
+        link: '/all-products?category=sofas',
+        position: 'bottom',
       },
     ],
   },
@@ -335,10 +344,10 @@ export function ArtHomeCollectionSlider() {
                     if (hotspot.position === 'bottom' || isNearTop) {
                       placementClasses = 'top-full mt-3 left-1/2 -translate-x-1/2';
                     }
-                    if (isNearRight) {
+                    if (hotspot.position === 'left' || isNearRight) {
                       placementClasses = 'bottom-full mb-3 right-0';
                     }
-                    if (isNearLeft) {
+                    if (isNearLeft && hotspot.position !== 'left') {
                       placementClasses = 'bottom-full mb-3 left-0';
                     }
 
