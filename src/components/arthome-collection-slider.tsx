@@ -264,7 +264,32 @@ export function ArtHomeCollectionSlider() {
         .arthome-pulse-ring {
           animation: arthome-pulse-ring 2.1s cubic-bezier(0.22, 1, 0.36, 1) infinite;
         }
+        /* Ken Burns slow zoom on active slide bg image */
+        @keyframes luxury-kenburns {
+          0%   { transform: scale(1) translateZ(0); }
+          100% { transform: scale(1.06) translateZ(0); }
+        }
+        .luxury-bg-img {
+          animation: luxury-kenburns 9s ease-out forwards;
+          will-change: transform;
+          /* Sharpen + richness: contrast pops micro-edges, saturate deepens material tones */
+          filter: url(#luxury-sharpen) contrast(1.1) saturate(1.1) brightness(1.03);
+          backface-visibility: hidden;
+        }
       `}</style>
+
+      {/* SVG Unsharp Mask — hidden off-screen, referenced by CSS filter: url(#luxury-sharpen) */}
+      <svg style={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden' }} aria-hidden="true">
+        <defs>
+          <filter id="luxury-sharpen" x="0%" y="0%" width="100%" height="100%" colorInterpolationFilters="sRGB">
+            <feConvolveMatrix
+              order="3"
+              kernelMatrix="0 -0.5 0  -0.5 3 -0.5  0 -0.5 0"
+              preserveAlpha="true"
+            />
+          </filter>
+        </defs>
+      </svg>
 
       {/* Slider Viewport Container */}
       <div
@@ -297,20 +322,27 @@ export function ArtHomeCollectionSlider() {
               >
                 {/* Slide Frame with generous height matching original luxury scale */}
                 <div className="relative w-full h-[460px] sm:h-[560px] md:h-[650px] lg:h-[720px] xl:h-[780px] bg-neutral-100 overflow-hidden shadow-xs">
-                  {/* High Definition Background Photograph */}
+                  {/* High Definition Background Photograph — luxury-sharpened */}
                   <img
                     src={slide.bgImage}
                     alt={slide.collectionName}
-                    className="w-full h-full object-cover object-center pointer-events-none select-none"
+                    className="luxury-bg-img w-full h-full object-cover object-center pointer-events-none select-none"
                     draggable={false}
                   />
 
-                  {/* Atmospheric Luxury Vignette */}
-                  <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/15 via-transparent to-black/10" />
+                  {/* Radial Vignette — mix-blend-mode:multiply so it deepens shadows
+                      organically without washing out furniture textures */}
+                  <div className="absolute inset-0 pointer-events-none" style={{
+                    background: 'radial-gradient(ellipse at 50% 50%, transparent 28%, rgba(8,6,4,0.45) 68%, rgba(2,2,2,0.78) 100%)',
+                    mixBlendMode: 'multiply',
+                  }} />
+                  {/* Bottom-to-top atmospheric lift — keeps floor/base grounded */}
+                  <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/30 via-transparent to-transparent" />
 
-                  {/* Text at top of each image matching Art Home Furniture (No shadow, clean black typography) */}
+                  {/* Text at top of each image — upgraded to champagne for luxury feel */}
                   <div className="absolute top-5 left-5 sm:top-7 sm:left-7 md:top-9 md:left-9 z-10 pointer-events-none">
-                    <h2 className="font-sans font-normal text-[20px] sm:text-[22px] md:text-[24px] text-black tracking-normal leading-tight select-none">
+                    <h2 className="font-sans font-light text-[20px] sm:text-[22px] md:text-[24px] tracking-[0.08em] leading-tight select-none drop-shadow-[0_1px_6px_rgba(0,0,0,0.5)]"
+                      style={{ color: '#f0ece4', textShadow: '0 2px 12px rgba(0,0,0,0.4)' }}>
                       {slide.collectionName}
                     </h2>
                   </div>
