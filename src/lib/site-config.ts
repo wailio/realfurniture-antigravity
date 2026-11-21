@@ -71,7 +71,7 @@ export interface SiteConfig {
 export const DEFAULT_SITE_CONFIG: SiteConfig = {
   phone: '0797 59 30 79',
   whatsapp: '213797593079',
-  email: 'contact@mfmeubles.com',
+  email: 'mf.meuble.kouba@gmail.com',
   address: 'M&F Meubles, Kouba, Algiers, Algeria, 16311',
   hours: '6j/7 · 08h30 – 19h00 (Fermé le vendredi)',
   maps_embed_url: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3197.9859247874274!2d3.07651347583487!3d36.72289927226924!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x128fadd15a1404d7%3A0xe033d167d05c196f!2sM%26F%20Meubles!5e0!3m2!1sfr!2sdz!4v1795266510762!5m2!1sfr!2sdz',
@@ -84,7 +84,7 @@ export const DEFAULT_SITE_CONFIG: SiteConfig = {
   hero_image_1: '/hero/hero-1.jpg',
   hero_image_2: '/hero/hero-2.jpg',
 
-  promo_bar: 'Livraison + montage dans les 58 wilayas · Showroom d\'exception à Kouba (Alger)',
+  promo_bar: 'Livraison + montage dans les 69 wilayas · Showroom d\'exception à Kouba (Alger)',
 
   review_1_name: 'Amina Mina, Alger',
   review_1_text: "Merci énormément M&F Meuble j'ai bien reçu ma commande et je suis très satisfait merci pour le sérieux et le professionnalisme et bonne continuation 🙏",
@@ -100,7 +100,7 @@ export const DEFAULT_SITE_CONFIG: SiteConfig = {
   about_histoire: "Fondée avec la vision d'offrir un mobilier d'excellence en Algérie, M&F Meubles s'impose comme une référence incontournable du mobilier haut de gamme.",
   about_histoire_2: "Chaque collection est le fruit d'un dialogue entre nos artisans et les grands courants du design international.",
   about_histoire_3: "Nous sélectionnons rigoureusement nos matériaux pour vous offrir durabilité, confort et élégance intemporelle.",
-  about_image: '',
+  about_image: '/images/locationim.jpg',
 
   valeur_1_title: 'Excellence',
   valeur_1_text: 'Chaque pièce est fabriquée avec les meilleurs matériaux et un savoir-faire artisanal exceptionnel.',

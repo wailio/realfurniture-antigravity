@@ -242,7 +242,7 @@ function ContactContent() {
                   </div>
                   <h3 className="text-sm font-bold text-neutral-900 mb-0.5">Livraison</h3>
                   <p className="text-xs text-neutral-600 leading-snug">
-                    <strong className="text-neutral-900">58 wilayas</strong> couvertes
+                    <strong className="text-neutral-900">69 wilayas</strong> couvertes
                   </p>
                   <span className="text-[10px] text-neutral-400 mt-1">Partout en Algérie</span>
                 </div>

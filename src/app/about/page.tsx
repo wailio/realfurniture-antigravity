@@ -146,17 +146,17 @@ export default function AboutPage() {
                 {/* Floating badge — top-left */}
                 <div className="absolute -top-2 -left-4 bg-white border border-neutral-200 shadow-lg px-3 py-2 text-center min-w-[80px]">
                   <div className="text-xl font-bold text-neutral-900 leading-none">
-                    <CountUp target={12} suffix="+" />
+                    <CountUp target={21} suffix="" />
                   </div>
-                  <div className="text-[9px] uppercase tracking-widest text-neutral-500 mt-0.5 font-medium">Ans</div>
+                  <div className="text-[9px] uppercase tracking-widest text-neutral-500 mt-0.5 font-medium">Ans (depuis 2005)</div>
                 </div>
 
                 {/* Floating badge — bottom-right */}
                 <div className="absolute -bottom-2 -right-2 bg-white border border-neutral-200 shadow-lg px-3 py-2 text-center min-w-[90px]">
                   <div className="text-xl font-bold text-neutral-900 leading-none">
-                    <CountUp target={200} suffix="+" />
+                    <CountUp target={12} suffix="" />
                   </div>
-                  <div className="text-[9px] uppercase tracking-widest text-neutral-500 mt-0.5 font-medium">Avis 5★</div>
+                  <div className="text-[9px] uppercase tracking-widest text-neutral-500 mt-0.5 font-medium">Avis Google 5★</div>
                 </div>
               </div>
             </LuxuryReveal>
@@ -171,10 +171,10 @@ export default function AboutPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
           <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-neutral-100">
             {[
-              { n: 12, s: '+', label: "Années d'expérience" },
-              { n: 58, s: '', label: 'Wilayas livrées' },
-              { n: 3000, s: '+', label: 'Foyers équipés' },
-              { n: 200, s: '+', label: 'Avis Google 5 étoiles' },
+              { n: 21, s: '', label: "Années d'expérience (depuis 2005)" },
+              { n: 69, s: '', label: 'Wilayas livrées' },
+              { n: 500, s: '+', label: 'Projets sur-mesure' },
+              { n: 12, s: '', label: 'Avis Google 5 étoiles' },
             ].map((stat, i) => (
               <LuxuryReveal key={i} delay={i * 80}>
                 <div className="py-7 px-4 sm:px-8 text-center">
@@ -279,8 +279,8 @@ export default function AboutPage() {
           <LuxuryReveal variant="left">
             <div className="relative group overflow-hidden aspect-[4/3] shadow-xl bg-neutral-100">
               <Image
-                src={siteConfig.about_image || '/images/acbd.jpg'}
-                alt="Showroom M&F Meubles"
+                src={siteConfig.about_image || '/images/locationim.jpg'}
+                alt="Showroom M&F Meubles — Kouba"
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
@@ -288,7 +288,7 @@ export default function AboutPage() {
               {/* caption overlay */}
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent px-6 py-5">
                 <span className="text-white text-xs font-medium tracking-wide">
-                  Showroom Kouba · Alger
+                  Showroom M&amp;F Meubles · Kouba, Alger
                 </span>
               </div>
             </div>
@@ -318,7 +318,7 @@ export default function AboutPage() {
 
               {/* mini icon-row */}
               <div className="flex flex-wrap gap-4 pt-2">
-                {['Algérie · 58 wilayas', 'Livraison + Montage', 'Sur-Mesure'].map((tag) => (
+                {['Algérie · 69 wilayas', 'Livraison + Montage', 'Sur-Mesure'].map((tag) => (
                   <span
                     key={tag}
                     className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-neutral-600 border border-neutral-200 px-3 py-1.5"

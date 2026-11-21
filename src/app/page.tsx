@@ -369,7 +369,7 @@ export default function HomePage() {
                   className="flex items-center gap-6 text-[12px] lg:text-[12.5px] font-normal uppercase tracking-[0.2em] text-white/80"
                 >
                   <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-white/[0.12] text-white border border-white/25 text-[11px] font-semibold tracking-wider shadow-[0_0_14px_rgba(255,255,255,0.12)]">
-                    Livraison 58 Wilayas
+                    Livraison 69 Wilayas
                   </span>
                   <span>Montage professionnel soigné</span>
                   <span className="text-white/40 text-[10px]">✦</span>
@@ -426,7 +426,7 @@ export default function HomePage() {
                   className="flex items-center gap-3 text-[10.5px] uppercase tracking-[0.18em] text-white/80"
                 >
                   <span className="px-2 py-0.5 rounded-full bg-white/15 text-white border border-white/25 text-[9.5px] font-semibold">
-                    58 Wilayas
+                    69 Wilayas
                   </span>
                   <span>Livraison &amp; montage soigné</span>
                   <span className="text-white/40 text-[9px]">✦</span>

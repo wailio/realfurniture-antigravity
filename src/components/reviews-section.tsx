@@ -277,7 +277,7 @@ export function ReviewsSection() {
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-neutral-100 border border-neutral-200/80 w-fit mb-5 shadow-sm pointer-events-none">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
                 <span className="text-[11px] font-semibold tracking-wider text-neutral-800 uppercase">
-                  Avis Clients Vérifiés · 4.9 / 5
+                  Avis Clients Vérifiés · 5.0 / 5 (12 avis Google)
                 </span>
               </div>
 
@@ -439,12 +439,12 @@ export function ReviewsSection() {
 
           <div className="text-center mt-6">
             <a
-              href="https://www.google.com/maps/place/Ch%C3%A2teau+D'Art+-+meubles/@36.7083703,3.0600586,17z/data=!4m8!3m7!1s0x128fad5fae229a89:0xa8afd38ca1b6e44f!8m2!3d36.7083703!4d3.0626335!9m1!1b1!16s%2Fg%2F11gsn14yk8"
+              href="https://maps.app.goo.gl/PgX4a88fpg7dPQkFA"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 text-xs font-medium text-neutral-900 underline hover:text-neutral-600"
             >
-              <span>Voir les 120+ avis complets sur Google Maps</span>
+              <span>Voir les 12 avis vérifiés 5 étoiles sur Google Maps</span>
             </a>
           </div>
         </div>

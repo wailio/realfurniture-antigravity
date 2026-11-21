@@ -524,6 +524,7 @@ export default function ShowroomPage() {
                       { icon:<MapPin className="w-5 h-5 text-neutral-700 shrink-0 mt-0.5"/>, title:'Adresse', lines:["M&F Meubles · Kouba, Algiers, Algeria, 16311 (accès direct et parking clientèle réservé)."] },
                       { icon:<Clock className="w-5 h-5 text-neutral-700 shrink-0 mt-0.5"/>, title:"Horaires d'Ouverture", lines:['Samedi – Jeudi : 08h30 – 19h00','Vendredi : Fermé'] },
                       { icon:<Phone className="w-5 h-5 text-neutral-700 shrink-0 mt-0.5"/>, title:'Téléphone & WhatsApp', lines:[siteConfig.phone || '0797 59 30 79','Accueil téléphonique 6j/7 de 08h30 à 19h00'] },
+                      { icon:<Sparkles className="w-5 h-5 text-[#b68d40] shrink-0 mt-0.5"/>, title:'Livraison & Installation', lines:['69 wilayas couvertes · Livraison et montage soigné partout en Algérie.'] },
                     ].map((row, i) => (
                       <div key={i} className="flex items-start gap-3.5 p-4 rounded-2xl bg-neutral-50 border border-neutral-200/70">
                         {row.icon}

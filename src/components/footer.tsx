@@ -242,7 +242,7 @@ export function Footer() {
               </div>
               {/* Delivery note — no pill, just thin underline */}
               <span className="text-xs text-white/45 font-medium border-b border-white/20 pb-0.5 mt-1">
-                Livraison &amp; montage soigné sur Alger et les 58 wilayas
+                Livraison &amp; montage soigné sur Alger et les 69 wilayas
               </span>
             </div>
 

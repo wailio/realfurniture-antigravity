@@ -359,7 +359,7 @@ function AllProductsContent() {
               <span className="font-serif italic font-light text-neutral-500">Créations</span>
             </h1>
             <p className="text-neutral-500 text-xs sm:text-sm leading-relaxed max-w-lg">
-              Meubles contemporains conçus pour durer — livrés et installés dans les 58 wilayas d&apos;Algérie.
+              Meubles contemporains conçus pour durer — livrés et installés dans les 69 wilayas d&apos;Algérie.
             </p>
           </div>
         </div>

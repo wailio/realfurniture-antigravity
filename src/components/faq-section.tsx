@@ -13,7 +13,7 @@ export const FAQ_DATA: FaqItem[] = [
   {
     question: "Livrez-vous dans toute l'Algérie ou seulement à Alger ?",
     answer:
-      "Oui, nous livrons dans les 58 wilayas. La livraison et le montage sont 100% gratuits sur Alger, Blida, Boumerdès, Tipaza et Médéa. Pour les autres wilayas, le délai est de 3 à 5 jours (5 à 8 jours pour le Grand Sud).",
+      "Oui, nous livrons dans les 69 wilayas. La livraison et le montage sont 100% gratuits sur Alger, Blida, Boumerdès, Tipaza et Médéa. Pour les autres wilayas, le délai est de 3 à 5 jours (5 à 8 jours pour le Grand Sud).",
   },
   {
     question: "Quel est le délai de livraison après confirmation de ma commande ?",
@@ -117,7 +117,7 @@ export function FaqSection() {
 
           <LuxuryReveal delay={150}>
             <p className="text-sm sm:text-base text-neutral-500 mt-3 max-w-xl mx-auto">
-              Livraison dans les 58 wilayas, montage gratuit, garanties et options sur mesure.
+              Livraison dans les 69 wilayas, montage gratuit, garanties et options sur mesure.
             </p>
           </LuxuryReveal>
         </div>
