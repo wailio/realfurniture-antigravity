@@ -69,12 +69,12 @@ export interface SiteConfig {
 }
 
 export const DEFAULT_SITE_CONFIG: SiteConfig = {
-  phone: '0561 71 91 00',
-  whatsapp: '213561719100',
+  phone: '0797 59 30 79',
+  whatsapp: '213797593079',
   email: 'contact@mfmeubles.com',
-  address: 'Kouba, Alger, Algérie',
-  hours: '7j/7 · 9h30 – 20h00',
-  maps_embed_url: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3197.9859247874274!2d3.07651347583487!3d36.72289927226924!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x128fadd15a1404d7%3A0xe033d167d05c196f!2sM%26F%20Meubles!5e0!3m2!1sfr!2sdz!4v1795257542578!5m2!1sfr!2sdz',
+  address: 'M&F Meubles, Kouba, Algiers, Algeria, 16311',
+  hours: '6j/7 · 08h30 – 19h00 (Fermé le vendredi)',
+  maps_embed_url: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3197.9859247874274!2d3.07651347583487!3d36.72289927226924!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x128fadd15a1404d7%3A0xe033d167d05c196f!2sM%26F%20Meubles!5e0!3m2!1sfr!2sdz!4v1795266510762!5m2!1sfr!2sdz',
 
   hero_eyebrow: "M&F MEUBLES · MOBILIER & DESIGN D'EXCEPTION",
   hero_subheading: "L'art du confort pour",
@@ -86,14 +86,14 @@ export const DEFAULT_SITE_CONFIG: SiteConfig = {
 
   promo_bar: 'Livraison + montage dans les 58 wilayas · Showroom d\'exception à Kouba (Alger)',
 
-  review_1_name: 'Dr. Amina K., Alger',
-  review_1_text: 'La qualité des finitions et le confort du salon dépassent toutes mes attentes. Une véritable pièce maîtresse dans notre maison.',
-  review_2_name: 'Yacine M., Oran',
-  review_2_text: "Livraison ponctuelle et montage très professionnel. Les matériaux et les tissus sont d'un raffinement rare.",
-  review_3_name: 'Nadia & Farouk B., Constantine',
-  review_3_text: "Nous avons meublé notre salle à manger et notre salon complet chez M&F Meubles. L'accompagnement de l'équipe a été exceptionnel.",
-  review_4_name: 'Karim S., Sétif',
-  review_4_text: "Le design contemporain s'intègre avec une élégance naturelle. Service client réactif et conseils avisés au showroom de Kouba.",
+  review_1_name: 'Amina Mina, Alger',
+  review_1_text: "Merci énormément M&F Meuble j'ai bien reçu ma commande et je suis très satisfait merci pour le sérieux et le professionnalisme et bonne continuation 🙏",
+  review_2_name: 'Me Khalida Mehannek',
+  review_2_text: "Achat Fluide, Parfait de bout en bout ! Service commercial attentif, réactif et sérieux. Livreurs également très pro, ponctuelle et sympathique. Je recommande sans hésiter ⭐️⭐️⭐️⭐️⭐️",
+  review_3_name: 'Nihel Rh',
+  review_3_text: "Très bonne adresse. Des meubles magnifiques avec une qualité irréprochable. Service rapide et une équipe très professionnelle. Bonne continuation.",
+  review_4_name: 'Intissar Lazoughli',
+  review_4_text: "Haut standing, un service irréprochable et un accueil chaleureux au showroom de Kouba.",
 
   about_tagline: "L'Art du Mobilier d'Exception",
   about_philosophie: "M&F Meubles conçoit et façonne des pièces qui allient l'héritage artisanal et le design contemporain le plus pointu.",

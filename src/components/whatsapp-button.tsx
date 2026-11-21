@@ -7,7 +7,7 @@ export function WhatsAppButton() {
   const pathname = usePathname();
   if (pathname?.startsWith('/admin')) return null;
 
-  const phoneNumber = '213561719100';
+  const phoneNumber = '213797593079';
   const defaultMessage = "Bonjour M&F Meubles, je souhaite me renseigner sur vos collections.";
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(defaultMessage)}`;
 

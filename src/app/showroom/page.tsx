@@ -520,9 +520,9 @@ export default function ShowroomPage() {
                   </h2>
                   <div className="space-y-4">
                     {[
-                      { icon:<MapPin className="w-5 h-5 text-neutral-700 shrink-0 mt-0.5"/>, title:'Adresse', lines:["M&F Meubles · Kouba, Alger (accès direct et parking clientèle réservé)."] },
-                      { icon:<Clock className="w-5 h-5 text-neutral-700 shrink-0 mt-0.5"/>, title:"Horaires d'Ouverture", lines:['Samedi – Jeudi : 09h30 – 20h00','Vendredi : 14h30 – 20h00'] },
-                      { icon:<Phone className="w-5 h-5 text-neutral-700 shrink-0 mt-0.5"/>, title:'Téléphone & WhatsApp', lines:[siteConfig.phone_raw || '+213 561 71 91 00','Accueil téléphonique 7j/7 de 09h00 à 20h00'] },
+                      { icon:<MapPin className="w-5 h-5 text-neutral-700 shrink-0 mt-0.5"/>, title:'Adresse', lines:["M&F Meubles · Kouba, Algiers, Algeria, 16311 (accès direct et parking clientèle réservé)."] },
+                      { icon:<Clock className="w-5 h-5 text-neutral-700 shrink-0 mt-0.5"/>, title:"Horaires d'Ouverture", lines:['Samedi – Jeudi : 08h30 – 19h00','Vendredi : Fermé'] },
+                      { icon:<Phone className="w-5 h-5 text-neutral-700 shrink-0 mt-0.5"/>, title:'Téléphone & WhatsApp', lines:[siteConfig.phone || '0797 59 30 79','Accueil téléphonique 6j/7 de 08h30 à 19h00'] },
                     ].map((row, i) => (
                       <div key={i} className="flex items-start gap-3.5 p-4 rounded-2xl bg-neutral-50 border border-neutral-200/70">
                         {row.icon}
@@ -547,7 +547,7 @@ export default function ShowroomPage() {
                     <MapPin className="w-3.5 h-3.5 text-neutral-700" /> Showroom Kouba
                   </div>
                   <iframe
-                    src={siteConfig.maps_embed_url || "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3197.9859247874274!2d3.07651347583487!3d36.72289927226924!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x128fadd15a1404d7%3A0xe033d167d05c196f!2sM%26F%20Meubles!5e0!3m2!1sfr!2sdz!4v1795257542578!5m2!1sfr!2sdz"}
+                    src={siteConfig.maps_embed_url || "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3197.9859247874274!2d3.07651347583487!3d36.72289927226924!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x128fadd15a1404d7%3A0xe033d167d05c196f!2sM%26F%20Meubles!5e0!3m2!1sfr!2sdz!4v1795266510762!5m2!1sfr!2sdz"}
                     width="100%" height="100%" style={{ border: 0 }} allowFullScreen loading="lazy"
                     referrerPolicy="strict-origin-when-cross-origin" title="M&F Meubles Showroom Kouba"
                     className="w-full h-full min-h-[400px]"

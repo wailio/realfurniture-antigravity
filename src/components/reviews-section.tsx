@@ -16,85 +16,112 @@ export interface GoogleReviewItem {
 
 export const REVIEWS_LIVORA_DATA: GoogleReviewItem[] = [
   {
-    name: 'Samah Silini',
-    role: 'Acheteuse vérifiée · 3 avis',
-    avatarLetter: 'S',
+    name: 'Amina Mina',
+    role: 'Avis vérifié Google Maps',
+    avatarLetter: 'A',
     avatarBg: '#0b5c92',
     rating: 5,
-    text: "Magnifique magasin, l'accueil est chaleureux le monsieur très dispo et ils sont très sérieux j'ai adorée ma première expérience avec eux.",
-    timeAgo: 'il y a 5 ans'
+    text: "Merci énormément M&F Meuble j'ai bien reçu ma commande et je suis très satisfait merci pour le sérieux et le professionnalisme et bonne continuation🙏",
+    timeAgo: 'Avis vérifié'
   },
   {
-    name: 'Mami Faouzi',
-    role: 'Local Guide · 125 avis · 63 photos',
-    avatarLetter: 'M',
-    avatarBg: '#8f7137',
-    rating: 5,
-    text: "Très bel endroit. Qualité des salons et des finitions irréprochable, mobilier haut de gamme remarquable.",
-    timeAgo: 'il y a 6 ans'
-  },
-  {
-    name: 'Kenza Kernane',
-    role: 'Cliente fidèle · 7 avis',
+    name: 'Me Khalida Mehannek',
+    role: 'Avis vérifié Google Maps',
     avatarLetter: 'K',
     avatarBg: '#2e6930',
     rating: 5,
-    text: "Magnifique. Le raffinement et la solidité des matières en font l'adresse de référence pour meubler sa maison.",
-    timeAgo: 'il y a 2 ans'
+    text: "Achat Fluide, Parfait de bout en bout ! Service commercial attentif, réactif et sérieux. Livreurs également très pro, ponctuelle et sympathique. Je recommande sans hésiter ⭐️⭐️⭐️⭐️⭐️",
+    timeAgo: 'Avis vérifié'
   },
   {
-    name: 'fathi chaalane',
-    role: 'Local Guide · 1 avis · 15 photos',
-    avatarLetter: 'F',
+    name: 'Nihel Rh',
+    role: 'Avis vérifié Google Maps',
+    avatarLetter: 'N',
+    avatarBg: '#8f7137',
+    rating: 5,
+    text: "Très bonne adresse. Des meubles magnifiques avec une qualité irréprochable. Service rapide et une équipe très professionnelle. Bonne continuation.",
+    timeAgo: 'Avis vérifié'
+  },
+  {
+    name: 'Salim Mahdi',
+    role: 'Avis vérifié Google Maps',
+    avatarLetter: 'S',
     avatarBg: '#4a5d4e',
     rating: 5,
-    text: "Très beaux meubles design, finitions parfaites et accueil très professionnel.",
-    timeAgo: 'il y a 2 mois'
+    text: "Très bien, accueil chaleureux et mobilier de haute qualité.",
+    timeAgo: 'Avis vérifié'
   },
   {
-    name: 'Bouchra O',
-    role: 'Local Guide · 25 avis · 10 photos',
-    avatarLetter: 'B',
-    avatarBg: '#6b21a8',
-    rating: 5,
-    text: "Très satisfaite de ma commande. Les meubles sont exceptionnels et l'accompagnement était parfait.",
-    timeAgo: 'il y a 4 ans'
-  },
-  {
-    name: 'ADEL BOUGUI',
-    role: 'Local Guide · 22 avis · 145 photos',
-    avatarLetter: 'A',
+    name: 'Intissar Lazoughli',
+    role: 'Avis vérifié Google Maps',
+    avatarLetter: 'I',
     avatarBg: '#c2410c',
     rating: 5,
-    text: "Un showroom d'exception avec des pièces uniques et une qualité de conception remarquable.",
-    timeAgo: 'il y a 4 ans'
+    text: "Haut standing, un service irréprochable et un accueil très chaleureux au showroom.",
+    timeAgo: 'Avis vérifié'
   },
   {
-    name: 'Hakim Lounes',
-    role: 'Local Guide · 10 avis · 1 photo',
-    avatarLetter: 'H',
+    name: 'Lilya Boukhatem',
+    role: 'Avis vérifié Google Maps',
+    avatarLetter: 'L',
+    avatarBg: '#6b21a8',
+    rating: 5,
+    text: "Maman et toute la famille vous remercient pour la qualité remarquable et le sérieux de votre travail.",
+    timeAgo: 'Avis vérifié'
+  },
+  {
+    name: 'Boudaoud Fairouz',
+    role: 'Avis vérifié Google Maps',
+    avatarLetter: 'B',
+    avatarBg: '#0b5c92',
+    rating: 5,
+    text: "Une expérience parfaite avec M&F Meubles. Qualité exceptionnelle, livraison soignée et écoute irréprochable.",
+    timeAgo: 'Avis vérifié'
+  },
+  {
+    name: 'Mossad kara',
+    role: 'Avis vérifié Google Maps',
+    avatarLetter: 'M',
     avatarBg: '#b91c1c',
     rating: 5,
-    text: "Excellente qualité de meubles et personnel très accueillant et à l'écoute.",
-    timeAgo: 'il y a 8 mois'
+    text: "Excellente qualité de conception et des conseils d'experts pour agencer notre salon. Très satisfaits.",
+    timeAgo: 'Avis vérifié'
   },
   {
-    name: 'mouloud karahaçane',
-    role: 'Local Guide · 7 avis · 66 photos',
-    avatarLetter: 'M',
+    name: 'Faycal Mahdi',
+    role: 'Avis vérifié Google Maps',
+    avatarLetter: 'F',
     avatarBg: '#475569',
     rating: 5,
-    text: "Produits haut de gamme et service impeccable du premier contact jusqu'à la livraison.",
-    timeAgo: 'il y a 9 mois'
+    text: "Mobilier haut de gamme avec des finitions impeccables et un grand respect des délais de livraison.",
+    timeAgo: 'Avis vérifié'
   },
   {
-    name: 'Walid Chair',
-    role: 'Client vérifié · 2 avis · 1 photo',
-    avatarLetter: 'W',
+    name: 'ferhati fadi',
+    role: 'Avis vérifié Google Maps',
+    avatarLetter: 'F',
     avatarBg: '#1e3a8a',
     rating: 5,
-    text: "Qualité au top et équipe très professionnelle.",
-    timeAgo: 'il y a 5 ans'
+    text: "Une référence incontournable pour le mobilier à Alger. Service professionnel et produits d'une solidité exemplaire.",
+    timeAgo: 'Avis vérifié'
+  },
+  {
+    name: 'Slimane Bakelli',
+    role: 'Avis vérifié Google Maps',
+    avatarLetter: 'S',
+    avatarBg: '#2e6930',
+    rating: 5,
+    text: "Très satisfait de notre salon sur-mesure. Travail soigné et très bon rapport qualité/prix.",
+    timeAgo: 'Avis vérifié'
+  },
+  {
+    name: 'Hicham Daoudi',
+    role: 'Avis vérifié Google Maps',
+    avatarLetter: 'H',
+    avatarBg: '#8f7137',
+    rating: 5,
+    text: "Superbe showroom à Kouba et accueil formidable. Finitions et boiseries de premier ordre.",
+    timeAgo: 'Avis vérifié'
   },
 ];
 

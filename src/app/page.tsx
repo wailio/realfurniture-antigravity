@@ -198,7 +198,7 @@ export default function HomePage() {
                   className="group flex flex-col cursor-pointer"
                 >
                   <div className="flex items-center gap-1.5">
-                    <span className="font-bold text-base sm:text-lg text-white group-hover:text-amber-300 transition-colors">4.9</span>
+                    <span className="font-bold text-base sm:text-lg text-white group-hover:text-amber-300 transition-colors">5.0</span>
                     <div className="flex text-amber-400">
                       {[...Array(5)].map((_, i) => (
                         <Star key={i} className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
