@@ -89,7 +89,7 @@ const COLLECTION_SLIDES: CollectionSlideItem[] = [
       {
         id: 'th-table',
         x: 48,
-        y: 52,
+        y: 44,
         title: 'Table Marbre Gris & Pied Chrome Spirale',
         image: '/arthome-collection/table-marbre-chrome.jpg',
         link: '/all-products?category=salle-a-manger',
@@ -97,8 +97,8 @@ const COLLECTION_SLIDES: CollectionSlideItem[] = [
       },
       {
         id: 'th-chair',
-        x: 83,
-        y: 54,
+        x: 78,
+        y: 50,
         title: 'Chaise Velours Gris Matelassée',
         image: '/arthome-collection/chaise-velours-gris.jpg',
         link: '/all-products?category=salle-a-manger',
@@ -107,7 +107,7 @@ const COLLECTION_SLIDES: CollectionSlideItem[] = [
       {
         id: 'th-buffet',
         x: 55,
-        y: 28,
+        y: 20,
         title: 'Buffet & Miroir Prestige Billes Chromées',
         image: '/arthome-collection/buffet-miroir-billes.jpg',
         link: '/all-products?category=accessories',
