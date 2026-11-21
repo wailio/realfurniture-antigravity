@@ -12,25 +12,25 @@ interface ArtHomeRoomsAndFeaturedProps {
 
 const ROOMS = [
   {
-    title: 'Dining Room',
+    title: 'Salle à Manger',
     count: 56,
     image: '/arthome-rooms/dining-room.jpg',
     slug: 'salle-a-manger',
   },
   {
-    title: 'Bedroom',
+    title: 'Chambre à Coucher',
     count: 2,
     image: '/arthome-rooms/bedroom.jpg',
     slug: 'chambres',
   },
   {
-    title: 'Outdoor',
+    title: 'Espace Extérieur',
     count: 1,
     image: '/arthome-rooms/outdoor.jpg',
     slug: 'accessories',
   },
   {
-    title: 'Living Room',
+    title: 'Salon & Séjour',
     count: 97,
     image: '/arthome-rooms/living-room.jpg',
     slug: 'sofas',
@@ -59,10 +59,10 @@ export function ArtHomeRoomsAndFeatured({ products }: ArtHomeRoomsAndFeaturedPro
     <section className="bg-white py-12 md:py-20">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* ── PART 1: Shop by Rooms (Exact Art Home Furniture dimensions & placement) ── */}
+        {/* ── PART 1: Explorer par Pièce (Exact Art Home Furniture dimensions & placement) ── */}
         <div className="mb-5 sm:mb-6">
           <h3 className="font-sans text-[22px] sm:text-[24px] md:text-[26px] font-normal text-[#212529] tracking-normal">
-            Shop by Rooms
+            Explorer par Pièce
           </h3>
         </div>
 
