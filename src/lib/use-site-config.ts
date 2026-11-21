@@ -5,6 +5,7 @@ import {
   SiteConfig,
   DEFAULT_SITE_CONFIG,
   PUBLIC_SITE_CONFIG_STORAGE_URL,
+  getSafeMapEmbedUrl,
 } from '@/lib/site-config'
 
 export function useSiteConfig(): SiteConfig {
@@ -15,9 +16,12 @@ export function useSiteConfig(): SiteConfig {
 
     // 1. Instant local storage cache if available
     try {
-      const cached = localStorage.getItem('chateau_site_config')
+      localStorage.removeItem('chateau_site_config') // Clear legacy rental cache
+      const cached = localStorage.getItem('mf_site_config')
       if (cached) {
-        setConfig({ ...DEFAULT_SITE_CONFIG, ...JSON.parse(cached) })
+        const parsed = JSON.parse(cached)
+        parsed.maps_embed_url = getSafeMapEmbedUrl(parsed.maps_embed_url)
+        setConfig({ ...DEFAULT_SITE_CONFIG, ...parsed })
       }
     } catch {}
 
@@ -27,9 +31,10 @@ export function useSiteConfig(): SiteConfig {
       .then((data) => {
         if (isMounted && data) {
           const merged = { ...DEFAULT_SITE_CONFIG, ...data }
+          merged.maps_embed_url = getSafeMapEmbedUrl(merged.maps_embed_url)
           setConfig(merged)
           try {
-            localStorage.setItem('chateau_site_config', JSON.stringify(merged))
+            localStorage.setItem('mf_site_config', JSON.stringify(merged))
           } catch {}
         }
       })

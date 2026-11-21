@@ -10,6 +10,7 @@ import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { LuxuryReveal } from '@/components/luxury-reveal';
 import { useSiteConfig } from '@/lib/use-site-config';
+import { getSafeMapEmbedUrl } from '@/lib/site-config';
 
 /* ─── Types ─── */
 interface ShowroomPhoto {
@@ -547,7 +548,7 @@ export default function ShowroomPage() {
                     <MapPin className="w-3.5 h-3.5 text-neutral-700" /> Showroom Kouba
                   </div>
                   <iframe
-                    src={siteConfig.maps_embed_url || "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3197.9859247874274!2d3.07651347583487!3d36.72289927226924!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x128fadd15a1404d7%3A0xe033d167d05c196f!2sM%26F%20Meubles!5e0!3m2!1sfr!2sdz!4v1795266510762!5m2!1sfr!2sdz"}
+                    src={getSafeMapEmbedUrl(siteConfig.maps_embed_url)}
                     width="100%" height="100%" style={{ border: 0 }} allowFullScreen loading="lazy"
                     referrerPolicy="strict-origin-when-cross-origin" title="M&F Meubles Showroom Kouba"
                     className="w-full h-full min-h-[400px]"

@@ -129,3 +129,27 @@ export const DEFAULT_SITE_CONFIG: SiteConfig = {
 
 export const PUBLIC_SITE_CONFIG_STORAGE_URL =
   'https://vhzgasepkcdhnpcinntb.supabase.co/storage/v1/object/public/products/site-config.json'
+
+export function getSafeMapEmbedUrl(url?: string): string {
+  if (!url || typeof url !== 'string' || !url.trim()) {
+    return DEFAULT_SITE_CONFIG.maps_embed_url;
+  }
+  const clean = url.trim();
+  // Valid embed URL formats
+  if (clean.includes('/maps/embed') || clean.includes('output=embed')) {
+    return clean;
+  }
+  // If user pasted a search query link like https://maps.google.com/?q=...
+  if (clean.includes('google.com/maps') && clean.includes('q=')) {
+    try {
+      const parsed = new URL(clean);
+      const q = parsed.searchParams.get('q');
+      if (q) {
+        return `https://maps.google.com/maps?q=${encodeURIComponent(q)}&t=&z=16&ie=UTF8&iwloc=&output=embed`;
+      }
+    } catch {}
+  }
+  // Default fallback to M&F Meubles Showroom Kouba embed
+  return DEFAULT_SITE_CONFIG.maps_embed_url;
+}
+

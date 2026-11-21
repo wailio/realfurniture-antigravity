@@ -8,12 +8,11 @@ import { LuxuryReveal } from '@/components/luxury-reveal';
 import { Phone, Mail, MapPin, Clock, MessageSquare, Check, ArrowRight, ArrowUpRight, Star, Sparkles, Copy } from 'lucide-react';
 import { products } from '@/lib/products';
 import { useSiteConfig } from '@/lib/use-site-config';
+import { getSafeMapEmbedUrl } from '@/lib/site-config';
 
 function ShowroomMap() {
   const siteConfig = useSiteConfig();
-  const mapSrc =
-    siteConfig.maps_embed_url ||
-    'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3197.9859247874274!2d3.07651347583487!3d36.72289927226924!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x128fadd15a1404d7%3A0xe033d167d05c196f!2sM%26F%20Meubles!5e0!3m2!1sfr!2sdz!4v1795266510762!5m2!1sfr!2sdz';
+  const mapSrc = getSafeMapEmbedUrl(siteConfig.maps_embed_url);
 
   return (
     <div className="w-full relative rounded-3xl overflow-hidden border border-neutral-200/80 shadow-sm bg-neutral-50">
