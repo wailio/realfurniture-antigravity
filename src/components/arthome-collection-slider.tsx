@@ -150,16 +150,54 @@ export function ArtHomeCollectionSlider() {
     return () => window.removeEventListener('resize', updateWidth);
   }, []);
 
-  // Responsiveness:
-  // Desktop: peek = 260px, gap = 32px
-  // Tablet: peek = 100px, gap = 20px
-  // Mobile: peek = 32px, gap = 12px
+  // Responsiveness matching original design:
+  // Desktop: peek = 300px, gap = 40px
+  // Tablet: peek = 120px, gap = 24px
+  // Mobile: peek = 60px, gap = 14px
   const isMobile = containerWidth < 640;
   const isTablet = containerWidth >= 640 && containerWidth < 1024;
 
-  const peekWidth = isMobile ? 32 : isTablet ? 100 : 260;
-  const gap = isMobile ? 12 : isTablet ? 20 : 32;
-  const slideWidth = Math.max(260, containerWidth - peekWidth - gap);
+  const peekWidth = isMobile ? 60 : isTablet ? 120 : 300;
+  const gap = isMobile ? 14 : isTablet ? 24 : 40;
+  const slideWidth = Math.max(280, containerWidth - peekWidth - gap);
+
+  // Exact slide height corresponding to responsive classes: h-[460px] sm:h-[560px] md:h-[650px] lg:h-[720px] xl:h-[780px]
+  const slideHeight =
+    containerWidth < 640
+      ? 460
+      : containerWidth < 768
+      ? 560
+      : containerWidth < 1024
+      ? 650
+      : containerWidth < 1280
+      ? 720
+      : 780;
+
+  // Background image canvas geometry (1024x576 = 16:9 aspect ratio)
+  // Replicates object-cover object-center while strictly anchoring hotspots to the exact image pixels
+  const imageAspect = 16 / 9;
+  const containerAspect = slideWidth / slideHeight;
+
+  let canvasWidth = slideWidth;
+  let canvasHeight = slideHeight;
+  let canvasLeft = 0;
+  let canvasTop = 0;
+
+  if (containerAspect < imageAspect) {
+    // Container is taller than image (e.g. mobile h-[460px])
+    // Image fills height, centered horizontally
+    canvasHeight = slideHeight;
+    canvasWidth = slideHeight * imageAspect;
+    canvasLeft = (slideWidth - canvasWidth) / 2;
+    canvasTop = 0;
+  } else {
+    // Container is wider than image (e.g. wide desktop)
+    // Image fills width, centered vertically
+    canvasWidth = slideWidth;
+    canvasHeight = slideWidth / imageAspect;
+    canvasLeft = 0;
+    canvasTop = (slideHeight - canvasHeight) / 2;
+  }
 
   // Endless loop navigation
   const prevSlide = useCallback(() => {
@@ -314,14 +352,23 @@ export function ArtHomeCollectionSlider() {
                 className="relative shrink-0 select-none"
                 style={{ width: `${slideWidth}px` }}
               >
-                {/* Fixed 16:9 Aspect Ratio Frame — strictly locks background canvas and hotspot coordinates on ALL devices */}
-                <div className="relative w-full aspect-[16/9] rounded-xl sm:rounded-2xl md:rounded-3xl shadow-sm bg-neutral-900">
-                  {/* High Definition Background Photograph Container (clipped to rounded corners) */}
-                  <div className="absolute inset-0 overflow-hidden rounded-xl sm:rounded-2xl md:rounded-3xl pointer-events-none">
+                {/* Slide Frame with generous height matching original luxury scale and sharp edges */}
+                <div className="relative w-full h-[460px] sm:h-[560px] md:h-[650px] lg:h-[720px] xl:h-[780px] bg-neutral-900 overflow-hidden shadow-xs">
+                  {/* Mathematical Image Canvas: strictly locked to object-cover geometry so hotspots never drift on any screen or zoom */}
+                  <div
+                    className="absolute pointer-events-none"
+                    style={{
+                      width: `${canvasWidth}px`,
+                      height: `${canvasHeight}px`,
+                      left: `${canvasLeft}px`,
+                      top: `${canvasTop}px`,
+                    }}
+                  >
+                    {/* High Definition Background Photograph — luxury-sharpened, sharp-edged */}
                     <img
                       src={slide.bgImage}
                       alt={slide.collectionName}
-                      className="luxury-bg-img w-full h-full object-cover object-center pointer-events-none select-none"
+                      className="luxury-bg-img w-full h-full object-cover select-none pointer-events-none"
                       draggable={false}
                     />
 
@@ -336,113 +383,111 @@ export function ArtHomeCollectionSlider() {
                     />
                     {/* Bottom-to-top atmospheric lift — keeps floor/base grounded */}
                     <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/30 via-transparent to-transparent" />
+
+                    {/* Hotspots: strictly anchored to the background photo canvas */}
+                    {slide.hotspots.map((hotspot) => {
+                      const uniqueHotspotKey = `${slide.keyId}-${hotspot.id}`;
+                      const isVisible =
+                        activeTooltipId === uniqueHotspotKey ||
+                        hoveredTooltipId === uniqueHotspotKey;
+
+                      // Tooltip positioning logic
+                      const isNearTop = hotspot.y < 35;
+                      const isNearBottom = hotspot.y > 65;
+                      const isNearRight = hotspot.x > 75;
+                      const isNearLeft = hotspot.x < 25;
+
+                      let placementClasses = 'bottom-full mb-3 left-1/2 -translate-x-1/2';
+                      if (hotspot.position === 'top' || isNearBottom) {
+                        placementClasses = 'bottom-full mb-3 left-1/2 -translate-x-1/2';
+                      }
+                      if (hotspot.position === 'bottom' || isNearTop) {
+                        placementClasses = 'top-full mt-3 left-1/2 -translate-x-1/2';
+                      }
+                      if (hotspot.position === 'left' || isNearRight) {
+                        placementClasses = 'bottom-full mb-3 right-0';
+                      }
+                      if (isNearLeft && hotspot.position !== 'left') {
+                        placementClasses = 'bottom-full mb-3 left-0';
+                      }
+
+                      return (
+                        <div
+                          key={hotspot.id}
+                          className="absolute z-20 pointer-events-auto"
+                          style={{
+                            left: `${hotspot.x}%`,
+                            top: `${hotspot.y}%`,
+                            transform: 'translate(-50%, -50%)',
+                          }}
+                        >
+                          {/* Interactive Dot */}
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setActiveTooltipId((prev) =>
+                                prev === uniqueHotspotKey ? null : uniqueHotspotKey
+                              );
+                            }}
+                            onMouseEnter={() => setHoveredTooltipId(uniqueHotspotKey)}
+                            onMouseLeave={() => setHoveredTooltipId(null)}
+                            className="relative flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 cursor-pointer group focus:outline-hidden"
+                            aria-label={hotspot.title}
+                          >
+                            {/* Pulsating Halo Wave */}
+                            <span className="arthome-pulse-ring absolute inset-0 rounded-full bg-white/80 pointer-events-none" />
+
+                            {/* Soft Beat Base */}
+                            <span className="arthome-soft-beat absolute w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-white/45 group-hover:scale-125 transition-transform duration-300 pointer-events-none" />
+
+                            {/* Crisp Solid White Center Circle */}
+                            <span className="relative w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full bg-white shadow-[0_2px_8px_rgba(0,0,0,0.4)] border border-neutral-300/80" />
+                          </button>
+
+                          {/* White Popover Card (matching user screenshot bottom-right card exactly) */}
+                          <div
+                            onMouseEnter={() => setHoveredTooltipId(uniqueHotspotKey)}
+                            onMouseLeave={() => setHoveredTooltipId(null)}
+                            className={`absolute ${placementClasses} z-30 transition-all duration-300 pointer-events-auto ${
+                              isVisible
+                                ? 'opacity-100 scale-100 translate-y-0'
+                                : 'opacity-0 scale-95 pointer-events-none'
+                            }`}
+                          >
+                            <Link
+                              href={hotspot.link}
+                              className="block bg-white rounded-lg shadow-[0_12px_32px_rgba(0,0,0,0.22)] border border-neutral-100 p-3 sm:p-3.5 w-40 sm:w-44 text-center transition-transform hover:scale-[1.02] group/card"
+                            >
+                              {/* Product Thumbnail */}
+                              <div className="w-full h-16 sm:h-20 mb-2 flex items-center justify-center overflow-hidden rounded bg-neutral-50/60">
+                                <img
+                                  src={hotspot.image}
+                                  alt={hotspot.title}
+                                  className="max-w-full max-h-full object-contain group-hover/card:scale-105 transition-transform duration-300"
+                                />
+                              </div>
+
+                              {/* Product Title */}
+                              <h4 className="text-[11.5px] sm:text-[12.5px] font-medium text-neutral-900 group-hover/card:text-black leading-snug line-clamp-2">
+                                {hotspot.title}
+                              </h4>
+                            </Link>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
 
                   {/* Text at top of each image — upgraded to champagne for luxury feel */}
-                  <div className="absolute top-2.5 left-3 sm:top-5 sm:left-5 md:top-8 md:left-8 z-10 pointer-events-none">
+                  <div className="absolute top-5 left-5 sm:top-7 sm:left-7 md:top-9 md:left-9 z-10 pointer-events-none">
                     <h2
-                      className="font-sans font-light text-[13px] sm:text-[18px] md:text-[23px] tracking-[0.06em] leading-tight select-none drop-shadow-[0_1px_6px_rgba(0,0,0,0.5)]"
+                      className="font-sans font-light text-[20px] sm:text-[22px] md:text-[24px] tracking-[0.08em] leading-tight select-none drop-shadow-[0_1px_6px_rgba(0,0,0,0.5)]"
                       style={{ color: '#f0ece4', textShadow: '0 2px 12px rgba(0,0,0,0.4)' }}
                     >
                       {slide.collectionName}
                     </h2>
                   </div>
-
-                  {/* Hotspots: anchored to fixed 16:9 canvas so dots never drift on any device or zoom level */}
-                  {slide.hotspots.map((hotspot) => {
-                    const uniqueHotspotKey = `${slide.keyId}-${hotspot.id}`;
-                    const isVisible =
-                      activeTooltipId === uniqueHotspotKey ||
-                      hoveredTooltipId === uniqueHotspotKey;
-
-                    // Tooltip positioning logic to keep cards comfortably in-bounds
-                    const isNearTop = hotspot.y < 35;
-                    const isNearRight = hotspot.x > 70;
-                    const isNearLeft = hotspot.x < 30;
-
-                    let placementClasses = 'bottom-full mb-2.5 left-1/2 -translate-x-1/2';
-                    if (isNearTop) {
-                      placementClasses = `top-full mt-2.5 ${
-                        isNearRight
-                          ? 'right-0'
-                          : isNearLeft
-                          ? 'left-0'
-                          : 'left-1/2 -translate-x-1/2'
-                      }`;
-                    } else if (isNearRight) {
-                      placementClasses = 'bottom-full mb-2.5 right-0';
-                    } else if (isNearLeft) {
-                      placementClasses = 'bottom-full mb-2.5 left-0';
-                    } else {
-                      placementClasses = 'bottom-full mb-2.5 left-1/2 -translate-x-1/2';
-                    }
-
-                    return (
-                      <div
-                        key={hotspot.id}
-                        className="absolute z-20"
-                        style={{
-                          left: `${hotspot.x}%`,
-                          top: `${hotspot.y}%`,
-                          transform: 'translate(-50%, -50%)',
-                        }}
-                      >
-                        {/* Interactive Dot */}
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setActiveTooltipId((prev) =>
-                              prev === uniqueHotspotKey ? null : uniqueHotspotKey
-                            );
-                          }}
-                          onMouseEnter={() => setHoveredTooltipId(uniqueHotspotKey)}
-                          onMouseLeave={() => setHoveredTooltipId(null)}
-                          className="relative flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 cursor-pointer group focus:outline-hidden"
-                          aria-label={hotspot.title}
-                        >
-                          {/* Pulsating Halo Wave */}
-                          <span className="arthome-pulse-ring absolute inset-0 rounded-full bg-white/80 pointer-events-none" />
-
-                          {/* Soft Beat Base */}
-                          <span className="arthome-soft-beat absolute w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 rounded-full bg-white/45 group-hover:scale-125 transition-transform duration-300 pointer-events-none" />
-
-                          {/* Crisp Solid White Center Circle */}
-                          <span className="relative w-2.5 h-2.5 sm:w-3 sm:h-3 md:w-4 md:h-4 rounded-full bg-white shadow-[0_2px_8px_rgba(0,0,0,0.4)] border border-neutral-300/80" />
-                        </button>
-
-                        {/* White Popover Card (matching user screenshot bottom-right card exactly) */}
-                        <div
-                          onMouseEnter={() => setHoveredTooltipId(uniqueHotspotKey)}
-                          onMouseLeave={() => setHoveredTooltipId(null)}
-                          className={`absolute ${placementClasses} z-30 transition-all duration-300 pointer-events-auto ${
-                            isVisible
-                              ? 'opacity-100 scale-100 translate-y-0'
-                              : 'opacity-0 scale-95 pointer-events-none'
-                          }`}
-                        >
-                          <Link
-                            href={hotspot.link}
-                            className="block bg-white rounded-lg sm:rounded-xl shadow-[0_12px_32px_rgba(0,0,0,0.25)] border border-neutral-200/80 p-2 sm:p-3 md:p-3.5 w-36 sm:w-40 md:w-44 text-center transition-transform hover:scale-[1.02] group/card"
-                          >
-                            {/* Product Thumbnail */}
-                            <div className="w-full h-14 sm:h-18 md:h-20 mb-1.5 sm:mb-2 flex items-center justify-center overflow-hidden rounded bg-neutral-50/70">
-                              <img
-                                src={hotspot.image}
-                                alt={hotspot.title}
-                                className="max-w-full max-h-full object-contain group-hover/card:scale-105 transition-transform duration-300"
-                              />
-                            </div>
-
-                            {/* Product Title */}
-                            <h4 className="text-[10.5px] sm:text-[11.5px] md:text-[12.5px] font-medium text-neutral-900 group-hover/card:text-black leading-snug line-clamp-2">
-                              {hotspot.title}
-                            </h4>
-                          </Link>
-                        </div>
-                      </div>
-                    );
-                  })}
                 </div>
               </div>
             );
@@ -453,20 +498,20 @@ export function ArtHomeCollectionSlider() {
         <button
           type="button"
           onClick={prevSlide}
-          className="absolute left-2 sm:left-4 md:left-6 top-1/2 -translate-y-1/2 z-40 w-9 h-9 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full bg-white text-neutral-900 shadow-[0_4px_20px_rgba(0,0,0,0.18)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.24)] hover:bg-neutral-50 active:scale-90 hover:scale-105 transition-all duration-200 flex items-center justify-center cursor-pointer border border-neutral-200/80"
+          className="absolute left-3 sm:left-6 md:left-8 top-1/2 -translate-y-1/2 z-40 w-12 h-12 sm:w-13 sm:h-13 md:w-14 md:h-14 rounded-full bg-white text-neutral-900 shadow-[0_6px_25px_rgba(0,0,0,0.18)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.24)] hover:bg-neutral-50 active:scale-90 hover:scale-105 transition-all duration-200 flex items-center justify-center cursor-pointer border border-neutral-200/80"
           aria-label="Collection précédente"
         >
-          <ChevronLeft className="w-4 h-4 sm:w-6 sm:h-6 stroke-[1.8]" />
+          <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 stroke-[1.8]" />
         </button>
 
         {/* Circular Navigation Arrow: Right (>) at the edge/side of the page */}
         <button
           type="button"
           onClick={nextSlide}
-          className="absolute right-2 sm:right-4 md:right-6 top-1/2 -translate-y-1/2 z-40 w-9 h-9 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full bg-white text-neutral-900 shadow-[0_4px_20px_rgba(0,0,0,0.18)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.24)] hover:bg-neutral-50 active:scale-90 hover:scale-105 transition-all duration-200 flex items-center justify-center cursor-pointer border border-neutral-200/80"
+          className="absolute right-3 sm:right-6 md:right-8 top-1/2 -translate-y-1/2 z-40 w-12 h-12 sm:w-13 sm:h-13 md:w-14 md:h-14 rounded-full bg-white text-neutral-900 shadow-[0_6px_25px_rgba(0,0,0,0.18)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.24)] hover:bg-neutral-50 active:scale-90 hover:scale-105 transition-all duration-200 flex items-center justify-center cursor-pointer border border-neutral-200/80"
           aria-label="Collection suivante"
         >
-          <ChevronRight className="w-4 h-4 sm:w-6 sm:h-6 stroke-[1.8]" />
+          <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 stroke-[1.8]" />
         </button>
       </div>
     </section>
