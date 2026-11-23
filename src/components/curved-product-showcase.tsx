@@ -18,6 +18,14 @@ const CATEGORY_SLOTS: CategorySlot[] = [
   { slug: 'accessories', categoryLabel: 'ACCESSOIRES' },
 ];
 
+const SHOWCASE_CATEGORY_IMAGES: Record<string, string> = {
+  'salle-a-manger': '/products/salle/sallesmanger-harmonie.jpg',
+  'sofas': '/products/salon/couch.jpg',
+  'chambres': '/products/chambre/chmbr.jpg',
+  'armoire': '/products/armoire/armo.jpg',
+  'accessories': '/products/accessoire/other.jpg',
+};
+
 export function CurvedProductShowcase() {
   // Categorized product pools
   const categoryProductsMap = useRef<Record<string, Product[]>>({});
@@ -423,7 +431,7 @@ export function CurvedProductShowcase() {
                 }}
               >
                 <img
-                  src={product.image}
+                  src={SHOWCASE_CATEGORY_IMAGES[cat.slug] || product.image}
                   alt={product.name}
                   className="w-full h-full object-cover rounded-[24px] transition-transform duration-1000 ease-out group-hover:scale-106"
                   draggable={false}

@@ -4,6 +4,14 @@ import { getSupabaseConfig, supabaseHeaders } from "@/lib/supabase-config";
 
 export const runtime = 'edge';
 
+const CATEGORY_DEFAULT_IMAGE: Record<string, string> = {
+  'sofas': '/products/salon/couch.jpg',
+  'salle-a-manger': '/products/salle/sallesmanger.jpg',
+  'chambres': '/products/chambre/chmbr.jpg',
+  'armoire': '/products/armoire/armo.jpg',
+  'accessories': '/products/accessoire/other.jpg',
+};
+
 function mapDbProduct(item: any): Product {
   const price = Number(item.price) || 0;
   const originalPrice = item.sale_price ? Number(item.sale_price) : undefined;
@@ -12,9 +20,12 @@ function mapDbProduct(item: any): Product {
     discount = Math.round(((originalPrice - price) / originalPrice) * 100);
   }
 
+  const category = item.category || 'sofas';
+  const defaultImg = CATEGORY_DEFAULT_IMAGE[category] || '/products/salon/couch.jpg';
+
   const imgs = Array.isArray(item.images) && item.images.length > 0 
     ? item.images 
-    : [item.image || '/products/salon/aa.jpg'];
+    : [item.image || defaultImg];
 
   return {
     id: item.id,
@@ -90,9 +101,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const defaultImg = CATEGORY_DEFAULT_IMAGE[category] || '/products/salon/couch.jpg';
     const imgList = Array.isArray(images) && images.length > 0 
       ? images 
-      : [image || '/products/salon/aa.jpg'];
+      : [image || defaultImg];
 
     const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 

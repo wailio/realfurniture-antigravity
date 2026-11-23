@@ -29,11 +29,11 @@ export default function HomePage() {
   const siteConfig = useSiteConfig();
 
   const categories = [
-    { name: 'Salle à manger', image: '/categories/salle-a-manger.jpg', slug: 'salle-a-manger' },
-    { name: 'Canapés & Salons', image: '/categories/canapes.jpg', slug: 'sofas' },
-    { name: 'Chambres & Suites', image: '/categories/chambres.jpg', slug: 'chambres' },
-    { name: 'Armoires & Dressings', image: '/categories/armoire.jpg', slug: 'armoire' },
-    { name: 'Accessoires', image: '/categories/accessoires.jpg', slug: 'accessories' },
+    { name: 'Salle à manger', image: '/products/salle/sallesmanger.jpg', slug: 'salle-a-manger' },
+    { name: 'Canapés & Salons', image: '/products/salon/couch.jpg', slug: 'sofas' },
+    { name: 'Chambres & Suites', image: '/products/chambre/chmbr.jpg', slug: 'chambres' },
+    { name: 'Armoires & Dressings', image: '/products/armoire/armo.jpg', slug: 'armoire' },
+    { name: 'Accessoires', image: '/products/accessoire/other.jpg', slug: 'accessories' },
   ];
 
   const [productList, setProductList] = React.useState<any[]>(products);

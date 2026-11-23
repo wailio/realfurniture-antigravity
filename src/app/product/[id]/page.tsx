@@ -33,15 +33,30 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
         const data = await res.json();
         if (data && data.length > 0) {
           const item = data[0];
+          const category = item.category || 'sofas';
+          const defaultImg =
+            category === 'salle-a-manger'
+              ? '/products/salle/sallesmanger.jpg'
+              : category === 'chambres'
+              ? '/products/chambre/chmbr.jpg'
+              : category === 'armoire'
+              ? '/products/armoire/armo.jpg'
+              : category === 'accessories'
+              ? '/products/accessoire/other.jpg'
+              : '/products/salon/couch.jpg';
+
+          const imgs =
+            item.images && item.images.length > 0 ? item.images : [defaultImg];
+
           product = {
             id: item.id,
             name: item.name,
             description: item.description || '',
             price: item.price,
             originalPrice: item.sale_price || undefined,
-            image: item.images?.[0] || '/products/salon/aa.jpg',
-            images: item.images && item.images.length > 0 ? item.images : ['/products/salon/aa.jpg'],
-            category: item.category,
+            image: imgs[0],
+            images: imgs,
+            category: category,
             brand: "M&F Meubles",
           };
         }
