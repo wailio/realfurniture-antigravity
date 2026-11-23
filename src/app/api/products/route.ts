@@ -12,6 +12,15 @@ const CATEGORY_DEFAULT_IMAGE: Record<string, string> = {
   'accessories': '/products/accessoire/other.jpg',
 };
 
+const OLD_IMAGE_PATTERN = /\/(aa|bb|cc|dd|ee|ff|gg|hh|ii|11|22|33|44|55|66|77|88|99|ar1|ar2|ar3|acc1|acc2|-[1-9]|-[1-9][0-9])\.jpg$/i;
+
+function sanitizeProductImage(img: string, category: string): string {
+  if (!img || typeof img !== 'string' || OLD_IMAGE_PATTERN.test(img)) {
+    return CATEGORY_DEFAULT_IMAGE[category] || '/products/salon/couch.jpg';
+  }
+  return img;
+}
+
 function mapDbProduct(item: any): Product {
   const price = Number(item.price) || 0;
   const originalPrice = item.sale_price ? Number(item.sale_price) : undefined;
@@ -23,9 +32,11 @@ function mapDbProduct(item: any): Product {
   const category = item.category || 'sofas';
   const defaultImg = CATEGORY_DEFAULT_IMAGE[category] || '/products/salon/couch.jpg';
 
-  const imgs = Array.isArray(item.images) && item.images.length > 0 
+  const rawImgs = Array.isArray(item.images) && item.images.length > 0 
     ? item.images 
     : [item.image || defaultImg];
+
+  const imgs = rawImgs.map((img: string) => sanitizeProductImage(img, category));
 
   return {
     id: item.id,

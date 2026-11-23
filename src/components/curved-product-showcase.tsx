@@ -77,15 +77,14 @@ export function CurvedProductShowcase() {
     });
   }, []);
 
-  // Automatic spinning loop: glides every 2s with smooth slow motion, pauses on hover
+  // Automatic spinning loop: glides continuously every 2.4s with smooth motion (keeps gliding even on hover)
   useEffect(() => {
-    if (isStageHovered) return;
     const timer = setTimeout(() => {
       advanceSpin();
-    }, 2000);
+    }, 2400);
 
     return () => clearTimeout(timer);
-  }, [centerSlot, advanceSpin, isStageHovered]);
+  }, [centerSlot, advanceSpin]);
 
   // Floor Shadow Transforms: projects dark physical contact shadow under each 3D card
   const getFloorShadowTransform = (slotIdx: number) => {
