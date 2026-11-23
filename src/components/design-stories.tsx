@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Instagram, Facebook, Youtube, ArrowUpRight } from 'lucide-react';
+import { Instagram, Facebook, ArrowUpRight } from 'lucide-react';
 import { LuxuryReveal } from '@/components/luxury-reveal';
 
 function TikTokIcon({ className = 'w-5 h-5' }: { className?: string }) {
@@ -23,18 +23,10 @@ interface StoryItem {
 
 const stories: StoryItem[] = [
   {
-    id: 'instagram',
-    name: 'Instagram',
-    handle: '@mfmeubles',
-    video: '/videos/instagram-vd.mp4',
-    icon: Instagram,
-    link: 'https://www.instagram.com/mfmeubles/',
-  },
-  {
     id: 'facebook',
     name: 'Facebook',
     handle: '@mfmeubles',
-    video: '/videos/facebook-vd.mp4',
+    video: '/videos/fb-vd.mp4',
     icon: Facebook,
     link: 'https://www.facebook.com/profile.php?id=100063579698712&locale=fr_FR',
   },
@@ -42,17 +34,17 @@ const stories: StoryItem[] = [
     id: 'tiktok',
     name: 'TikTok',
     handle: '@mfmeubleskouba',
-    video: '/videos/tiktok-vd.mp4',
+    video: '/videos/tktk-vd.mp4',
     icon: TikTokIcon,
     link: 'https://www.tiktok.com/@mfmeubleskouba',
   },
   {
-    id: 'reviews',
-    name: 'Avis Google',
-    handle: 'M&F Meubles · Kouba',
-    video: '/videos/youtube-vd.mp4',
-    icon: Youtube,
-    link: 'https://maps.app.goo.gl/PgX4a88fpg7dPQkFA',
+    id: 'instagram',
+    name: 'Instagram',
+    handle: '@mfmeubles',
+    video: '/videos/insta-vd.mp4',
+    icon: Instagram,
+    link: 'https://www.instagram.com/mfmeubles/',
   },
 ];
 
@@ -76,23 +68,23 @@ export function DesignStories() {
           </LuxuryReveal>
         </div>
 
-        {/* 4 Story Video Cards Container with tight vertical padding */}
+        {/* 3 Story Video Cards Container with balanced luxury proportions */}
         <div className="relative">
-          <div className="flex lg:grid lg:grid-cols-4 overflow-x-auto lg:overflow-visible gap-5 lg:gap-6 pb-2 pt-1 px-1 sm:px-2 lg:px-0 snap-x snap-mandatory scrollbar-hide">
+          <div className="flex lg:grid lg:grid-cols-3 max-w-[1140px] mx-auto overflow-x-auto lg:overflow-visible gap-5 lg:gap-8 pb-2 pt-1 px-1 sm:px-2 lg:px-0 snap-x snap-mandatory scrollbar-hide">
             {stories.map((story, idx) => {
               const IconComponent = story.icon;
               return (
                 <LuxuryReveal 
                   key={story.id} 
                   delay={idx * 80}
-                  className="shrink-0 snap-center w-[260px] sm:w-[285px] lg:w-auto"
+                  className="shrink-0 snap-center w-[270px] sm:w-[300px] lg:w-auto"
                 >
                   <a
                     href={story.link}
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={`Voir nos créations sur ${story.name}`}
-                    className="story-item group relative block h-[420px] sm:h-[460px] lg:h-[500px] w-full rounded-[24px] overflow-hidden border border-neutral-200/90 hover:border-neutral-400 transition-all duration-300 shadow-[0_8px_24px_-6px_rgba(0,0,0,0.06)] hover:shadow-[0_16px_36px_-8px_rgba(0,0,0,0.12)] bg-neutral-100"
+                    className="story-item group relative block h-[430px] sm:h-[480px] lg:h-[520px] w-full rounded-[24px] overflow-hidden border border-neutral-200/90 hover:border-neutral-400 transition-all duration-300 shadow-[0_8px_24px_-6px_rgba(0,0,0,0.06)] hover:shadow-[0_16px_36px_-8px_rgba(0,0,0,0.12)] bg-neutral-100"
                   >
                     {/* Background Video */}
                     <video
