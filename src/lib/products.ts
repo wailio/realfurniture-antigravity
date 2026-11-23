@@ -22,21 +22,36 @@ export interface Product {
 
 export const SALLE_IMAGES = [
   '/products/salle/sallesmanger.jpg',
+  '/products/salle/sallesmanger-harmonie.jpg',
+  '/products/salle/sallesmanger.jpg',
+  '/products/salle/sallesmanger-harmonie.jpg',
 ];
 
 export const SALON_IMAGES = [
+  '/products/salon/couch.jpg',
+  '/products/salon/couch.jpg',
+  '/products/salon/couch.jpg',
   '/products/salon/couch.jpg',
 ];
 
 export const CHAMBRE_IMAGES = [
   '/products/chambre/chmbr.jpg',
+  '/products/chambre/chmbr.jpg',
+  '/products/chambre/chmbr.jpg',
+  '/products/chambre/chmbr.jpg',
 ];
 
 export const ARMOIRE_IMAGES = [
   '/products/armoire/armo.jpg',
+  '/products/armoire/armo.jpg',
+  '/products/armoire/armo.jpg',
+  '/products/armoire/armo.jpg',
 ];
 
 export const ACCESSOIRE_IMAGES = [
+  '/products/accessoire/other.jpg',
+  '/products/accessoire/other.jpg',
+  '/products/accessoire/other.jpg',
   '/products/accessoire/other.jpg',
 ];
 

@@ -36,7 +36,14 @@ function mapDbProduct(item: any): Product {
     ? item.images 
     : [item.image || defaultImg];
 
-  const imgs = rawImgs.map((img: string) => sanitizeProductImage(img, category));
+  const sanitized = rawImgs.map((img: string) => sanitizeProductImage(img, category));
+  const imgs = sanitized.length >= 4 
+    ? sanitized 
+    : sanitized.length === 2 
+    ? [...sanitized, ...sanitized] 
+    : sanitized.length === 3 
+    ? [...sanitized, sanitized[0]] 
+    : [sanitized[0], sanitized[0], sanitized[0], sanitized[0]];
 
   return {
     id: item.id,

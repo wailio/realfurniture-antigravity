@@ -21,7 +21,15 @@ interface ProductDetailShowcaseProps {
 }
 
 export function ProductDetailShowcase({ product }: ProductDetailShowcaseProps) {
-  const images = product.images && product.images.length > 0 ? product.images : [product.image];
+  const rawImages = product.images && product.images.length > 0 ? product.images : [product.image];
+  // Ensure the product detail showcase always has multiple thumbnail views (4 gallery items) for smooth navigation & previews
+  const images = rawImages.length >= 4 
+    ? rawImages 
+    : rawImages.length === 2 
+    ? [...rawImages, ...rawImages] 
+    : rawImages.length === 3 
+    ? [...rawImages, rawImages[0]] 
+    : [rawImages[0], rawImages[0], rawImages[0], rawImages[0]];
   const [activeImageIndex, setActiveImageIndex] = useState<number>(0);
   const [selectedFinish, setSelectedFinish] = useState<string>(
     product.finishes && product.finishes.length > 0 ? product.finishes[0].name : 'Naturel'

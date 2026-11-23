@@ -48,7 +48,14 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
           const rawImgs =
             item.images && item.images.length > 0 ? item.images : [defaultImg];
           const oldPattern = /\/(aa|bb|cc|dd|ee|ff|gg|hh|ii|11|22|33|44|55|66|77|88|99|ar1|ar2|ar3|acc1|acc2|-[1-9]|-[1-9][0-9])\.jpg$/i;
-          const imgs = rawImgs.map((img: string) => (!img || oldPattern.test(img)) ? defaultImg : img);
+          const sanitizedImgs = rawImgs.map((img: string) => (!img || oldPattern.test(img)) ? defaultImg : img);
+          const imgs = sanitizedImgs.length >= 4 
+            ? sanitizedImgs 
+            : sanitizedImgs.length === 2 
+            ? [...sanitizedImgs, ...sanitizedImgs] 
+            : sanitizedImgs.length === 3 
+            ? [...sanitizedImgs, sanitizedImgs[0]] 
+            : [sanitizedImgs[0], sanitizedImgs[0], sanitizedImgs[0], sanitizedImgs[0]];
 
           product = {
             id: item.id,
