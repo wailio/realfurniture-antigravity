@@ -15,6 +15,7 @@ import {
   Mail,
   Phone,
   Calendar,
+  Activity,
   Lock,
   Plus,
   X,
@@ -27,7 +28,7 @@ import {
   Check,
 } from 'lucide-react'
 import { showIosToast, showIosConfirm } from '@/components/ui/ios-dialog'
-import { useAdminTheme } from '@/contexts/theme-context'
+import { IosMenu, IosSelect, IosToggle, type IosMenuItem } from '@/components/ui/ios-menu'
 
 // ── Types ────────────────────────────────────────────────────────────────────
 interface AdminUser {
@@ -45,23 +46,35 @@ interface AdminUser {
 }
 
 const ROLE_META = {
-  developer: { label: 'Développeur', color: '#F59E0B', bg: '#FEF3C7', border: '#FDE68A', darkBg: 'rgba(245,158,11,0.15)', darkBorder: 'rgba(245,158,11,0.3)', icon: Crown },
-  admin:     { label: 'Administrateur', color: '#3B82F6', bg: '#EFF6FF', border: '#BFDBFE', darkBg: 'rgba(59,130,246,0.15)', darkBorder: 'rgba(59,130,246,0.3)', icon: Shield },
+  developer: { label: 'Développeur', color: '#B45309', bg: '#FEF3C7', border: '#FDE68A', icon: Crown },
+  admin:     { label: 'Administrateur', color: '#1D4ED8', bg: '#EFF6FF', border: '#BFDBFE', icon: Shield },
 }
 
 const STATUS_META = {
-  active:    { label: 'Actif',    color: '#10B981', bg: '#ECFDF5', darkBg: 'rgba(16,185,129,0.15)', icon: CheckCircle2 },
-  inactive:  { label: 'Inactif', color: '#64748B', bg: '#F8FAFC', darkBg: 'rgba(255,255,255,0.06)', icon: Clock },
-  suspended: { label: 'Suspendu', color: '#EF4444', bg: '#FEF2F2', darkBg: 'rgba(239,68,68,0.15)', icon: UserX },
+  active:    { label: 'Actif',    color: '#047857', bg: '#ECFDF5', border: '#A7F3D0', icon: CheckCircle2 },
+  inactive:  { label: 'Inactif',  color: '#64748B', bg: '#F1F5F9', border: '#E2E8F0', icon: Clock },
+  suspended: { label: 'Suspendu', color: '#DC2626', bg: '#FEF2F2', border: '#FEE2E2', icon: UserX },
 }
 
 const AVAILABLE_PERMISSIONS = [
-  { key: 'dashboard',    label: 'Dashboard',   desc: 'Vue globale et métriques' },
-  { key: 'products',     label: 'Produits',    desc: 'Catalogue et stocks' },
-  { key: 'orders',       label: 'Commandes',   desc: 'Messages et demandes clients' },
-  { key: 'sales',        label: 'Ventes CRM',  desc: 'Funnel et leads commerciaux' },
-  { key: 'website-info', label: 'Infos site',  desc: 'Textes et horaires' },
+  { key: 'dashboard',    label: 'Dashboard',      desc: 'Vue globale et métriques' },
+  { key: 'products',     label: 'Produits',       desc: 'Catalogue et stocks' },
+  { key: 'orders',       label: 'Commandes',      desc: 'Messages et demandes clients' },
+  { key: 'sales',        label: 'Ventes CRM',     desc: 'Funnel et leads commerciaux' },
+  { key: 'website-info', label: 'Infos site',     desc: 'Textes et horaires' },
+  { key: 'users',        label: 'Utilisateurs',   desc: 'Créer et gérer les comptes admin' },
 ]
+
+function timeAgo(iso?: string) {
+  if (!iso) return 'Jamais'
+  const diff = Date.now() - new Date(iso).getTime()
+  const mins = Math.floor(diff / 60000)
+  if (mins < 2)  return 'À l\'instant'
+  if (mins < 60) return `Il y a ${mins} min`
+  const hrs = Math.floor(mins / 60)
+  if (hrs < 24)  return `Il y a ${hrs}h`
+  return `Il y a ${Math.floor(hrs / 24)}j`
+}
 
 function formatDate(iso?: string) {
   if (!iso) return '—'
@@ -69,7 +82,6 @@ function formatDate(iso?: string) {
 }
 
 export default function AdminUsersPage() {
-  const { isDark } = useAdminTheme()
   const [users, setUsers] = useState<AdminUser[]>([])
   const [loading, setLoading] = useState(true)
   const [customCount, setCustomCount] = useState(0)
@@ -93,6 +105,7 @@ export default function AdminUsersPage() {
     permissions: ['products', 'orders', 'sales', 'website-info'],
   })
 
+  // Load current user and users list
   useEffect(() => {
     try {
       const stored = sessionStorage.getItem('admin_user')
@@ -129,6 +142,7 @@ export default function AdminUsersPage() {
     }
   }
 
+  // Close popup menu on outside click
   useEffect(() => {
     if (!openMenu) return
     const handler = () => setOpenMenu(null)
@@ -136,6 +150,7 @@ export default function AdminUsersPage() {
     return () => window.removeEventListener('click', handler)
   }, [openMenu])
 
+  // Handle form permission toggle
   function togglePerm(key: string) {
     setForm(prev => {
       const exists = prev.permissions.includes(key)
@@ -146,6 +161,7 @@ export default function AdminUsersPage() {
     })
   }
 
+  // Handle Create User Submit
   async function handleCreateUser(e: React.FormEvent) {
     e.preventDefault()
     if (!form.username.trim() || !form.password.trim()) {
@@ -184,7 +200,7 @@ export default function AdminUsersPage() {
         setSelectedId(data.user.id)
       }
 
-      showIosToast('Utilisateur créé avec succès !', 'success')
+      showIosToast('Utilisateur créé avec succès et prêt à se connecter !')
       setShowCreateModal(false)
       setForm({
         username: '',
@@ -202,10 +218,11 @@ export default function AdminUsersPage() {
     }
   }
 
+  // Handle Delete User
   async function confirmDeleteUser(user: AdminUser) {
     setOpenMenu(null)
-    if (user.isBuiltIn) {
-      showIosToast('Impossible de supprimer le compte système principal', 'error')
+    if (user.username === 'wailio') {
+      showIosToast('Impossible de supprimer le compte développeur principal')
       return
     }
 
@@ -224,15 +241,64 @@ export default function AdminUsersPage() {
         method: 'DELETE',
       })
       if (res.ok) {
-        showIosToast('Utilisateur supprimé ✓', 'info')
+        showIosToast('Utilisateur supprimé')
         if (selectedId === user.id) setSelectedId(null)
         await loadUsers()
       } else {
         const data = await res.json()
-        showIosToast(data.error || 'Erreur lors de la suppression', 'error')
+        showIosToast(data.error || 'Erreur lors de la suppression')
       }
     } catch {
-      showIosToast('Erreur réseau lors de la suppression', 'error')
+      showIosToast('Erreur réseau lors de la suppression')
+    }
+  }
+
+  // Handle updating user role via iOS Select
+  async function handleUpdateUserRole(username: string, newRole: string) {
+    try {
+      const res = await fetch('/api/admin/users', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, role: newRole }),
+      })
+      if (res.ok) {
+        setUsers(prev => prev.map(u => u.username === username ? { ...u, role: newRole as any } : u))
+        showIosToast(`Rôle mis à jour : ${newRole === 'developer' ? 'Développeur' : 'Administrateur'}`)
+      } else {
+        const data = await res.json()
+        showIosToast(data.error || 'Erreur mise à jour rôle', 'error')
+      }
+    } catch {
+      showIosToast('Erreur réseau', 'error')
+    }
+  }
+
+  // Handle toggling permission via iOS Toggle switch
+  async function handleToggleUserPermission(username: string, permKey: string, granted: boolean) {
+    const user = users.find(u => u.username === username)
+    if (!user) return
+    const curPerms = user.permissions || []
+    const newPerms = granted ? Array.from(new Set([...curPerms, permKey])) : curPerms.filter(p => p !== permKey)
+
+    // Optimistic UI update
+    setUsers(prev => prev.map(u => u.username === username ? { ...u, permissions: newPerms } : u))
+
+    try {
+      const res = await fetch('/api/admin/users', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, permissions: newPerms }),
+      })
+      if (res.ok) {
+        showIosToast(granted ? `Permission autorisée` : `Permission désactivée`)
+      } else {
+        // Revert on error
+        setUsers(prev => prev.map(u => u.username === username ? { ...u, permissions: curPerms } : u))
+        showIosToast('Erreur mise à jour permission', 'error')
+      }
+    } catch {
+      setUsers(prev => prev.map(u => u.username === username ? { ...u, permissions: curPerms } : u))
+      showIosToast('Erreur réseau', 'error')
     }
   }
 
@@ -246,14 +312,62 @@ export default function AdminUsersPage() {
 
   return (
     <div className="min-h-screen" style={{ background: 'transparent', fontFamily: 'var(--font-body)' }}>
-      {/* ── Page Header: Apple Frosted Header ── */}
+      <style>{`
+        .users-card {
+          background: #FFFFFF;
+          border: 1px solid rgba(0, 0, 0, 0.06);
+          border-radius: 22px;
+          box-shadow: 
+            0 1px 2px rgba(15, 23, 42, 0.02),
+            0 4px 16px -2px rgba(15, 23, 42, 0.04),
+            0 12px 32px -4px rgba(15, 23, 42, 0.025);
+        }
+        .user-row {
+          transition: all 0.15s ease;
+          border-radius: 18px;
+          cursor: pointer;
+          background: #FFFFFF;
+          border: 1px solid rgba(0, 0, 0, 0.06);
+          box-shadow: 0 1px 3px rgba(15, 23, 42, 0.02), 0 4px 12px -2px rgba(15, 23, 42, 0.02);
+        }
+        .user-row:hover {
+          border-color: rgba(0, 0, 0, 0.12);
+          background: #FBFBFC;
+          transform: translateY(-1px);
+          box-shadow: 0 4px 14px -2px rgba(15, 23, 42, 0.06);
+        }
+        .user-row-selected {
+          border-color: #0F172A !important;
+          border-width: 2px !important;
+          box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.06), 0 6px 20px -2px rgba(15, 23, 42, 0.06) !important;
+        }
+        .perm-pill {
+          display: inline-flex;
+          align-items: center;
+          padding: 3px 9px;
+          border-radius: 6px;
+          font-size: 11px;
+          font-weight: 500;
+          white-space: nowrap;
+        }
+        .detail-row {
+          display: flex;
+          align-items: flex-start;
+          gap: 12px;
+          padding: 10px 0;
+          border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+        }
+        .detail-row:last-child { border-bottom: none; }
+      `}</style>
+
+      {/* ── Page Header: Apple frosted header with Thin+Bold contrast ── */}
       <div
         style={{
-          background: isDark ? 'rgba(0, 0, 0, 0.75)' : 'rgba(245, 245, 247, 0.85)',
+          background: 'rgba(245, 245, 247, 0.85)',
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
-          borderBottom: isDark ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid rgba(0, 0, 0, 0.05)',
-          padding: 'clamp(14px, 2vw, 20px) clamp(16px, 3vw, 28px)',
+          borderBottom: '1px solid rgba(0, 0, 0, 0.05)',
+          padding: 'clamp(16px, 2vw, 22px) clamp(16px, 3vw, 28px)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -261,18 +375,16 @@ export default function AdminUsersPage() {
           position: 'sticky',
           top: 0,
           zIndex: 40,
-          transition: 'background 0.3s ease, border-color 0.3s ease',
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0 }}>
-          <Users2 className="w-5 h-5 text-[#3B82F6] shrink-0" />
+          <Users2 className="w-6 h-6 text-[#0F172A] shrink-0" />
           <div style={{ minWidth: 0 }}>
             <h1
               style={{
-                fontFamily: 'var(--font-heading)',
-                fontSize: 20,
+                fontSize: 22,
                 fontWeight: 400,
-                color: isDark ? '#FFFFFF' : '#0F172A',
+                color: '#0F172A',
                 letterSpacing: '-0.02em',
                 margin: 0,
                 lineHeight: 1.2,
@@ -281,38 +393,43 @@ export default function AdminUsersPage() {
                 textOverflow: 'ellipsis',
               }}
             >
-              Utilisateurs &amp; Accès <span style={{ fontWeight: 800 }}>• M&amp;F Meubles</span>
+              Utilisateurs <span style={{ fontWeight: 800 }}>• Comptes &amp; Accès</span>
             </h1>
-            <p className="hidden sm:block" style={{ fontSize: 11.5, color: isDark ? 'rgba(235,235,245,0.6)' : '#64748B', marginTop: 2 }}>
+            <p className="hidden sm:block" style={{ fontSize: 12, color: '#64748B', marginTop: 2 }}>
               Gestion des comptes administrateurs &amp; autorisations
             </p>
           </div>
         </div>
 
-        {/* Right side */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexShrink: 0 }}>
-          <span style={{ fontSize: 11.5, color: isDark ? '#F59E0B' : '#B45309', fontWeight: 600, whiteSpace: 'nowrap' }}>
-            {currentUserRole === 'developer' ? 'Accès Développeur' : 'Accès Administrateur'}
+        {/* Right side: role text and add button */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
+          <span
+            style={{
+              fontSize: 11.5,
+              fontWeight: 600,
+              color: '#334155',
+              background: '#F1F5F9',
+              border: '1px solid #E2E8F0',
+              padding: '4px 10px',
+              borderRadius: 99,
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {currentUserRole === 'developer' ? 'Accès développeur' : 'Accès administrateur'}
           </span>
 
+          {/* Add User Button */}
           <button
             type="button"
             onClick={() => setShowCreateModal(true)}
+            className="flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-lg font-semibold text-xs sm:text-[13px] transition-all"
             style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 6,
-              padding: '7px 14px',
-              borderRadius: 12,
-              fontSize: 12,
-              fontWeight: 600,
-              background: isDark ? '#FFFFFF' : '#0F172A',
-              color: isDark ? '#000000' : '#FFFFFF',
-              border: 'none',
-              cursor: 'pointer',
-              boxShadow: isDark ? 'none' : '0 2px 6px rgba(15,23,42,0.12)',
-              transition: 'background 0.15s ease',
+              background: '#0F172A',
+              color: '#FFFFFF',
+              boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
             }}
+            onMouseEnter={e => (e.currentTarget.style.background = '#1E293B')}
+            onMouseLeave={e => (e.currentTarget.style.background = '#0F172A')}
           >
             <Plus className="w-4 h-4" />
             <span>Ajouter</span>
@@ -320,8 +437,9 @@ export default function AdminUsersPage() {
         </div>
       </div>
 
-      <div style={{ padding: 'clamp(14px,2.5vw,26px) clamp(14px,3vw,28px)', maxWidth: 1400, margin: '0 auto' }}>
-        {/* ── Status Info Bar ── */}
+      <div style={{ padding: 'clamp(14px,2.5vw,26px) clamp(14px,3vw,28px)' }}>
+
+        {/* ── Status Info Bar: Count & Real-time Supabase sync notice ── */}
         <div
           style={{
             display: 'flex',
@@ -329,26 +447,27 @@ export default function AdminUsersPage() {
             justifyContent: 'space-between',
             gap: 12,
             padding: '11px 16px',
-            borderRadius: 14,
+            borderRadius: 12,
             marginBottom: 18,
-            background: isDark ? 'rgba(59,130,246,0.1)' : '#EFF6FF',
-            border: isDark ? '1px solid rgba(59,130,246,0.2)' : '1px solid #BFDBFE',
+            background: '#EFF6FF',
+            border: '1px solid #BFDBFE',
             flexWrap: 'wrap',
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
-            <Lock style={{ width: 14, height: 14, color: '#3B82F6', flexShrink: 0 }} />
-            <p style={{ fontSize: 12.5, color: isDark ? 'rgba(235,235,245,0.85)' : '#1E3A8A', margin: 0 }}>
+            <Lock style={{ width: 14, height: 14, color: '#2563EB', flexShrink: 0 }} />
+            <p style={{ fontSize: 12.5, color: '#1E40AF', margin: 0 }}>
               Synchronisé en direct avec <strong>Supabase</strong> · Tout nouvel utilisateur peut se connecter instantanément.
             </p>
           </div>
-          <div style={{ fontSize: 11.5, color: isDark ? '#60A5FA' : '#1D4ED8', fontWeight: 600, whiteSpace: 'nowrap' }}>
+          <div style={{ fontSize: 12, color: '#1D4ED8', fontWeight: 700, whiteSpace: 'nowrap' }}>
             {customCount} / {maxCustomUsers} utilisateurs créés
           </div>
         </div>
 
         {/* ── Main Grid: User List (Left) + Detail Panel (Right) ── */}
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px]" style={{ gap: 16 }}>
+
           {/* ── Left: User List ── */}
           <div>
             {/* Search bar */}
@@ -359,10 +478,10 @@ export default function AdminUsersPage() {
                 display: 'flex',
                 alignItems: 'center',
                 gap: 10,
-                marginBottom: 14,
-                background: isDark ? '#1C1C1E' : '#FFFFFF',
-                border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #DFE3E8',
-                boxShadow: isDark ? 'none' : '0 1px 3px rgba(15, 23, 42, 0.04)',
+                marginBottom: 16,
+                background: '#FFFFFF',
+                border: '1px solid #DFE3E8',
+                boxShadow: '0 1px 3px rgba(15, 23, 42, 0.04)',
               }}
             >
               <Search style={{ width: 15, height: 15, color: '#94A3B8', flexShrink: 0 }} />
@@ -372,44 +491,25 @@ export default function AdminUsersPage() {
                 onChange={e => setSearch(e.target.value)}
                 placeholder="Rechercher par nom ou identifiant..."
                 style={{
-                  flex: 1,
-                  background: 'transparent',
-                  border: 'none',
-                  outline: 'none',
-                  fontSize: 13,
-                  color: isDark ? '#FFFFFF' : '#0F172A',
+                  flex: 1, background: 'transparent', border: 'none', outline: 'none',
+                  fontSize: 13, color: '#0F172A',
                 }}
               />
               {search && (
-                <button
-                  type="button"
-                  onClick={() => setSearch('')}
-                  style={{ background: 'none', border: 'none', color: '#94A3B8', cursor: 'pointer', padding: 0 }}
-                >
-                  <X className="w-3.5 h-3.5" />
-                </button>
+                <button onClick={() => setSearch('')} style={{ background: 'none', border: 'none', color: '#94A3B8', cursor: 'pointer', fontSize: 16, lineHeight: 1, padding: 0 }}>×</button>
               )}
             </div>
 
             {/* User rows */}
             {loading ? (
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '60px 0' }}>
-                <Loader2 className="w-6 h-6 animate-spin" style={{ color: isDark ? '#FFFFFF' : '#0F172A' }} />
+              <div className="flex items-center justify-center py-16 gap-3 text-slate-500 text-sm">
+                <Loader2 className="w-5 h-5 animate-spin text-[#0F172A]" />
+                <span>Chargement des utilisateurs depuis Supabase...</span>
               </div>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {filtered.length === 0 ? (
-                  <div
-                    style={{
-                      textAlign: 'center',
-                      padding: '50px 20px',
-                      background: isDark ? '#1C1C1E' : '#FFFFFF',
-                      borderRadius: 18,
-                      border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E5E7EB',
-                      color: isDark ? 'rgba(235,235,245,0.6)' : '#64748B',
-                      fontSize: 13,
-                    }}
-                  >
+                  <div style={{ textAlign: 'center', padding: '40px 20px', color: '#94A3B8', fontSize: 13 }}>
                     Aucun utilisateur trouvé
                   </div>
                 ) : filtered.map(user => {
@@ -423,38 +523,22 @@ export default function AdminUsersPage() {
                     <div
                       key={user.id}
                       onClick={() => setSelectedId(isSelected ? null : user.id)}
+                      className={`user-row ${isSelected ? 'user-row-selected' : ''}`}
                       style={{
                         display: 'flex',
                         alignItems: 'center',
                         gap: 12,
-                        padding: '12px 16px',
-                        background: isSelected
-                          ? (isDark ? '#2C2C2E' : '#F1F5F9')
-                          : (isDark ? '#1C1C1E' : '#FFFFFF'),
-                        borderRadius: 16,
-                        border: isSelected
-                          ? (isDark ? '1px solid rgba(255,255,255,0.2)' : '1px solid #CBD5E1')
-                          : (isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E5E7EB'),
-                        boxShadow: isDark ? 'none' : '0 1px 3px rgba(15,23,42,0.02)',
-                        cursor: 'pointer',
-                        transition: 'all 0.15s ease',
+                        padding: '14px 16px',
                       }}
                     >
                       {/* Avatar */}
                       <div
                         style={{
-                          width: 38,
-                          height: 38,
-                          borderRadius: 10,
-                          flexShrink: 0,
-                          background: isDark ? '#2C2C2E' : '#F1F5F9',
-                          border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E2E8F0',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          fontSize: 15,
-                          fontWeight: 700,
-                          color: isDark ? '#FFFFFF' : '#0F172A',
+                          width: 40, height: 40, borderRadius: 10, flexShrink: 0,
+                          background: user.role === 'developer' ? '#FEF3C7' : '#EFF6FF',
+                          border: `1.5px solid ${role.border}`,
+                          display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          fontSize: 15, fontWeight: 700, color: role.color,
                         }}
                       >
                         {user.displayName.charAt(0).toUpperCase()}
@@ -463,123 +547,74 @@ export default function AdminUsersPage() {
                       {/* Info */}
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 7, flexWrap: 'wrap' }}>
-                          <span style={{ fontSize: 13.5, fontWeight: 700, color: isDark ? '#FFFFFF' : '#0F172A' }}>{user.displayName}</span>
-                          <span style={{ fontSize: 11, color: isDark ? 'rgba(235,235,245,0.4)' : '#94A3B8' }}>@{user.username}</span>
+                          <span style={{ fontSize: 14, fontWeight: 700, color: '#0F172A' }}>{user.displayName}</span>
+                          <span style={{ fontSize: 11.5, color: '#64748B' }}>@{user.username}</span>
                           {user.isBuiltIn && (
-                            <span style={{ fontSize: 9.5, padding: '1px 6px', borderRadius: 4, background: isDark ? '#2C2C2E' : '#F1F5F9', color: isDark ? 'rgba(235,235,245,0.6)' : '#64748B', fontWeight: 600 }}>
+                            <span style={{ fontSize: 10, padding: '1px 6px', borderRadius: 4, background: '#F1F5F9', color: '#475569', fontWeight: 600 }}>
                               Principal
                             </span>
                           )}
                         </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginTop: 4, flexWrap: 'wrap' }}>
-                          <div
-                            style={{
-                              display: 'inline-flex',
-                              alignItems: 'center',
-                              gap: 4,
-                              padding: '2px 7px',
-                              borderRadius: 6,
-                              background: isDark ? role.darkBg : role.bg,
-                              border: `1px solid ${isDark ? role.darkBorder : role.border}`,
-                            }}
-                          >
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 4, flexWrap: 'wrap' }}>
+                          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '2px 8px', borderRadius: 99, background: role.bg, border: `1px solid ${role.border}` }}>
                             <RoleIcon style={{ width: 10, height: 10, color: role.color }} />
-                            <span style={{ fontSize: 10, fontWeight: 600, color: role.color }}>{role.label}</span>
+                            <span style={{ fontSize: 10.5, fontWeight: 600, color: role.color }}>{role.label}</span>
                           </div>
-                          <div
-                            style={{
-                              display: 'inline-flex',
-                              alignItems: 'center',
-                              gap: 4,
-                              padding: '2px 7px',
-                              borderRadius: 6,
-                              background: isDark ? status.darkBg : status.bg,
-                            }}
-                          >
+                          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '2px 8px', borderRadius: 99, background: status.bg, border: `1px solid ${status.color}30` }}>
                             <StatusIcon style={{ width: 10, height: 10, color: status.color }} />
-                            <span style={{ fontSize: 10, fontWeight: 600, color: status.color }}>{status.label}</span>
+                            <span style={{ fontSize: 10.5, fontWeight: 500, color: status.color }}>{status.label}</span>
                           </div>
                         </div>
                       </div>
 
-                      {/* More menu */}
+                      {/* More menu — iOS Popover Menu */}
                       <div style={{ position: 'relative' }}>
                         <button
                           type="button"
                           onClick={e => { e.stopPropagation(); setOpenMenu(openMenu === user.id ? null : user.id) }}
                           style={{
-                            background: 'none',
-                            border: 'none',
-                            color: isDark ? 'rgba(235,235,245,0.4)' : '#94A3B8',
+                            background: openMenu === user.id ? '#0F172A' : '#F1F5F9',
+                            border: '1px solid #E2E8F0',
+                            color: openMenu === user.id ? '#FFFFFF' : '#64748B',
                             cursor: 'pointer',
                             padding: '6px',
-                            borderRadius: 6,
+                            borderRadius: 8,
                             display: 'flex',
+                            transition: 'all 0.15s ease',
                           }}
                           title="Actions"
                         >
                           <MoreHorizontal style={{ width: 16, height: 16 }} />
                         </button>
-                        {openMenu === user.id && (
-                          <div
-                            onClick={e => e.stopPropagation()}
-                            style={{
-                              position: 'absolute',
-                              right: 0,
-                              top: '100%',
-                              marginTop: 4,
-                              zIndex: 100,
-                              background: isDark ? '#2C2C2E' : '#FFFFFF',
-                              border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid #E2E8F0',
-                              borderRadius: 12,
-                              padding: '5px',
-                              minWidth: 170,
-                              boxShadow: isDark ? '0 12px 40px rgba(0,0,0,0.6)' : '0 12px 30px rgba(15,23,42,0.1)',
-                            }}
-                          >
-                            <button
-                              type="button"
-                              onClick={() => { setSelectedId(user.id); setOpenMenu(null) }}
-                              style={{
-                                display: 'block',
-                                width: '100%',
-                                textAlign: 'left',
-                                padding: '8px 12px',
-                                borderRadius: 8,
-                                border: 'none',
-                                background: 'transparent',
-                                color: isDark ? '#FFFFFF' : '#0F172A',
-                                cursor: 'pointer',
-                                fontSize: 12.5,
-                              }}
-                            >
-                              Détails
-                            </button>
-                            {!user.isBuiltIn && (
-                              <button
-                                type="button"
-                                onClick={() => confirmDeleteUser(user)}
-                                style={{
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  gap: 6,
-                                  width: '100%',
-                                  textAlign: 'left',
-                                  padding: '8px 12px',
-                                  borderRadius: 8,
-                                  border: 'none',
-                                  background: 'transparent',
-                                  color: isDark ? '#FF453A' : '#DC2626',
-                                  cursor: 'pointer',
-                                  fontSize: 12.5,
-                                }}
-                              >
-                                <Trash2 style={{ width: 13, height: 13 }} />
-                                <span>Supprimer</span>
-                              </button>
-                            )}
-                          </div>
-                        )}
+                        <IosMenu
+                          isOpen={openMenu === user.id}
+                          onClose={() => setOpenMenu(null)}
+                          align="right"
+                          items={[
+                            {
+                              id: 'details',
+                              label: 'Afficher les permissions',
+                              icon: <Shield className="w-3.5 h-3.5" />,
+                              onClick: () => { setSelectedId(user.id); setOpenMenu(null) },
+                            },
+                            {
+                              id: 'copy',
+                              label: "Copier l'identifiant",
+                              icon: <KeyRound className="w-3.5 h-3.5" />,
+                              onClick: () => {
+                                navigator.clipboard?.writeText(user.username)
+                                showIosToast(`@${user.username} copié`)
+                              },
+                            },
+                            ...(user.username !== 'wailio' ? [{
+                              id: 'delete',
+                              label: 'Supprimer le compte',
+                              icon: <Trash2 className="w-3.5 h-3.5" />,
+                              destructive: true,
+                              onClick: () => confirmDeleteUser(user),
+                            }] : []),
+                          ]}
+                        />
                       </div>
                     </div>
                   )
@@ -592,114 +627,104 @@ export default function AdminUsersPage() {
           <div>
             {selectedUser ? (
               <div
-                style={{
-                  background: isDark ? '#1C1C1E' : '#FFFFFF',
-                  borderRadius: 18,
-                  border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E5E7EB',
-                  padding: '20px',
-                  position: 'sticky',
-                  top: 80,
-                  boxShadow: isDark ? 'none' : '0 1px 3px rgba(15,23,42,0.03)',
-                }}
+                className="users-card"
+                style={{ borderRadius: 22, padding: '22px', position: 'sticky', top: 80 }}
               >
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', paddingBottom: 16, borderBottom: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #F1F5F9', marginBottom: 14 }}>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', paddingBottom: 16, borderBottom: '1px solid rgba(0,0,0,0.05)', marginBottom: 14 }}>
                   <div
                     style={{
-                      width: 58,
-                      height: 58,
-                      borderRadius: 16,
-                      background: isDark ? '#2C2C2E' : '#F1F5F9',
-                      border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #E2E8F0',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: 22,
-                      fontWeight: 700,
-                      color: isDark ? '#FFFFFF' : '#0F172A',
+                      width: 60, height: 60, borderRadius: 18,
+                      background: selectedUser.role === 'developer' ? '#FEF3C7' : '#EFF6FF',
+                      border: `2px solid ${ROLE_META[selectedUser.role]?.border || '#E5E7EB'}`,
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      fontSize: 24, fontWeight: 800, color: ROLE_META[selectedUser.role]?.color || '#0F172A',
                       marginBottom: 10,
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.04)',
                     }}
                   >
                     {selectedUser.displayName.charAt(0).toUpperCase()}
                   </div>
-                  <p style={{ fontSize: 16, fontWeight: 700, color: isDark ? '#FFFFFF' : '#0F172A', margin: 0 }}>{selectedUser.displayName}</p>
-                  <p style={{ fontSize: 11.5, color: isDark ? 'rgba(235,235,245,0.6)' : '#64748B', marginTop: 2 }}>@{selectedUser.username}</p>
+                  <p style={{ fontSize: 16, fontWeight: 700, color: '#0F172A', margin: 0 }}>{selectedUser.displayName}</p>
+                  <p style={{ fontSize: 12, color: '#64748B', marginTop: 2, marginBottom: 10 }}>@{selectedUser.username}</p>
+
+                  {/* iOS Role Selector Dropdown */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <span style={{ fontSize: 11, color: '#64748B', fontWeight: 600 }}>RÔLE :</span>
+                    <IosSelect
+                      options={[
+                        { id: 'admin', label: 'Administrateur', icon: <Shield className="w-3.5 h-3.5 text-blue-600 mr-1.5" /> },
+                        { id: 'developer', label: 'Développeur', icon: <Crown className="w-3.5 h-3.5 text-amber-600 mr-1.5" /> },
+                      ]}
+                      value={selectedUser.role}
+                      onChange={(newRole) => handleUpdateUserRole(selectedUser.username, newRole)}
+                    />
+                  </div>
                 </div>
 
                 <div>
                   {selectedUser.email && (
-                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, padding: '10px 0', borderBottom: isDark ? '1px solid rgba(255,255,255,0.06)' : '1px solid #F1F5F9' }}>
-                      <Mail style={{ width: 13, height: 13, color: '#94A3B8', marginTop: 2, flexShrink: 0 }} />
+                    <div className="detail-row">
+                      <Mail style={{ width: 14, height: 14, color: '#94A3B8', marginTop: 1, flexShrink: 0 }} />
                       <div>
-                        <p style={{ fontSize: 10, color: isDark ? 'rgba(235,235,245,0.4)' : '#94A3B8', margin: 0 }}>Email</p>
-                        <p style={{ fontSize: 12, color: isDark ? '#FFFFFF' : '#0F172A', margin: '2px 0 0' }}>{selectedUser.email}</p>
+                        <p style={{ fontSize: 10.5, color: '#64748B', marginBottom: 1, fontWeight: 600 }}>Email</p>
+                        <p style={{ fontSize: 12.5, color: '#0F172A', fontWeight: 500 }}>{selectedUser.email}</p>
                       </div>
                     </div>
                   )}
                   {selectedUser.phone && (
-                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, padding: '10px 0', borderBottom: isDark ? '1px solid rgba(255,255,255,0.06)' : '1px solid #F1F5F9' }}>
-                      <Phone style={{ width: 13, height: 13, color: '#94A3B8', marginTop: 2, flexShrink: 0 }} />
+                    <div className="detail-row">
+                      <Phone style={{ width: 14, height: 14, color: '#94A3B8', marginTop: 1, flexShrink: 0 }} />
                       <div>
-                        <p style={{ fontSize: 10, color: isDark ? 'rgba(235,235,245,0.4)' : '#94A3B8', margin: 0 }}>Téléphone</p>
-                        <p style={{ fontSize: 12, color: isDark ? '#FFFFFF' : '#0F172A', margin: '2px 0 0' }}>{selectedUser.phone}</p>
+                        <p style={{ fontSize: 10.5, color: '#64748B', marginBottom: 1, fontWeight: 600 }}>Téléphone</p>
+                        <p style={{ fontSize: 12.5, color: '#0F172A', fontWeight: 500 }}>{selectedUser.phone}</p>
                       </div>
                     </div>
                   )}
-                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, padding: '10px 0', borderBottom: isDark ? '1px solid rgba(255,255,255,0.06)' : '1px solid #F1F5F9' }}>
-                    <Calendar style={{ width: 13, height: 13, color: '#94A3B8', marginTop: 2, flexShrink: 0 }} />
+                  <div className="detail-row">
+                    <Calendar style={{ width: 14, height: 14, color: '#94A3B8', marginTop: 1, flexShrink: 0 }} />
                     <div>
-                      <p style={{ fontSize: 10, color: isDark ? 'rgba(235,235,245,0.4)' : '#94A3B8', margin: 0 }}>Créé le</p>
-                      <p style={{ fontSize: 12, color: isDark ? '#FFFFFF' : '#0F172A', margin: '2px 0 0' }}>{formatDate(selectedUser.createdAt)}</p>
+                      <p style={{ fontSize: 10.5, color: '#64748B', marginBottom: 1, fontWeight: 600 }}>Créé le</p>
+                      <p style={{ fontSize: 12.5, color: '#0F172A', fontWeight: 500 }}>{formatDate(selectedUser.createdAt)}</p>
                     </div>
                   </div>
 
-                  {/* Permissions */}
-                  <div style={{ marginTop: 14 }}>
-                    <p style={{ fontSize: 10, color: isDark ? 'rgba(235,235,245,0.4)' : '#94A3B8', marginBottom: 7, textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 700 }}>
-                      Permissions actives
-                    </p>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
-                      {(selectedUser.permissions || []).map(p => (
-                        <span
-                          key={p}
-                          style={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            padding: '3px 9px',
-                            borderRadius: 6,
-                            fontSize: 11,
-                            fontWeight: 600,
-                            background: isDark ? '#2C2C2E' : '#F1F5F9',
-                            border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E2E8F0',
-                            color: isDark ? '#FFFFFF' : '#0F172A',
-                          }}
-                        >
-                          {p === 'dashboard' ? 'Dashboard' : p === 'products' ? 'Produits' : p === 'orders' ? 'Commandes' : p === 'sales' ? 'Ventes' : p === 'website-info' ? 'Infos site' : p === 'users' ? 'Utilisateurs' : p}
-                        </span>
-                      ))}
+                  {/* iOS Permissions Switch Toggles (Matching Image 5) */}
+                  <div style={{ marginTop: 16 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+                      <p style={{ fontSize: 11, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 700, margin: 0 }}>
+                        Permissions actives (iOS)
+                      </p>
+                      <span style={{ fontSize: 11, color: '#10B981', fontWeight: 600 }}>
+                        {(selectedUser.permissions || []).length} / {AVAILABLE_PERMISSIONS.length}
+                      </span>
+                    </div>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 4, background: '#F8F9FA', padding: '10px 12px', borderRadius: 14, border: '1px solid rgba(0,0,0,0.05)' }}>
+                      {AVAILABLE_PERMISSIONS.map(p => {
+                        const isGranted = (selectedUser.permissions || []).includes(p.key)
+                        return (
+                          <div key={p.key} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid rgba(0,0,0,0.04)' }}>
+                            <div style={{ minWidth: 0, paddingRight: 8 }}>
+                              <p style={{ fontSize: 12.5, fontWeight: 600, color: '#0F172A', margin: 0 }}>{p.label}</p>
+                              <p style={{ fontSize: 11, color: '#64748B', margin: 0 }}>{p.desc}</p>
+                            </div>
+                            <IosToggle
+                              checked={isGranted}
+                              size="sm"
+                              onChange={(checked) => handleToggleUserPermission(selectedUser.username, p.key, checked)}
+                            />
+                          </div>
+                        )
+                      })}
                     </div>
                   </div>
                 </div>
 
-                {!selectedUser.isBuiltIn && (
+                {selectedUser.username !== 'wailio' && (
                   <button
                     type="button"
                     onClick={() => confirmDeleteUser(selectedUser)}
-                    style={{
-                      width: '100%',
-                      marginTop: 18,
-                      padding: '9px',
-                      borderRadius: 10,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: 6,
-                      fontSize: 12,
-                      fontWeight: 600,
-                      color: isDark ? '#FF453A' : '#DC2626',
-                      background: isDark ? 'rgba(239,68,68,0.12)' : '#FEF2F2',
-                      border: isDark ? '1px solid rgba(239,68,68,0.3)' : '1px solid #FECACA',
-                      cursor: 'pointer',
-                    }}
+                    className="w-full mt-5 py-2.5 rounded-lg flex items-center justify-center gap-2 text-xs font-semibold text-red-600 bg-red-50 border border-red-200 hover:bg-red-100 transition-all"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                     <span>Supprimer cet utilisateur</span>
@@ -710,15 +735,9 @@ export default function AdminUsersPage() {
                   type="button"
                   onClick={() => setSelectedId(null)}
                   style={{
-                    marginTop: 10,
-                    width: '100%',
-                    padding: '8px',
-                    borderRadius: 8,
-                    background: isDark ? '#2C2C2E' : '#F1F5F9',
-                    border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E2E8F0',
-                    color: isDark ? 'rgba(235,235,245,0.6)' : '#64748B',
-                    cursor: 'pointer',
-                    fontSize: 12,
+                    marginTop: 10, width: '100%', padding: '8px', borderRadius: 8,
+                    background: '#F1F5F9', border: '1px solid #E2E8F0',
+                    color: '#64748B', cursor: 'pointer', fontSize: 12, fontWeight: 500,
                   }}
                 >
                   Fermer
@@ -726,24 +745,15 @@ export default function AdminUsersPage() {
               </div>
             ) : (
               <div
+                className="users-card"
                 style={{
-                  background: isDark ? '#1C1C1E' : '#FFFFFF',
-                  borderRadius: 18,
-                  border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E5E7EB',
-                  padding: '36px 20px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: 10,
-                  minHeight: 180,
-                  position: 'sticky',
-                  top: 80,
-                  boxShadow: isDark ? 'none' : '0 1px 3px rgba(15,23,42,0.03)',
+                  borderRadius: 16, padding: '36px 20px',
+                  display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                  gap: 10, minHeight: 180, position: 'sticky', top: 80,
                 }}
               >
-                <Users2 style={{ width: 24, height: 24, color: '#94A3B8' }} />
-                <p style={{ fontSize: 12.5, color: isDark ? 'rgba(235,235,245,0.4)' : '#94A3B8', textAlign: 'center', margin: 0 }}>
+                <Users2 style={{ width: 22, height: 22, color: '#94A3B8' }} />
+                <p style={{ fontSize: 12.5, color: '#64748B', textAlign: 'center' }}>
                   Sélectionnez un utilisateur<br />pour voir ses autorisations
                 </p>
               </div>
@@ -752,73 +762,36 @@ export default function AdminUsersPage() {
         </div>
       </div>
 
-      {/* ── CREATE USER MODAL ── */}
+      {/* ── CREATE USER MODAL (Light SaaS Style) ── */}
       {showCreateModal && (
         <div
-          className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
-          style={{ background: isDark ? 'rgba(0, 0, 0, 0.75)' : 'rgba(15, 23, 42, 0.45)', backdropFilter: 'blur(8px)' }}
+          className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm"
           onClick={() => !createLoading && setShowCreateModal(false)}
         >
           <div
-            className="w-full max-w-md rounded-2xl overflow-hidden relative"
-            style={{
-              background: isDark ? '#1C1C1E' : '#FFFFFF',
-              border: isDark ? '1px solid rgba(255, 255, 255, 0.12)' : '1px solid #E5E7EB',
-              boxShadow: isDark ? '0 24px 70px rgba(0, 0, 0, 0.8)' : '0 24px 60px -12px rgba(15,23,42,0.2)',
-            }}
+            className="w-full max-w-md rounded-2xl overflow-hidden relative bg-white border border-[#E5E7EB] shadow-2xl"
             onClick={e => e.stopPropagation()}
           >
             {/* Modal Header */}
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                padding: '16px 24px',
-                borderBottom: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #F1F5F9',
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <KeyRound className="w-5 h-5 text-[#3B82F6]" />
-                <h3 style={{ fontSize: 16, fontWeight: 700, color: isDark ? '#FFFFFF' : '#0F172A', margin: 0 }}>Nouvel utilisateur</h3>
+            <div className="flex items-center justify-between px-6 py-4 border-b border-[#E5E7EB]">
+              <div className="flex items-center gap-2.5">
+                <KeyRound className="w-5 h-5 text-[#0F172A]" />
+                <h3 className="text-base font-bold text-[#0F172A]">Nouvel utilisateur</h3>
               </div>
               <button
                 type="button"
                 onClick={() => setShowCreateModal(false)}
                 disabled={createLoading}
-                style={{
-                  width: 32,
-                  height: 32,
-                  borderRadius: 8,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  background: isDark ? '#2C2C2E' : '#F1F5F9',
-                  border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E2E8F0',
-                  color: isDark ? 'rgba(235,235,245,0.6)' : '#64748B',
-                  cursor: 'pointer',
-                }}
+                className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-800 hover:bg-slate-100 transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
             {/* Modal Body */}
-            <form onSubmit={handleCreateUser} style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <form onSubmit={handleCreateUser} className="p-6 space-y-4">
               {createError && (
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 8,
-                    padding: '12px',
-                    borderRadius: 10,
-                    background: isDark ? 'rgba(239,68,68,0.12)' : '#FEF2F2',
-                    border: isDark ? '1px solid rgba(239,68,68,0.3)' : '1px solid #FECACA',
-                    color: isDark ? '#FF453A' : '#DC2626',
-                    fontSize: 12,
-                  }}
-                >
+                <div className="flex items-center gap-2 p-3 rounded-lg bg-red-50 border border-red-200 text-red-600 text-xs font-medium">
                   <AlertCircle className="w-4 h-4 shrink-0" />
                   <span>{createError}</span>
                 </div>
@@ -826,7 +799,7 @@ export default function AdminUsersPage() {
 
               {/* Display name */}
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: isDark ? 'rgba(235,235,245,0.8)' : '#334155', marginBottom: 6 }}>
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                   Nom complet / Rôle
                 </label>
                 <input
@@ -835,23 +808,13 @@ export default function AdminUsersPage() {
                   value={form.displayName}
                   onChange={e => setForm({ ...form, displayName: e.target.value })}
                   placeholder="Ex: Karim Hadj (Commercial)"
-                  style={{
-                    width: '100%',
-                    padding: '10px 14px',
-                    borderRadius: 10,
-                    border: isDark ? '1.5px solid rgba(255,255,255,0.12)' : '1.5px solid #E2E8F0',
-                    background: isDark ? '#2C2C2E' : '#F8FAFC',
-                    fontSize: 13,
-                    color: isDark ? '#FFFFFF' : '#0F172A',
-                    outline: 'none',
-                    boxSizing: 'border-box',
-                  }}
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-sm text-[#0F172A] placeholder-slate-400 focus:outline-none focus:border-[#0F172A] focus:ring-2 focus:ring-slate-100 transition-all"
                 />
               </div>
 
               {/* Username */}
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: isDark ? 'rgba(235,235,245,0.8)' : '#334155', marginBottom: 6 }}>
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                   Identifiant de connexion (username)
                 </label>
                 <input
@@ -861,29 +824,17 @@ export default function AdminUsersPage() {
                   onChange={e => setForm({ ...form, username: e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, '') })}
                   placeholder="Ex: karim_commercial"
                   autoComplete="off"
-                  style={{
-                    width: '100%',
-                    padding: '10px 14px',
-                    borderRadius: 10,
-                    border: isDark ? '1.5px solid rgba(255,255,255,0.12)' : '1.5px solid #E2E8F0',
-                    background: isDark ? '#2C2C2E' : '#F8FAFC',
-                    fontSize: 13,
-                    color: isDark ? '#FFFFFF' : '#0F172A',
-                    outline: 'none',
-                    boxSizing: 'border-box',
-                  }}
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-sm text-[#0F172A] placeholder-slate-400 focus:outline-none focus:border-[#0F172A] focus:ring-2 focus:ring-slate-100 transition-all"
                 />
-                <p style={{ fontSize: 10.5, color: isDark ? 'rgba(235,235,245,0.4)' : '#94A3B8', marginTop: 4, margin: 0 }}>
-                  Lettres minuscules, chiffres, tirets uniquement.
-                </p>
+                <p className="text-[10.5px] text-slate-500 mt-1">Lettres minuscules, chiffres, tirets uniquement.</p>
               </div>
 
               {/* Password */}
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: isDark ? 'rgba(235,235,245,0.8)' : '#334155', marginBottom: 6 }}>
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                   Mot de passe
                 </label>
-                <div style={{ position: 'relative' }}>
+                <div className="relative">
                   <input
                     type={showPassword ? 'text' : 'password'}
                     required
@@ -891,83 +842,40 @@ export default function AdminUsersPage() {
                     onChange={e => setForm({ ...form, password: e.target.value })}
                     placeholder="Minimum 4 caractères"
                     autoComplete="new-password"
-                    style={{
-                      width: '100%',
-                      padding: '10px 14px',
-                      paddingRight: '40px',
-                      borderRadius: 10,
-                      border: isDark ? '1.5px solid rgba(255,255,255,0.12)' : '1.5px solid #E2E8F0',
-                      background: isDark ? '#2C2C2E' : '#F8FAFC',
-                      fontSize: 13,
-                      color: isDark ? '#FFFFFF' : '#0F172A',
-                      outline: 'none',
-                      boxSizing: 'border-box',
-                    }}
+                    className="w-full px-3.5 py-2.5 pr-10 rounded-xl bg-white border border-slate-300 text-sm text-[#0F172A] placeholder-slate-400 focus:outline-none focus:border-[#0F172A] focus:ring-2 focus:ring-slate-100 transition-all"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    style={{
-                      position: 'absolute',
-                      right: 10,
-                      top: '50%',
-                      transform: 'translateY(-50%)',
-                      background: 'none',
-                      border: 'none',
-                      color: '#94A3B8',
-                      cursor: 'pointer',
-                      padding: 4,
-                    }}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 p-1"
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
               </div>
 
-              {/* Permissions */}
+              {/* Permissions (iOS System UI) */}
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: isDark ? 'rgba(235,235,245,0.8)' : '#334155', marginBottom: 8 }}>
-                  Sections accessibles
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                  Sections accessibles (iOS)
                 </label>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                <div className="flex flex-col gap-1.5 p-3 rounded-2xl bg-slate-50 border border-slate-200">
                   {AVAILABLE_PERMISSIONS.map(p => {
                     const active = form.permissions.includes(p.key)
                     return (
                       <div
                         key={p.key}
-                        onClick={() => togglePerm(p.key)}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: 8,
-                          padding: '10px 12px',
-                          borderRadius: 10,
-                          border: active
-                            ? (isDark ? '1px solid rgba(59,130,246,0.4)' : '1px solid #93C5FD')
-                            : (isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E2E8F0'),
-                          background: active
-                            ? (isDark ? 'rgba(59,130,246,0.15)' : '#EFF6FF')
-                            : (isDark ? '#2C2C2E' : '#F8FAFC'),
-                          cursor: 'pointer',
-                          transition: 'all 0.15s ease',
-                        }}
+                        className="flex items-center justify-between py-1.5 px-1 border-b border-slate-200/60 last:border-none"
                       >
-                        <div
-                          style={{
-                            width: 16,
-                            height: 16,
-                            borderRadius: 4,
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            border: active ? 'none' : (isDark ? '1px solid rgba(255,255,255,0.3)' : '1px solid #CBD5E1'),
-                            background: active ? '#3B82F6' : 'transparent',
-                            color: '#FFFFFF',
-                          }}
-                        >
-                          {active && <Check className="w-3 h-3 stroke-[3]" />}
+                        <div>
+                          <p className="text-xs font-semibold text-[#0F172A]">{p.label}</p>
+                          <p className="text-[10.5px] text-slate-500">{p.desc}</p>
                         </div>
-                        <span style={{ fontSize: 12, fontWeight: 600, color: isDark ? '#FFFFFF' : '#0F172A' }}>{p.label}</span>
+                        <IosToggle
+                          checked={active}
+                          size="sm"
+                          onChange={() => togglePerm(p.key)}
+                        />
                       </div>
                     )
                   })}
@@ -978,31 +886,15 @@ export default function AdminUsersPage() {
               <button
                 type="submit"
                 disabled={createLoading}
-                style={{
-                  width: '100%',
-                  marginTop: 10,
-                  padding: '12px',
-                  borderRadius: 12,
-                  fontWeight: 600,
-                  fontSize: 13,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: 8,
-                  background: isDark ? '#FFFFFF' : '#0F172A',
-                  color: isDark ? '#000000' : '#FFFFFF',
-                  border: 'none',
-                  cursor: createLoading ? 'wait' : 'pointer',
-                  boxShadow: isDark ? 'none' : '0 2px 6px rgba(15,23,42,0.12)',
-                }}
+                className="w-full mt-4 py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 bg-[#0F172A] text-white hover:bg-slate-800 shadow-sm transition-all"
               >
                 {createLoading ? (
                   <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <Loader2 className="w-4 h-4 animate-spin text-white" />
                     <span>Sauvegarde dans Supabase...</span>
                   </>
                 ) : (
-                  <span>Créer et autoriser l&apos;accès</span>
+                  <span>Créer et autoriser l'accès</span>
                 )}
               </button>
             </form>
