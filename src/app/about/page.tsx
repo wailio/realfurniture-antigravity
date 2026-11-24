@@ -131,15 +131,15 @@ export default function AboutPage() {
               </div>
             </LuxuryReveal>
 
-            {/* Right — big emblem with floating stats */}
-            <LuxuryReveal variant="right" delay={200} className="lg:col-span-5 relative flex justify-center lg:justify-end">
-              <div className="relative w-full max-w-[380px]">
+            {/* Right — big logo with floating stats */}
+            <LuxuryReveal variant="right" delay={200} className="lg:col-span-5 relative flex items-center justify-center">
+              <div className="relative w-full max-w-[460px] flex items-center justify-center py-8">
                 <Image
                   src="/images/mf-logo-new.png"
                   alt="M&F Meubles — Logo"
-                  width={380}
-                  height={380}
-                  className="w-full h-auto object-contain opacity-[0.92]"
+                  width={460}
+                  height={280}
+                  className="w-full h-auto object-contain opacity-[0.95]"
                   priority
                 />
 
