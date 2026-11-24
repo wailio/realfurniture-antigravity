@@ -272,186 +272,97 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Section 2: Luxury Animated Delivery & Craftsmanship Ticker with Artistic Paint Throws ── */}
-      <section className="relative overflow-hidden bg-[#101217] text-white border-y border-white/[0.12]">
-        {/* Ambient Luminous White Paint Diffusions (Soft Atelier Mist) */}
-        <div className="pointer-events-none absolute -top-10 left-[15%] h-36 w-80 rounded-full bg-white/[0.09] blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-10 right-[20%] h-32 w-96 rounded-full bg-white/[0.08] blur-3xl" />
-        <div className="pointer-events-none absolute top-1/2 left-[55%] -translate-y-1/2 h-24 w-64 rounded-full bg-white/[0.06] blur-2xl" />
+      {/* ── Section 2: Clean Luxury Editorial Ticker ── */}
+      <section className="relative overflow-hidden bg-[#F7F5F2] border-y border-neutral-200/80">
 
-        {/* Artistic Hand-Crafted Paint Throws & Random Splatters Overlay */}
-        <svg
-          className="pointer-events-none absolute inset-0 h-full w-full opacity-65 mix-blend-screen"
-          xmlns="http://www.w3.org/2000/svg"
-          preserveAspectRatio="none"
-          viewBox="0 0 1440 96"
-          fill="none"
-        >
-          {/* Dynamic White Paint Throw / Brush Splashes (Organic curved gestures) */}
-          <path
-            d="M-20,48 C60,20 140,75 220,38 C280,10 320,62 380,44 C420,32 450,55 490,48 C430,60 360,65 300,52 C210,78 120,50 -20,62 Z"
-            fill="url(#whitePaintGlow1)"
-            opacity="0.35"
-          />
-          <path
-            d="M620,25 C710,5 790,60 880,32 C950,10 1020,45 1110,28 C1040,55 960,42 900,58 C820,65 730,40 620,42 Z"
-            fill="url(#whitePaintGlow2)"
-            opacity="0.3"
-          />
-          <path
-            d="M1180,60 C1240,30 1310,75 1390,40 C1430,22 1470,50 1500,35 C1470,62 1420,68 1360,55 C1290,75 1230,68 1180,72 Z"
-            fill="url(#whitePaintGlow1)"
-            opacity="0.25"
-          />
+        {/* Soft left/right edge fades */}
+        <div className="pointer-events-none absolute inset-y-0 left-0 w-20 md:w-32 bg-gradient-to-r from-[#F7F5F2] to-transparent z-10" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 w-20 md:w-32 bg-gradient-to-l from-[#F7F5F2] to-transparent z-10" />
 
-          {/* Random Paint Splatters & Droplets (Flicks of white paint of various sizes) */}
-          <circle cx="85" cy="22" r="1.5" fill="#FFFFFF" opacity="0.8" />
-          <circle cx="98" cy="30" r="2.8" fill="#FFFFFF" opacity="0.65" />
-          <circle cx="112" cy="18" r="1.2" fill="#FFFFFF" opacity="0.5" />
-          <circle cx="125" cy="36" r="3.2" fill="#FFFFFF" opacity="0.75" />
-          <circle cx="140" cy="26" r="1.6" fill="#FFFFFF" opacity="0.6" />
-          <circle cx="160" cy="42" r="2.2" fill="#FFFFFF" opacity="0.4" />
-          <circle cx="175" cy="20" r="1.0" fill="#FFFFFF" opacity="0.7" />
-
-          <circle cx="340" cy="68" r="2.5" fill="#FFFFFF" opacity="0.7" />
-          <circle cx="355" cy="74" r="1.5" fill="#FFFFFF" opacity="0.5" />
-          <circle cx="370" cy="62" r="3.5" fill="#FFFFFF" opacity="0.6" />
-          <circle cx="388" cy="78" r="1.8" fill="#FFFFFF" opacity="0.8" />
-          <circle cx="405" cy="65" r="2.0" fill="#FFFFFF" opacity="0.45" />
-
-          <circle cx="580" cy="18" r="2.2" fill="#FFFFFF" opacity="0.75" />
-          <circle cx="598" cy="28" r="3.6" fill="#FFFFFF" opacity="0.6" />
-          <circle cx="615" cy="14" r="1.4" fill="#FFFFFF" opacity="0.8" />
-          <circle cx="632" cy="32" r="2.0" fill="#FFFFFF" opacity="0.5" />
-
-          <circle cx="820" cy="72" r="3.0" fill="#FFFFFF" opacity="0.7" />
-          <circle cx="838" cy="64" r="1.5" fill="#FFFFFF" opacity="0.6" />
-          <circle cx="855" cy="80" r="2.4" fill="#FFFFFF" opacity="0.8" />
-          <circle cx="875" cy="68" r="1.2" fill="#FFFFFF" opacity="0.5" />
-
-          <circle cx="1060" cy="24" r="3.2" fill="#FFFFFF" opacity="0.65" />
-          <circle cx="1078" cy="16" r="1.6" fill="#FFFFFF" opacity="0.8" />
-          <circle cx="1095" cy="34" r="2.6" fill="#FFFFFF" opacity="0.7" />
-          <circle cx="1115" cy="20" r="1.2" fill="#FFFFFF" opacity="0.45" />
-
-          <circle cx="1290" cy="70" r="2.8" fill="#FFFFFF" opacity="0.75" />
-          <circle cx="1308" cy="78" r="1.4" fill="#FFFFFF" opacity="0.5" />
-          <circle cx="1325" cy="62" r="3.4" fill="#FFFFFF" opacity="0.65" />
-          <circle cx="1345" cy="74" r="1.8" fill="#FFFFFF" opacity="0.8" />
-
-          {/* Linear Paint Gradients */}
-          <defs>
-            <linearGradient id="whitePaintGlow1" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.8" />
-              <stop offset="50%" stopColor="#FFFFFF" stopOpacity="0.4" />
-              <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0" />
-            </linearGradient>
-            <linearGradient id="whitePaintGlow2" x1="100%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.7" />
-              <stop offset="60%" stopColor="#FFFFFF" stopOpacity="0.35" />
-              <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0" />
-            </linearGradient>
-          </defs>
-        </svg>
-
-        {/* Subtle Edge Fade Gradients for Seamless Dissolve */}
-        <div className="pointer-events-none absolute inset-y-0 left-0 w-16 md:w-28 bg-gradient-to-r from-[#101217] via-[#101217]/90 to-transparent z-10" />
-        <div className="pointer-events-none absolute inset-y-0 right-0 w-16 md:w-28 bg-gradient-to-l from-[#101217] via-[#101217]/90 to-transparent z-10" />
-
-        {/* Desktop Tickers (Two opposite lines: Right and Left) */}
+        {/* Desktop Tickers */}
         <div className="relative hidden overflow-hidden md:block">
-          {/* Top Line: Gliding to the Right */}
-          <div className="border-b border-white/[0.08] py-3">
-            <div className="delivery-marquee delivery-marquee-right flex w-max items-center gap-12 whitespace-nowrap">
-              {[...Array(4)].map((_, i) => (
+          {/* Top Line → Right */}
+          <div className="border-b border-neutral-200/70 py-3.5">
+            <div className="delivery-marquee delivery-marquee-right flex w-max items-center gap-16 whitespace-nowrap">
+              {[...Array(5)].map((_, i) => (
                 <span
                   key={i}
-                  className="flex items-center gap-6 text-[12px] lg:text-[12.5px] font-normal uppercase tracking-[0.2em] text-white/80"
+                  className="flex items-center gap-10 text-[11px] font-medium uppercase tracking-[0.22em] text-neutral-500"
                 >
-                  <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-white/[0.12] text-white border border-white/25 text-[11px] font-semibold tracking-wider shadow-[0_0_14px_rgba(255,255,255,0.12)]">
-                    Livraison 69 Wilayas
-                  </span>
+                  <span className="text-neutral-800 font-semibold">Livraison · 69 Wilayas</span>
+                  <span className="w-1 h-1 rounded-full bg-neutral-300 inline-block" />
                   <span>Montage professionnel soigné</span>
-                  <span className="text-white/40 text-[10px]">✦</span>
-                  <span className="text-white font-medium">Offerte sur Alger &amp; wilayas limitrophes</span>
-                  <span className="text-white/40 text-[10px]">✦</span>
-                  <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-white/[0.09] text-white border border-white/20 text-[11px] font-medium tracking-wider">
-                    Ateliers d&apos;artisanat
-                  </span>
-                  <span>Confection sur-mesure</span>
-                  <span className="text-white/40 text-[10px]">✦</span>
-                  <span className="text-white font-medium">Showroom d&apos;exception à Kouba (Alger)</span>
-                  <span className="text-white/40 text-[10px]">✦</span>
+                  <span className="w-1 h-1 rounded-full bg-neutral-300 inline-block" />
+                  <span className="text-neutral-800 font-semibold">Gratuite sur Alger & environs</span>
+                  <span className="w-1 h-1 rounded-full bg-neutral-300 inline-block" />
+                  <span>Ateliers d&apos;artisanat · Confection sur-mesure</span>
+                  <span className="w-1 h-1 rounded-full bg-neutral-300 inline-block" />
+                  <span className="text-neutral-800 font-semibold">Showroom à Kouba · Alger</span>
+                  <span className="w-1 h-1 rounded-full bg-neutral-300 inline-block" />
                 </span>
               ))}
             </div>
           </div>
 
-          {/* Bottom Line: Gliding to the Left */}
-          <div className="py-3 bg-white/[0.02]">
-            <div className="delivery-marquee delivery-marquee-left flex w-max items-center gap-12 whitespace-nowrap">
-              {[...Array(4)].map((_, i) => (
+          {/* Bottom Line → Left */}
+          <div className="py-3.5">
+            <div className="delivery-marquee delivery-marquee-left flex w-max items-center gap-16 whitespace-nowrap">
+              {[...Array(5)].map((_, i) => (
                 <span
                   key={i}
-                  className="flex items-center gap-6 text-[12px] lg:text-[12.5px] font-normal uppercase tracking-[0.2em] text-white/80"
+                  className="flex items-center gap-10 text-[11px] font-medium uppercase tracking-[0.22em] text-neutral-500"
                 >
-                  <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-white/[0.12] text-white border border-white/25 text-[11px] font-semibold tracking-wider shadow-[0_0_14px_rgba(255,255,255,0.12)]">
-                    Garantie 10 Ans
-                  </span>
-                  <span>Boiserie noble séchée au four</span>
-                  <span className="text-white/40 text-[10px]">✦</span>
-                  <span className="text-white font-medium">Tissus anti-taches &amp; cuirs italiens au choix</span>
-                  <span className="text-white/40 text-[10px]">✦</span>
-                  <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-white/[0.09] text-white border border-white/20 text-[11px] font-medium tracking-wider">
-                    Étude 3D Offerte
-                  </span>
+                  <span className="text-neutral-800 font-semibold">Garantie 10 Ans</span>
+                  <span className="w-1 h-1 rounded-full bg-neutral-300 inline-block" />
+                  <span>Tissus anti-taches · Cuirs italiens au choix</span>
+                  <span className="w-1 h-1 rounded-full bg-neutral-300 inline-block" />
+                  <span className="text-neutral-800 font-semibold">Étude 3D Offerte</span>
+                  <span className="w-1 h-1 rounded-full bg-neutral-300 inline-block" />
                   <span>Personnalisation complète des dimensions</span>
-                  <span className="text-white/40 text-[10px]">✦</span>
-                  <span className="text-white font-medium">Paiement sécurisé après inspection</span>
-                  <span className="text-white/40 text-[10px]">✦</span>
+                  <span className="w-1 h-1 rounded-full bg-neutral-300 inline-block" />
+                  <span className="text-neutral-800 font-semibold">Paiement après inspection</span>
+                  <span className="w-1 h-1 rounded-full bg-neutral-300 inline-block" />
                 </span>
               ))}
             </div>
           </div>
         </div>
 
-        {/* Mobile Ticker (Two sleek calm gliding lines with white capsules) */}
+        {/* Mobile Ticker */}
         <div className="relative overflow-hidden md:hidden">
-          {/* Top Line: Moving to the Right */}
-          <div className="border-b border-white/[0.08] py-2.5">
-            <div className="delivery-marquee delivery-marquee-right flex w-max items-center gap-8 whitespace-nowrap">
-              {[...Array(4)].map((_, i) => (
+          {/* Top Line → Right */}
+          <div className="border-b border-neutral-200/70 py-2.5">
+            <div className="delivery-marquee delivery-marquee-right flex w-max items-center gap-10 whitespace-nowrap">
+              {[...Array(5)].map((_, i) => (
                 <span
                   key={i}
-                  className="flex items-center gap-3 text-[10.5px] uppercase tracking-[0.18em] text-white/80"
+                  className="flex items-center gap-6 text-[10px] font-medium uppercase tracking-[0.2em] text-neutral-500"
                 >
-                  <span className="px-2 py-0.5 rounded-full bg-white/15 text-white border border-white/25 text-[9.5px] font-semibold">
-                    69 Wilayas
-                  </span>
-                  <span>Livraison &amp; montage soigné</span>
-                  <span className="text-white/40 text-[9px]">✦</span>
-                  <span className="text-white font-medium">Showroom Kouba</span>
-                  <span className="text-white/40 text-[9px]">✦</span>
+                  <span className="text-neutral-800 font-semibold">69 Wilayas</span>
+                  <span className="w-1 h-1 rounded-full bg-neutral-300 inline-block" />
+                  <span>Livraison &amp; montage</span>
+                  <span className="w-1 h-1 rounded-full bg-neutral-300 inline-block" />
+                  <span className="text-neutral-800 font-semibold">Showroom Kouba</span>
+                  <span className="w-1 h-1 rounded-full bg-neutral-300 inline-block" />
                 </span>
               ))}
             </div>
           </div>
 
-          {/* Bottom Line: Moving to the Left */}
-          <div className="py-2.5 bg-white/[0.02]">
-            <div className="delivery-marquee delivery-marquee-left flex w-max items-center gap-8 whitespace-nowrap">
-              {[...Array(4)].map((_, i) => (
+          {/* Bottom Line → Left */}
+          <div className="py-2.5">
+            <div className="delivery-marquee delivery-marquee-left flex w-max items-center gap-10 whitespace-nowrap">
+              {[...Array(5)].map((_, i) => (
                 <span
                   key={i}
-                  className="flex items-center gap-3 text-[10.5px] uppercase tracking-[0.18em] text-white/80"
+                  className="flex items-center gap-6 text-[10px] font-medium uppercase tracking-[0.2em] text-neutral-500"
                 >
-                  <span className="px-2 py-0.5 rounded-full bg-white/15 text-white border border-white/25 text-[9.5px] font-semibold">
-                    Garantie 10 ans
-                  </span>
-                  <span>Boiserie noble · Sur-mesure</span>
-                  <span className="text-white/40 text-[9px]">✦</span>
-                  <span className="text-white font-medium">Paiement après inspection</span>
-                  <span className="text-white/40 text-[9px]">✦</span>
+                  <span className="text-neutral-800 font-semibold">Garantie 10 Ans</span>
+                  <span className="w-1 h-1 rounded-full bg-neutral-300 inline-block" />
+                  <span>Sur-mesure · Étude 3D offerte</span>
+                  <span className="w-1 h-1 rounded-full bg-neutral-300 inline-block" />
+                  <span className="text-neutral-800 font-semibold">Paiement après inspection</span>
+                  <span className="w-1 h-1 rounded-full bg-neutral-300 inline-block" />
                 </span>
               ))}
             </div>
