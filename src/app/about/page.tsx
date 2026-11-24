@@ -135,11 +135,11 @@ export default function AboutPage() {
             <LuxuryReveal variant="right" delay={200} className="lg:col-span-5 relative flex justify-center lg:justify-end">
               <div className="relative w-full max-w-[380px]">
                 <Image
-                  src="/images/chateau-dart-emblem.png"
-                  alt="M&F Meubles — Emblème"
+                  src="/images/mf-logo-new.png"
+                  alt="M&F Meubles — Logo"
                   width={380}
                   height={380}
-                  className="w-full h-auto object-contain opacity-[0.88]"
+                  className="w-full h-auto object-contain opacity-[0.92]"
                   priority
                 />
 

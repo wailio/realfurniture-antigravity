@@ -20,14 +20,14 @@ interface ShowroomPhoto {
 }
 
 const SHOWROOM_PHOTOS: ShowroomPhoto[] = [
-  { id:'1', title:'Espace Salon Prestige & Marbre Calacatta', category:'salons', categoryLabel:'Salons', image:'/showroom-apres.jpg', description:'Présentation de nos canapés modulaires en bouclette texturée et tables en marbre poli.', badge:'Espace Principal' },
-  { id:'2', title:'Villa Galerie & Architecture Intérieure', category:'salons', categoryLabel:'Salons', image:'/hero-mansion.jpg', description:'Scénographie lumineuse mettant en valeur les lignes épurées et les finitions dorées brossées.', badge:'Mise en Scène' },
-  { id:'3', title:'Salon Réception & Luminaires Suspendus', category:'salons', categoryLabel:'Salons', image:'/arthome-rooms/living-room.jpg', description:'Une harmonie de tons taupe, bois thermo-traité et fauteuils ergonomiques sculptés.', badge:'Collection 2026' },
-  { id:'4', title:'Espace Salles à Manger & Tables en Chêne Massif', category:'salles', categoryLabel:'Salles à Manger', image:'/arthome-rooms/dining-room.jpg', description:'Tables ovales et rectangulaires entourées de chaises tapissées main.', badge:'Haute Ébénisterie' },
-  { id:'5', title:'Suite Parentale & Lits Capitonnés', category:'chambres', categoryLabel:'Chambres', image:'/arthome-rooms/bedroom.jpg', description:'Têtes de lit monumentales, tables de chevet suspendues et literie grand confort.', badge:'Espace Sommeil' },
-  { id:'6', title:"Salon d'Accueil & Matiérothèque Privée", category:'details', categoryLabel:'Détails & Matières', image:'/images/contact-hero.jpg', description:"Rencontrez nos architectes et touchez plus de 150 échantillons de velours, cuirs et bois.", badge:'Conseil VIP' },
-  { id:'7', title:"Espace Véranda & Mobilier d'Exception", category:'details', categoryLabel:'Détails & Matières', image:'/arthome-rooms/outdoor.jpg', description:"Sélection de matériaux résistants et designs d'avant-garde ouverts sur la lumière.", badge:'Nouveauté' },
-  { id:'8', title:'Détails des Assemblages & Marbres Rares', category:'details', categoryLabel:'Détails & Matières', image:'/images/acbd.jpg', description:'Le soin artisanal apporté aux veinages du bois, coutures sellier et finitions laquées.', badge:'Finitions' },
+  { id:'1', title:'Salon Panoramique Crème & Or', category:'salons', categoryLabel:'Salons', image:'/products/salon/couch.jpg', description:'Composition modulable de prestige en velours structuré avec assise généreuse et finitions artisanales.', badge:'Espace Principal' },
+  { id:'2', title:'Canapé d\'Angle Majestueux', category:'salons', categoryLabel:'Salons', image:'/products/salon/couch.jpg', description:'Grand canapé d\'angle luxueux avec méridienne spacieuse, coussins assortis et table marbre.', badge:'Collection 2026' },
+  { id:'3', title:'Salle à Manger Céramique & Chaises Cuir', category:'salles', categoryLabel:'Salles à Manger', image:'/products/salle/sallesmanger.jpg', description:'Table en céramique aux lignes architecturales accompagnée de chaises tapissées grand confort.', badge:'Haute Ébénisterie' },
+  { id:'4', title:'Table Marbre & Buffet Élégance', category:'salles', categoryLabel:'Salles à Manger', image:'/products/salle/sallesmanger-harmonie.jpg', description:'Plateau en marbre veiné blanc et or, entouré de fauteuils bouclette tendance 2026.', badge:'Nouveauté' },
+  { id:'5', title:'Suite Parentale & Lit Capitonné ECLIPSE', category:'chambres', categoryLabel:'Chambres', image:'/products/chambre/chmbr.jpg', description:'Tête de lit monumentale avec banquette velours bleu, tables de chevet suspendues et literie grand confort.', badge:'Espace Sommeil' },
+  { id:'6', title:'Armoire Dressing Coulissante Atelier', category:'chambres', categoryLabel:'Chambres', image:'/products/armoire/armo.jpg', description:'Armoire spacieuse avec penderies doubles, tiroirs intégrés et portes coulissantes à fermeture douce.', badge:'Collection Premium' },
+  { id:'7', title:'Buffet & Miroir Sculpté Cannelé', category:'details', categoryLabel:'Détails & Matières', image:'/products/accessoire/other.jpg', description:'Meuble d\'appoint d\'une finesse incomparable avec miroir demi-lune et finitions cannelées tendance.', badge:'Conseil VIP' },
+  { id:'8', title:'Console & Lampe Laiton Prestige', category:'details', categoryLabel:'Détails & Matières', image:'/products/accessoire/other.jpg', description:'Le soin artisanal apporté aux finitions, veinages du bois, coutures sellier et poignées laitonnées.', badge:'Finitions' },
 ];
 
 /* ═══════════════════════════════════════════════════════════════
@@ -229,14 +229,14 @@ function ScrollRevealImages() {
           >
             <div className="relative overflow-hidden shadow-2xl" style={{ aspectRatio: '4/5' }}>
               <Image
-                src="/arthome-rooms/dining-room.jpg"
+                src="/products/salle/sallesmanger.jpg"
                 alt="Salle à manger"
                 fill
                 className="object-cover"
               />
               <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/50 to-transparent">
                 <p className="text-white text-[10px] font-semibold uppercase tracking-widest">Salle à Manger</p>
-                <p className="text-white/65 text-[9px] font-light">Finition chêne massif</p>
+                <p className="text-white/65 text-[9px] font-light">Table céramique & chaises cuir</p>
               </div>
             </div>
           </div>
@@ -258,14 +258,14 @@ function ScrollRevealImages() {
           >
             <div className="relative overflow-hidden shadow-2xl" style={{ aspectRatio: '3/4' }}>
               <Image
-                src="/arthome-rooms/bedroom.jpg"
+                src="/products/chambre/chmbr.jpg"
                 alt="Suite parentale"
                 fill
                 className="object-cover"
               />
               <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/50 to-transparent">
                 <p className="text-white text-[10px] font-semibold uppercase tracking-widest">Suite Parentale</p>
-                <p className="text-white/65 text-[9px] font-light">Tête de lit capitonnée</p>
+                <p className="text-white/65 text-[9px] font-light">Lit capitonné & banquette velours</p>
               </div>
             </div>
           </div>
@@ -286,14 +286,14 @@ function ScrollRevealImages() {
           >
             <div className="relative overflow-hidden shadow-2xl" style={{ aspectRatio: '4/5' }}>
               <Image
-                src="/arthome-rooms/living-room.jpg"
+                src="/products/salon/couch.jpg"
                 alt="Salon prestige"
                 fill
                 className="object-cover"
               />
               <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/50 to-transparent">
                 <p className="text-white text-[10px] font-semibold uppercase tracking-widest">Salon Prestige</p>
-                <p className="text-white/65 text-[9px] font-light">Marbre &amp; Bouclette</p>
+                <p className="text-white/65 text-[9px] font-light">Canapé d&apos;angle & table marbre</p>
               </div>
             </div>
           </div>
