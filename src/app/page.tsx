@@ -273,32 +273,34 @@ export default function HomePage() {
       </section>
 
       {/* ── Section 2: Clean Luxury Editorial Ticker ── */}
-      <section className="relative overflow-hidden bg-[#F7F5F2] border-y border-neutral-200/80">
+      <section className="relative overflow-hidden bg-[#111827] text-white border-y border-white/[0.08]">
 
         {/* Soft left/right edge fades */}
-        <div className="pointer-events-none absolute inset-y-0 left-0 w-20 md:w-32 bg-gradient-to-r from-[#F7F5F2] to-transparent z-10" />
-        <div className="pointer-events-none absolute inset-y-0 right-0 w-20 md:w-32 bg-gradient-to-l from-[#F7F5F2] to-transparent z-10" />
+        <div className="pointer-events-none absolute inset-y-0 left-0 w-20 md:w-32 bg-gradient-to-r from-[#111827] to-transparent z-10" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 w-20 md:w-32 bg-gradient-to-l from-[#111827] to-transparent z-10" />
 
         {/* Desktop Tickers */}
         <div className="relative hidden overflow-hidden md:block">
           {/* Top Line → Right */}
-          <div className="border-b border-neutral-200/70 py-3.5">
+          <div className="border-b border-white/[0.06] py-3.5">
             <div className="delivery-marquee delivery-marquee-right flex w-max items-center gap-16 whitespace-nowrap">
               {[...Array(5)].map((_, i) => (
                 <span
                   key={i}
-                  className="flex items-center gap-10 text-[11px] font-medium uppercase tracking-[0.22em] text-neutral-500"
+                  className="flex items-center gap-10 text-[11px] font-medium uppercase tracking-[0.22em] text-neutral-400"
                 >
-                  <span className="text-neutral-800 font-semibold">Livraison · 69 Wilayas</span>
-                  <span className="w-1 h-1 rounded-full bg-neutral-300 inline-block" />
+                  <span className="px-2.5 py-0.5 rounded-full bg-white/[0.08] border border-white/15 text-white font-semibold text-[10px] tracking-[0.18em]">
+                    Livraison · 69 Wilayas
+                  </span>
+                  <span className="w-1 h-1 rounded-full bg-neutral-600 inline-block" />
                   <span>Montage professionnel soigné</span>
-                  <span className="w-1 h-1 rounded-full bg-neutral-300 inline-block" />
-                  <span className="text-neutral-800 font-semibold">Gratuite sur Alger & environs</span>
-                  <span className="w-1 h-1 rounded-full bg-neutral-300 inline-block" />
+                  <span className="w-1 h-1 rounded-full bg-neutral-600 inline-block" />
+                  <span className="text-white font-semibold">Gratuite sur Alger & environs</span>
+                  <span className="w-1 h-1 rounded-full bg-neutral-600 inline-block" />
                   <span>Ateliers d&apos;artisanat · Confection sur-mesure</span>
-                  <span className="w-1 h-1 rounded-full bg-neutral-300 inline-block" />
-                  <span className="text-neutral-800 font-semibold">Showroom à Kouba · Alger</span>
-                  <span className="w-1 h-1 rounded-full bg-neutral-300 inline-block" />
+                  <span className="w-1 h-1 rounded-full bg-neutral-600 inline-block" />
+                  <span className="text-white font-semibold">Showroom à Kouba · Alger</span>
+                  <span className="w-1 h-1 rounded-full bg-neutral-600 inline-block" />
                 </span>
               ))}
             </div>
@@ -310,18 +312,20 @@ export default function HomePage() {
               {[...Array(5)].map((_, i) => (
                 <span
                   key={i}
-                  className="flex items-center gap-10 text-[11px] font-medium uppercase tracking-[0.22em] text-neutral-500"
+                  className="flex items-center gap-10 text-[11px] font-medium uppercase tracking-[0.22em] text-neutral-400"
                 >
-                  <span className="text-neutral-800 font-semibold">Garantie 10 Ans</span>
-                  <span className="w-1 h-1 rounded-full bg-neutral-300 inline-block" />
+                  <span className="px-2.5 py-0.5 rounded-full bg-white/[0.08] border border-white/15 text-white font-semibold text-[10px] tracking-[0.18em]">
+                    Garantie 10 Ans
+                  </span>
+                  <span className="w-1 h-1 rounded-full bg-neutral-600 inline-block" />
                   <span>Tissus anti-taches · Cuirs italiens au choix</span>
-                  <span className="w-1 h-1 rounded-full bg-neutral-300 inline-block" />
-                  <span className="text-neutral-800 font-semibold">Étude 3D Offerte</span>
-                  <span className="w-1 h-1 rounded-full bg-neutral-300 inline-block" />
+                  <span className="w-1 h-1 rounded-full bg-neutral-600 inline-block" />
+                  <span className="text-white font-semibold">Étude 3D Offerte</span>
+                  <span className="w-1 h-1 rounded-full bg-neutral-600 inline-block" />
                   <span>Personnalisation complète des dimensions</span>
-                  <span className="w-1 h-1 rounded-full bg-neutral-300 inline-block" />
-                  <span className="text-neutral-800 font-semibold">Paiement après inspection</span>
-                  <span className="w-1 h-1 rounded-full bg-neutral-300 inline-block" />
+                  <span className="w-1 h-1 rounded-full bg-neutral-600 inline-block" />
+                  <span className="text-white font-semibold">Paiement après inspection</span>
+                  <span className="w-1 h-1 rounded-full bg-neutral-600 inline-block" />
                 </span>
               ))}
             </div>
@@ -331,19 +335,21 @@ export default function HomePage() {
         {/* Mobile Ticker */}
         <div className="relative overflow-hidden md:hidden">
           {/* Top Line → Right */}
-          <div className="border-b border-neutral-200/70 py-2.5">
+          <div className="border-b border-white/[0.06] py-2.5">
             <div className="delivery-marquee delivery-marquee-right flex w-max items-center gap-10 whitespace-nowrap">
               {[...Array(5)].map((_, i) => (
                 <span
                   key={i}
-                  className="flex items-center gap-6 text-[10px] font-medium uppercase tracking-[0.2em] text-neutral-500"
+                  className="flex items-center gap-6 text-[10px] font-medium uppercase tracking-[0.2em] text-neutral-400"
                 >
-                  <span className="text-neutral-800 font-semibold">69 Wilayas</span>
-                  <span className="w-1 h-1 rounded-full bg-neutral-300 inline-block" />
+                  <span className="px-2 py-0.5 rounded-full bg-white/[0.08] border border-white/15 text-white font-semibold text-[9.5px]">
+                    69 Wilayas
+                  </span>
+                  <span className="w-1 h-1 rounded-full bg-neutral-600 inline-block" />
                   <span>Livraison &amp; montage</span>
-                  <span className="w-1 h-1 rounded-full bg-neutral-300 inline-block" />
-                  <span className="text-neutral-800 font-semibold">Showroom Kouba</span>
-                  <span className="w-1 h-1 rounded-full bg-neutral-300 inline-block" />
+                  <span className="w-1 h-1 rounded-full bg-neutral-600 inline-block" />
+                  <span className="text-white font-semibold">Showroom Kouba</span>
+                  <span className="w-1 h-1 rounded-full bg-neutral-600 inline-block" />
                 </span>
               ))}
             </div>
@@ -355,14 +361,16 @@ export default function HomePage() {
               {[...Array(5)].map((_, i) => (
                 <span
                   key={i}
-                  className="flex items-center gap-6 text-[10px] font-medium uppercase tracking-[0.2em] text-neutral-500"
+                  className="flex items-center gap-6 text-[10px] font-medium uppercase tracking-[0.2em] text-neutral-400"
                 >
-                  <span className="text-neutral-800 font-semibold">Garantie 10 Ans</span>
-                  <span className="w-1 h-1 rounded-full bg-neutral-300 inline-block" />
+                  <span className="px-2 py-0.5 rounded-full bg-white/[0.08] border border-white/15 text-white font-semibold text-[9.5px]">
+                    Garantie 10 Ans
+                  </span>
+                  <span className="w-1 h-1 rounded-full bg-neutral-600 inline-block" />
                   <span>Sur-mesure · Étude 3D offerte</span>
-                  <span className="w-1 h-1 rounded-full bg-neutral-300 inline-block" />
-                  <span className="text-neutral-800 font-semibold">Paiement après inspection</span>
-                  <span className="w-1 h-1 rounded-full bg-neutral-300 inline-block" />
+                  <span className="w-1 h-1 rounded-full bg-neutral-600 inline-block" />
+                  <span className="text-white font-semibold">Paiement après inspection</span>
+                  <span className="w-1 h-1 rounded-full bg-neutral-600 inline-block" />
                 </span>
               ))}
             </div>
